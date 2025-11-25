@@ -64,6 +64,8 @@ Route::get('/_diag', function (Request $request) {
         'db_connection' => env('DB_CONNECTION'),
         'db_status' => $dbStatus,
         'pg_options_type' => gettype(config('database.connections.pgsql.options')),
+        'migrations_count' => DB::table('migrations')->count(),
+        'migrations' => DB::table('migrations')->orderBy('id','desc')->limit(10)->pluck('migration'),
     ]);
 });
 
