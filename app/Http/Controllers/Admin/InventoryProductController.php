@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class InventoryProductController extends Controller
 {
@@ -82,31 +83,34 @@ class InventoryProductController extends Controller
 
         $products = $query->paginate(20);
 
-        // Calculate statistics
-        $allProducts = Product::with('variants')->get();
+        // Calculate statistics using DB queries (avoid loading all rows into memory)
+        $totalProducts = Product::count();
+        $activeProducts = Product::where('status', 'active')->count();
+        $inactiveProducts = Product::where('status', 'inactive')->count();
+
+        // low stock: product current_stock <= low_stock_threshold OR any variant with stock_quantity <= 20
+        $lowStockCount = Product::whereRaw('current_stock <= low_stock_threshold')
+            ->orWhereHas('variants', function ($q) {
+                $q->where('stock_quantity', '<=', 20);
+            })
+            ->count();
+
+        // total inventory value: sum product base_price * current_stock + contribution from variants
+        $productValue = Product::sum(DB::raw('COALESCE(base_price * current_stock, 0)'));
+        $variantValue = DB::table('product_variants')
+            ->join('products', 'product_variants.product_id', '=', 'products.id')
+            ->selectRaw('SUM((products.base_price + COALESCE(product_variants.price_modifier,0)) * product_variants.stock_quantity) AS total')
+            ->value('total') ?: 0;
+
+        $totalStock = Product::sum('current_stock') + DB::table('product_variants')->sum('stock_quantity');
+
         $stats = [
-            'total_products' => $allProducts->count(),
-            'active_products' => $allProducts->where('status', 'active')->count(),
-            'inactive_products' => $allProducts->where('status', 'inactive')->count(),
-            'low_stock_count' => $allProducts->filter(function($product) {
-                if ($product->variants->count() > 0) {
-                    return $product->variants->where('stock_quantity', '<=', 20)->count() > 0;
-                }
-                return $product->current_stock <= $product->low_stock_threshold;
-            })->count(),
-            'total_inventory_value' => $allProducts->sum(function($product) {
-                if ($product->variants->count() > 0) {
-                    return $product->variants->sum(function($variant) use ($product) {
-                        return ($product->base_price + $variant->price_modifier) * $variant->stock_quantity;
-                    });
-                }
-                return $product->base_price * $product->current_stock;
-            }),
-            'total_stock' => $allProducts->sum(function($product) {
-                return $product->variants->count() > 0 
-                    ? $product->variants->sum('stock_quantity') 
-                    : $product->current_stock;
-            }),
+            'total_products' => (int) $totalProducts,
+            'active_products' => (int) $activeProducts,
+            'inactive_products' => (int) $inactiveProducts,
+            'low_stock_count' => (int) $lowStockCount,
+            'total_inventory_value' => (float) ($productValue + $variantValue),
+            'total_stock' => (int) $totalStock,
         ];
 
         return view('admin.inventory.index', [
