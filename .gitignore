@@ -22,7 +22,31 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Deployment scripts
 /deploy.sh
 /build-production.bat
-!/DEPLOYMENT.md
-!/.env.production.example
+
+# Test files
+test_*.php
+test_*.html
+tmp_*.html
+*_result.json
+/tests/Feature/
+/database/factories/
+
+# Database files
+*.sql
+setup-database.sql
+database_*.sql
+
+# GitHub workflows (not needed for Vercel)
+/.github/workflows/
+
+# Old/deprecated files
+gold.gif
+public/gold.gif
+*_old.blade.php
+
+# Vercel
+.vercel
