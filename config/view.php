@@ -30,7 +30,7 @@ return [
 
     'compiled' => env(
         'VIEW_COMPILED_PATH',
-        realpath(storage_path('framework/views'))
+        (env('APP_ENV') === 'production' ? sys_get_temp_dir() . '/laravel-views' : storage_path('framework/views'))
     ),
 
     /*
