@@ -22,6 +22,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CustomerDashboardController;
 use App\Http\Controllers\ChatbotController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,32 @@ use App\Http\Controllers\ChatbotController;
 // ============================================================================
 // CUSTOMER ROUTES (Public & Authenticated)
 // ============================================================================
+
+// Temporary diagnostic route (protected by DIAG_TOKEN)
+Route::get('/_diag', function (Request $request) {
+    if ($request->query('token') !== env('DIAG_TOKEN')) {
+        abort(403);
+    }
+
+    $dbStatus = 'not tested';
+    try {
+        DB::select('select 1');
+        $dbStatus = 'ok';
+    } catch (\Throwable $e) {
+        $dbStatus = 'error: ' . $e->getMessage();
+    }
+
+    return response()->json([
+        'env' => env('APP_ENV'),
+        'app_debug' => config('app.debug'),
+        'view_compiled_path' => env('VIEW_COMPILED_PATH'),
+        'view_compiled_writable' => is_writable(env('VIEW_COMPILED_PATH', sys_get_temp_dir() . '/laravel-views')),
+        'tmp' => sys_get_temp_dir(),
+        'tmp_writable' => is_writable(sys_get_temp_dir()),
+        'db_connection' => env('DB_CONNECTION'),
+        'db_status' => $dbStatus,
+    ]);
+});
 
 // Temporary migration route (remove after running)
 Route::get('/run-migrations', function () {
