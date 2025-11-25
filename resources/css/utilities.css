@@ -1,0 +1,505 @@
+/**
+ * ============================================================
+ * TAILWIND CSS CUSTOM UTILITIES & COMPONENT UTILITIES
+ * ============================================================
+ * 
+ * This file contains custom utility classes that complement
+ * the Tailwind configuration and provide reusable patterns
+ * for the IGP Hub application.
+ */
+
+/* ============================================================
+   LAYOUT UTILITIES
+   ============================================================ */
+
+.container-tight {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.container-full {
+    @apply w-full px-4 sm:px-6 lg:px-8;
+}
+
+.safe-area {
+    @apply px-4 sm:px-6 md:px-8 lg:px-10;
+}
+
+/* ============================================================
+   FLEXBOX UTILITIES
+   ============================================================ */
+
+.flex-center {
+    @apply flex items-center justify-center;
+}
+
+.flex-between {
+    @apply flex items-center justify-between;
+}
+
+.flex-col-center {
+    @apply flex flex-col items-center justify-center;
+}
+
+.flex-col-between {
+    @apply flex flex-col items-stretch justify-between;
+}
+
+.flex-gap-x {
+    @apply flex gap-x-4;
+}
+
+.flex-gap-y {
+    @apply flex flex-col gap-y-4;
+}
+
+/* ============================================================
+   GRID UTILITIES
+   ============================================================ */
+
+.grid-cols-auto-fit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.grid-cols-auto-fill {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.grid-cols-2-md {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .grid-cols-2-md {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.grid-cols-3-lg {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .grid-cols-3-lg {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* ============================================================
+   CARD & SURFACE UTILITIES
+   ============================================================ */
+
+.card {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm p-6;
+}
+
+.card-hover {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow duration-200 cursor-pointer;
+}
+
+.card-elevated {
+    @apply bg-white rounded-lg border border-gray-200 shadow-md p-6;
+}
+
+.card-flat {
+    @apply bg-gray-50 rounded-lg border border-gray-200 p-6;
+}
+
+.surface {
+    @apply bg-white rounded-lg;
+}
+
+.surface-glass {
+    @apply glass rounded-lg;
+}
+
+.surface-blur {
+    @apply bg-white/80 backdrop-blur-md rounded-lg border border-white/20;
+}
+
+/* ============================================================
+   BADGE & LABEL UTILITIES
+   ============================================================ */
+
+.badge-sm {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
+}
+
+.badge-md {
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium;
+}
+
+.badge-lg {
+    @apply inline-flex items-center gap-1 rounded-full px-4 py-1.5 text-base font-medium;
+}
+
+.badge-success {
+    @apply bg-success-100 text-success-800;
+}
+
+.badge-warning {
+    @apply bg-warning-100 text-warning-800;
+}
+
+.badge-danger {
+    @apply bg-danger-100 text-danger-800;
+}
+
+.badge-info {
+    @apply bg-info-100 text-info-800;
+}
+
+.badge-primary {
+    @apply bg-primary-100 text-primary-800;
+}
+
+.badge-gray {
+    @apply bg-gray-100 text-gray-800;
+}
+
+.badge-outline-success {
+    @apply border border-success-300 text-success-700;
+}
+
+.badge-outline-warning {
+    @apply border border-warning-300 text-warning-700;
+}
+
+.badge-outline-danger {
+    @apply border border-danger-300 text-danger-700;
+}
+
+/* ============================================================
+   INPUT & FORM UTILITIES
+   ============================================================ */
+
+.input-base {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg font-base text-gray-900;
+}
+
+.input-lg {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg font-base text-gray-900;
+}
+
+.input-sm {
+    @apply w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900;
+}
+
+.input-focus {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+}
+
+.form-group {
+    @apply mb-4;
+}
+
+.form-label {
+    @apply block text-sm font-semibold text-gray-700 mb-2;
+}
+
+.form-error {
+    @apply text-danger-600 text-sm mt-1;
+}
+
+.form-hint {
+    @apply text-gray-600 text-sm mt-1;
+}
+
+/* ============================================================
+   BUTTON UTILITIES
+   ============================================================ */
+
+.btn-base {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-sm {
+    @apply inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-xs transition-all duration-200;
+}
+
+.btn-lg {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold text-base transition-all duration-200;
+}
+
+.btn-primary {
+    @apply btn-base bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800;
+}
+
+.btn-secondary {
+    @apply btn-base bg-gray-200 text-gray-900 hover:bg-gray-300 active:bg-gray-400;
+}
+
+.btn-danger {
+    @apply btn-base bg-danger-600 text-white hover:bg-danger-700 active:bg-danger-800;
+}
+
+.btn-success {
+    @apply btn-base bg-success-600 text-white hover:bg-success-700 active:bg-success-800;
+}
+
+.btn-ghost {
+    @apply btn-base bg-transparent text-gray-700 border border-gray-300 hover:bg-gray-50;
+}
+
+.btn-icon {
+    @apply btn-base px-3;
+}
+
+/* ============================================================
+   TEXT & TYPOGRAPHY UTILITIES
+   ============================================================ */
+
+.text-xl-md {
+    @apply text-xl md:text-2xl;
+}
+
+.text-lg-md {
+    @apply text-lg md:text-xl;
+}
+
+.text-sm-xs {
+    @apply text-sm sm:text-xs;
+}
+
+.text-ellipsis {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+}
+
+.text-gradient-primary {
+    @apply bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent;
+}
+
+.text-gradient-blue {
+    @apply bg-gradient-to-r from-primary-500 to-info-500 bg-clip-text text-transparent;
+}
+
+.text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================================
+   OPACITY & TRANSPARENCY UTILITIES
+   ============================================================ */
+
+.bg-overlay {
+    @apply bg-black/50;
+}
+
+.bg-overlay-light {
+    @apply bg-black/30;
+}
+
+.bg-overlay-dark {
+    @apply bg-black/70;
+}
+
+.bg-white-semi {
+    @apply bg-white/50 backdrop-blur-sm;
+}
+
+/* ============================================================
+   BORDER & DIVIDER UTILITIES
+   ============================================================ */
+
+.divider-y {
+    @apply border-b border-gray-200;
+}
+
+.divider-x {
+    @apply border-r border-gray-200;
+}
+
+.divider-soft {
+    @apply border-gray-100;
+}
+
+.border-dashed-primary {
+    @apply border-2 border-dashed border-primary-300;
+}
+
+/* ============================================================
+   SPACING UTILITIES
+   ============================================================ */
+
+.space-y-gutter {
+    @apply space-y-6 sm:space-y-8 md:space-y-10;
+}
+
+.space-x-gutter {
+    @apply space-x-6 sm:space-x-8 md:space-x-10;
+}
+
+.gap-gutter {
+    @apply gap-6 sm:gap-8 md:gap-10;
+}
+
+/* ============================================================
+   SHADOW & ELEVATION UTILITIES
+   ============================================================ */
+
+.shadow-inset-sm {
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.shadow-inset {
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.shadow-inset-lg {
+    box-shadow: inset 0 4px 8px 0 rgba(0, 0, 0, 0.15);
+}
+
+.shadow-glow-primary {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.shadow-glow-success {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+.shadow-glow-danger {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================================
+   VISIBILITY & DISPLAY UTILITIES
+   ============================================================ */
+
+.hidden-mobile {
+    @apply hidden sm:block;
+}
+
+.hidden-desktop {
+    @apply sm:hidden;
+}
+
+.visually-hidden {
+    @apply sr-only;
+}
+
+.pointer-events-none {
+    pointer-events: none;
+}
+
+.pointer-events-auto {
+    pointer-events: auto;
+}
+
+/* ============================================================
+   TRANSFORM & TRANSITION UTILITIES
+   ============================================================ */
+
+.scale-on-hover {
+    @apply transition-transform duration-200 hover:scale-105;
+}
+
+.scale-on-hover-down {
+    @apply transition-transform duration-200 hover:scale-95;
+}
+
+.translate-on-hover-up {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+}
+
+.rotate-on-hover {
+    @apply transition-transform duration-200 hover:rotate-6;
+}
+
+.blur-on-hover {
+    @apply transition-all duration-200 hover:blur;
+}
+
+/* ============================================================
+   RESPONSIVE DISPLAY UTILITIES
+   ============================================================ */
+
+.show-xs {
+    @apply block sm:hidden;
+}
+
+.show-sm {
+    @apply hidden sm:block md:hidden;
+}
+
+.show-md {
+    @apply hidden md:block lg:hidden;
+}
+
+.show-lg {
+    @apply hidden lg:block xl:hidden;
+}
+
+.show-xl {
+    @apply hidden xl:block;
+}
+
+/* ============================================================
+   LOADING STATE UTILITIES
+   ============================================================ */
+
+.skeleton {
+    @apply bg-gray-200 animate-pulse;
+}
+
+.skeleton-text {
+    @apply skeleton rounded w-full h-4;
+}
+
+.skeleton-avatar {
+    @apply skeleton rounded-full w-10 h-10;
+}
+
+.skeleton-card {
+    @apply skeleton rounded-lg w-full h-32;
+}
+
+/* ============================================================
+   ACCESSIBILITY UTILITIES
+   ============================================================ */
+
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+.focus-ring-inset {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-0;
+}
+
+.sr-only-focusable {
+    @apply sr-only focus:not-sr-only;
+}
+
+/* ============================================================
+   UTILITY MIXINS (for use with @apply)
+   ============================================================ */
+
+.absolute-center {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+.absolute-cover {
+    @apply absolute top-0 left-0 right-0 bottom-0;
+}
+
+.fixed-center {
+    @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}

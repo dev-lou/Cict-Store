@@ -1,0 +1,39 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # --- Server-level maintenance toggle -------------------------------------------------
+    # If the file MAINTENANCE.enabled exists in the document root, serve maintenance.html
+    # for navigations and non-asset requests with HTTP 503. This allows admins to enable
+    # maintenance without touching the app code or restarting Apache.
+    # NOTE: Apache must be running for this to work — if Apache is stopped you'll still
+    # get a browser-level connection error (ERR_CONNECTION_REFUSED) because no webserver
+    # answers the request.
+    ErrorDocument 503 /maintenance.html
+    RewriteCond %{DOCUMENT_ROOT}/MAINTENANCE.enabled -f
+    RewriteCond %{REQUEST_URI} !^/maintenance.html$ [NC]
+    RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$ [NC]
+    RewriteRule ^ /maintenance.html [R=503,L]
+    # ------------------------------------------------------------------------------------
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Pre-commit hook: ensure route-params check passes before commit
+
+echo "Running route-parameter checks..."
+composer check:route-params
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+  echo "\nRoute-parameter check failed. Fix issues before committing."
+  exit 1
+fi
+
+echo "route-parameter checks passed." 
+exit 0
