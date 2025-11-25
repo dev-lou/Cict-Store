@@ -63,6 +63,7 @@ Route::get('/_diag', function (Request $request) {
         'tmp_writable' => is_writable(sys_get_temp_dir()),
         'db_connection' => env('DB_CONNECTION'),
         'db_status' => $dbStatus,
+        'pg_options_type' => gettype(config('database.connections.pgsql.options')),
     ]);
 });
 
