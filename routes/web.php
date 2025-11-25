@@ -38,6 +38,15 @@ use App\Http\Controllers\ChatbotController;
 // CUSTOMER ROUTES (Public & Authenticated)
 // ============================================================================
 
+// Temporary migration route (remove after running)
+Route::get('/run-migrations', function () {
+    if (app()->environment('production')) {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return 'Migrations completed! Output: ' . \Illuminate\Support\Facades\Artisan::output();
+    }
+    return 'Only available in production';
+});
+
 // Home Page
 Route::get('/', [HomepageController::class, 'index'])->name('home');
 
