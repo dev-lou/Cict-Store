@@ -38,7 +38,11 @@ class Handler extends ExceptionHandler
         // For Vercel serverless: avoid Blade view compilation errors
         if (app()->environment('production') && $request->expectsJson() === false) {
             $statusCode = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
-            $message = config('app.debug') ? $e->getMessage() : 'An error occurred';
+            // Always show the exception message here for debugging (temporary)
+            $message = $e->getMessage() . ' [' . get_class($e) . ']';
+            $trace = collect($e->getTrace())->take(5)->map(function ($t) {
+                return (isset($t['file']) ? $t['file'] . ':' . ($t['line'] ?? '') : '') . ' ' . ($t['function'] ?? '');
+            })->implode("\n");
             
             // Return simple HTML response instead of compiled Blade view
             return response()->make(
@@ -55,6 +59,7 @@ class Handler extends ExceptionHandler
                 <body>
                     <h1>' . $statusCode . '</h1>
                     <p>' . htmlspecialchars($message) . '</p>
+                    <pre style="text-align:left; white-space:pre-wrap; color:#333; background:#f5f5f5; padding:10px; border-radius:6px;">' . htmlspecialchars($trace) . '</pre>
                     <p><a href="/">← Back to Home</a></p>
                 </body>
                 </html>',
