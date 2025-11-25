@@ -18,6 +18,9 @@ require __DIR__.'/../vendor/autoload.php';
 if (! class_exists(\Laravel\Pail\PailServiceProvider::class)) {
     require_once __DIR__.'/../app/Compat/PailServiceProvider.php';
 }
+if (! class_exists(\NunoMaduro\Collision\Adapters\Laravel\CollisionServiceProvider::class)) {
+    require_once __DIR__.'/../app/Compat/CollisionServiceProvider.php';
+}
 
 // Bootstrap Laravel and handle the request...
 $app = require_once __DIR__.'/../bootstrap/app.php';
