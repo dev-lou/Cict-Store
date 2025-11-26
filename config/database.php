@@ -103,7 +103,15 @@ return [
 
                     // Try to resolve an A record (IPv4). `gethostbyname` returns the
                     // input string if resolution fails - validate the result.
-                    $ip = gethostbyname($host);
+                    // Prefer DNS A records (IPv4) over gethostbyname which returns
+                    // the original hostname when no A record exists on some systems.
+                    $dnsA = @dns_get_record($host, DNS_A);
+                    if (!empty($dnsA) && is_array($dnsA)) {
+                        $ip = $dnsA[0]['ip'] ?? null;
+                    } else {
+                        $ip = gethostbyname($host);
+                    }
+
                     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
                         return $ip;
                     }
