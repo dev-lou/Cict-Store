@@ -14,8 +14,6 @@ class Kernel extends HttpKernel
     protected $middleware = [
         // Ensure proxies (Vercel, Cloud providers) are trusted so scheme/host detection works
         \App\Http\Middleware\TrustProxies::class,
-        // The degraded middleware intercepts public requests early when the DB is unreachable
-        \App\Http\Middleware\DegradedModeIfDbUnavailable::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
