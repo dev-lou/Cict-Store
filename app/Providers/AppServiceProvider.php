@@ -37,8 +37,21 @@ class AppServiceProvider extends ServiceProvider
             if (str_contains($errorMsg, 'Network is unreachable') || str_contains($errorMsg, 'connect') || str_contains($errorMsg, 'Connection timed out')) {
                 try {
                     $envHost = env('DB_HOST');
+                    // Log DNS A and AAAA records for easier diagnosis when running on the host
+                    try {
+                        $a = @dns_get_record($envHost, DNS_A);
+                        $aaaa = @dns_get_record($envHost, DNS_AAAA);
+                        logger()->info('DB host DNS records', ['host' => $envHost, 'A' => array_map(fn($x) => $x['ip'] ?? null, $a ?: []), 'AAAA' => array_map(fn($x) => $x['ipv6'] ?? null, $aaaa ?: [])]);
+                    } catch (\Throwable $dnsEx) {
+                        logger()->warning('DNS lookup failed during boot: ' . $dnsEx->getMessage());
+                    }
                     if ($envHost && !filter_var($envHost, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                        $resolved = gethostbyname($envHost);
+                        $dnsA = @dns_get_record($envHost, DNS_A);
+                        if (!empty($dnsA) && is_array($dnsA)) {
+                            $resolved = $dnsA[0]['ip'] ?? null;
+                        } else {
+                            $resolved = gethostbyname($envHost);
+                        }
                         if ($resolved && filter_var($resolved, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
                             logger()->info('Resolved DB host to IPv4 during boot. Updating runtime DB host.', ['host' => $envHost, 'ipv4' => $resolved]);
                             config(['database.connections.pgsql.host' => $resolved]);
