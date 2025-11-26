@@ -15,7 +15,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @php $viteManifestPath = public_path('build/manifest.json'); @endphp
+    @if (file_exists($viteManifestPath))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <!-- Vite manifest not found; fallback to static assets -->
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <script src="{{ asset('js/app.js') }}" defer></script>
+    @endif
     
     <!-- Page Transition Styles -->
     <link rel="stylesheet" href="{{ asset('css/page-transitions.css') }}">
