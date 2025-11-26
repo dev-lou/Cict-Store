@@ -60,6 +60,36 @@ return [
             'report' => false,
         ],
 
+        /*
+        |--------------------------------------------------------------------------
+        | Supabase Storage Disk (S3-Compatible)
+        |--------------------------------------------------------------------------
+        |
+        | This disk configuration connects to Supabase Storage using the S3
+        | protocol. Supabase Storage is S3-compatible, allowing Laravel's
+        | native S3 driver to work seamlessly.
+        |
+        | Required .env variables:
+        | - AWS_ACCESS_KEY_ID: Your Supabase project reference ID
+        | - AWS_SECRET_ACCESS_KEY: Your Supabase service_role key
+        | - AWS_BUCKET: The bucket name in Supabase Storage (e.g., "products")
+        | - AWS_ENDPOINT: https://<project-ref>.supabase.co/storage/v1/s3
+        | - AWS_URL: https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>
+        |
+        */
+        'supabase' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION', 'ap-southeast-1'),
+            'bucket' => env('AWS_BUCKET', 'products'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', true),
+            'visibility' => 'public',
+            'throw' => true,
+        ],
+
     ],
 
     /*

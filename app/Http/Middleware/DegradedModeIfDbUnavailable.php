@@ -83,7 +83,7 @@ class DegradedModeIfDbUnavailable
                             $page,
                             ['path' => $request->url(), 'query' => $request->query()]
                         );
-                        return response()->view('shop.index', ['products' => $paginator]);
+                        return response()->view('shop.index', ['products' => $paginator, 'sort' => $request->get('sort', 'newest'), 'search' => $request->get('search', '')]);
                     }
                     // Shop product show (/shop/{slug})
                     if (str_starts_with($path, 'shop/') && count($request->segments()) >= 2) {

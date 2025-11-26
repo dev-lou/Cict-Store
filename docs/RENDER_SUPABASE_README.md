@@ -1,64 +1,139 @@
 # Render / Supabase — Troubleshooting & Fixes
 
-Why your Render app cannot reach Supabase (common cause):
-* Supabase project endpoint can sometimes be IPv6-only (AAAA DNS record only) and Render's service might use IPv4 for outgoing network traffic only. If that's the case, a connection attempt to the Supabase host will fail with `Network is unreachable` and your app will see `SQLSTATE[08006]` errors.
+## The Problem
 
-What I added to help diagnose & fix this:
+Your Render app cannot reach the Supabase Postgres database because:
+- **Supabase endpoints are IPv6-only** (they only have AAAA DNS records, no IPv4 A records)
+- **Render's outbound network is IPv4-only** (cannot connect to IPv6 addresses)
 
-* app changes:
-  * The code now prefers `DB_HOST_IPV4` when present and attempts to resolve DNS A/AAAA records for `DB_HOST` at boot. It logs the DNS A/AAAA results to help you diagnose the network reachability problem.
-  * If the database is unreachable, public GET pages (e.g., `/`, `/shop`) are allowed to pass through and controllers will attempt to use cache or the Supabase REST API fallback.
-  * Product and homepage controllers now use cache and the Supabase REST API as fallbacks when Postgres is unreachable.
-  * `healthz` returns info about whether DB is ok, and if a Supabase REST fallback is available.
-  * `scripts/check_db_connectivity.php` - a script you can run in the Render web console that prints resolved A/AAAA records and tests TCP connectivity for each.
+This results in `SQLSTATE[08006] Network is unreachable` errors.
 
-Quick steps you can run on Render console to check what is going on:
+---
 
-1) Run the DNS/connectivity checker (in your Render service console):
+## ✅ IMMEDIATE FIX: Enable REST API Fallback
 
-```sh
-# From your repository root
-php scripts/check_db_connectivity.php
+This keeps your **storefront pages online** (home, shop, products) even when Postgres is unreachable.
+
+### Step 1: Add these environment variables in Render Dashboard
+
+Go to your Render service → **Environment** → Add these variables:
+
+| Variable | Value | Where to find it |
+|----------|-------|------------------|
+| `SUPABASE_SERVICE_ROLE_KEY` | `eyJhbGci...` | Supabase → Project Settings → API → `service_role` key |
+| `SUPABASE_ANON_KEY` | `eyJhbGci...` | Supabase → Project Settings → API → `anon` key |
+
+### Step 2: Redeploy
+
+Click **Manual Deploy** → **Deploy latest commit**
+
+### Step 3: Verify
+
+Visit `https://your-app.onrender.com/healthz`
+
+You should see:
+```json
+{"status":"degraded","db":"unreachable","fallback":"supabase_rest"}
 ```
 
-This will show resolved IPv4 and IPv6 addresses and whether a TCP connection can be established to each.
+This means:
+- ❌ Postgres is still unreachable (expected)
+- ✅ REST API fallback is active (storefront will work!)
 
-2) If you see only IPv6 AAAA addresses and no IPv4 A records, it confirms your route: it is an IPv6-only host and the Render egress network is IPv4-only.
+---
 
-3) Quick fixes (pick one):
+## 🔧 PERMANENT FIX OPTIONS
 
-A) If Supabase can provide an IPv4 A record
+### Option A: Ask Supabase for IPv4 (Recommended)
 
-* Update your Render environment variable `DB_HOST` with the provided IPv4 host or set `DB_HOST_IPV4` to the new IPv4 address. Then redeploy.
+1. Contact Supabase support
+2. Request an IPv4 endpoint for your database
+3. Update `DB_HOST` in Render with the new IPv4 address
+4. Redeploy
 
-B) Use a small IPv4 proxy (temporary workaround)
+### Option B: Use an IPv4 Proxy
 
-* Provision a small VM that has a public IPv4 address (DigitalOcean droplet is easy).
-* Install `socat` and forward `TCP port 5432` from the droplet to the Supabase IPv6 host:
+Set up a small VM with IPv4 that forwards traffic to Supabase's IPv6:
 
-```sh
+```bash
+# On a DigitalOcean/AWS/GCP VM with IPv4
 sudo apt update && sudo apt install -y socat
-sudo socat TCP-LISTEN:5432,reuseaddr,fork TCP6:db.ppsdvdrnvquykxsmwjmg.supabase.co:5432 &
+sudo socat TCP-LISTEN:5432,reuseaddr,fork TCP6:[2a05:d014:etc:your-supabase-ipv6]:5432 &
 ```
 
-* Update `DB_HOST` or `DB_HOST_IPV4` in Render to the IPv4 address of the droplet and redeploy.
+Then update Render:
+- `DB_HOST` = your VM's IPv4 address
+- `DB_PORT` = 5432
 
-Pros: Quick and works with IPv6-only DB.
-Cons: You must secure the droplet and open port 5432 only to Render IPs.
+### Option C: Use a Different Database Provider
 
-C) Use Supabase REST API fallback (approximate read-only experience)
+Switch to a Postgres provider that offers IPv4 endpoints (Neon, Railway, etc.)
 
-* Set `SUPABASE_SERVICE_ROLE_KEY` or `SUPABASE_ANON_KEY` in your Render environment variables.
-* Redeploy. The app will attempt to use Supabase REST read-only API for public pages (home/shop/product) when DB connection is unavailable.
-* This does not enable writes (e.g., product management, orders), but it keeps your storefront visible.
+---
 
-D) Migrate the DB to an IPv4-enabled host (long-term)
+## 📊 Diagnostic Commands
 
-* Move to a DB provider that provides IPv4 A record endpoints.
+Run these in Render's **Shell** tab:
 
-4) After making any env changes and redeploy:
+```bash
+# Check DNS resolution and connectivity
+php scripts/check_db_connectivity.php
 
-- Visit `/healthz` to confirm status. The JSON shows `db` and `fallback` status.
-- Check Render logs and search `DegradedMode: DB unreachable`, `Supabase REST fallback` or `DB host DNS records` to find more details.
+# Test if REST fallback is working
+curl -s http://localhost/healthz | cat
 
-If you want me to provide an automated helper for the proxy setup (socat service + systemd unit + small script to restrict access to Render IPs), say “Yes — provide proxy scaffold” and I’ll generate the files and a README to provision them on a DO droplet.
+# Prime the local cache (creates fallback JSON files)
+php artisan app:prime-cache
+```
+
+---
+
+## 🔍 What the Fallback Does
+
+When Postgres is unreachable, the app automatically:
+
+1. **Middleware intercepts** the DB failure
+2. **Fetches data** from Supabase REST API instead
+3. **Renders pages** using the REST data
+4. **Falls back to local JSON** if REST also fails
+
+**Works for:**
+- ✅ Homepage (`/`)
+- ✅ Shop listing (`/shop`)
+- ✅ Product pages (`/shop/{slug}`)
+
+**Does NOT work for:**
+- ❌ Admin panel (requires DB)
+- ❌ Orders/checkout (requires DB)
+- ❌ User accounts (requires DB)
+
+---
+
+## 📁 Files Involved
+
+| File | Purpose |
+|------|---------|
+| `app/Http/Middleware/DegradedModeIfDbUnavailable.php` | Intercepts DB errors, uses REST fallback |
+| `app/Services/SupabaseFallback.php` | REST API client for Supabase |
+| `app/DTO/FallbackProduct.php` | Data object for fallback product data |
+| `app/Console/Commands/PrimeCache.php` | Creates local JSON fallback files |
+| `scripts/check_db_connectivity.php` | Diagnostic script |
+| `storage/app/public/fallback/*.json` | Local JSON cache files |
+| `storage/app/public/degraded.html` | Static 503 page |
+
+---
+
+## 🚨 Troubleshooting
+
+### "Bad Gateway" errors
+- Check Render logs for the actual error
+- Run `php scripts/check_db_connectivity.php` in Render shell
+
+### REST fallback not working
+- Verify `SUPABASE_SERVICE_ROLE_KEY` is set correctly
+- Check that it matches your Supabase project
+- Look for "DegradedMode" entries in Render logs
+
+### Pages show old data
+- Run `php artisan app:prime-cache` to refresh local JSON
+- Check that REST API is returning current data
