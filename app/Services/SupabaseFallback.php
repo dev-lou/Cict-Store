@@ -115,6 +115,25 @@ class SupabaseFallback
 
         $data = $this->getFromRest('products', $params);
         if (! $data) {
+            // Attempt to use local fallback file
+            $local = $this->readLocalFallback('products');
+            if ($local) {
+                // apply filters search/order/limit/offset in-memory as best-effort
+                $collection = $local;
+                if (!empty($filters['search'])) {
+                    $collection = $collection->filter(function ($p) use ($filters) {
+                        return str_contains(strtolower($p->name ?? ''), strtolower($filters['search']));
+                    });
+                }
+                if (!empty($filters['order'])) {
+                    // Simplified: only support created_at.desc ordering
+                    if ($filters['order'] === 'created_at.desc' || $filters['order'] === 'created_at.desc') {
+                        $collection = $collection->sortByDesc('created_at');
+                    }
+                }
+                $slice = $collection->slice($offset, $limit)->values();
+                return $slice;
+            }
             return null;
         }
         return collect($data)->map(function ($item) {
@@ -132,6 +151,14 @@ class SupabaseFallback
 
         $data = $this->getFromRest('products', $params);
         if (! $data || count($data) === 0) {
+            // Attempt to read local fallback and find by slug
+            $local = $this->readLocalFallback('products');
+            if ($local) {
+                $found = $local->first(fn($p) => ($p->slug ?? '') === $slug);
+                if ($found) {
+                    return (object)$found;
+                }
+            }
             return null;
         }
         return (object) $data[0];
