@@ -3,12 +3,13 @@
 namespace App\DTO;
 
 use Illuminate\Support\Collection;
+use Illuminate\Contracts\Routing\UrlRoutable;
 
 /**
  * A lightweight data object that mimics the properties and minimal methods
  * expected by views and controllers when a DB-based Product model isn't available.
  */
-class FallbackProduct
+class FallbackProduct implements UrlRoutable
 {
     public $id;
     public $name;
@@ -48,6 +49,27 @@ class FallbackProduct
         } else {
             $this->variants = collect($variants)->map(fn($v) => (object)$v);
         }
+    }
+
+    // UrlRoutable interface methods
+    public function getRouteKey()
+    {
+        return $this->slug;
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return null; // We don't use this for resolution
+    }
+
+    public function resolveChildRouteBinding($childType, $value, $field)
+    {
+        return null;
     }
 
     // Provide compatibility methods used in some controllers/views
