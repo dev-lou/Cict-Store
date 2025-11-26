@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('components.vite-assets')
 </head>
 <body class="text-white font-inter antialiased" style="background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3e 50%, #0f0f1e 100%); margin: 0; padding: 0;">
     <!-- Grid Container: Two columns (Sidebar | Main Content) -->
