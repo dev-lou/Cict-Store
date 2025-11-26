@@ -64,11 +64,25 @@ Route::get('/healthz', function () {
     try {
         // quick no-results DB ping
         DB::select('SELECT 1');
-        return response()->json(['status' => 'ok', 'db' => 'ok'], 200);
+        return response()->json(['status' => 'ok', 'db' => 'ok', 'fallback' => null], 200);
     } catch (\Throwable $e) {
         // Do not leak database details, only return degraded status
         logger()->warning('Health check: DB unreachable: ' . $e->getMessage());
-        return response()->json(['status' => 'degraded', 'db' => 'unreachable'], 503);
+        $fallback = null;
+        // If we have a server-side key, try to verify the supabase REST is responding
+        if (!empty(env('SUPABASE_SERVICE_ROLE_KEY'))) {
+            try {
+                $fallbackService = new \App\Services\SupabaseFallback();
+                $test = $fallbackService->getFeaturedProducts(1);
+                if ($test && $test->isNotEmpty()) {
+                    $fallback = 'supabase_rest';
+                }
+            } catch (\Throwable $inner) {
+                logger()->warning('Health check: Supabase REST fallback failed: ' . $inner->getMessage());
+            }
+        }
+
+        return response()->json(['status' => 'degraded', 'db' => 'unreachable', 'fallback' => $fallback], 503);
     }
 });
 
