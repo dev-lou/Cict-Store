@@ -138,6 +138,8 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Create storage link
 RUN php artisan storage:link || true
+RUN php artisan view:clear || true
+RUN php artisan config:clear || true
 
 # =============================================================================
 # STEP 10: Expose Port & Start Apache
