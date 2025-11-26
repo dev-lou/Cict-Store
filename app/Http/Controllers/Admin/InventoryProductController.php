@@ -160,16 +160,30 @@ class InventoryProductController extends Controller
             'variants.*.price_modifier' => 'nullable|numeric|min:0',
         ]);
 
-        // Handle image upload
+        // Handle image upload to Supabase Storage
         $imagePath = null;
         if ($request->hasFile('image')) {
             try {
                 $file = $request->file('image');
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $imagePath = $file->storeAs('products', $filename, 'public');
-                \Log::info('Image stored successfully', ['path' => $imagePath]);
+                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $storagePath = 'products/' . $filename;
+
+                // Upload to Supabase Storage using the 'supabase' disk
+                Storage::disk('supabase')->put($storagePath, file_get_contents($file), 'public');
+
+                // Build the public URL for the uploaded image
+                // Format: https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>/<path>
+                $imagePath = env('AWS_URL') . '/' . $storagePath;
+
+                \Log::info('Image uploaded to Supabase successfully', [
+                    'storage_path' => $storagePath,
+                    'public_url' => $imagePath,
+                ]);
             } catch (\Exception $e) {
-                \Log::error('Image upload failed', ['error' => $e->getMessage()]);
+                \Log::error('Supabase image upload failed', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 $imagePath = null;
             }
         }
@@ -177,7 +191,7 @@ class InventoryProductController extends Controller
         // Calculate total stock from variants
         $totalStock = collect($validated['variants'])->sum('stock_quantity');
 
-        // Add image path and calculated stock to validated data
+        // Add image path (public URL) and calculated stock to validated data
         $validated['image_path'] = $imagePath;
         $validated['current_stock'] = $totalStock;
         $validated['low_stock_threshold'] = 20; // Default threshold
@@ -262,24 +276,33 @@ class InventoryProductController extends Controller
 
         \Log::info('Validation passed', ['validated_data' => $validated]);
 
-        // Handle image upload
+        // Handle image upload to Supabase Storage
         if ($request->hasFile('image')) {
             try {
-                // Delete old image if it exists
+                // Delete old image from Supabase if it exists
                 if ($product->image_path) {
-                    Storage::disk('public')->delete($product->image_path);
+                    $this->deleteSupabaseImage($product->image_path);
                 }
 
-                // Upload new image to public disk
+                // Upload new image to Supabase Storage
                 $file = $request->file('image');
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $imagePath = $file->storeAs('products', $filename, 'public');
-                
-                $validated['image_path'] = $imagePath;
-                \Log::info('Product image updated', ['path' => $imagePath]);
+                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $storagePath = 'products/' . $filename;
+
+                Storage::disk('supabase')->put($storagePath, file_get_contents($file), 'public');
+
+                // Build the public URL for the uploaded image
+                $validated['image_path'] = env('AWS_URL') . '/' . $storagePath;
+
+                \Log::info('Product image updated on Supabase', [
+                    'storage_path' => $storagePath,
+                    'public_url' => $validated['image_path'],
+                ]);
             } catch (\Exception $e) {
-                // If image upload fails, skip it
-                \Log::error('Image upload failed during update', ['error' => $e->getMessage()]);
+                \Log::error('Supabase image upload failed during update', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
             }
         }
 
@@ -362,13 +385,13 @@ class InventoryProductController extends Controller
     public function destroy(Product $product)
     {
         try {
-            // Delete associated image if it exists
+            // Delete associated image from Supabase Storage if it exists
             if ($product->image_path) {
                 try {
-                    Storage::disk('public')->delete($product->image_path);
+                    $this->deleteSupabaseImage($product->image_path);
                 } catch (\Exception $storageException) {
                     // Log the storage error but continue with deletion
-                    \Log::warning('Failed to delete product image: ' . $storageException->getMessage());
+                    \Log::warning('Failed to delete product image from Supabase: ' . $storageException->getMessage());
                 }
             }
 
@@ -412,6 +435,49 @@ class InventoryProductController extends Controller
             // Return redirect for traditional form submissions
             return redirect()->route('admin.inventory.index')
                 ->with('error', 'Failed to delete product: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete an image from Supabase Storage.
+     *
+     * Extracts the storage path from the full public URL and deletes the file.
+     *
+     * @param  string  $imageUrl  The full public URL of the image
+     * @return bool
+     */
+    private function deleteSupabaseImage(string $imageUrl): bool
+    {
+        try {
+            // Extract the storage path from the full URL
+            // URL format: https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>/<path>
+            $baseUrl = env('AWS_URL');
+
+            if ($baseUrl && str_starts_with($imageUrl, $baseUrl)) {
+                // Extract path after the base URL
+                $storagePath = ltrim(str_replace($baseUrl, '', $imageUrl), '/');
+
+                if ($storagePath) {
+                    Storage::disk('supabase')->delete($storagePath);
+                    \Log::info('Deleted image from Supabase', ['path' => $storagePath]);
+                    return true;
+                }
+            }
+
+            // Fallback: Try to delete from legacy local storage if it's a relative path
+            if (!str_starts_with($imageUrl, 'http')) {
+                Storage::disk('public')->delete($imageUrl);
+                \Log::info('Deleted legacy local image', ['path' => $imageUrl]);
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            \Log::warning('Failed to delete Supabase image', [
+                'url' => $imageUrl,
+                'error' => $e->getMessage(),
+            ]);
+            return false;
         }
     }
 }

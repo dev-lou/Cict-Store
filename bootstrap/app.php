@@ -26,9 +26,13 @@ if (!empty($_ENV['DATABASE_URL']) || !empty($_SERVER['DATABASE_URL']) || !empty(
             parse_str($parsedUrl['query'], $queryParams);
         }
         
-        // Build host string, appending options if present for Neon SNI
+        // Build host string. For Neon pooler hosts we DO NOT append a separate SNI endpoint
+        // via `options=...` to the DB_HOST because that causes a mismatch between the
+        // SNI project inferred from the host and the endpoint in options. Only append
+        // `options` when connecting directly to the SNI endpoint, not when using pooler.
         $host = $parsedUrl['host'] ?? '127.0.0.1';
-        if (!empty($queryParams['options'])) {
+        $isPoolerHost = str_contains($host, '-pooler');
+        if (!empty($queryParams['options']) && ! $isPoolerHost) {
             // Append options to host so it becomes part of DSN: host=...;options=endpoint=...
             $host .= ';options=' . rawurldecode($queryParams['options']);
         }
