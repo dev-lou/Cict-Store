@@ -72,9 +72,18 @@ class DegradedModeIfDbUnavailable
                         $filters = [];
                         if ($request->has('search')) $filters['search'] = $request->search;
                         if ($request->has('sort')) $filters['order'] = $request->get('sort');
-                        $products = $fallback->getProducts($filters, $limit, $offset) ?: collect([]);
-                        $products = $products->map(fn($p) => new FallbackProduct($p));
-                        return response()->view('shop.index', ['products' => $products]);
+                        $productsCollection = $fallback->getProducts($filters, $limit, $offset) ?: collect([]);
+                        $productsCollection = collect($productsCollection)->map(fn($p) => new FallbackProduct($p));
+                        // Create a simple LengthAwarePaginator so the view can paginate links
+                        $page = max(1, (int)$request->get('page', 1));
+                        $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
+                            $productsCollection, // items
+                            $productsCollection->count(), // total
+                            $limit,
+                            $page,
+                            ['path' => $request->url(), 'query' => $request->query()]
+                        );
+                        return response()->view('shop.index', ['products' => $paginator]);
                     }
                     // Shop product show (/shop/{slug})
                     if (str_starts_with($path, 'shop/') && count($request->segments()) >= 2) {
