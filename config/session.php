@@ -2,6 +2,22 @@
 
 use Illuminate\Support\Str;
 
+/*
+|--------------------------------------------------------------------------
+| Session Driver Fallback
+|--------------------------------------------------------------------------
+| When DB is unreachable (e.g., IPv6-only Supabase + IPv4-only Render), we
+| fallback to file-based sessions so the app can still serve public pages.
+*/
+$sessionDriver = env('SESSION_DRIVER', 'database');
+if ($sessionDriver === 'database') {
+    // Quick check if DB is likely reachable - if env says database but we
+    // can't connect, the session middleware will fail. AppServiceProvider
+    // will override this at runtime if needed, but we can do a fast check here.
+    // Actually, config files run before DB is connected, so we can't test here.
+    // The fallback is handled in AppServiceProvider boot().
+}
+
 return [
 
     /*
