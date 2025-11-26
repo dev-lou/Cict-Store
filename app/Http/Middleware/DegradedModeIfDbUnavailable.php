@@ -117,14 +117,40 @@ class DegradedModeIfDbUnavailable
                     }
                     
                     // Shop product show (/shop/{slug})
-                    if (str_starts_with($path, 'shop/') && count($request->segments()) >= 2) {
+                    $segments = $request->segments();
+                    $segmentCount = count($segments);
+                    logger()->info('DegradedMode: Checking product path', [
+                        'path' => $path,
+                        'segments' => $segments,
+                        'segment_count' => $segmentCount,
+                        'starts_with_shop' => str_starts_with($path, 'shop/'),
+                        'should_enter_product_block' => (str_starts_with($path, 'shop/') && $segmentCount >= 2),
+                    ]);
+                    
+                    if (str_starts_with($path, 'shop/') && $segmentCount >= 2) {
                         $slug = $request->segment(2);
-                        logger()->info('DegradedMode: Fetching product by slug', ['slug' => $slug]);
-                        $remote = $fallback->getProductBySlug($slug);
+                        logger()->info('DegradedMode: ENTERED product block - Fetching product by slug', ['slug' => $slug]);
+                        try {
+                            $remote = $fallback->getProductBySlug($slug);
+                            logger()->info('DegradedMode: getProductBySlug result', [
+                                'slug' => $slug,
+                                'remote_is_null' => ($remote === null),
+                                'remote_type' => gettype($remote),
+                            ]);
+                        } catch (\Throwable $fetchError) {
+                            logger()->error('DegradedMode: getProductBySlug threw exception', [
+                                'slug' => $slug,
+                                'error' => $fetchError->getMessage(),
+                            ]);
+                            $remote = null;
+                        }
                         if ($remote) {
+                            $remoteId = is_object($remote) ? ($remote->id ?? 'no-id') : ($remote['id'] ?? 'no-id');
+                            logger()->info('DegradedMode: Creating FallbackProduct', ['remote_id' => $remoteId]);
                             $product = new FallbackProduct($remote);
                             $variants = $fallback->getVariantsForProduct($product->id) ?: collect([]);
                             $product->variants = collect($variants)->map(fn($v) => (object)$v);
+                            logger()->info('DegradedMode: About to render product view', ['product_name' => $product->name]);
                             try {
                                 return $this->renderFallbackView('shop.show', ['product' => $product]);
                             } catch (\Throwable $viewError) {
@@ -143,8 +169,10 @@ class DegradedModeIfDbUnavailable
                                 return new Response($html, 200, ['Content-Type' => 'text/html']);
                             }
                         } else {
-                            logger()->warning('DegradedMode: Product not found', ['slug' => $slug]);
+                            logger()->warning('DegradedMode: Product not found or fetch failed', ['slug' => $slug]);
                         }
+                    } else {
+                        logger()->info('DegradedMode: Did NOT enter product block', ['path' => $path]);
                     }
                 } catch (\Throwable $inner) {
                     logger()->warning('DegradedMode: REST fallback attempt failed: ' . $inner->getMessage(), ['path' => $path]);
