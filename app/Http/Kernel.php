@@ -25,6 +25,10 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            // If DB is unreachable, the middleware will show a lightweight
+            // static degraded page (503). We register it early in the web stack
+            // so the app avoids querying DB-configured features during outages.
+            \App\Http\Middleware\DegradedModeIfDbUnavailable::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
