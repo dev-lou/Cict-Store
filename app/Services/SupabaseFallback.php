@@ -12,7 +12,7 @@ class SupabaseFallback
     private function getFromRest(string $table, array $params = []): ?array
     {
         $projectRef = env('AWS_ACCESS_KEY_ID'); // we reuse this as the project ref in env
-        $serviceKey = env('SUPABASE_SERVICE_ROLE_KEY');
+        $serviceKey = env('SUPABASE_SERVICE_ROLE_KEY') ?: env('SUPABASE_ANON_KEY');
         if (! $projectRef || ! $serviceKey) {
             return null;
         }
