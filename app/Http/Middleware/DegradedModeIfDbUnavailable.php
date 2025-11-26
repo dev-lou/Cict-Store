@@ -23,27 +23,18 @@ class DegradedModeIfDbUnavailable
         // If a Supabase REST fallback is configured we allow public pages to proceed
         // so controllers can render content using the REST fallback. This prevents
         // sending a degraded page for routes that can still be served.
-        $hasSupabaseRestFallback = !empty(env('SUPABASE_SERVICE_ROLE_KEY'));
+        $hasSupabaseRestFallback = !empty(env('SUPABASE_SERVICE_ROLE_KEY')) || !empty(env('SUPABASE_ANON_KEY'));
 
-        // Allow some public read-only pages to pass through even if DB unreachable
+        // Allow any GET public route (excluding admin and api paths) to pass-through
+        // so controllers can rely on cache or REST fallback to render content.
         $publicPassThrough = function ($path, $request) {
-            // Only allow GET requests to bypass the degraded page
             if (! $request->isMethod('GET')) {
                 return false;
             }
-            // Home route
-            if ($path === '/') {
-                return true;
+            if (str_starts_with($path, 'admin') || str_starts_with($path, 'api')) {
+                return false;
             }
-            // Shop and product pages
-            if (str_starts_with($path, 'shop')) {
-                return true;
-            }
-            // Static pages that can be safely rendered without DB writes
-            if (in_array($path, ['contact', 'services', 'profile'])) {
-                return true;
-            }
-            return false;
+            return true;
         };
 
         try {
@@ -66,7 +57,7 @@ class DegradedModeIfDbUnavailable
                 return $next($request);
             }
 
-            // Allow a predefined set of public read-only pages to keep going (e.g., /, /shop)
+            // Allow any GET public route to keep going (e.g., /, /shop, /about)
             if ($publicPassThrough($path, $request)) {
                 logger()->info('DegradedMode: bypassing degraded page for public GET route', ['path' => $path]);
                 return $next($request);
