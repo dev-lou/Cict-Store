@@ -9,7 +9,7 @@ class TrustProxies extends Middleware
 {
     /**
      * The trusted proxies for this application.
-     * Accept all (useful for serverless providers behind a proxy)
+     * Accept all proxies (required for cloud platforms like Render behind load balancers)
      *
      * @var array|string|null
      */

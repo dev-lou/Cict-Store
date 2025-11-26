@@ -30,19 +30,7 @@ return [
 
     'compiled' => env(
         'VIEW_COMPILED_PATH',
-        (env('APP_ENV') === 'production' ? sys_get_temp_dir() . '/laravel-views' : storage_path('framework/views'))
+        realpath(storage_path('framework/views'))
     ),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Disable View Compilation (Serverless)
-    |--------------------------------------------------------------------------
-    |
-    | For serverless environments like Vercel, we need to use pre-compiled
-    | views and prevent runtime compilation due to read-only filesystem.
-    |
-    */
-
-    'cache' => env('VIEW_CACHE_ENABLED', true),
 
 ];

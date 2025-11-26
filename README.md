@@ -39,8 +39,10 @@ A modern, full-stack e-commerce platform built for the **CICT Student Council** 
 | **Tailwind CSS** | 4.0 | Utility-first CSS framework |
 | **Alpine.js** | 3.x | Lightweight JavaScript framework |
 | **MySQL** | 8.0+ | Relational database |
+| **PostgreSQL** | 13+ | Production database (Neon) |
 | **Gemini API** | 2.0 | AI chatbot integration (Google) |
-| **Vercel** | - | Serverless hosting platform |
+| **Docker** | - | Containerized deployment |
+| **Render** | - | Cloud hosting platform |
 
 ---
 
@@ -127,51 +129,63 @@ php artisan serve
 
 ---
 
-## 🌐 Deployment to Vercel
+## 🐳 Deployment to Render (Docker)
 
-### Step 1: Install Vercel CLI
+### Step 1: Push to GitHub
 ```bash
-npm i -g vercel
+git add .
+git commit -m "Prepare for Docker deployment"
+git push origin main
 ```
 
-### Step 2: Login to Vercel
-```bash
-vercel login
-```
+### Step 2: Create Render Web Service
+1. Go to [Render Dashboard](https://dashboard.render.com)
+2. Click **New** → **Web Service**
+3. Connect your GitHub repository
+4. Configure:
+   - **Environment**: Docker
+   - **Branch**: main
+   - **Instance Type**: Free or Starter
 
-### Step 3: Deploy
-```bash
-vercel --prod
-```
+### Step 3: Configure Environment Variables
+In Render dashboard (Environment → Environment Variables):
 
-### Step 4: Configure Environment Variables
-In the Vercel dashboard (Project Settings → Environment Variables):
-
-```bash
+```env
+APP_NAME="Ctrl+P"
 APP_ENV=production
 APP_DEBUG=false
 APP_KEY=base64:YOUR_PRODUCTION_KEY
-APP_URL=https://your-project.vercel.app
+APP_URL=https://your-app.onrender.com
 
-# Database (Use PlanetScale, Railway, or Neon)
-DB_CONNECTION=mysql
-DB_HOST=your-db-host.com
-DB_DATABASE=your_database
-DB_USERNAME=your_user
-DB_PASSWORD=your_password
+# Database (Neon PostgreSQL)
+DB_CONNECTION=pgsql
+DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
 
 # Gemini API
 GEMINI_API_KEY=your-production-gemini-key
 GEMINI_MODEL=gemini-2.0-flash
+
+# Session & Cache
+SESSION_DRIVER=database
+CACHE_STORE=database
 ```
 
-### Step 5: Run Migrations on Vercel
+### Step 4: Run Migrations
+After deployment, open **Shell** in Render dashboard:
 ```bash
-# Pull environment variables
-vercel env pull .env.production
-
-# Run migrations
 php artisan migrate --force
+php artisan db:seed --force  # Optional
+```
+
+### Local Docker Testing
+```bash
+# Build the image
+docker build -t ctrl-p .
+
+# Run the container
+docker run -p 8080:80 --env-file .env ctrl-p
+
+# Access at http://localhost:8080
 ```
 
 ---
@@ -201,7 +215,8 @@ ctrl-p/
 │   ├── images/                  # Static images
 │   └── storage/                 # Symlink to storage/app/public
 ├── .env.example                 # Environment template
-├── vercel.json                  # Vercel configuration
+├── Dockerfile                   # Docker configuration for Render
+├── .dockerignore                # Docker build exclusions
 └── composer.json                # PHP dependencies
 ```
 
@@ -290,6 +305,14 @@ npm run build:production
 php artisan cache:clear
 ```
 
+### Issue: Docker Build Failed
+```bash
+# Rebuild without cache
+docker build --no-cache -t ctrl-p .
+
+# Check build logs for missing dependencies
+```
+
 ### Issue: Database Connection Failed
 ```bash
 # Verify database credentials in .env
@@ -297,10 +320,10 @@ php artisan tinker
 >>> DB::connection()->getPdo();
 ```
 
-### Issue: Vercel 500 Error
+### Issue: Render 502/504 Error
 ```bash
-# Check logs in Vercel dashboard
-# Ensure all environment variables are set
+# Check logs in Render dashboard
+# Ensure DATABASE_URL is set correctly
 # Verify APP_KEY is generated
 ```
 
@@ -324,7 +347,8 @@ CICT Student Council - Information Systems Developer
 - **Laravel** - PHP framework
 - **Tailwind CSS** - Utility-first CSS
 - **Google Gemini** - AI chatbot integration
-- **Vercel** - Serverless hosting platform
+- **Render** - Cloud hosting platform
+- **Neon** - Serverless PostgreSQL
 
 ---
 

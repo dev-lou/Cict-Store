@@ -217,7 +217,8 @@
                                 <div class="flex items-center gap-2">
                                     @php
                                         // Get total stock from variants if they exist, otherwise fall back to current_stock
-                                        $variantStock = (int) $product->variants()->sum('stock_quantity');
+                                        // Use the already eager-loaded variants collection to avoid running an extra DB query per product
+                                        $variantStock = (int) $product->variants->sum('stock_quantity');
                                         $totalStock = $variantStock > 0 ? $variantStock : (int) $product->current_stock;
                                         
                                         // Determine color based on stock level
