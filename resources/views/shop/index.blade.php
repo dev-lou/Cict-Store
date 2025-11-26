@@ -232,7 +232,9 @@
                         
                         <!-- Product Image -->
                         <div class="product-image-container">
-                            @if($product->image_path)
+                            @if(!empty($product->image_url))
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="product-image">
+                            @elseif(!empty($product->image_path))
                                 <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="product-image">
                             @else
                                 <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #AAAAAA; font-size: 14px; font-weight: 500;">
