@@ -332,7 +332,7 @@
                 win.style.setProperty('z-index', '2147483647', 'important');
                 win.style.setProperty('pointer-events', 'auto', 'important');
                 win.classList.add('chat-window-enter');
-                console.log('CICT chat: openChat - showing window');
+                    if (window.APP_DEBUG) console.log('CICT chat: openChat - showing window');
                 // Force bottom-right anchoring to keep it fixed in the visible area
                 win.style.setProperty('right', '24px', 'important');
                 win.style.setProperty('bottom', '24px', 'important');
@@ -345,12 +345,12 @@
                 // Debugging: log computed styles and bounding rect to help diagnose visibility problems
                 try {
                     const cs = window.getComputedStyle(win);
-                    console.log('CICT chat: computed display=', cs.display, 'visibility=', cs.visibility, 'opacity=', cs.opacity, 'zIndex=', cs.zIndex);
+                    if (window.APP_DEBUG) console.log('CICT chat: computed display=', cs.display, 'visibility=', cs.visibility, 'opacity=', cs.opacity, 'zIndex=', cs.zIndex);
                     const rect = win.getBoundingClientRect();
-                    console.log('CICT chat: bounding rect=', rect);
+                    if (window.APP_DEBUG) console.log('CICT chat: bounding rect=', rect);
 
                     // Log viewport info
-                    console.log('CICT chat: viewport innerHeight=', window.innerHeight, 'innerWidth=', window.innerWidth, 'scrollY=', window.scrollY, 'clientHeight=', document.documentElement.clientHeight);
+                    if (window.APP_DEBUG) console.log('CICT chat: viewport innerHeight=', window.innerHeight, 'innerWidth=', window.innerWidth, 'scrollY=', window.scrollY, 'clientHeight=', document.documentElement.clientHeight);
 
                     // If the element is partially or fully off-screen (top >= innerHeight OR bottom > innerHeight OR fully above) reposition
                     if (rect.top >= window.innerHeight || rect.bottom > window.innerHeight || rect.bottom <= 0 || rect.top < 0) {
@@ -377,16 +377,16 @@
                             }
 
                         const newRect = win.getBoundingClientRect();
-                        console.log('CICT chat: new bounding rect=', newRect);
+                        if (window.APP_DEBUG) console.log('CICT chat: new bounding rect=', newRect);
                         // also log computed style after reposition
                         const cs2 = window.getComputedStyle(win);
-                        console.log('CICT chat: computed after reposition display=', cs2.display, 'top=', cs2.top, 'bottom=', cs2.bottom, 'left=', cs2.left, 'right=', cs2.right);
+                        if (window.APP_DEBUG) console.log('CICT chat: computed after reposition display=', cs2.display, 'top=', cs2.top, 'bottom=', cs2.bottom, 'left=', cs2.left, 'right=', cs2.right);
                     }
 
                     // Walk up ancestors and log any transforms which can affect fixed positioning
                     let node = win.parentElement; let i=0; while(node && i<8) {
                         const pcs = window.getComputedStyle(node);
-                        if (pcs.transform && pcs.transform !== 'none') console.log('CICT chat: ancestor transform on', node.tagName, 'transform=', pcs.transform);
+                        if (pcs.transform && pcs.transform !== 'none' && window.APP_DEBUG) console.log('CICT chat: ancestor transform on', node.tagName, 'transform=', pcs.transform);
                         node = node.parentElement; i++;
                     }
                 } catch(e) { console.error('CICT chat: openChat debug error', e); }
@@ -395,7 +395,7 @@
             function closeChat() {
                 state.open = false;
                 win.style.setProperty('display', 'none', 'important');
-                console.log('CICT chat: closeChat - hiding window');
+                if (window.APP_DEBUG) console.log('CICT chat: closeChat - hiding window');
                 btn.style.setProperty('display', 'flex', 'important');
             }
 
@@ -452,10 +452,10 @@
                 btn.style.setProperty('display', 'flex', 'important');
                 btn.style.setProperty('z-index', '2147483647', 'important');
                 btn.style.setProperty('pointer-events', 'auto', 'important');
-                btn.addEventListener('click', function(e) { console.log('CICT chat: button clicked'); e.preventDefault(); openChat(); });
+                btn.addEventListener('click', function(e) { if (window.APP_DEBUG) console.log('CICT chat: button clicked'); e.preventDefault(); openChat(); });
             }
 
-            if (closeBtn) closeBtn.addEventListener('click', function(e) { console.log('CICT chat: close clicked'); e.preventDefault(); closeChat(); });
+            if (closeBtn) closeBtn.addEventListener('click', function(e) { if (window.APP_DEBUG) console.log('CICT chat: close clicked'); e.preventDefault(); closeChat(); });
 
             if (form) {
                 form.addEventListener('submit', function(e) {
@@ -480,7 +480,7 @@
             win.style.setProperty('position', 'fixed', 'important');
             win.style.setProperty('z-index', '2147483647', 'important');
 
-            console.log('CICT chat widget (vanilla) initialized');
+            if (window.APP_DEBUG) console.log('CICT chat widget (vanilla) initialized');
         })();
     </script>
     

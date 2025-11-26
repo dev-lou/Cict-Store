@@ -393,15 +393,11 @@
                     </div>
 
                     <div class="map-container">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d489.5623416294347!2d122.6630055!3d11.001158!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33af1776ffd9b7f1%3A0x2c4663ccaaf49fa8!2sIloilo%20State%20University%20of%20Fisheries%20Science%20and%20Technology%E2%80%93%20Dingle%20Campus!5e0!3m2!1sen!2sph!4v1763305122332!5m2!1sen!2sph" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0; margin: 0; padding: 0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
+                        <!-- Google Maps embed removed (no API) - provide a link to Google Maps instead -->
+                        <div style="padding: 12px; background: rgba(30,31,32,0.6); border-radius:8px; text-align:center;">
+                            <p style="margin:0 0 8px; color:#cbd5e1;">Map preview removed to avoid external Google Maps API usage.</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Iloilo+State+University+of+Fisheries+Science+and+Technology+Dingle+Campus" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display:inline-block; padding:10px 16px; color:#fff; background: linear-gradient(135deg,#3b82f6 0%,#2563eb 100%); border-radius:6px;">Open in Google Maps</a>
+                        </div>
                     </div>
                 </div>
             </div>
