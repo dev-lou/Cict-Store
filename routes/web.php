@@ -23,6 +23,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CustomerDashboardController;
 use App\Http\Controllers\ChatbotController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,35 @@ use Illuminate\Http\Request;
 
 // Home Page
 Route::get('/', [HomepageController::class, 'index'])->name('home');
+
+// Health check endpoints
+//  - /_health: developer-only (local env) — private debug info
+//  - /healthz: platform-friendly and safe for production - returns 200/503
+if (app()->environment('local')) {
+    Route::get('/_health', function () {
+        $appKey = (config('app.key')) ? 'present' : 'missing';
+        try {
+            DB::select('SELECT 1');
+            $db = 'ok';
+        } catch (\Throwable $e) {
+            $db = 'error: '.$e->getMessage();
+        }
+        return response()->json(['health' => 'ok', 'app_key' => $appKey, 'db' => $db]);
+    });
+}
+
+// Production-safe healthz endpoint for platform health checks (e.g., Render).
+Route::get('/healthz', function () {
+    try {
+        // quick no-results DB ping
+        DB::select('SELECT 1');
+        return response()->json(['status' => 'ok', 'db' => 'ok'], 200);
+    } catch (\Throwable $e) {
+        // Do not leak database details, only return degraded status
+        logger()->warning('Health check: DB unreachable: ' . $e->getMessage());
+        return response()->json(['status' => 'degraded', 'db' => 'unreachable'], 503);
+    }
+});
 
 // Shop Routes (Browse Products)
 Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
