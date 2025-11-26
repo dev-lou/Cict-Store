@@ -49,12 +49,15 @@ class DegradedModeIfDbUnavailable
             if ($hasSupabaseRestFallback) {
                 // When the Supabase REST fallback key exists try to render common public pages
                 // directly from Supabase REST to avoid controller DB queries and handler 503s.
+                logger()->info('DegradedMode: Attempting REST fallback', ['path' => $path]);
                 try {
                     $fallback = new SupabaseFallback();
                     
                     // Home page
                     if ($path === '' || $path === '/') {
+                        logger()->info('DegradedMode: Fetching featured products for homepage');
                         $featured = $fallback->getFeaturedProducts(6) ?: collect([]);
+                        logger()->info('DegradedMode: Got featured products', ['count' => $featured->count()]);
                         $featured = collect($featured)->map(fn($p) => new FallbackProduct($p));
                         // Share default order counts to prevent View composer DB queries
                         return $this->renderFallbackView('home.homepage', ['featuredProducts' => $featured]);
