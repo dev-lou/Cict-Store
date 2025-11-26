@@ -1,1 +1,0 @@
-<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views\components\auth-modals.blade.php ENDPATH**/ ?>

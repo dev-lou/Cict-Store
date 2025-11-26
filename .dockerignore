@@ -1,0 +1,62 @@
+# =============================================================================
+# Docker Ignore File
+# Excludes files not needed in the Docker build context
+# =============================================================================
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dependencies (will be installed in container)
+node_modules
+vendor
+
+# Environment files (secrets should be passed via env vars)
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+tests
+phpunit.xml
+.phpunit.result.cache
+coverage
+
+# Documentation
+*.md
+!README.md
+docs
+
+# Development files
+docker-compose*.yml
+Makefile
+
+# Logs and cache (will be generated in container)
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+
+# Keep .gitignore files in storage
+!storage/logs/.gitignore
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+!bootstrap/cache/.gitignore
+
+# Build artifacts
+public/hot
+public/build
