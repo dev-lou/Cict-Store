@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Runtime DB connectivity check - fallback to file sessions if DB unreachable
+        try {
+            // Attempt a simple connection query
+            DB::connection()->getPdo();
+        } catch (\Throwable $e) {
+            logger()->warning('Database connection failed during boot - falling back to file session driver: '.$e->getMessage());
+            // Set session driver to file so app remains operational (sessions won't need DB)
+            config(['session.driver' => 'file']);
+            // Also fallback cache to file to avoid database cache queries if configured
+            config(['cache.default' => 'file']);
+        }
         // Ensure pgsql 'options' is always an array to prevent TypeErrors
         // when a `DATABASE_URL` query param named `options` is present
         // (Laravel's parser sets `options` to a string which conflicts
