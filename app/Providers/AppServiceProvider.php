@@ -114,7 +114,20 @@ class AppServiceProvider extends ServiceProvider
         $this->defineAuthorizationGates();
 
         // Share order counts with all views via View Composer (guarded by try/catch)
+        // Skip if we already know DB is unavailable (set by middleware or earlier in boot)
         View::composer('*', function ($view) {
+            // Check if DB was marked as unavailable (by middleware setting session driver to file)
+            if (config('session.driver') === 'file' && env('SESSION_DRIVER') === 'database') {
+                // DB is likely unavailable, skip queries and use defaults
+                $view->with([
+                    'pendingOrderCount' => 0,
+                    'processingOrderCount' => 0,
+                    'completedOrderCount' => 0,
+                    'totalOrderCount' => 0,
+                ]);
+                return;
+            }
+            
             try {
                 $pendingOrderCount = Order::where('status', 'pending')->count();
                 $processingOrderCount = Order::where('status', 'processing')->count();
