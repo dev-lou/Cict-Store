@@ -125,7 +125,15 @@ class DegradedModeIfDbUnavailable
             'totalOrderCount' => 0,
         ], $data);
         
-        $content = view($view, $data)->render();
-        return new Response($content, 200, ['Content-Type' => 'text/html']);
+        try {
+            $content = view($view, $data)->render();
+            return new Response($content, 200, ['Content-Type' => 'text/html']);
+        } catch (\Throwable $e) {
+            logger()->error('DegradedMode: View render failed: ' . $e->getMessage(), [
+                'view' => $view,
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e; // Re-throw to be caught by outer handler
+        }
     }
 }
