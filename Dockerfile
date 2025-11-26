@@ -1,6 +1,7 @@
 # =============================================================================
 # Laravel Production Dockerfile for Render
 # Base: PHP 8.2 with Apache
+# Stack: Laravel, Blade, Vite (Tailwind), Neon PostgreSQL
 # =============================================================================
 
 FROM php:8.2-apache
@@ -8,24 +9,34 @@ FROM php:8.2-apache
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# =============================================================================
+# STEP 1: Install System Dependencies
+# =============================================================================
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
+    unzip \
+    libpq-dev \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     libonig-dev \
     libxml2-dev \
-    libpq-dev \
     libzip-dev \
     zip \
-    unzip \
-    nodejs \
-    npm \
+    # Install Node.js 20.x LTS (better than default apt nodejs)
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    # Clean up
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Verify Node.js and npm installation
+RUN node --version && npm --version
+
+# =============================================================================
+# STEP 2: Install PHP Extensions
+# =============================================================================
 # Configure and install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
@@ -40,15 +51,20 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         zip \
         opcache
 
+# =============================================================================
+# STEP 3: Configure Apache
+# =============================================================================
 # Enable Apache modules
 RUN a2enmod rewrite headers
 
-# Configure Apache DocumentRoot
+# Set Apache DocumentRoot to Laravel's public folder
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+
+# Update Apache configuration
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Configure Apache for Laravel (AllowOverride for .htaccess)
+# Configure Apache for Laravel (.htaccess support)
 RUN echo '<Directory /var/www/html/public>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
@@ -56,25 +72,45 @@ RUN echo '<Directory /var/www/html/public>\n\
 </Directory>' > /etc/apache2/conf-available/laravel.conf \
     && a2enconf laravel
 
+# =============================================================================
+# STEP 4: Install Composer
+# =============================================================================
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# =============================================================================
+# STEP 5: Copy Application Files
+# =============================================================================
 # Copy application files
 COPY . .
 
+# =============================================================================
+# STEP 6: Install PHP Dependencies (Production)
+# =============================================================================
 # Install PHP dependencies (production)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --prefer-dist \
+    --no-progress
 
+# =============================================================================
+# STEP 7: Install Node.js Dependencies & Build Vite Assets
+# =============================================================================
 # Install Node.js dependencies and build assets
-RUN npm ci && npm run build
+RUN npm ci --no-audit --no-fund && npm run build
 
 # Remove node_modules after build to reduce image size
 RUN rm -rf node_modules
 
+# =============================================================================
+# STEP 8: Configure PHP for Production
+# =============================================================================
 # Configure PHP for production
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-# Configure OPcache for production
+# Configure OPcache for maximum performance
 RUN echo 'opcache.enable=1\n\
 opcache.memory_consumption=256\n\
 opcache.interned_strings_buffer=64\n\
@@ -83,17 +119,20 @@ opcache.validate_timestamps=0\n\
 opcache.save_comments=1\n\
 opcache.fast_shutdown=1' > /usr/local/etc/php/conf.d/opcache.ini
 
+# =============================================================================
+# STEP 9: Set Permissions for Laravel
+# =============================================================================
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Create storage link (will be created at runtime if needed)
+# Create storage link
 RUN php artisan storage:link || true
 
-# Cache configuration (optional - can be done at runtime)
-# RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
-
+# =============================================================================
+# STEP 10: Expose Port & Start Apache
+# =============================================================================
 # Expose port 80
 EXPOSE 80
 
