@@ -82,6 +82,23 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         });
+
+        // Vite manifest fallback: In some Vite versions or setups, the manifest may be
+        // emitted as public/build/.vite/manifest.json. To avoid runtime errors when
+        // the app expects public/build/manifest.json, copy the nested manifest to the
+        // expected path at runtime (only when necessary).
+        try {
+            $manifestDir = public_path('build');
+            $legacyManifest = $manifestDir . DIRECTORY_SEPARATOR . '.vite' . DIRECTORY_SEPARATOR . 'manifest.json';
+            $expectedManifest = $manifestDir . DIRECTORY_SEPARATOR . 'manifest.json';
+
+            if (file_exists($legacyManifest) && !file_exists($expectedManifest)) {
+                @copy($legacyManifest, $expectedManifest);
+                logger()->info('Copied Vite manifest from nested .vite to build manifest', ['from' => $legacyManifest, 'to' => $expectedManifest]);
+            }
+        } catch (\Throwable $e) {
+            logger()->warning('Failed to ensure Vite manifest was present: ' . $e->getMessage());
+        }
     }
 
     /**

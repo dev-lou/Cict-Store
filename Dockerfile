@@ -106,6 +106,8 @@ RUN export NPM_CONFIG_PRODUCTION=false \
     && echo "Node: $(node --version) npm: $(npm --version)" \
     && npm ci --no-audit --no-fund --include=dev --silent \
     && npm run build --silent || (echo "ERROR: npm run build failed"; echo "node_modules listing:"; ls -la node_modules || true; echo "build dir listing:"; ls -la public || true; exit 1) \
+    # Handle Vite 7+ writing nested .vite/manifest.json - copy it to public/build/manifest.json when present
+    && if [ -f public/build/.vite/manifest.json ] && [ ! -f public/build/manifest.json ]; then echo "Found .vite/manifest.json -> copying to public/build/manifest.json"; cp public/build/.vite/manifest.json public/build/manifest.json; echo "Manifest content:"; head -n 5 public/build/manifest.json || true; fi \
     && if [ ! -f public/build/manifest.json ]; then echo "ERROR: Vite manifest missing"; ls -la public/build || true; exit 1; fi
 # Set production environment (optional - keeps environment cleaned for PHP runtime)
 ENV NODE_ENV=production
