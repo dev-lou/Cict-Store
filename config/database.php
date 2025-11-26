@@ -85,25 +85,27 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
+            // Note: We intentionally do NOT use 'url' => env('DATABASE_URL') here because
+            // Laravel's URL parser converts query params like `options=endpoint%3D...` into
+            // string config values, which breaks PDO (expects 'options' to be an array).
+            // Instead, we parse DATABASE_URL manually or use individual DB_* env vars.
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
+            'database' => env('DB_DATABASE', 'neondb'),
+            'username' => env('DB_USERNAME', 'neondb_owner'),
             'password' => env('DB_PASSWORD', ''),
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'sslmode' => env('DB_SSLMODE', 'require'),
+            // PDO options must be an array — never allow DATABASE_URL parsing to override this
             'options' => extension_loaded('pdo_pgsql') ? [
                 PDO::ATTR_TIMEOUT => 30,
-                // For PostgreSQL we must avoid emulated prepares so boolean values are sent with proper type
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_STRINGIFY_FETCHES => false,
             ] : [],
-            // Neon-specific: Pass endpoint ID for SNI support
-            'application_name' => 'ctrl-p',
+            'application_name' => env('APP_NAME', 'ctrl-p'),
         ],
 
         'sqlsrv' => [

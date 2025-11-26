@@ -1,0 +1,56 @@
+# =============================================================================
+# Docker Compose - Local Development & Testing
+# Usage: docker-compose up --build
+# Access: http://localhost:8080
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # Laravel Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ctrl-p-app
+    ports:
+      - "8080:80"
+    environment:
+      # Application
+      - APP_NAME=Ctrl+P
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8080
+      
+      # Database (Neon PostgreSQL)
+      - DB_CONNECTION=pgsql
+      - DATABASE_URL=${DATABASE_URL}
+      
+      # Session & Cache
+      - SESSION_DRIVER=database
+      - CACHE_STORE=database
+      - QUEUE_CONNECTION=sync
+      
+      # Gemini AI
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=gemini-2.0-flash
+    volumes:
+      # Mount storage for persistent data (optional for local testing)
+      - ./storage/app:/var/www/html/storage/app
+      - ./storage/logs:/var/www/html/storage/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# =============================================================================
+# Usage Instructions:
+# =============================================================================
+# 1. Create a .env file with DATABASE_URL and GEMINI_API_KEY
+# 2. Run: docker-compose up --build
+# 3. Access: http://localhost:8080
+# 4. Stop: docker-compose down
+# =============================================================================
