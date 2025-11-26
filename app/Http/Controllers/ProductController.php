@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Services\SupabaseFallback;
+use App\DTO\FallbackProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -59,6 +60,8 @@ class ProductController extends Controller
                 $filters['search'] = $request->search;
             }
             $productsCollection = $fallback->getProducts($filters, $limit, $offset) ?: collect([]);
+            // Map to fallback DTOs so views can expect properties like `low_stock_threshold`.
+            $productsCollection = collect($productsCollection)->map(fn($p) => new FallbackProduct($p));
             $products = new LengthAwarePaginator(
                 $productsCollection, // items
                 $productsCollection->count(), // total (best-effort)
@@ -92,9 +95,10 @@ class ProductController extends Controller
             $fallback = new SupabaseFallback();
             $remote = $fallback->getProductBySlug($product->slug);
             if ($remote) {
-                // Map remote object into a pseudo-product object for the view
-                $product = $remote;
-                $product->variants = $fallback->getVariantsForProduct($product->id) ?: collect([]);
+                // Wrap remote into fallback DTO for view compatibility
+                $product = new FallbackProduct($remote);
+                $variants = $fallback->getVariantsForProduct($product->id) ?: collect([]);
+                $product->variants = collect($variants)->map(fn($v) => (object)$v);
             }
         }
 
