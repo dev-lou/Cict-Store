@@ -528,7 +528,7 @@
 
             <div id="imageStatus" style="display:none; color: #94a3b8; font-size: 0.85rem; margin-bottom: 8px; text-align:center"></div>
             <!-- Visible debug log to capture picker events (helpful if devtools aren't open) -->
-            <div id="imageDebug" style="display:block; color:#94a3b8; font-size:0.8rem; margin-top:6px; padding:8px; background: rgba(2,6,23,0.3); border-radius:6px; max-height:120px; overflow:auto; white-space:pre-wrap; font-family: monospace;">Debug log (events will appear here)</div>
+            <div id="imageDebug" style="display:none; color:#94a3b8; font-size:0.8rem; margin-top:6px; padding:8px; background: rgba(2,6,23,0.3); border-radius:6px; max-height:120px; overflow:auto; white-space:pre-wrap; font-family: monospace;">Debug log (events will appear here)</div>
 
             <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; padding: 12px; text-align: center; margin-bottom: 16px;">
                 <p style="color: #cbd5e1; font-weight: 600; margin: 0 0 4px 0; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
@@ -872,7 +872,7 @@
                     e.preventDefault();
                     e.stopPropagation();
                     // Clear file input and preview
-                    try { imageInput.value = ''; } catch (err) { console.log('clear input err', err); }
+                    try { imageInput.value = ''; } catch (err) { /* suppressed in production */ }
                     const statusEl = document.getElementById('imageStatus');
                     if (statusEl) { statusEl.style.display = 'none'; }
                     imagePreview.innerHTML = `<div style="text-align: center;">
@@ -900,25 +900,25 @@
         // Debug logging helper + robust change handling
         function appendImageDebug(msg) {
             try {
-                console.log(msg);
+                if (!window.APP_DEBUG) return;
                 const el = document.getElementById('imageDebug');
                 if (!el) return;
                 const time = new Date().toLocaleTimeString();
                 el.textContent = `[${time}] ${msg}\n` + el.textContent;
             } catch (err) {
-                console.log('appendImageDebug err', err);
+                // suppressed in production
             }
         }
         let pickerRequested = false;
         let imagePickerInProgress = false;
         imageInput.addEventListener('change', function(e) {
-                console.log('create: imageInput.change files=', this.files);
+                // suppressed debug logging
                 appendImageDebug('change: files=' + (this.files && this.files.length ? Array.from(this.files).map(f => f.name).join(',') : 'none'));
             const file = this.files && this.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    console.log('create: reader.onload file=', file && file.name);
+                    // suppressed debug logging
                     appendImageDebug('reader.onload: ' + (file && file.name));
                     imagePreview.innerHTML = `<img src="${event.target.result}" style="width: 100%; height: 100%; object-fit: cover;" />`;
                     const btn = ensureRemoveBtnCreate();
@@ -937,7 +937,7 @@
                 };
                 reader.readAsDataURL(file);
             } else {
-                console.log('create: no file selected');
+                // suppressed debug logging
                 appendImageDebug('no file selected');
             }
         });
@@ -948,7 +948,7 @@
             existingRemoveBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                try { imageInput.value = ''; } catch (err) { console.log('clear input err', err); }
+                try { imageInput.value = ''; } catch (err) { /* suppressed in production */ }
                 const statusEl = document.getElementById('imageStatus');
                 if (statusEl) { statusEl.style.display = 'none'; }
                 imagePreview.innerHTML = `<div style="text-align: center;">
@@ -974,19 +974,26 @@
 
         // Log file presence just before form submit to help debugging
         document.getElementById('saveBtn').addEventListener('click', function(ev) {
-            console.log('create: before submit files=', imageInput.files && imageInput.files.length);
+            // suppressed debug logging
             appendImageDebug('before submit files=' + (imageInput.files && imageInput.files.length));
         });
 
         // When the window regains focus after the file picker, clear opening state
         window.addEventListener('focus', function() {
             if (imageInput && imageInput.dataset && imageInput.dataset.opening) {
-                console.log('create: focus detected - clearing opening flag');
+                // suppressed debug logging
                 appendImageDebug('focus detected - clearing opening flag');
                 imageInput.dataset.opening = '';
             }
             // clear progress flag on focus to avoid stuck state
             imagePickerInProgress = false;
+            // Show debug area only in debug mode
+            try {
+                if (window.APP_DEBUG) {
+                    const debugEl = document.getElementById('imageDebug');
+                    if (debugEl) debugEl.style.display = 'block';
+                }
+            } catch (e) { /* silent */ }
         });
 
         // Check for success/error on page load
@@ -1073,7 +1080,7 @@
                     });
                     
                     // Submit form
-                    console.log('create: before submit files=', imageInput.files && imageInput.files.length);
+                    // suppressed debug logging
                     document.getElementById('productForm').submit();
                 }
             });

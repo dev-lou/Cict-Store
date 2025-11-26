@@ -327,9 +327,7 @@
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
                 
                 // Log the request for debugging
-                console.log('Delete request - Product ID:', productId);
-                console.log('URL:', `/admin/inventory/${productId}`);
-                console.log('CSRF Token:', csrfToken ? 'Present' : 'Missing');
+                // suppressed debug logging: delete request
                 
                 // Send DELETE request via AJAX
                 fetch(`/admin/inventory/${productId}`, {
@@ -342,14 +340,14 @@
                     }
                 })
                 .then(response => {
-                    console.log('Response status:', response.status);
+                    // suppressed debug logging
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Delete response:', data);
+                    // suppressed debug logging
                     Swal.fire({
                         title: 'Delete Successful!',
                         text: data.message || 'The product has been deleted successfully.',

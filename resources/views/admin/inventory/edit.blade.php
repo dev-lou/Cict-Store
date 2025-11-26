@@ -705,7 +705,7 @@
 
             <div id="imageStatus" style="display:none; color: #94a3b8; font-size: 0.85rem; margin-bottom: 8px; text-align:center"></div>
             <!-- Visible debug log pane for image events (helps when devtools are closed) -->
-            <div id="imageDebug" style="display:block; color:#94a3b8; font-size:0.8rem; margin-top:6px; padding:8px; background: rgba(2,6,23,0.3); border-radius:6px; max-height:120px; overflow:auto; white-space:pre-wrap; font-family: monospace;">Debug log (events will appear here)</div>
+            <div id="imageDebug" style="display:none; color:#94a3b8; font-size:0.8rem; margin-top:6px; padding:8px; background: rgba(2,6,23,0.3); border-radius:6px; max-height:120px; overflow:auto; white-space:pre-wrap; font-family: monospace;">Debug log (events will appear here)</div>
 
             <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; padding: 12px; text-align: center; margin-bottom: 16px;">
                 <p style="color: #cbd5e1; font-weight: 600; margin: 0 0 4px 0; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
@@ -1029,7 +1029,7 @@
                 removeImageBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    try { imageInput.value = ''; } catch (err) { console.log('clear input err', err); }
+                    try { imageInput.value = ''; } catch (err) { /* suppressed in production */ }
                     const statusEl = document.getElementById('imageStatus');
                     if (statusEl) { statusEl.style.display = 'none'; }
                     imagePreview.innerHTML = `<div style="text-align: center;">
@@ -1056,21 +1056,21 @@
 
         function appendImageDebug(msg) {
             try {
-                console.log(msg);
+                // suppressed debug logging
                 const el = document.getElementById('imageDebug');
                 if (!el) return;
                 const time = new Date().toLocaleTimeString();
                 el.textContent = `[${time}] ${msg}\n` + el.textContent;
             } catch (err) {
-                console.log('appendImageDebug err', err);
+                // suppressed debug logging
             }
         }
 
         // indicate the image handlers are ready
-        try { appendImageDebug('edit image-js ready'); } catch (err) { console.log('appendImageDebug missing', err); }
+        try { appendImageDebug('edit image-js ready'); } catch (err) { /* suppressed in production */ }
 
         imageInput.addEventListener('change', function(e) {
-                console.log('edit: imageInput.change files=', this.files);
+                // suppressed debug logging
                 appendImageDebug('change: files=' + (this.files && this.files.length ? Array.from(this.files).map(f => f.name).join(',') : 'none'));
                 // If change fired but no file is present (race), re-check shortly to allow browser to populate files
                 if (!(this.files && this.files.length)) {
@@ -1104,7 +1104,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    console.log('edit: reader.onload file=', file && file.name);
+                    // suppressed debug logging
                     appendImageDebug('reader.onload: ' + (file && file.name));
                     imagePreview.innerHTML = `<img src="${event.target.result}" style="width: 100%; height: 100%; object-fit: cover;" />`;
                     const btn = ensureRemoveBtnEdit();
@@ -1122,7 +1122,7 @@
                 };
                 reader.readAsDataURL(file);
             } else {
-                console.log('edit: no file selected');
+                // suppressed debug logging
                 appendImageDebug('no file selected');
             }
         });
@@ -1133,7 +1133,7 @@
             existingRemoveBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                try { imageInput.value = ''; } catch (err) { console.log('clear input err', err); }
+                try { imageInput.value = ''; } catch (err) { /* suppressed in production */ }
                 const statusEl = document.getElementById('imageStatus');
                 if (statusEl) { statusEl.style.display = 'none'; }
                 imagePreview.innerHTML = `<div style="text-align: center;">
@@ -1158,7 +1158,7 @@
             // Always clear previous selection so choosing the same file triggers change
             // But if user clicked the remove button, don't clear here
             if (!e.target.closest('#removeImageBtn')) {
-                try { imageInput.value = ''; } catch (err) { console.log('pointerdown clear err', err); }
+                try { imageInput.value = ''; } catch (err) { /* suppressed in production */ }
                 appendImageDebug('pointerdown: cleared input.value');
             } else {
                 appendImageDebug('pointerdown: remove button targeted');
@@ -1173,7 +1173,7 @@
         // Trace actual input click as well
         imageInput.addEventListener('click', function(e) {
             appendImageDebug('input.click event');
-            console.log('edit: imageInput.click');
+            // suppressed debug logging
             // Mark dataset.opening (used for focus cleanup) so we can detect picker lifecycle
             try { imageInput.dataset.opening = '1'; } catch (err) { /* ignore */ }
         });
@@ -1183,12 +1183,19 @@
         // When the window regains focus after the file picker, clear opening state
         window.addEventListener('focus', function() {
             if (imageInput && imageInput.dataset && imageInput.dataset.opening) {
-                console.log('edit: focus detected - clearing opening flag');
+                // suppressed debug logging
                 appendImageDebug('focus detected - clearing opening flag');
                 imageInput.dataset.opening = '';
             }
             // clear progress flag on focus to avoid stuck state
             imagePickerInProgress = false;
+            // Show debug area only in debug mode
+            try {
+                if (window.APP_DEBUG) {
+                    const debugEl = document.getElementById('imageDebug');
+                    if (debugEl) debugEl.style.display = 'block';
+                }
+            } catch (e) { /* silent */ }
         });
 
         // Save button
@@ -1225,7 +1232,7 @@
                     
                     // Submit form
                     setTimeout(() => {
-                        console.log('edit: before submit files=', document.getElementById('imageInput').files && document.getElementById('imageInput').files.length);
+                        // suppressed debug logging
                         appendImageDebug('before submit files=' + (document.getElementById('imageInput').files && document.getElementById('imageInput').files.length));
                         document.getElementById('productForm').submit();
                     }, 500);
