@@ -97,7 +97,10 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'require'),
+            // Neon-specific endpoint id to ensure SNI endpoint is present in the DSN
+            'neon_endpoint' => env('DB_NEON_ENDPOINT'),
             // PDO options with connection timeout for reliability
+            // Ensure PDO options is always an array - Laravel may parse a string 'options' from DATABASE_URL
             'options' => extension_loaded('pdo_pgsql') ? [
                 PDO::ATTR_TIMEOUT => 10,                // 10 second connection timeout
                 PDO::ATTR_EMULATE_PREPARES => false,
