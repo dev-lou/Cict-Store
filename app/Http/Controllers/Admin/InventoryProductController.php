@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class InventoryProductController extends Controller
 {
@@ -264,6 +265,10 @@ class InventoryProductController extends Controller
             ]);
         }
 
+        // Clear homepage caches so featured products show updates in near-real-time
+        Cache::forget('homepage.featured_products');
+        Cache::forget('home.featured_products');
+
         return redirect()->route('admin.inventory.index')
             ->with('success', 'Product created successfully with ' . count($validated['variants']) . ' variant(s)!');
             
@@ -464,6 +469,10 @@ class InventoryProductController extends Controller
             $product->update(['current_stock' => $totalStock]);
         }
 
+        // Clear homepage caches so featured products show updates in near-real-time
+        Cache::forget('homepage.featured_products');
+        Cache::forget('home.featured_products');
+
         return redirect()->route('admin.inventory.index')
             ->with('success', 'Product and variants updated successfully!');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -507,6 +516,10 @@ class InventoryProductController extends Controller
             $isAjax = request()->header('Accept') === 'application/json' || 
                       request()->header('X-Requested-With') === 'XMLHttpRequest';
             
+            // Clear homepage caches to ensure updated product list is reflected
+            Cache::forget('homepage.featured_products');
+            Cache::forget('home.featured_products');
+
             if ($isAjax || request()->expectsJson()) {
                 return response()->json([
                     'success' => true,
