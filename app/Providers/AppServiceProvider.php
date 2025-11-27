@@ -64,7 +64,21 @@ class AppServiceProvider extends ServiceProvider
         $this->defineAuthorizationGates();
 
         // Share order counts with all views via View Composer
+        // Skip for error views to prevent infinite loops
         View::composer('*', function ($view) {
+            $viewName = $view->getName();
+            
+            // Skip error views and API responses
+            if (str_starts_with($viewName, 'errors.') || str_starts_with($viewName, 'errors::')) {
+                $view->with([
+                    'pendingOrderCount' => 0,
+                    'processingOrderCount' => 0,
+                    'completedOrderCount' => 0,
+                    'totalOrderCount' => 0,
+                ]);
+                return;
+            }
+            
             try {
                 $pendingOrderCount = Order::where('status', 'pending')->count();
                 $processingOrderCount = Order::where('status', 'processing')->count();
@@ -79,7 +93,7 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             } catch (\Throwable $e) {
                 // Fallback to zero counts if database query fails
-                logger()->warning('Order counts view composer failed: ' . $e->getMessage());
+                // Don't log excessively to avoid log spam
                 $view->with([
                     'pendingOrderCount' => 0,
                     'processingOrderCount' => 0,
