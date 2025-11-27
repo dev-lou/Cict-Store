@@ -1,4 +1,16 @@
 <x-app-layout :title="'My Profile - CICT Merch'">
+    <!-- Decorative Red Header Banner (Behind Navbar) -->
+    <div style="position: fixed; top: 0; left: 0; right: 0; height: 280px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); z-index: 0; overflow: hidden;">
+        <!-- Decorative Pattern Overlay -->
+        <div style="position: absolute; inset: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        <!-- Gradient Fade at Bottom -->
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to top, #FFFAF1, transparent);"></div>
+        <!-- Decorative Circles -->
+        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+        <div style="position: absolute; top: 60px; right: 150px; width: 100px; height: 100px; background: rgba(255,255,255,0.03); border-radius: 50%;"></div>
+        <div style="position: absolute; top: 20px; left: 10%; width: 150px; height: 150px; background: rgba(255,255,255,0.04); border-radius: 50%;"></div>
+    </div>
+
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -30,10 +42,9 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 100px;
-            background: linear-gradient(135deg, #8B0000 0%, #C41E3A 25%, #FF6B35 50%, #FFA500 75%, #FFD700 100%);
-            z-index: 0;
+            height: 280px;
             pointer-events: none;
+            z-index: 0;
         }
 
         .profile-page {
