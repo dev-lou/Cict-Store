@@ -22,7 +22,8 @@ php artisan migrate --force 2>&1 || echo "Migration failed or DB unreachable - c
 
 # Try to prime caches for the homepage. This is a best-effort
 # operation that helps the app serve cached content when the DB is unreachable.
-php artisan app:prime-cache || true
+# Note: `app:prime-cache` command may not exist in every build; remove it to avoid build noise.
+# (Optional) If you add a prime-cache command in the future, re-enable it here.
 
 # Ensure storage & bootstrap cache permissions - best effort
 chown -R www-data:www-data /var/www/html || true
