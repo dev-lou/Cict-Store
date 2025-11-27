@@ -102,15 +102,23 @@ Copy these variables to your Render Dashboard → Environment section.
 | `AWS_URL` | `https://ppsdvdrnvquykxsmwjmg.supabase.co/storage/v1/object/public/products` | Public URL for images |
 | `AWS_USE_PATH_STYLE_ENDPOINT` | `true` | Required for Supabase S3 |
 
+### 🔴 REQUIRED - Neon Endpoint (For SNI Routing)
+
+| Variable | Value | Description |
+|----------|-------|--------------|
+| `DB_NEON_ENDPOINT` | `ep-XXXXX-XXXXX-pooler` | **Your Neon endpoint ID** (extract from host) |
+
+> **How to find your endpoint ID:** Look at your `DB_HOST` value. The endpoint is everything before `.aws.neon.tech`. For example, if your host is `ep-noisy-mud-a1r3q36o-pooler.ap-southeast-1.aws.neon.tech`, your endpoint is `ep-noisy-mud-a1r3q36o-pooler`.
+
 ### 🔴 REQUIRED - Session & Cache
 
 | Variable | Value | Description |
-|----------|-------|-------------|
-| `SESSION_DRIVER` | `database` | Store sessions in Neon DB |
+|----------|-------|--------------|
+| `SESSION_DRIVER` | `cookie` | Cookie-based sessions (most reliable) |
 | `SESSION_LIFETIME` | `1440` | Session lifetime in minutes (24h) |
 | `SESSION_SECURE_COOKIE` | `true` | HTTPS only cookies |
-| `CACHE_STORE` | `database` | Store cache in Neon DB |
-| `QUEUE_CONNECTION` | `database` | Store jobs in Neon DB |
+| `CACHE_STORE` | `file` | File-based cache (avoids DB transactions) |
+| `QUEUE_CONNECTION` | `sync` | Synchronous queue (simpler) |
 
 ### 🟡 OPTIONAL - Additional Settings
 
@@ -163,9 +171,17 @@ AWS_URL=https://ppsdvdrnvquykxsmwjmg.supabase.co/storage/v1/object/public/produc
 AWS_USE_PATH_STYLE_ENDPOINT=true
 
 # =============================================================================
-# SESSION, CACHE & QUEUE
+# NEON ENDPOINT (REQUIRED for SNI routing - extract from DB_HOST)
+# Example: If DB_HOST=ep-noisy-mud-a1r3q36o-pooler.ap-southeast-1.aws.neon.tech
+#          Then DB_NEON_ENDPOINT=ep-noisy-mud-a1r3q36o-pooler
 # =============================================================================
-SESSION_DRIVER=database
+DB_NEON_ENDPOINT=ep-XXXXX-XXXXX-pooler
+
+# =============================================================================
+# SESSION, CACHE & QUEUE
+# Using cookie/file to avoid DB transaction issues during high load
+# =============================================================================
+SESSION_DRIVER=cookie
 SESSION_LIFETIME=1440
 SESSION_ENCRYPT=false
 SESSION_PATH=/
@@ -173,8 +189,8 @@ SESSION_DOMAIN=null
 SESSION_SECURE_COOKIE=true
 SESSION_HTTP_ONLY=true
 SESSION_SAME_SITE=lax
-CACHE_STORE=database
-QUEUE_CONNECTION=database
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
 BROADCAST_CONNECTION=log
 
 # =============================================================================
