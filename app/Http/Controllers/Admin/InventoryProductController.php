@@ -203,11 +203,17 @@ class InventoryProductController extends Controller
                         'public_url' => $imagePath,
                     ]);
                 } else {
-                    \Log::warning('Supabase upload returned false, trying local fallback');
+                    \Log::warning('Supabase upload failed verification', [
+                        'put_returned' => $uploaded,
+                        'file_exists' => $fileExists,
+                    ]);
                     // Fallback to local storage
                     $localPath = $file->store('products', 'public');
                     $imagePath = '/storage/' . $localPath;
                     \Log::info('Image saved to local storage as fallback', ['path' => $imagePath]);
+                    
+                    // Add warning for admin
+                    session()->flash('warning', 'Image saved locally (Supabase upload failed). Images may be lost on redeploy.');
                 }
             } catch (\Exception $e) {
                 \Log::error('Supabase image upload failed', [
@@ -220,6 +226,9 @@ class InventoryProductController extends Controller
                     $localPath = $request->file('image')->store('products', 'public');
                     $imagePath = '/storage/' . $localPath;
                     \Log::info('Image saved to local storage as fallback after Supabase error', ['path' => $imagePath]);
+                    
+                    // Add warning for admin with error details
+                    session()->flash('warning', 'Supabase error: ' . $e->getMessage() . '. Image saved locally (may be lost on redeploy).');
                 } catch (\Exception $localError) {
                     \Log::error('Local storage fallback also failed', ['error' => $localError->getMessage()]);
                     $imagePath = null;
