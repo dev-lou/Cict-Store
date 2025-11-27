@@ -8,6 +8,7 @@ use App\Services\SupabaseFallback;
 use App\DTO\FallbackProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Throwable;
 
 class HomeController extends Controller
 {
@@ -57,7 +58,7 @@ class HomeController extends Controller
                             ->exists();
                     });
             });
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             logger()->warning('Unable to fetch featured products for HomeController due to DB connectivity: ' . $e->getMessage());
             try {
                 $fallback = new SupabaseFallback();
@@ -68,7 +69,7 @@ class HomeController extends Controller
                 } else {
                     $featuredProducts = Cache::get('home.featured_products', collect([]));
                 }
-            } catch (\Throwable $inner) {
+            } catch (Throwable $inner) {
                 logger()->warning('Supabase REST fallback for featured products failed: ' . $inner->getMessage());
                 $featuredProducts = Cache::get('home.featured_products', collect([]));
             }
