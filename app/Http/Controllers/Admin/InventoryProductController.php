@@ -168,23 +168,50 @@ class InventoryProductController extends Controller
                 $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
                 $storagePath = 'products/' . $filename;
 
-                // Upload to Supabase Storage using the 'supabase' disk
-                Storage::disk('supabase')->put($storagePath, file_get_contents($file), 'public');
-
-                // Build the public URL for the uploaded image
-                // Format: https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>/<path>
-                $imagePath = env('AWS_URL') . '/' . $storagePath;
-
-                \Log::info('Image uploaded to Supabase successfully', [
+                \Log::info('Attempting Supabase upload', [
+                    'filename' => $filename,
                     'storage_path' => $storagePath,
-                    'public_url' => $imagePath,
+                    'file_size' => $file->getSize(),
+                    'mime_type' => $file->getMimeType(),
+                    'disk' => 'supabase',
+                    'endpoint' => env('AWS_ENDPOINT'),
+                    'bucket' => env('AWS_BUCKET'),
                 ]);
+
+                // Upload to Supabase Storage using the 'supabase' disk
+                $uploaded = Storage::disk('supabase')->put($storagePath, file_get_contents($file), 'public');
+
+                if ($uploaded) {
+                    // Build the public URL for the uploaded image
+                    // Format: https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>/<path>
+                    $imagePath = env('AWS_URL') . '/' . $storagePath;
+
+                    \Log::info('Image uploaded to Supabase successfully', [
+                        'storage_path' => $storagePath,
+                        'public_url' => $imagePath,
+                    ]);
+                } else {
+                    \Log::warning('Supabase upload returned false, trying local fallback');
+                    // Fallback to local storage
+                    $localPath = $file->store('products', 'public');
+                    $imagePath = '/storage/' . $localPath;
+                    \Log::info('Image saved to local storage as fallback', ['path' => $imagePath]);
+                }
             } catch (\Exception $e) {
                 \Log::error('Supabase image upload failed', [
                     'error' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
                 ]);
-                $imagePath = null;
+                
+                // Try local storage as fallback
+                try {
+                    $localPath = $request->file('image')->store('products', 'public');
+                    $imagePath = '/storage/' . $localPath;
+                    \Log::info('Image saved to local storage as fallback after Supabase error', ['path' => $imagePath]);
+                } catch (\Exception $localError) {
+                    \Log::error('Local storage fallback also failed', ['error' => $localError->getMessage()]);
+                    $imagePath = null;
+                }
             }
         }
 
@@ -289,20 +316,42 @@ class InventoryProductController extends Controller
                 $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
                 $storagePath = 'products/' . $filename;
 
-                Storage::disk('supabase')->put($storagePath, file_get_contents($file), 'public');
-
-                // Build the public URL for the uploaded image
-                $validated['image_path'] = env('AWS_URL') . '/' . $storagePath;
-
-                \Log::info('Product image updated on Supabase', [
+                \Log::info('Attempting Supabase upload for update', [
+                    'filename' => $filename,
                     'storage_path' => $storagePath,
-                    'public_url' => $validated['image_path'],
+                    'file_size' => $file->getSize(),
+                    'disk' => 'supabase',
                 ]);
+
+                $uploaded = Storage::disk('supabase')->put($storagePath, file_get_contents($file), 'public');
+
+                if ($uploaded) {
+                    // Build the public URL for the uploaded image
+                    $validated['image_path'] = env('AWS_URL') . '/' . $storagePath;
+
+                    \Log::info('Product image updated on Supabase', [
+                        'storage_path' => $storagePath,
+                        'public_url' => $validated['image_path'],
+                    ]);
+                } else {
+                    \Log::warning('Supabase upload returned false during update, trying local fallback');
+                    $localPath = $file->store('products', 'public');
+                    $validated['image_path'] = '/storage/' . $localPath;
+                }
             } catch (\Exception $e) {
                 \Log::error('Supabase image upload failed during update', [
                     'error' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
                 ]);
+                
+                // Try local storage as fallback
+                try {
+                    $localPath = $request->file('image')->store('products', 'public');
+                    $validated['image_path'] = '/storage/' . $localPath;
+                    \Log::info('Image saved to local storage as fallback during update', ['path' => $validated['image_path']]);
+                } catch (\Exception $localError) {
+                    \Log::error('Local storage fallback also failed during update', ['error' => $localError->getMessage()]);
+                }
             }
         }
 

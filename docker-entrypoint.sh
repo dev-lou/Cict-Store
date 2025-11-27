@@ -9,12 +9,14 @@ if [ -f /var/www/html/public/build/.vite/manifest.json ] && [ ! -f /var/www/html
   echo "Copied Vite manifest from .vite/manifest.json to public/build/manifest.json"
 fi
 
-# Create necessary directories for file-based cache and sessions
+# Create necessary directories for file-based cache, sessions, and uploads
 echo "Creating storage directories..."
 mkdir -p /var/www/html/storage/framework/cache/data
 mkdir -p /var/www/html/storage/framework/sessions
 mkdir -p /var/www/html/storage/framework/views
 mkdir -p /var/www/html/storage/logs
+mkdir -p /var/www/html/storage/app/public/products
+mkdir -p /var/www/html/storage/app/public/profile-pictures
 mkdir -p /var/www/html/bootstrap/cache
 
 # Clear file caches quickly (no DB required)
