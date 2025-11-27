@@ -264,7 +264,7 @@
                                         @if (!empty($item->product->image_url))
                                             <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="order-item-image">
                                         @elseif ($item->product->image_path)
-                                            <img src="{{ Str::startsWith($item->product->image_path, 'http') ? $item->product->image_path : asset('storage/' . $item->product->image_path) }}" alt="{{ $item->product->name }}" class="order-item-image">
+                                            <img src="{{ Str::startsWith($item->product->image_path, 'http') ? $item->product->image_path : (Str::startsWith($item->product->image_path, '/storage') ? asset($item->product->image_path) : asset('storage/' . $item->product->image_path)) }}" alt="{{ $item->product->name }}" class="order-item-image">
                                         @else
                                             <div class="order-item-image flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
                                                 <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
