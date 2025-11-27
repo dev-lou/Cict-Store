@@ -1,7 +1,19 @@
 <x-app-layout>
     @section('title', $product->name . ' - ' . config('app.name', 'IGP Hub'))
 
-    <div style="background: #FFFAF1; min-height: 100vh; width: 100%;">
+    <!-- Decorative Red Header Banner (Behind Navbar) -->
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 280px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); z-index: 0; overflow: hidden;">
+        <!-- Decorative Pattern Overlay -->
+        <div style="position: absolute; inset: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"1\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        <!-- Gradient Fade at Bottom -->
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to top, #FFFAF1, transparent);"></div>
+        <!-- Decorative Circles -->
+        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+        <div style="position: absolute; top: 60px; right: 150px; width: 100px; height: 100px; background: rgba(255,255,255,0.03); border-radius: 50%;"></div>
+        <div style="position: absolute; top: 20px; left: 10%; width: 150px; height: 150px; background: rgba(255,255,255,0.04); border-radius: 50%;"></div>
+    </div>
+
+    <div style="background: #FFFAF1; min-height: 100vh; width: 100%; position: relative; z-index: 1;">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
 
@@ -16,15 +28,15 @@
 
         /* Breadcrumb */
         .breadcrumb-nav {
-            background: #FFFFFF;
-            border-bottom: 1px solid #F0F0F0;
+            background: transparent;
+            border-bottom: none;
             padding: 12px 0;
             margin-top: 110px;
             padding-top: 12px;
         }
 
         .breadcrumb-nav a {
-            color: #8B0000;
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
@@ -32,7 +44,15 @@
         }
 
         .breadcrumb-nav a:hover {
-            color: #A00000;
+            color: #FFFFFF;
+        }
+        
+        .breadcrumb-nav .breadcrumb-current {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .breadcrumb-nav .breadcrumb-separator {
+            color: rgba(255, 255, 255, 0.5);
         }
 
         /* Main Content */
@@ -398,10 +418,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <nav style="display: flex; gap: 8px; align-items: center; font-size: 14px;">
                 <a href="{{ route('home') }}">Home</a>
-                <span style="color: #CCC;">/</span>
+                <span class="breadcrumb-separator">/</span>
                 <a href="{{ route('shop.index') }}">Shop</a>
-                <span style="color: #CCC;">/</span>
-                <span style="color: #666666;">{{ $product->name }}</span>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">{{ $product->name }}</span>
             </nav>
         </div>
     </div>
