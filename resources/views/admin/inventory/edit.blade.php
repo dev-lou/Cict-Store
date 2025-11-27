@@ -1262,27 +1262,7 @@
             });
         });
 
-        // Cancel button
-        document.getElementById('cancelBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Discard Changes?',
-                text: 'Are you sure? Your changes will not be saved.',
-                icon: 'warning',
-                iconColor: '#f59e0b',
-                background: 'rgba(15, 23, 42, 0.98)',
-                color: '#e2e8f0',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: 'rgba(148, 163, 184, 0.2)',
-                confirmButtonText: 'Yes, Discard',
-                backdrop: 'rgba(0, 0, 0, 0.7)'
-            }).then(result => {
-                if (result.isConfirmed) {
-                    window.location.href = '{{ route("admin.inventory.index") }}';
-                }
-            });
-        });
+        // Cancel button - Note: Cancel is an <a> tag, no JS needed as it navigates directly
 
         // Show success/error alerts after page load
         window.addEventListener('load', function() {
