@@ -85,41 +85,7 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            // Note: We intentionally do NOT use 'url' => env('DATABASE_URL') here because
-            // Laravel's URL parser converts query params like `options=endpoint%3D...` into
-            // string config values, which breaks PDO (expects 'options' to be an array).
-            // Instead, we parse DATABASE_URL manually or use individual DB_* env vars.
-            // Prefer an IPv4 address if one is available because some hosts (e.g.,
-            // Supabase) return IPv6 addresses that may not be routable from certain
-            // environments (like Render) and could result in "Network is unreachable".
-            // Allow explicit override via DB_HOST_IPV4 env var.
-            'host' => env('DB_HOST_IPV4') ?: (
-                (function () {
-                    $host = env('DB_HOST', '127.0.0.1');
-                    // If the host is already an IPv4 address, return it directly.
-                    if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                        return $host;
-                    }
-
-                    // Try to resolve an A record (IPv4). `gethostbyname` returns the
-                    // input string if resolution fails - validate the result.
-                    // Prefer DNS A records (IPv4) over gethostbyname which returns
-                    // the original hostname when no A record exists on some systems.
-                    $dnsA = @dns_get_record($host, DNS_A);
-                    if (!empty($dnsA) && is_array($dnsA)) {
-                        $ip = $dnsA[0]['ip'] ?? null;
-                    } else {
-                        $ip = gethostbyname($host);
-                    }
-
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                        return $ip;
-                    }
-
-                    // Otherwise fall back to the configured host.
-                    return $host;
-                })()
-            ),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'neondb'),
             'username' => env('DB_USERNAME', 'neondb_owner'),
@@ -129,9 +95,9 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'require'),
-            // PDO options must be an array — never allow DATABASE_URL parsing to override this
+            // PDO options with connection timeout for reliability
             'options' => extension_loaded('pdo_pgsql') ? [
-                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_TIMEOUT => 10,                // 10 second connection timeout
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_STRINGIFY_FETCHES => false,
             ] : [],

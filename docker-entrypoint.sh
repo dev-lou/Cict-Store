@@ -7,10 +7,18 @@ if [ -f /var/www/html/public/build/.vite/manifest.json ] && [ ! -f /var/www/html
   echo "Copied Vite manifest from .vite/manifest.json to public/build/manifest.json"
 fi
 
-# Clear compiled view/cache to avoid old templates referencing missing manifest
-php artisan view:clear || true
+# Clear ALL caches to ensure fresh config is used
+echo "Clearing all caches..."
 php artisan config:clear || true
 php artisan cache:clear || true
+php artisan view:clear || true
+php artisan route:clear || true
+rm -f bootstrap/cache/config.php || true
+rm -f bootstrap/cache/routes-v7.php || true
+
+# Log current config for debugging
+echo "Session driver: $(php artisan tinker --execute=\"echo config('session.driver');\" 2>/dev/null || echo 'unknown')"
+echo "Cache store: $(php artisan tinker --execute=\"echo config('cache.default');\" 2>/dev/null || echo 'unknown')"
 
 # Run database migrations (if DB is reachable)
 echo "Attempting database migrations..."
