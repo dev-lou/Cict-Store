@@ -14,8 +14,8 @@ class GeminiChatService
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key');
-        // Use gemini-1.5-flash (gemini-pro is deprecated)
-        $this->model = config('services.gemini.model', 'gemini-2.0-flash');
+        // Use gemini-2.0-flash-exp (Gemini 2.0 Flash experimental model)
+        $this->model = config('services.gemini.model', 'gemini-2.0-flash-exp');
         // Using v1beta API endpoint for newer models
         $this->apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent";
     }
@@ -82,10 +82,18 @@ class GeminiChatService
                     ]
                 ]);
 
+            Log::info('Gemini API request sent', [
+                'model' => $this->model,
+                'url' => $this->apiUrl,
+                'status' => $response->status(),
+            ]);
+
             if (!$response->successful()) {
                 Log::error('Gemini API error', [
                     'status' => $response->status(),
-                    'body' => $response->body()
+                    'body' => $response->body(),
+                    'model' => $this->model,
+                    'api_key_set' => !empty($this->apiKey),
                 ]);
                 
                 return [
