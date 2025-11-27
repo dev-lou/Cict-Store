@@ -167,7 +167,7 @@ class InventoryProductController extends Controller
             try {
                 $file = $request->file('image');
                 $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-                $storagePath = 'products/' . $filename;
+                $storagePath = $filename;  // Store directly in bucket root since bucket is already 'products'
 
                 \Log::info('Attempting Supabase upload', [
                     'filename' => $filename,
@@ -331,7 +331,7 @@ class InventoryProductController extends Controller
                 // Upload new image to Supabase Storage
                 $file = $request->file('image');
                 $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-                $storagePath = 'products/' . $filename;
+                $storagePath = $filename;  // Store directly in bucket root since bucket is already 'products'
 
                 \Log::info('Attempting Supabase upload for update', [
                     'filename' => $filename,
