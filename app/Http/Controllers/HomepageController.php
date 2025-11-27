@@ -42,7 +42,7 @@ class HomepageController extends Controller
                     $remote = $fallback->getFeaturedProducts(6);
                     if ($remote && $remote->isNotEmpty()) {
                         // Map to fallback DTOs
-                        $featuredProducts = $remote->map(fn($p) => new \App\DTO\FallbackProduct($p));
+                        $featuredProducts = $remote->map(fn($p) => new FallbackProduct($p));
                         Cache::put('homepage.featured_products', $remote, now()->addMinutes(10));
                     } else {
                         // Try to use cached data even if empty; otherwise return empty collection

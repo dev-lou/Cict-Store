@@ -50,7 +50,7 @@ class Handler extends ExceptionHandler
                 // Try to rollback the aborted transaction
                 try {
                     DB::rollBack();
-                } catch (\Throwable $rollbackError) {
+                } catch (Throwable $rollbackError) {
                     // Ignore rollback errors - connection may already be reset
                 }
                 

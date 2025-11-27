@@ -63,7 +63,7 @@ class HomeController extends Controller
                 $fallback = new SupabaseFallback();
                 $remote = $fallback->getFeaturedProducts(8);
                 if ($remote && $remote->isNotEmpty()) {
-                    $featuredProducts = $remote->map(fn($p) => new \App\DTO\FallbackProduct($p));
+                    $featuredProducts = $remote->map(fn($p) => new FallbackProduct($p));
                     Cache::put('home.featured_products', $remote, now()->addMinutes(10));
                 } else {
                     $featuredProducts = Cache::get('home.featured_products', collect([]));
