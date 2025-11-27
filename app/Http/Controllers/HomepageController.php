@@ -7,6 +7,7 @@ use App\Services\SupabaseFallback;
 use App\DTO\FallbackProduct;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
+use Throwable;
 
 class HomepageController extends Controller
 {
@@ -34,7 +35,7 @@ class HomepageController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->take(6)
                     ->get();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 logger()->warning('Unable to fetch featured products from DB: ' . $e->getMessage());
                 // Try to use the Supabase REST fallback if configured
                 try {
@@ -48,7 +49,7 @@ class HomepageController extends Controller
                         // Try to use cached data even if empty; otherwise return empty collection
                         $featuredProducts = Cache::get('homepage.featured_products', collect([]));
                     }
-                } catch (\Throwable $inner) {
+                } catch (Throwable $inner) {
                     logger()->warning('Supabase REST fallback failed: ' . $inner->getMessage());
                     $featuredProducts = Cache::get('homepage.featured_products', collect([]));
                 }
