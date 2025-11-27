@@ -139,26 +139,27 @@ class InventoryProductController extends Controller
      */
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
-        // Log incoming request data for debugging
-        \Log::info('Product Store Request', [
-            'has_image' => $request->hasFile('image'),
-            'image_file' => $request->file('image') ? $request->file('image')->getClientOriginalName() : null,
-            'all_data' => $request->except(['image']),
-        ]);
+        try {
+            // Log incoming request data for debugging
+            \Log::info('Product Store Request', [
+                'has_image' => $request->hasFile('image'),
+                'image_file' => $request->file('image') ? $request->file('image')->getClientOriginalName() : null,
+                'all_data' => $request->except(['image']),
+            ]);
 
-        // Validate product input
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|unique:products,slug|max:255',
-            'description' => 'nullable|string',
-            'base_price' => 'required|numeric|min:0',
-            'status' => 'required|in:active,inactive',
-            'image' => 'nullable|image|mimes:jpeg,png,gif,webp|max:5120', // 5MB max
-            'variants' => 'required|array|min:1',
-            'variants.*.name' => 'required|string|max:255',
-            'variants.*.stock_quantity' => 'required|integer|min:0',
-            'variants.*.price_modifier' => 'nullable|numeric|min:0',
-        ]);
+            // Validate product input
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'slug' => 'required|string|unique:products,slug|max:255',
+                'description' => 'nullable|string',
+                'base_price' => 'required|numeric|min:0',
+                'status' => 'required|in:active,inactive',
+                'image' => 'nullable|image|mimes:jpeg,png,gif,webp|max:5120', // 5MB max
+                'variants' => 'required|array|min:1',
+                'variants.*.name' => 'required|string|max:255',
+                'variants.*.stock_quantity' => 'required|integer|min:0',
+                'variants.*.price_modifier' => 'nullable|numeric|min:0',
+            ]);
 
         // Handle image upload to Supabase Storage
         $imagePath = null;
@@ -240,6 +241,21 @@ class InventoryProductController extends Controller
 
         return redirect()->route('admin.inventory.index')
             ->with('success', 'Product created successfully with ' . count($validated['variants']) . ' variant(s)!');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e; // Let validation errors bubble up normally
+        } catch (\Exception $e) {
+            \Log::error('Product store failed', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to create product: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -272,6 +288,7 @@ class InventoryProductController extends Controller
      */
     public function update(Request $request, Product $product): \Illuminate\Http\RedirectResponse
     {
+        try {
         \Log::info('Update method called for product', ['product_id' => $product->id, 'product_name' => $product->name]);
         \Log::info('Request data', ['all_data' => $request->all()]);
         
@@ -423,6 +440,17 @@ class InventoryProductController extends Controller
 
         return redirect()->route('admin.inventory.index')
             ->with('success', 'Product and variants updated successfully!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            \Log::error('Product update failed', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->except(['image']),
+            ]);
+            return redirect()->back()->withInput()->with('error', 'Failed to update product: ' . $e->getMessage());
+        }
     }
 
     /**
