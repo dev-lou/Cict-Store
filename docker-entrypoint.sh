@@ -17,8 +17,20 @@ rm -f bootstrap/cache/config.php || true
 rm -f bootstrap/cache/routes-v7.php || true
 
 # Run database migrations (if DB is reachable)
-echo "Attempting database migrations..."
-php artisan migrate --force 2>&1 || echo "Migration failed or DB unreachable - continuing anyway"
+# If tables already exist (e.g., imported from another DB), this is expected to fail
+# We check if migrations table exists; if not, we assume fresh DB and run migrations
+echo "Checking database state..."
+MIGRATE_STATUS=$(php artisan migrate:status 2>&1) || true
+
+if echo "$MIGRATE_STATUS" | grep -q "Migration table not found"; then
+    echo "Fresh database detected, running migrations..."
+    php artisan migrate --force 2>&1 || echo "Migration failed - continuing anyway"
+elif echo "$MIGRATE_STATUS" | grep -q "Pending"; then
+    echo "Pending migrations found, running them..."
+    php artisan migrate --force 2>&1 || echo "Migration failed - continuing anyway"
+else
+    echo "Database already migrated or tables exist - skipping migrations"
+fi
 
 # Try to prime caches for the homepage. This is a best-effort
 # operation that helps the app serve cached content when the DB is unreachable.
