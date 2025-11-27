@@ -1,6 +1,6 @@
 <x-app-layout :title="'My Profile - CICT Merch'">
     <!-- Decorative Red Header Banner (Behind Navbar) -->
-    <div style="position: fixed; top: 0; left: 0; right: 0; height: 280px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); z-index: 0; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 280px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); z-index: 0; overflow: hidden;">
         <!-- Decorative Pattern Overlay -->
         <div style="position: absolute; inset: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
         <!-- Gradient Fade at Bottom -->
@@ -48,11 +48,12 @@
         }
 
         .profile-page {
-            background: var(--cream);
+            background: transparent;
             min-height: 100vh;
             padding-bottom: 80px;
             padding-top: 140px;
             position: relative;
+            z-index: 1;
         }
 
         .profile-header {
