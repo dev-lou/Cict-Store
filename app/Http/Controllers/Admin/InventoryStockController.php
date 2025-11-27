@@ -8,6 +8,7 @@ use App\Models\ProductVariant;
 use App\Models\InventoryHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class InventoryStockController extends Controller
 {
@@ -52,6 +53,10 @@ class InventoryStockController extends Controller
             ]);
 
             DB::commit();
+
+            // Clear homepage caches so changes are reflected immediately
+            Cache::forget('homepage.featured_products');
+            Cache::forget('home.featured_products');
 
             return redirect()->route('admin.inventory.index')
                 ->with('success', "Stock-in completed: +{$request->quantity} units added to {$product->name} ({$variant->name})");
@@ -109,6 +114,10 @@ class InventoryStockController extends Controller
             ]);
 
             DB::commit();
+
+            // Clear homepage caches so changes are reflected immediately
+            Cache::forget('homepage.featured_products');
+            Cache::forget('home.featured_products');
 
             return redirect()->route('admin.inventory.index')
                 ->with('success', "Stock-out completed: -{$request->quantity} units removed from {$product->name} ({$variant->name})");
