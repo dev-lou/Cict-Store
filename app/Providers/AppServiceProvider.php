@@ -24,63 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Runtime DB connectivity check - fallback to file sessions if DB unreachable
-        try {
-            // Attempt a simple connection query
-            DB::connection()->getPdo();
-        } catch (\Throwable $e) {
-            // If the error mentions IPv6 or Network is unreachable, attempt an IPv4 re-resolve
-            $errorMsg = $e->getMessage() ?: '';
-            logger()->warning('Database connection failed during boot: ' . $errorMsg);
-
-            $attemptedRestore = false;
-            if (str_contains($errorMsg, 'Network is unreachable') || str_contains($errorMsg, 'connect') || str_contains($errorMsg, 'Connection timed out')) {
-                try {
-                    $envHost = env('DB_HOST');
-                    // Log DNS A and AAAA records for easier diagnosis when running on the host
-                    try {
-                        $a = @dns_get_record($envHost, DNS_A);
-                        $aaaa = @dns_get_record($envHost, DNS_AAAA);
-                        logger()->info('DB host DNS records', ['host' => $envHost, 'A' => array_map(fn($x) => $x['ip'] ?? null, $a ?: []), 'AAAA' => array_map(fn($x) => $x['ipv6'] ?? null, $aaaa ?: [])]);
-                    } catch (\Throwable $dnsEx) {
-                        logger()->warning('DNS lookup failed during boot: ' . $dnsEx->getMessage());
-                    }
-                    if ($envHost && !filter_var($envHost, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                        $dnsA = @dns_get_record($envHost, DNS_A);
-                        if (!empty($dnsA) && is_array($dnsA)) {
-                            $resolved = $dnsA[0]['ip'] ?? null;
-                        } else {
-                            $resolved = gethostbyname($envHost);
-                        }
-                        if ($resolved && filter_var($resolved, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                            logger()->info('Resolved DB host to IPv4 during boot. Updating runtime DB host.', ['host' => $envHost, 'ipv4' => $resolved]);
-                            config(['database.connections.pgsql.host' => $resolved]);
-                            // purge existing connection and attempt to reconnect
-                            DB::purge('pgsql');
-                            try {
-                                DB::reconnect('pgsql');
-                                DB::connection('pgsql')->getPdo();
-                                // If successful, don't fallback to file sessions
-                                $attemptedRestore = true;
-                                logger()->info('Reconnected to DB using IPv4 host during boot.');
-                            } catch (\Throwable $reconnectException) {
-                                logger()->warning('Reconnecting with IPv4 host failed: ' . $reconnectException->getMessage());
-                            }
-                        }
-                    }
-                } catch (\Throwable $inner) {
-                    logger()->warning('Failed to attempt IPv4 resolution for DB host: '.$inner->getMessage());
-                }
-            }
-
-            if (! $attemptedRestore) {
-                logger()->warning('Falling back to file session driver (DB unavailable): '.$errorMsg);
-                // Set session driver to file so app remains operational (sessions won't need DB)
-                config(['session.driver' => 'file']);
-                // Also fallback cache to file to avoid database cache queries if configured
-                config(['cache.default' => 'file']);
-            }
-        }
+        // NOTE: DB connection checks are now handled lazily (on first actual query).
+        // This prevents boot-time blocking when database is temporarily unreachable.
+        // With Neon PostgreSQL (IPv4), the database should always be reachable from Render.
         // Ensure pgsql 'options' is always an array to prevent TypeErrors
         // when a `DATABASE_URL` query param named `options` is present
         // (Laravel's parser sets `options` to a string which conflicts
@@ -113,21 +59,8 @@ class AppServiceProvider extends ServiceProvider
         // Define authorization gates
         $this->defineAuthorizationGates();
 
-        // Share order counts with all views via View Composer (guarded by try/catch)
-        // Skip if we already know DB is unavailable (set by middleware or earlier in boot)
+        // Share order counts with all views via View Composer
         View::composer('*', function ($view) {
-            // Check if DB was marked as unavailable (by middleware setting session driver to file)
-            if (config('session.driver') === 'file' && env('SESSION_DRIVER') === 'database') {
-                // DB is likely unavailable, skip queries and use defaults
-                $view->with([
-                    'pendingOrderCount' => 0,
-                    'processingOrderCount' => 0,
-                    'completedOrderCount' => 0,
-                    'totalOrderCount' => 0,
-                ]);
-                return;
-            }
-            
             try {
                 $pendingOrderCount = Order::where('status', 'pending')->count();
                 $processingOrderCount = Order::where('status', 'processing')->count();
@@ -141,10 +74,8 @@ class AppServiceProvider extends ServiceProvider
                     'totalOrderCount' => $totalOrderCount,
                 ]);
             } catch (\Throwable $e) {
-                // When DB is unavailable or misconfigured (e.g., during migrations, CI, or dev),
-                // don't crash the app; provide defaults and log the issue.
-                logger()->warning('Order counts view composer failed to query database: '.$e->getMessage());
-
+                // Fallback to zero counts if database query fails
+                logger()->warning('Order counts view composer failed: ' . $e->getMessage());
                 $view->with([
                     'pendingOrderCount' => 0,
                     'processingOrderCount' => 0,
