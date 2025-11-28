@@ -50,7 +50,8 @@ SELECT * FROM announcements;
 
 ### Option B: Using pg_dump (if you have psql installed)
 ```bash
-pg_dump "postgresql://postgres:vincekie123@db.ppsdvdrnvquykxsmwjmg.supabase.co:5432/postgres" > supabase_backup.sql
+# Remove credential examples before running or replace with placeholder values
+pg_dump "postgresql://postgres:YOUR_DATABASE_PASSWORD@db.YOUR_PROJECT_REF.supabase.co:5432/postgres" > supabase_backup.sql
 ```
 
 ---
@@ -73,7 +74,7 @@ Copy these variables to your Render Dashboard → Environment section.
 |----------|-------|-------------|
 | `APP_NAME` | `Ctrl+P` | Application name |
 | `APP_ENV` | `production` | Environment |
-| `APP_KEY` | `base64:uJZPhoPFaV5SknwBe9ww5IcGrzQl0BBcBaO5TrrDNB4=` | Laravel encryption key |
+| `APP_KEY` | `base64:YOUR_APP_KEY` | Laravel encryption key |
 | `APP_DEBUG` | `false` | Disable debug in production |
 | `APP_URL` | `https://ctrl-p.onrender.com` | Your Render URL |
 
@@ -95,7 +96,7 @@ Copy these variables to your Render Dashboard → Environment section.
 |----------|-------|-------------|
 | `FILESYSTEM_DISK` | `supabase` | Use Supabase for file storage |
 | `AWS_ACCESS_KEY_ID` | `ppsdvdrnvquykxsmwjmg` | Supabase project ref |
-| `AWS_SECRET_ACCESS_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwc2R2ZHJudnF1eWt4c213am1nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDE0Mjg5OCwiZXhwIjoyMDc5NzE4ODk4fQ.mrHT31NR-s1wNeQOUFAIgCTHXVa9NotPMoDDR6CR7kE` | Supabase service role key |
+| `AWS_SECRET_ACCESS_KEY` | `YOUR_SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key |
 | `AWS_DEFAULT_REGION` | `ap-southeast-1` | Supabase region |
 | `AWS_BUCKET` | `products` | Storage bucket name |
 | `AWS_ENDPOINT` | `https://ppsdvdrnvquykxsmwjmg.supabase.co/storage/v1/s3` | Supabase S3 endpoint |
@@ -128,7 +129,7 @@ Copy these variables to your Render Dashboard → Environment section.
 | `LOG_CHANNEL` | `stack` | Logging channel |
 | `LOG_LEVEL` | `warning` | Only log warnings and errors |
 | `MAIL_MAILER` | `log` | Log emails (no actual sending) |
-| `GEMINI_API_KEY` | `AIzaSyBcouFU0SiONOEKb5fA3Z-lg-cf_dCv7Zg` | Gemini AI API key |
+| `GEMINI_API_KEY` | `YOUR_GEMINI_API_KEY` | Gemini AI API key |
 | `GEMINI_MODEL` | `gemini-2.0-flash` | Gemini model to use |
 
 ---
@@ -141,7 +142,7 @@ Copy these variables to your Render Dashboard → Environment section.
 # =============================================================================
 APP_NAME=Ctrl+P
 APP_ENV=production
-APP_KEY=base64:uJZPhoPFaV5SknwBe9ww5IcGrzQl0BBcBaO5TrrDNB4=
+APP_KEY=base64:YOUR_APP_KEY
 APP_DEBUG=false
 APP_URL=https://ctrl-p.onrender.com
 APP_LOCALE=en
@@ -163,7 +164,7 @@ DB_SSLMODE=require
 # =============================================================================
 FILESYSTEM_DISK=supabase
 AWS_ACCESS_KEY_ID=ppsdvdrnvquykxsmwjmg
-AWS_SECRET_ACCESS_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwc2R2ZHJudnF1eWt4c213am1nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDE0Mjg5OCwiZXhwIjoyMDc5NzE4ODk4fQ.mrHT31NR-s1wNeQOUFAIgCTHXVa9NotPMoDDR6CR7kE
+AWS_SECRET_ACCESS_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
 AWS_DEFAULT_REGION=ap-southeast-1
 AWS_BUCKET=products
 AWS_ENDPOINT=https://ppsdvdrnvquykxsmwjmg.supabase.co/storage/v1/s3
@@ -215,7 +216,7 @@ MAIL_FROM_NAME=Ctrl+P
 # =============================================================================
 # EXTERNAL APIs
 # =============================================================================
-GEMINI_API_KEY=AIzaSyBcouFU0SiONOEKb5fA3Z-lg-cf_dCv7Zg
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 GEMINI_MODEL=gemini-2.0-flash
 
 # =============================================================================

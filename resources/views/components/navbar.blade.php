@@ -5,10 +5,12 @@
     closeMobileMenu() {
         this.mobileMenuOpen = false;
         document.body.style.overflow = '';
+        try { const c = document.getElementById('cict-chatbot'); if (c) c.style.display = ''; } catch(e) {}
     },
     openMobileMenu() {
         this.mobileMenuOpen = true;
         document.body.style.overflow = 'hidden';
+        try { const c = document.getElementById('cict-chatbot'); if (c) c.style.display = 'none'; } catch(e) {}
     }
 }" x-cloak>
 
@@ -238,6 +240,13 @@
             max-height: calc(100vh - 140px) !important;
             overflow-y: auto !important;
         }
+        /* Larger touchable areas inside notification items */
+        .notifications-dropdown .px-4.py-3 {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+        }
     }
 </style>
 
@@ -320,6 +329,8 @@
                 >
                     <button
                         @click="open = !open"
+                        :aria-expanded="open"
+                        aria-controls="notifications-panel"
                         class="relative p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target"
                         title="Notifications"
                     >
@@ -345,7 +356,8 @@
                         x-transition:leave="transition ease-in duration-75"
                         x-transition:leave-start="opacity-100 scale-100"
                         x-transition:leave-end="opacity-0 scale-95"
-                        class="notifications-dropdown absolute right-0 mt-3 rounded-xl shadow-xl z-50 overflow-hidden"
+                        id="notifications-panel" class="notifications-dropdown absolute right-0 mt-3 rounded-xl shadow-xl z-50 overflow-hidden"
+                        role="dialog" aria-label="Notifications" :aria-hidden="!open"
                         style="width: min(480px, calc(100vw - 32px)); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); display: none;"
                     >
                         <div class="px-4 py-3 flex items-center justify-between" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); background: rgba(218, 165, 32, 0.1);">
@@ -354,7 +366,7 @@
                                 <span x-cloak x-show="unreadCount > 0" class="text-xs font-semibold text-white px-2 py-1 rounded-full" style="background: #ff0000;" x-text="unreadCount + ' new'"></span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button @click="open = false" class="p-1 rounded-md text-black hover:bg-black/5" title="Close notifications">✕</button>
+                                <button @click="open = false" class="p-2 rounded-md text-black hover:bg-black/5 touch-target" title="Close notifications" aria-label="Close notifications">✕</button>
                             </div>
                         </div>
 
@@ -368,7 +380,7 @@
                                 </div>
                             </template>
 
-                            <template x-for="(notification, index) in notifications.slice(0, 2)" :key="notification.id">
+                            <template x-for="(notification, index) in notifications.slice(0, 6)" :key="notification.id">
                                 <div 
                                     @click="markAsRead(notification.id); open = false; window.location.href = notification.link || '#'"
                                     class="px-4 py-3 hover:bg-black/5 cursor-pointer transition-colors"
@@ -441,7 +453,7 @@
                         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                         x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
                         class="absolute right-0 w-64 rounded-xl shadow-2xl z-50 overflow-hidden"
-                        style="top: calc(100% + 0.75rem); background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(139, 0, 0, 0.1); display: none;"
+                        style="top: calc(100% + 0.75rem); background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(139, 0, 0, 0.1); display: none; z-index: 2147483649 !important;"
                         @click="if ($event.target.closest('a, button, form')) setTimeout(() => menuOpen = false, 100)"
                     >
                         <!-- User Info Header -->

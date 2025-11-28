@@ -113,8 +113,8 @@ FILESYSTEM_DISK=supabase
 ### Example with real values:
 
 ```env
-AWS_ACCESS_KEY_ID=abcdefghijklmnop
-AWS_SECRET_ACCESS_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+AWS_ACCESS_KEY_ID=YOUR_PROJECT_REF
+AWS_SECRET_ACCESS_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
 AWS_DEFAULT_REGION=ap-southeast-1
 AWS_BUCKET=products
 AWS_ENDPOINT=https://abcdefghijklmnop.supabase.co/storage/v1/s3

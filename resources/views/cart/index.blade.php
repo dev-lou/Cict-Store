@@ -334,6 +334,13 @@
                 align-items: center;
                 padding: 0 8px;
             }
+            /* Ensure the order summary card is not sticky on mobile to avoid occlusion with bottom sticky checkout */
+            .order-summary-card {
+                position: static !important;
+                top: auto !important;
+                width: 100% !important;
+                margin-bottom: 16px !important;
+            }
         }
 
         .touch-target {

@@ -50,3 +50,36 @@ public/gold.gif
 
 # Vercel
 .vercel
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# .env files
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+.env.backup
+
+# Composer / vendor
+/vendor/
+
+# Laravel storage & logs
+/storage/logs/
+/storage/*.key
+public/storage
+
+# Misc
+*.cache
+*.sqlite
+coverage/
+.php-cs-fixer.cache
+.phpunit.result.cache
+/.parcel-cache
+/.idea
+/.vscode
+/.env
