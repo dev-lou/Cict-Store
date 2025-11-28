@@ -174,6 +174,8 @@ composer test
 
 Add CI (GitHub Actions) to run `composer test`, style checks, and a secret scanning job as part of PR checks.
 
+> NOTE: Active PHPUnit tests were archived to `archived-tests/`. Ad-hoc `scripts/test_*.php` were renamed to `*.example.php` to discourage committing real credentials — copy the example, set env vars, then run.
+
 ---
 
 
