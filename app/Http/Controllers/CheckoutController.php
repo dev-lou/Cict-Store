@@ -184,12 +184,19 @@ class CheckoutController extends Controller
         try {
             \DB::beginTransaction();
             
-            \Log::info('Creating order', ['user_id' => auth()->id(), 'total' => $total, 'subtotal' => $subtotal]);
+            $user = auth()->user();
+            \Log::info('Creating order', ['user_id' => $user->id, 'total' => $total, 'subtotal' => $subtotal]);
+            
             $order = Order::create([
-                'user_id' => auth()->id(),
-                'order_number' => 'ORD-' . date('YmdHis') . '-' . auth()->id(),
+                'user_id' => $user->id,
+                'order_number' => 'ORD-' . date('YmdHis') . '-' . $user->id,
                 'status' => 'pending',
+                'customer_name' => $user->name,
+                'customer_email' => $user->email,
+                'payment_method' => 'cash',
+                'payment_status' => 'pending',
                 'subtotal' => $subtotal,
+                'discount' => 0,
                 'tax' => 0,
                 'total' => $total,
                 'notes' => $validated['notes'] ?? null,
