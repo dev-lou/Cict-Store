@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\AuditableTrait;
 use App\Services\NotificationService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Order Model
+ * 
+ * Note: AuditableTrait removed to prevent transaction conflicts during order creation.
+ * Order history is tracked via order status changes instead.
  *
  * @property int $id
  * @property int $user_id
@@ -27,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Order extends Model
 {
-    use HasFactory, AuditableTrait;
+    use HasFactory;
 
     protected $fillable = [
         'user_id',
