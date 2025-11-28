@@ -34,15 +34,34 @@ class Order extends Model
         'order_number',
         'status',
         'assigned_staff_id',
+        'customer_name',
+        'customer_email',
+        'customer_phone',
+        'shipping_address',
+        'shipping_city',
+        'shipping_postal_code',
+        'payment_method',
+        'payment_status',
         'subtotal',
+        'discount',
         'tax',
         'total',
         'notes',
         'completed_at',
     ];
 
+    /**
+     * Default attribute values for pickup-based system.
+     */
+    protected $attributes = [
+        'payment_method' => 'cash',
+        'payment_status' => 'pending',
+        'discount' => 0,
+    ];
+
     protected $casts = [
         'subtotal' => 'decimal:2',
+        'discount' => 'decimal:2',
         'tax' => 'decimal:2',
         'total' => 'decimal:2',
         'completed_at' => 'datetime',
