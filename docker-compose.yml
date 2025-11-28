@@ -39,7 +39,7 @@ services:
       
       # Gemini AI
       - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - GEMINI_MODEL=gemini-2.0-flash
+      - GEMINI_MODEL=gemini-1.5-flash
     volumes:
       # Mount storage for persistent data (optional for local testing)
       - ./storage/app:/var/www/html/storage/app

@@ -129,7 +129,7 @@ Copy these variables to your Render Dashboard → Environment section.
 | `LOG_LEVEL` | `warning` | Only log warnings and errors |
 | `MAIL_MAILER` | `log` | Log emails (no actual sending) |
 | `GEMINI_API_KEY` | `AIzaSyBcouFU0SiONOEKb5fA3Z-lg-cf_dCv7Zg` | Gemini AI API key |
-| `GEMINI_MODEL` | `gemini-2.0-flash` | Gemini model to use |
+| `GEMINI_MODEL` | `gemini-1.5-flash` | Gemini model to use |
 
 ---
 
@@ -216,7 +216,7 @@ MAIL_FROM_NAME=Ctrl+P
 # EXTERNAL APIs
 # =============================================================================
 GEMINI_API_KEY=AIzaSyBcouFU0SiONOEKb5fA3Z-lg-cf_dCv7Zg
-GEMINI_MODEL=gemini-2.0-flash
+GEMINI_MODEL=gemini-1.5-flash
 
 # =============================================================================
 # FRONTEND

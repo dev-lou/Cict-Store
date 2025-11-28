@@ -130,8 +130,14 @@ class CheckoutController extends Controller
         try {
             foreach ($cart as $item) {
                 \Log::info('Processing cart item', ['item' => $item]);
-            $product = $products->get($item['product_id']);
-            $variant = $item['variant_id'] ? $variants->get($item['variant_id']) : null;
+                $product = $products->get($item['product_id']);
+                $variant = $item['variant_id'] ? $variants->get($item['variant_id']) : null;
+
+                if (!$product) {
+                    \Log::warning('Product not found in cart', ['product_id' => $item['product_id']]);
+                    return redirect()->route('cart.index')
+                        ->with('error', 'One of the products in your cart is no longer available. Please remove it and try again.');
+                }
 
                 if ($product) {
                 // Validate stock availability
