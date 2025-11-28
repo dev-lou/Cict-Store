@@ -34,6 +34,16 @@ chown -R www-data:www-data /var/www/html/bootstrap/cache || true
 chmod -R 775 /var/www/html/storage || true
 chmod -R 775 /var/www/html/bootstrap/cache || true
 
+# Ensure a laravel.log file exists and is writable; otherwise, fall back to errorlog channel
+echo "Ensuring laravel.log is writable..."
+touch /var/www/html/storage/logs/laravel.log || true
+chown www-data:www-data /var/www/html/storage/logs/laravel.log || true
+chmod 664 /var/www/html/storage/logs/laravel.log || true
+if [ ! -w /var/www/html/storage/logs/laravel.log ]; then
+  echo "WARNING: storage/logs/laravel.log is not writable; switching LOG_CHANNEL to 'errorlog' fallback"
+  export LOG_CHANNEL=errorlog
+fi
+
 # Run migrations in background with DB readiness check to not block startup
 # This allows Apache to start immediately and pass health checks
 echo "Starting background tasks..."
