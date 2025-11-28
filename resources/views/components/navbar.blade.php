@@ -231,7 +231,7 @@
             margin: 0 !important;
             border-radius: 0 !important;
             max-width: 100vw !important;
-            z-index: 60 !important;
+            z-index: 2147483648 !important; /* ensure notifications appear above chat widget */
             box-shadow: 0 8px 24px rgba(0,0,0,0.18) !important;
         }
         .notifications-dropdown .overflow-y-auto {

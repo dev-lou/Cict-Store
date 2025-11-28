@@ -77,6 +77,21 @@
         #cict-chat-messages::-webkit-scrollbar-thumb:hover {
             background: rgba(139, 0, 0, 0.3);
         }
+        /* On mobile reduce area and avoid overlapping notification dropdown */
+        @media (max-width: 768px) {
+            #cict-chatbot {
+                right: 8px !important;
+                bottom: 8px !important;
+            }
+            #cict-chatbot-window {
+                right: 8px !important;
+                left: 8px !important;
+                width: calc(100% - 16px) !important;
+                bottom: 8px !important;
+                border-radius: 12px !important;
+                height: calc(100vh - 120px) !important;
+            }
+        }
         [x-cloak] { display: none !important; }
         
         /* Scroll Reveal Animations */
