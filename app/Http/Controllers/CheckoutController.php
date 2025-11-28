@@ -180,14 +180,13 @@ class CheckoutController extends Controller
 
         $total = $subtotal;
 
-        // Create order with database transaction
+        // Create order WITHOUT transaction to avoid PostgreSQL transaction issues
         try {
-            \DB::beginTransaction();
-            
             $user = auth()->user();
             \Log::info('Creating order', ['user_id' => $user->id, 'total' => $total, 'subtotal' => $subtotal]);
             
-            $order = Order::create([
+            // Use direct DB insert to bypass any model event issues
+            $orderId = \DB::table('orders')->insertGetId([
                 'user_id' => $user->id,
                 'order_number' => 'ORD-' . date('YmdHis') . '-' . $user->id,
                 'status' => 'pending',
@@ -200,33 +199,37 @@ class CheckoutController extends Controller
                 'tax' => 0,
                 'total' => $total,
                 'notes' => $validated['notes'] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
-            \Log::info('Order created', ['order_id' => $order->id, 'order_number' => $order->order_number]);
+            \Log::info('Order created', ['order_id' => $orderId]);
             
-            // Create order items
+            // Create order items using direct DB insert
             foreach ($order_items as $itemData) {
-                OrderItem::create([
-                    'order_id' => $order->id,
+                \DB::table('order_items')->insert([
+                    'order_id' => $orderId,
                     'product_id' => $itemData['product_id'],
                     'product_variant_id' => $itemData['product_variant_id'],
                     'quantity' => $itemData['quantity'],
                     'unit_price' => $itemData['unit_price'],
                     'total_price' => $itemData['total_price'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
-                \Log::info('Order item created', ['order_id' => $order->id, 'product_id' => $itemData['product_id'], 'quantity' => $itemData['quantity']]);
+                \Log::info('Order item created', ['order_id' => $orderId, 'product_id' => $itemData['product_id']]);
             }
-            
-            \DB::commit();
             
             // Clear cart
             session()->forget('cart');
+
+            // Get the order for redirect
+            $order = Order::find($orderId);
 
             return redirect()->route('orders.show', $order)
                 ->with('success', 'Order placed successfully! Your order has been received.');
                 
         } catch (\Throwable $e) {
-            \DB::rollBack();
             \Log::error('Failed to create order', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
