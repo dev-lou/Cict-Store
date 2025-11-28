@@ -96,7 +96,7 @@ DB_PASSWORD=
 
 # Gemini AI Chatbot
 GEMINI_API_KEY=your-gemini-api-key-here
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.0-flash
 ```
 
 **Get Gemini API Key:** [Google AI Studio](https://aistudio.google.com/app/apikey)
@@ -163,7 +163,7 @@ DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
 
 # Gemini API
 GEMINI_API_KEY=your-production-gemini-key
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.0-flash
 
 # Session & Cache
 SESSION_DRIVER=database
