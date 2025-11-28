@@ -370,6 +370,13 @@
             .checkout-header h1 {
                 font-size: 1.8rem;
             }
+            /* Ensure the order summary card is not sticky on mobile to prevent awkward overlays */
+            .order-summary-card {
+                position: static !important;
+                top: auto !important;
+                width: 100% !important;
+                margin-bottom: 16px !important;
+            }
         }
     </style>
 

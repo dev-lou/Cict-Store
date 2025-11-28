@@ -153,7 +153,7 @@
             - Use max-height based on viewport so the window grows upward instead of increasing bottom space
             - Reduced width and increased height per user request
         -->
-        <div id="cict-chatbot-window" class="hidden fixed right-6 w-80 rounded-2xl shadow-2xl flex flex-col overflow-hidden chat-window" style="display:none; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(139,0,0,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(139,0,0,0.05); z-index:2147483647 !important; bottom:24px; height:480px; width:320px;">
+        <div id="cict-chatbot-window" class="hidden fixed right-6 w-80 rounded-2xl shadow-2xl flex flex-col overflow-hidden chat-window" role="dialog" aria-label="CICT Assistant" aria-hidden="true" style="display:none; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(139,0,0,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(139,0,0,0.05); z-index:2147483647 !important; bottom:24px; height:480px; width:320px;">
 
             <!-- Header -->
             <div class="px-3 py-2.5 flex items-center justify-between" style="background: linear-gradient(135deg,#8B0000 0%,#A00000 100%); color:white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -347,6 +347,7 @@
                 win.style.setProperty('z-index', '2147483647', 'important');
                 win.style.setProperty('pointer-events', 'auto', 'important');
                 win.classList.add('chat-window-enter');
+                win.setAttribute('aria-hidden', 'false');
                     if (window.APP_DEBUG) console.log('CICT chat: openChat - showing window');
                 // Force bottom-right anchoring to keep it fixed in the visible area
                 win.style.setProperty('right', '24px', 'important');
@@ -355,6 +356,7 @@
                 win.style.removeProperty('top');
 
                 btn.style.setProperty('display', 'none', 'important');
+                btn.setAttribute('aria-expanded', 'true');
                 setTimeout(() => messagesEl.scrollTop = messagesEl.scrollHeight, 80);
 
                 // Debugging: log computed styles and bounding rect to help diagnose visibility problems
@@ -410,8 +412,10 @@
             function closeChat() {
                 state.open = false;
                 win.style.setProperty('display', 'none', 'important');
+                win.setAttribute('aria-hidden', 'true');
                 if (window.APP_DEBUG) console.log('CICT chat: closeChat - hiding window');
                 btn.style.setProperty('display', 'flex', 'important');
+                btn.setAttribute('aria-expanded', 'false');
             }
 
             function setLoading(v) {
