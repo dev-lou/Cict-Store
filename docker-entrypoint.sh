@@ -34,13 +34,24 @@ chown -R www-data:www-data /var/www/html/bootstrap/cache || true
 chmod -R 775 /var/www/html/storage || true
 chmod -R 775 /var/www/html/bootstrap/cache || true
 
-# Run migrations in background with timeout to not block startup
+# Run migrations in background with DB readiness check to not block startup
 # This allows Apache to start immediately and pass health checks
 echo "Starting background tasks..."
 (
   sleep 3  # Wait for Apache to start first
-  echo "[Background] Running migrations..."
-  timeout 30 php artisan migrate --force 2>&1 || echo "[Background] Migration skipped or failed"
+  echo "[Background] Waiting for database to become available..."
+  WAIT_SECS=60
+  while [ $WAIT_SECS -gt 0 ]; do
+    php -r "require 'vendor/autoload.php'; try { \Illuminate\Support\Facades\DB::select('SELECT 1'); echo 'db_ok'; } catch (Exception \$e) { exit(1);} " >/dev/null 2>&1 && break || true
+    sleep 3
+    WAIT_SECS=$((WAIT_SECS-3))
+  done
+  if [ $WAIT_SECS -le 0 ]; then
+    echo "[Background] DB not available after timeout; skipping migrations"
+  else
+    echo "[Background] Running migrations..."
+    timeout 30 php artisan migrate --force 2>&1 || echo "[Background] Migration skipped or failed"
+  fi
   echo "[Background] Caching config..."
   php artisan config:cache 2>&1 || true
   echo "[Background] Tasks complete"

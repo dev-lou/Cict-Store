@@ -64,8 +64,10 @@ class AppServiceProvider extends ServiceProvider
         $this->defineAuthorizationGates();
 
         // Share order counts with all views via View Composer
-        // Skip for error views to prevent infinite loops
-        View::composer('*', function ($view) {
+        // Skip for error views and console commands to prevent infinite loops
+        // and avoid database queries during CLI tasks such as `php artisan`.
+        if (! app()->runningInConsole()) {
+            View::composer('*', function ($view) {
             $viewName = $view->getName();
             
             // Skip error views and API responses
@@ -101,7 +103,8 @@ class AppServiceProvider extends ServiceProvider
                     'totalOrderCount' => 0,
                 ]);
             }
-        });
+            });
+        }
 
         // Vite manifest fallback: In some Vite versions or setups, the manifest may be
         // emitted as public/build/.vite/manifest.json. To avoid runtime errors when
