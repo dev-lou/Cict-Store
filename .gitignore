@@ -66,6 +66,9 @@ yarn-error.log*
 .env.development
 .env.test
 .env.production
+.env.*.secret
+.env.local.php
+.env.local.*
 .env.backup
 
 # Composer / vendor
