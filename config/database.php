@@ -1,5 +1,13 @@
 <?php
 
+// Determine whether we're running locally or in a production/Render environment.
+// Use a lightweight toggle: LOCAL_DEV=true in your local .env to force local config.
+$isLocalDev = (env('LOCAL_DEV', false) || env('APP_ENV') === 'local');
+// Allow a dedicated local DB driver if needed (e.g., sqlite for offline runs)
+$localConnection = env('DB_CONNECTION_LOCAL', env('DB_CONNECTION', 'sqlite'));
+// Choose default DB connection depending on environment
+$defaultConnection = $isLocalDev ? $localConnection : env('DB_CONNECTION', 'pgsql');
+
 use Illuminate\Support\Str;
 
 return [
@@ -16,7 +24,19 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    /*
+    |--------------------------------------------------------------------------
+    | Default Database Connection Name
+    |--------------------------------------------------------------------------
+    |
+    | The default connection selected here will switch between a local-friendly
+    | connection when `LOCAL_DEV` or `APP_ENV=local` is set, and your environment
+    | configured DB (e.g., PostgreSQL for Render production). This enables
+    | safe offline development and local testing without touching production
+    | credentials.
+    |
+    */
+    'default' => $defaultConnection,
 
     /*
     |--------------------------------------------------------------------------
