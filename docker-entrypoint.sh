@@ -25,6 +25,9 @@ chmod -R 775 /var/www/html/storage
 (
     echo "[Background] Waiting for 5s to allow DB connection..."
     sleep 5
+    echo "[Background] Clearing caches..."
+    php artisan view:clear || true
+    php artisan config:clear || true
     echo "[Background] Caching config..."
     php artisan config:cache || true
     echo "[Background] Running migrations..."
