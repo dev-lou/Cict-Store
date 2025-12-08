@@ -69,10 +69,9 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
         $viewName = $view->getName();
         
-        // Skip error views, API responses, AND components (to prevent Blade compilation issues)
+        // Skip error views and API responses (but NOT components, they need the counts)
         if (str_starts_with($viewName, 'errors.') || 
-            str_starts_with($viewName, 'errors::') ||
-            str_starts_with($viewName, 'components.')) {
+            str_starts_with($viewName, 'errors::')) {
             $view->with([
                 'pendingOrderCount' => 0,
                 'processingOrderCount' => 0,

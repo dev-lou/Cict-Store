@@ -13,6 +13,122 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        /* Mobile-First Styles (< 640px) */
+        @media (max-width: 639px) {
+            /* Red hero section - extends below navbar with more height */
+            div[style*="min-height: 550px"] {
+                min-height: 320px !important;
+                padding: 1.5rem 1rem 2.5rem 1rem !important;
+                margin-top: 0 !important;
+                padding-top: 5rem !important;
+            }
+            
+            /* Hero text on red background */
+            div[style*="min-height: 550px"] p:first-of-type {
+                font-size: 0.875rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            div[style*="min-height: 550px"] h1 {
+                font-size: 1.75rem !important;
+                letter-spacing: -0.5px !important;
+                margin-bottom: 0.75rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            div[style*="min-height: 550px"] p:last-of-type {
+                font-size: 0.8125rem !important;
+                line-height: 1.5 !important;
+            }
+            
+            /* White background starts at Featured Products */
+            .shop-content {
+                background: #FFFFFF !important;
+                padding-top: 1.5rem !important;
+            }
+            
+            .products-header {
+                margin-top: 0 !important;
+            }
+            
+            /* Mobile Grid: 2 columns */
+            .grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+                padding: 0.5rem !important;
+            }
+            
+            /* Mobile Product Card */
+            .product-card {
+                border-radius: 0.5rem !important;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+            }
+            
+            .product-card:hover {
+                transform: none !important;
+            }
+            
+            /* Mobile Image: Square 1:1 */
+            .product-image-container {
+                height: 0 !important;
+                padding-bottom: 100% !important;
+                position: relative !important;
+            }
+            
+            .product-image {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+            }
+            
+            /* Mobile Product Info - Compact */
+            .product-info {
+                padding: 0.5rem !important;
+            }
+            
+            .product-card h3 {
+                font-size: 0.7rem !important;
+                line-height: 1.1 !important;
+                margin-bottom: 0.25rem !important;
+                display: -webkit-box !important;
+                -webkit-line-clamp: 2 !important;
+                -webkit-box-orient: vertical !important;
+                overflow: hidden !important;
+                font-weight: 600 !important;
+            }
+            
+            .product-card p {
+                display: none !important;
+            }
+            
+            /* Mobile Price */
+            .product-price {
+                font-size: 0.8rem !important;
+                margin-bottom: 0.375rem !important;
+                font-weight: 800 !important;
+            }
+            
+            /* Mobile Button */
+            .btn-view-details {
+                padding: 0.5rem !important;
+                font-size: 0.75rem !important;
+            }
+            
+            /* Mobile Badges */
+            .product-badge {
+                font-size: 0.625rem !important;
+                padding: 0.25rem 0.5rem !important;
+            }
+            
+            div[style*="position: absolute"][style*="top: 12px"][style*="right: 12px"] {
+                font-size: 0.625rem !important;
+                padding: 0.25rem 0.5rem !important;
+            }
+        }
+
         .shop-hero {
             background: linear-gradient(135deg, #FFFAF1 0%, #FFFFFF 100%);
             border-bottom: 2px solid #F0F0F0;
@@ -204,10 +320,10 @@
     </div>
 
     <!-- Products Section Wrapper -->
-    <div style="background: #FFFAF1; min-height: auto; width: 100%; padding-top: 0;">
+    <div style="background: #FFFFFF; min-height: auto; width: 100%; padding-top: 0;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 shop-content">
         @if($products->count() > 0)
-            <div class="products-header" style="margin-top: 40px;">
+            <div class="products-header" style="margin-top: 0px;">
                 <div class="products-header-left">
                     <h2>Featured Products</h2>
                     <p>{{ $products->total() }} items available for purchase</p>

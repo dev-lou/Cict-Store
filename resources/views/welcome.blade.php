@@ -6,6 +6,90 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <style>
+            @media (max-width: 639px) {
+                /* Mobile-optimized welcome page */
+                body {
+                    padding: 1rem !important;
+                }
+                
+                /* Make logo smaller on mobile */
+                svg.w-full {
+                    max-width: 280px !important;
+                    margin: 0 auto !important;
+                }
+                
+                /* Compact text sections */
+                main {
+                    max-width: 100% !important;
+                    padding: 1rem !important;
+                }
+                
+                main > div {
+                    padding: 1.5rem !important;
+                }
+                
+                /* Stack items better on mobile */
+                main h1 {
+                    font-size: 1.125rem !important;
+                    margin-bottom: 0.5rem !important;
+                }
+                
+                main p {
+                    font-size: 0.875rem !important;
+                    line-height: 1.5 !important;
+                    margin-bottom: 0.75rem !important;
+                }
+                
+                /* Compact list items */
+                main ul li {
+                    padding: 0.75rem 0 !important;
+                    gap: 0.75rem !important;
+                }
+                
+                main ul li span:first-child {
+                    padding: 0.25rem !important;
+                }
+                
+                main ul li span:first-child > span {
+                    width: 2rem !important;
+                    height: 2rem !important;
+                }
+                
+                main ul li span:first-child > span > span {
+                    width: 0.75rem !important;
+                    height: 0.75rem !important;
+                }
+                
+                /* Smaller text in links */
+                main a {
+                    font-size: 0.875rem !important;
+                }
+                
+                /* Compact buttons */
+                main ul.flex {
+                    gap: 0.5rem !important;
+                    flex-wrap: wrap !important;
+                }
+                
+                main ul.flex li a {
+                    padding: 0.5rem 1rem !important;
+                    font-size: 0.8125rem !important;
+                }
+                
+                /* Hide decorative 12 graphic on very small screens */
+                .bg-\[\#fff2f2\] {
+                    min-height: 200px !important;
+                    padding: 1rem !important;
+                }
+                
+                .bg-\[\#fff2f2\] svg:last-child {
+                    transform: scale(0.7) !important;
+                    margin-top: -2rem !important;
+                }
+            }
+        </style>
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
