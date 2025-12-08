@@ -528,13 +528,20 @@
 
         @media (max-width: 480px) {
             .hero-title {
-                font-size: 28px;
-                margin-bottom: 12px;
+                font-size: 1.5rem !important;
+                margin-bottom: 8px !important;
+                letter-spacing: -0.5px !important;
+            }
+            
+            .hero-section h2 {
+                font-size: 1.125rem !important;
+                margin-bottom: 12px !important;
             }
 
             .hero-subtitle {
-                font-size: 14px;
-                margin-bottom: 24px;
+                font-size: 0.8125rem !important;
+                margin-bottom: 24px !important;
+                line-height: 1.5 !important;
             }
 
             .section-heading {

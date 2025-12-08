@@ -26,6 +26,170 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        /* Mobile-First Styles (< 640px) */
+        @media (max-width: 639px) {
+            /* Extend red banner to fully cover behind and below navbar */
+            div[style*="height: 280px"] {
+                height: 250px !important;
+            }
+            
+            /* Mobile breadcrumb - position lower */
+            .breadcrumb-nav {
+                margin-top: 120px !important;
+                padding: 8px 0 !important;
+            }
+            
+            .breadcrumb-nav a,
+            .breadcrumb-nav .breadcrumb-current {
+                font-size: 0.75rem !important;
+            }
+            
+            /* Mobile product container - image far down */
+            .product-container {
+                padding: 0.5rem !important;
+                margin-top: 0 !important;
+                padding-top: 1rem !important;
+            }
+            
+            /* Mobile grid: single column */
+            .product-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+            }
+            
+            /* Mobile image - normal size */
+            .product-image-wrapper {
+                border-radius: 0.75rem !important;
+                aspect-ratio: 4/3 !important;
+                max-height: 250px !important;
+            }
+            
+            /* Mobile product details - 2 column layout */
+            .product-details h1 {
+                font-size: 1rem !important;
+                line-height: 1.3 !important;
+                font-weight: 700 !important;
+                margin-bottom: 0.5rem !important;
+                float: left !important;
+                width: 60% !important;
+            }
+            
+            /* Stock info on the right */
+            .product-meta {
+                float: right !important;
+                width: 38% !important;
+                text-align: right !important;
+                margin-top: 0 !important;
+            }
+            
+            /* Hide IN STOCK badge */
+            .stock-badge {
+                display: none !important;
+            }
+            
+            /* Stock count mobile display */
+            .mobile-stock-count {
+                display: block !important;
+                font-size: 0.75rem !important;
+                color: #6B7280 !important;
+                font-weight: 600 !important;
+            }
+            
+            /* Hide Total Stock line */
+            .price-section > div {
+                display: none !important;
+            }
+            
+            /* Hide desktop stock display */
+            @media (min-width: 640px) {
+                .mobile-stock-count {
+                    display: none !important;
+                }
+            }
+            
+            /* Clear float after name/stock */
+            .product-price {
+                clear: both !important;
+                font-size: 1.25rem !important;
+                margin-top: 0.5rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            /* Mobile variant section - SMALLER buttons */
+            .variant-section {
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .variant-label {
+                font-size: 0.75rem !important;
+                margin-bottom: 0.375rem !important;
+                font-weight: 600 !important;
+            }
+            
+            .variant-options {
+                gap: 0.25rem !important;
+            }
+            
+            .variant-option-label {
+                padding: 0.25rem 0.5rem !important;
+                font-size: 0.6875rem !important;
+                border-radius: 0.375rem !important;
+                min-height: auto !important;
+            }
+            
+            /* Hide quantity section on mobile */
+            .quantity-section {
+                display: none !important;
+            }
+            
+            /* Set default quantity to 1 */
+            #quantity_input {
+                display: none !important;
+            }
+            
+            /* Add to cart at top - not sticky */
+            #add-to-cart-form {
+                position: relative !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin-top: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            #add-to-cart-form button[type="submit"] {
+                width: 100% !important;
+                padding: 0.875rem 1.25rem !important;
+                font-size: 0.9375rem !important;
+                font-weight: 700 !important;
+                border-radius: 0.5rem !important;
+            }
+            
+            /* Related products: 2 columns on mobile */
+            .related-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            
+            .related-card {
+                border-radius: 0.5rem !important;
+            }
+            
+            .related-name {
+                font-size: 0.7rem !important;
+                line-height: 1.2 !important;
+                -webkit-line-clamp: 2 !important;
+            }
+            
+            .related-price {
+                font-size: 0.8rem !important;
+            }
+            
+            .related-image {
+                aspect-ratio: 1 !important;
+                height: auto !important;
+            }
+        }
+
         /* Breadcrumb */
         .breadcrumb-nav {
             background: transparent;
@@ -443,14 +607,15 @@
 
                 <!-- Product Info -->
                 <div class="product-details">
+                    @php
+                        // Check product current_stock, not just variants
+                        $currentStock = $product->current_stock;
+                    @endphp
+                    
                     <h1>{{ $product->name }}</h1>
 
                     <!-- Meta Info -->
-                    <div class="product-meta">
-                        @php
-                            // Check product current_stock, not just variants
-                            $currentStock = $product->current_stock;
-                        @endphp
+                    <div class="product-meta" data-stock="{{ $currentStock }}">
                         @if ($currentStock > $product->low_stock_threshold)
                             <span class="stock-badge in-stock">In Stock</span>
                         @elseif ($currentStock > 0)
@@ -458,6 +623,7 @@
                         @else
                             <span class="stock-badge out-of-stock">Out of Stock</span>
                         @endif
+                        <span class="mobile-stock-count" style="display: none;">{{ $currentStock }} left</span>
                     </div>
 
                     <!-- Price -->
