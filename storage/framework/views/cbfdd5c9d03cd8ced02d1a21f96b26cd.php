@@ -507,8 +507,8 @@
             }
 
             .products-grid {
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-                gap: 20px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
             }
 
             .services-grid {
@@ -565,6 +565,14 @@
 
             .product-card {
                 margin: 0;
+            }
+
+            .product-image {
+                height: 180px;
+            }
+
+            .product-info {
+                padding: 16px;
             }
 
             .contact-value {
