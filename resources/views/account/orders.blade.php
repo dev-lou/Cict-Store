@@ -1,413 +1,180 @@
-<x-app-layout>
-    <div style="background: #FFFAF1; min-height: 100vh; width: 100%; margin: 0; padding: 0;">
-        <style>
-            body {
-                background: #FFFAF1 !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
+<x-app-layout :title="'Orders - Ctrl+P'">
+    <style>
+        :root {
+            --ink: #0f172a;
+            --muted: #475569;
+            --surface: #ffffff;
+            --border: rgba(15,23,42,0.08);
+            --accent: #8B0000;
+            --accent-2: #A00000;
+            --bg: #f8fafc;
+        }
 
-            html {
-                background: #FFFAF1 !important;
-            }
+        body { background: var(--bg) !important; }
 
-            .animated-gradient-orders {
-                background: #FFFAF1;
-                min-height: 100vh;
-                padding-top: 120px;
-                padding-bottom: 80px;
-            }
+        .orders-shell { max-width: 1100px; margin: 0 auto; padding: 120px 24px 80px; }
+        .hero { display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:20px; }
+        .hero h1 { margin:0; font-size:32px; font-weight:800; letter-spacing:-0.4px; color:var(--ink); }
+        .hero p { margin:6px 0 0 0; color:var(--muted); max-width:640px; line-height:1.6; }
+        .eyebrow { text-transform: uppercase; letter-spacing:0.18em; font-size:11px; font-weight:700; color:var(--accent); margin:0; }
+        .chip { display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px; background: rgba(15,23,42,0.06); color:var(--ink); font-weight:700; }
+        .chips { display:flex; flex-wrap:wrap; gap:8px; }
 
-            .orders-list-card {
-                background: #FFFFFF;
-                border: 1px solid rgba(139, 0, 0, 0.08);
-                border-radius: 20px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.02);
-                transition: all cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
-                overflow: hidden;
-            }
+        .list { display:flex; flex-direction:column; gap:12px; }
+        .card { background: var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow:0 16px 48px rgba(15,23,42,0.06); }
+        .card-header { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+        .card-header h3 { margin:0; font-weight:800; color:var(--ink); font-size:18px; }
+        .sub { color:var(--muted); font-weight:600; font-size:13px; }
+        .status { padding:8px 12px; border-radius:10px; font-weight:800; font-size:12px; letter-spacing:0.4px; border:1px solid transparent; }
+        .pending { background: rgba(218,165,32,0.12); color:#a16207; border-color: rgba(218,165,32,0.3); }
+        .completed { background: rgba(52,211,153,0.12); color:#0f766e; border-color: rgba(52,211,153,0.3); }
+        .cancelled { background: rgba(248,113,113,0.12); color:#b91c1c; border-color: rgba(248,113,113,0.3); }
 
-            .orders-list-card:hover {
-                box-shadow: 0 12px 32px rgba(139, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
-                transform: translateY(-2px);
-                border-color: rgba(139, 0, 0, 0.15);
-            }
+        .meta { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:10px; margin:12px 0; }
+        .meta-block { padding:12px; border:1px solid var(--border); border-radius:12px; background:#fff; }
+        .meta-label { color:var(--muted); font-weight:700; font-size:12px; letter-spacing:0.2px; }
+        .meta-value { font-weight:800; color:var(--ink); font-size:18px; }
 
-            .order-header-text {
-                color: #1a1a1a;
-                font-weight: 800;
-                letter-spacing: -0.5px;
-            }
+        .actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+        .btn { padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:#fff; font-weight:700; cursor:pointer; text-decoration:none; color:var(--ink); }
+        .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; border:none; box-shadow:0 12px 30px rgba(139,0,0,0.18); }
+        .btn.secondary { border-color: var(--accent); color: var(--accent); }
+        .btn.danger { border-color: #dc2626; color:#dc2626; }
+        .btn:hover { transform: translateY(-1px); box-shadow:0 10px 24px rgba(15,23,42,0.08); }
 
-            .order-value-text {
-                color: #8B0000;
-                font-weight: 800;
-            }
+        .empty { text-align:center; padding:80px 20px; }
+        .empty h2 { margin:12px 0 8px; font-size:28px; font-weight:900; color:var(--ink); }
+        .empty p { margin:0 0 14px; color:var(--muted); font-weight:600; }
 
-            .order-label {
-                color: #888888;
-                font-size: 12px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                font-weight: 600;
-            }
+        .filter-row { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 20px; }
+        .filter-chip { display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:#fff; font-weight:800; color:var(--ink); text-decoration:none; transition: all 0.18s ease; }
+        .filter-chip span { font-weight:700; font-size:12px; color:var(--muted); }
+        .filter-chip.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; border-color: transparent; box-shadow:0 12px 30px rgba(139,0,0,0.18); }
+        .filter-chip.active span { color: rgba(255,255,255,0.85); }
+        .filter-chip:hover { transform: translateY(-1px); box-shadow:0 10px 24px rgba(15,23,42,0.08); }
 
-            .status-badge {
-                display: inline-block;
-                padding: 8px 16px;
-                border-radius: 8px;
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                letter-spacing: 0.8px;
-                border: 1px solid;
-            }
+        @media(max-width:768px) { .orders-shell { padding-top: 90px; } }
+    </style>
 
-            .status-pending {
-                background: linear-gradient(135deg, #FFE5E5 0%, #FFD4D4 100%);
-                color: #8B0000;
-                border-color: #8B0000;
-            }
+    @php
+        $currentStatus = $status ?? 'all';
+        $counts = $statusCounts ?? ['all' => $orders->total(), 'pending' => 0, 'processing' => 0, 'completed' => 0];
+    @endphp
 
-            .status-completed {
-                background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
-                color: #2E7D32;
-                border-color: #4CAF50;
-            }
-
-            .status-cancelled {
-                background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
-                color: #C62828;
-                border-color: #F44336;
-            }
-
-            .action-btn {
-                font-weight: 600;
-                padding: 12px 20px;
-                border-radius: 10px;
-                cursor: pointer;
-                transition: all cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
-                text-decoration: none;
-                display: inline-block;
-                border: none;
-                font-size: 14px;
-                letter-spacing: 0.2px;
-                min-height: 44px;
-            }
-
-            .touch-target {
-                min-height: 44px;
-                min-width: 44px;
-            }
-
-            .btn-primary {
-                background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-                color: #FFFFFF;
-                box-shadow: 0 4px 12px rgba(139, 0, 0, 0.2);
-            }
-
-            .btn-primary:hover {
-                background: linear-gradient(135deg, #A00000 0%, #C00000 100%);
-                box-shadow: 0 6px 16px rgba(139, 0, 0, 0.4);
-                transform: translateY(-2px);
-            }
-
-            .btn-secondary {
-                background: #FFFFFF;
-                color: #8B0000;
-                border: 1px solid #8B0000;
-                box-shadow: 0 2px 8px rgba(139, 0, 0, 0.08);
-            }
-
-            .btn-secondary:hover {
-                background: #8B0000;
-                color: #FFFFFF;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(139, 0, 0, 0.25);
-            }
-
-            .btn-danger {
-                background: #FFFFFF;
-                color: #DC2626;
-                border: 1px solid #DC2626;
-                box-shadow: 0 2px 8px rgba(220, 38, 38, 0.08);
-            }
-
-            .btn-danger:hover {
-                background: #DC2626;
-                color: #FFFFFF;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
-            }
-
-            .btn-delete {
-                background: #FFFFFF;
-                color: #991B1B;
-                border: 1px solid #991B1B;
-                box-shadow: 0 2px 8px rgba(153, 27, 27, 0.08);
-            }
-
-            .btn-delete:hover {
-                background: #991B1B;
-                color: #FFFFFF;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(153, 27, 27, 0.25);
-            }
-
-            .empty-state-icon {
-                color: #8B0000;
-                opacity: 0.7;
-            }
-
-            .pagination-wrapper {
-                margin-top: 32px;
-            }
-
-            .header-section {
-                padding-bottom: 40px;
-            }
-
-            .header-section h1 {
-                color: #1a1a1a;
-                font-weight: 800;
-                margin-bottom: 20px;
-                letter-spacing: -1px;
-            }
-
-            .header-section p {
-                color: #666666;
-                font-weight: 600;
-                font-size: 16px;
-            }
-
-            .header-badge {
-                background: linear-gradient(135deg, rgba(139, 0, 0, 0.05) 0%, rgba(255, 215, 0, 0.03) 100%);
-                border: 1px solid rgba(139, 0, 0, 0.12);
-                color: #8B0000;
-                border-radius: 12px;
-                box-shadow: 0 2px 8px rgba(139, 0, 0, 0.06);
-            }
-
-            .order-divider {
-                border-color: #F0F0F0;
-            }
-
-            .grid-info {
-                background: linear-gradient(135deg, rgba(255, 250, 241, 0.5) 0%, rgba(255, 245, 230, 0.5) 100%);
-                border-radius: 12px;
-                padding: 16px;
-                border: 1px solid rgba(139, 0, 0, 0.08);
-                transition: all 0.3s ease;
-            }
-
-            .grid-info:hover {
-                background: linear-gradient(135deg, rgba(255, 245, 230, 0.6) 0%, rgba(255, 234, 212, 0.6) 100%);
-                transform: translateY(-1px);
-                box-shadow: 0 2px 8px rgba(139, 0, 0, 0.06);
-            }
-        </style>
-
-        <div class="animated-gradient-orders">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Header -->
-                <div class="header-section mb-12">
-                    <h1 class="text-4xl md:text-5xl font-black mb-4">📦 My Orders</h1>
-                    <div class="header-badge inline-block px-6 py-3">
-                        <p class="font-bold text-base">View and manage your order history</p>
-                    </div>
-                </div>
-
-                <!-- Orders List -->
-                @if($orders->count() > 0)
-                    <!-- Desktop Table View (Hidden on Mobile) -->
-                    <div class="hidden md:block orders-list-card overflow-hidden">
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead style="background: linear-gradient(135deg, #F5F5F5 0%, #EEEEEE 100%); border-bottom: 2px solid rgba(139, 0, 0, 0.1);">
-                                    <tr>
-                                        <th class="px-6 py-4 text-left order-label" style="font-size: 13px;">Order #</th>
-                                        <th class="px-6 py-4 text-left order-label" style="font-size: 13px;">Date</th>
-                                        <th class="px-6 py-4 text-left order-label" style="font-size: 13px;">Items</th>
-                                        <th class="px-6 py-4 text-left order-label" style="font-size: 13px;">Total</th>
-                                        <th class="px-6 py-4 text-left order-label" style="font-size: 13px;">Status</th>
-                                        <th class="px-6 py-4 text-center order-label" style="font-size: 13px;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($orders as $order)
-                                        <tr style="border-bottom: 1px solid #F0F0F0; transition: all 0.2s ease;" onmouseover="this.style.background='#FFFAF1'" onmouseout="this.style.background='#FFFFFF'">
-                                            <td class="px-6 py-5">
-                                                <span class="order-header-text text-base font-bold">
-                                                    #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-5">
-                                                <div class="order-label text-sm">{{ $order->created_at->format('M d, Y') }}</div>
-                                                <div class="order-label text-xs">{{ $order->created_at->format('g:i A') }}</div>
-                                            </td>
-                                            <td class="px-6 py-5">
-                                                <span class="order-value-text text-base font-bold">{{ $order->items->count() }}</span>
-                                            </td>
-                                            <td class="px-6 py-5">
-                                                <span class="order-value-text text-lg font-bold">₱{{ number_format($order->total, 2) }}</span>
-                                            </td>
-                                            <td class="px-6 py-5">
-                                                <span class="status-badge status-{{ $order->status === 'completed' ? 'completed' : ($order->status === 'cancelled' ? 'cancelled' : 'pending') }}">
-                                                    {{ ucfirst($order->status) }}
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-5">
-                                                <div class="flex gap-2 justify-center flex-wrap">
-                                                    <a href="{{ route('orders.show', $order) }}" class="action-btn btn-primary text-xs px-3 py-2" style="min-width: 100px;">
-                                                        👁️ View
-                                                    </a>
-                                                    <a href="{{ route('orders.receipt.pdf', $order) }}" class="action-btn btn-secondary text-xs px-3 py-2" style="min-width: 100px;">
-                                                        📄 Receipt
-                                                    </a>
-                                                    @if($order->canBeCancelled())
-                                                        <form method="POST" action="{{ route('orders.cancel', $order) }}" class="inline" onsubmit="confirmCancel(event, this);">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="action-btn btn-danger text-xs px-3 py-2" style="min-width: 100px;">
-                                                                ✕ Cancel
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                    <form method="POST" action="{{ route('orders.destroy', $order) }}" class="inline" onsubmit="confirmDelete(event, this);">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="action-btn btn-delete text-xs px-3 py-2" style="min-width: 100px;">
-                                                            🗑️ Delete
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Mobile Card View (Hidden on Desktop) -->
-                    <div class="md:hidden space-y-4 pb-24">
-                        @foreach($orders as $order)
-                            <div class="orders-list-card p-6">
-                                <div class="flex items-start justify-between gap-4 mb-6 pb-4 border-b order-divider">
-                                    <div>
-                                        <h3 class="order-header-text text-lg font-bold mb-1">
-                                            Order #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}
-                                        </h3>
-                                        <p class="order-label text-xs">{{ $order->created_at->format('M d, Y \a\t g:i A') }}</p>
-                                    </div>
-                                    <span class="status-badge status-{{ $order->status === 'completed' ? 'completed' : ($order->status === 'cancelled' ? 'cancelled' : 'pending') }}" style="font-size: 10px; padding: 6px 12px;">
-                                        {{ ucfirst($order->status) }}
-                                    </span>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-4 mb-4">
-                                    <div class="grid-info">
-                                        <p class="order-label mb-1 text-xs">Items</p>
-                                        <p class="order-value-text text-lg font-bold">{{ $order->items->count() }}</p>
-                                    </div>
-                                    <div class="grid-info">
-                                        <p class="order-label mb-1 text-xs">Total</p>
-                                        <p class="order-value-text text-lg font-bold">₱{{ number_format($order->total, 2) }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col gap-2">
-                                    <a href="{{ route('orders.show', $order) }}" class="action-btn btn-primary text-center touch-target">
-                                        👁️ View Details
-                                    </a>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <a href="{{ route('orders.receipt.pdf', $order) }}" class="action-btn btn-secondary text-center text-xs touch-target">
-                                            📄 Receipt
-                                        </a>
-                                        @if($order->canBeCancelled())
-                                            <form method="POST" action="{{ route('orders.cancel', $order) }}" class="inline" onsubmit="confirmCancel(event, this);">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="action-btn btn-danger text-xs w-full touch-target">
-                                                    ✕ Cancel
-                                                </button>
-                                            </form>
-                                        @else
-                                            <form method="POST" action="{{ route('orders.destroy', $order) }}" class="inline" onsubmit="confirmDelete(event, this);">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="action-btn btn-delete text-xs w-full touch-target">
-                                                    🗑️ Delete
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <!-- Pagination -->
-                    @if($orders->hasPages())
-                        <div class="pagination-wrapper">
-                            {{ $orders->links() }}
-                        </div>
-                    @endif
-                @else
-                    <div class="orders-list-card p-12 md:p-16 text-center">
-                        <svg class="mx-auto h-16 w-16 empty-state-icon mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                        <p class="order-label mb-6 text-base">You haven't placed any orders yet.</p>
-                        <a href="{{ route('shop.index') }}" class="action-btn btn-primary inline-block">
-                            🛍️ Start Shopping
+    <div class="orders-shell">
+        <div class="hero">
+            <div>
+                <p class="eyebrow">Orders</p>
+                <h1>Order history</h1>
+                <p>Track receipts, download proof, or cancel if it is still pending.</p>
+            </div>
+            <div style="display:flex; align-items:flex-start; justify-content:flex-end; flex:1;">
+                <div class="filter-row" style="margin:0;">
+                    @php
+                        $filters = [
+                            'all' => 'All',
+                            'pending' => 'Pending',
+                            'processing' => 'Processing',
+                            'completed' => 'Completed',
+                        ];
+                    @endphp
+                    @foreach($filters as $key => $label)
+                        <a
+                            href="{{ route('account.orders', $key === 'all' ? [] : ['status' => $key]) }}"
+                            class="filter-chip {{ $currentStatus === $key ? 'active' : '' }}"
+                        >
+                            <span>{{ $label }}</span>
+                            <strong>{{ $counts[$key] ?? 0 }}</strong>
                         </a>
-                    </div>
-                @endif
+                    @endforeach
+                </div>
             </div>
         </div>
+
+        @if($orders->count() > 0)
+            <div class="list">
+                @foreach($orders as $order)
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Order #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</h3>
+                                <div class="sub">{{ $order->created_at->format('M d, Y · g:i A') }}</div>
+                            </div>
+                            <span class="status {{ $order->status === 'completed' ? 'completed' : ($order->status === 'cancelled' ? 'cancelled' : 'pending') }}">{{ ucfirst($order->status) }}</span>
+                        </div>
+
+                        <div class="meta">
+                            <div class="meta-block">
+                                <div class="meta-label">Items</div>
+                                <div class="meta-value">{{ $order->items->count() }}</div>
+                            </div>
+                            <div class="meta-block">
+                                <div class="meta-label">Total</div>
+                                <div class="meta-value">₱{{ number_format($order->total, 2) }}</div>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <a class="btn primary" href="{{ route('orders.show', $order) }}">View</a>
+                            <a class="btn secondary" href="{{ route('orders.receipt.pdf', $order) }}">Receipt</a>
+                            @if($order->canBeCancelled())
+                                <form method="POST" action="{{ route('orders.cancel', $order) }}" onsubmit="confirmCancel(event, this);">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn danger">Cancel</button>
+                                </form>
+                            @endif
+                            <form method="POST" action="{{ route('orders.destroy', $order) }}" onsubmit="confirmDelete(event, this);">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            @if($orders->hasPages())
+                <div style="margin-top:20px;">
+                    {{ $orders->links() }}
+                </div>
+            @endif
+        @else
+                <div class="card empty">
+                <div style="font-size:40px;">📦</div>
+                <h2>No orders yet</h2>
+                <p>When you place an order it will appear here.</p>
+                <a class="btn primary" style="text-decoration:none;" href="{{ route('shop.index') }}">Start shopping</a>
+            </div>
+        @endif
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function confirmCancel(event, form) {
             event.preventDefault();
-            
             Swal.fire({
-                title: 'Cancel Order?',
-                text: 'Are you sure you want to cancel this order? This action cannot be undone.',
                 icon: 'warning',
+                title: 'Cancel order?',
+                text: 'This will cancel the order.',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, Cancel Order',
-                cancelButtonText: 'No, Keep It',
                 confirmButtonColor: '#8B0000',
-                cancelButtonColor: '#6B7280',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Cancel order'
+            }).then(result => { if (result.isConfirmed) form.submit(); });
         }
 
         function confirmDelete(event, form) {
             event.preventDefault();
-            
             Swal.fire({
-                title: 'Delete Order?',
-                text: 'This will permanently delete this order from your history. This action cannot be undone.',
                 icon: 'error',
+                title: 'Delete order?',
+                text: 'This removes the record permanently.',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, Delete Order',
-                cancelButtonText: 'No, Keep It',
-                confirmButtonColor: '#991B1B',
-                cancelButtonColor: '#6B7280',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
+                confirmButtonColor: '#8B0000',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Delete'
+            }).then(result => { if (result.isConfirmed) form.submit(); });
         }
     </script>
 </x-app-layout>

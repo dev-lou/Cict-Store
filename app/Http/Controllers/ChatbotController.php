@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Service;
 use App\Services\GeminiChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -28,9 +29,28 @@ class ChatbotController extends Controller
         $message = $validated['message'];
         $context = $validated['context'] ?? [];
 
+        // Pull current active services from the database to ground responses
+        $services = Service::query()
+            ->where('is_active', true)
+            ->orderBy('category')
+            ->orderBy('sort_order')
+            ->get(['title', 'category']);
+
+        $serviceSummary = $services
+            ->groupBy('category')
+            ->map(function ($items, $category) {
+                return $category . ': ' . $items->pluck('title')->join(', ');
+            })
+            ->values()
+            ->join(' | ');
+
+        $messageWithServices = $serviceSummary
+            ? $message . "\n\nAvailable services (from database): " . $serviceSummary . "\nIf details are missing, direct the user to the Services page."
+            : $message . "\n\nNo services are listed in the database right now. Let users know they can browse services on the Services page.";
+
         Log::info('Chatbot message received', ['message' => $message]);
 
-        $response = $this->chatService->chat($message, $context);
+        $response = $this->chatService->chat($messageWithServices, $context);
 
         // Attach helpful navigation quick_links when the user intent matches common patterns
         $lower = strtolower($message);
