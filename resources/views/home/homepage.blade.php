@@ -1,4 +1,4 @@
-<x-app-layout :title="'Council IGP - Merchandise & Printing Services'">
+<x-app-layout :title="'Ctrl+P — Merchandise & Services'">
     <!-- SweetAlert2 for notifications -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -8,7 +8,7 @@
             --primary-blue-light: #A00000;
             --primary-text: #1F1F1F;
             --secondary-text: #555555;
-            --light-bg: #FFFAF1;
+            --light-bg: #F7F8FB;
             --white: #FFFFFF;
             --border-light: #E8DCC8;
             --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -17,45 +17,74 @@
 
         /* ============ HERO SECTION ============ */
         .hero-section {
-            background: transparent;
-            padding: 120px 20px 100px;
+            position: relative;
+            min-height: 86vh;
+            padding: 200px 20px 150px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.88) 0%, rgba(160, 0, 0, 0.86) 100%),
+                        url('https://wallpapers.com/images/hd/school-background-oxlcd9ghmwrsup8l.jpg') center/cover;
+            color: #FFFFFF;
             text-align: center;
-            margin-top: 0;
+            margin-top: -70px;
+            border-radius: 0 0 32px 32px;
+            box-shadow: inset 0 -90px 160px rgba(0,0,0,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero-content {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
+            padding: 24px;
         }
 
         .hero-title {
-            font-size: 56px;
-            font-weight: 800;
-            color: var(--primary-text);
-            margin-bottom: 16px;
-            line-height: 1.2;
-            letter-spacing: -1px;
+            font-size: 58px;
+            font-weight: 900;
+            margin-bottom: 14px;
+            line-height: 1.15;
+            letter-spacing: -1.6px;
+            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
         }
 
         .hero-subtitle {
-            font-size: 20px;
-            color: var(--secondary-text);
-            margin-bottom: 48px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
+            font-size: 19px;
+            color: rgba(255, 255, 255, 0.94);
+            margin-bottom: 32px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            line-height: 1.65;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+            max-width: 760px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.35px;
+            margin-bottom: 16px;
+            font-size: 13px;
         }
 
         .hero-button {
             display: inline-block;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            color: white;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #111827;
             padding: 16px 40px;
             border-radius: 12px;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 16px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 16px rgba(0, 58, 150, 0.2);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.35);
             border: none;
             cursor: pointer;
             letter-spacing: 0.5px;
@@ -63,7 +92,20 @@
 
         .hero-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0, 58, 150, 0.3);
+            box-shadow: 0 14px 36px rgba(251, 191, 36, 0.45);
+        }
+
+        .hero-button.secondary {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1.5px solid rgba(255, 255, 255, 0.7);
+            color: #FFFFFF;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .hero-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-3px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.24), 0 12px 28px rgba(0, 0, 0, 0.3);
         }
 
         /* ============ FEATURED PRODUCTS SECTION ============ */
@@ -200,63 +242,82 @@
         /* ============ SERVICES SECTION ============ */
         .services-section {
             padding: 80px 20px;
-            background: #FFFAF1;
+            background: #F7F8FB;
         }
 
-        .services-grid {
+        .services-bento-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 32px;
-            margin-top: 60px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin-top: 48px;
+            grid-auto-rows: 1fr;
         }
 
-        .service-card {
-            background: var(--white);
-            border: 1px solid var(--border-light);
-            border-radius: 14px;
-            padding: 40px 32px;
-            text-align: center;
+        .service-bento-card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 190px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-light);
-            position: relative;
-            overflow: hidden;
         }
 
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .service-bento-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+            border-color: #8B0000;
         }
 
-        .service-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-medium);
-            border-color: var(--primary-blue);
-        }
-
-        .service-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .service-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 24px;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            border-radius: 12px;
+        .service-bento-header {
             display: flex;
             align-items: center;
+            gap: 12px;
+        }
+
+        .service-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
             justify-content: center;
-            font-size: 32px;
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 58, 150, 0.15);
+            font-weight: 800;
+            color: #FFFFFF;
+            font-size: 18px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+        }
+
+        .service-bento-card h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: #0F172A;
+            letter-spacing: -0.2px;
+        }
+
+        .service-bento-card p {
+            margin: 0;
+            color: #4B5563;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .service-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #8B0000;
+            font-weight: 800;
+            text-decoration: none;
+            margin-top: auto;
+        }
+
+        .service-link:hover {
+            text-decoration: underline;
         }
 
         .service-title {
@@ -595,22 +656,41 @@
         .section-container {
             animation: fadeInUp 0.6s ease-out;
         }
+
+        /* Logo swap control */
+        .logo-swap-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.9);
+            color: #8B0000;
+            font-weight: 800;
+            font-size: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+        }
+
+        .logo-swap-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,0.16); }
     </style>
 
-    <div style="background: #FFFAF1; min-height: 100vh; width: 100%; padding-top: 0;">
+    <div style="background: #F7F8FB; min-height: 100vh; width: 100%; padding-top: 0;">
 
     <!-- ============ HERO SECTION ============ -->
-    <section class="hero-section" style="background: linear-gradient(135deg, rgba(139, 0, 0, 0.9) 0%, rgba(160, 0, 0, 0.9) 100%), url('https://images.unsplash.com/photo-1557821552-17105176677c?w=1200&h=600&fit=crop') center/cover; min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative;">
-        <div class="hero-content" style="text-align: center; color: white; z-index: 10; padding: 20px;">
-            <h1 class="hero-title" style="font-size: 64px; font-weight: 900; margin-bottom: 20px; color: #FFFFFF; text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); letter-spacing: -2px;">CICT Student Council</h1>
-            <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 24px; color: #FFD700; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);">Merchandise & Printing Services</h2>
-            <p class="hero-subtitle" style="font-size: 22px; color: rgba(255, 255, 255, 0.95); margin-bottom: 48px; max-width: 700px; margin-left: auto; margin-right: auto; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); font-weight: 500;">Quality merchandise and professional printing services proudly brought to you by ISUFST Dingle Campus CICT Student Council</p>
-            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                <a href="{{ route('shop.index') }}" class="hero-button" style="background: #FFD700; color: #1a1a1a; padding: 16px 48px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 16px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4); border: none; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 32px rgba(255, 215, 0, 0.6)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(255, 215, 0, 0.4)';">Shop Now</a>
-                <a href="{{ route('contact.index') }}" class="hero-button" style="background: #FFFFFF; color: #8B0000; padding: 16px 48px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 16px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 32px rgba(255, 255, 255, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(255, 255, 255, 0.3)';">Contact Us</a>
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-kicker">The Official CICT Merchandise &amp; Services Hub.</div>
+                <h1 class="hero-title">Ctrl+P: Your Shortcut to Campus Essentials.</h1>
+                <p class="hero-subtitle">We’ve streamlined student life at ISUFST Dingle Campus. Access official merch, fast printing, and essential student services in one seamless digital command center.</p>
+                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+                    <a href="{{ route('shop.index') }}" class="hero-button">Shop Merch</a>
+                    <a href="{{ route('services.index') }}" class="hero-button secondary">Browse Services</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     <!-- ============ FEATURED PRODUCTS SECTION ============ -->
     <section class="featured-section">
@@ -661,24 +741,39 @@
         <div class="section-container">
             <h2 class="section-heading">Our Services</h2>
             
-            <div class="services-grid">
-                <div class="service-card reveal-on-scroll" data-reveal-delay="0">
-                    <div class="service-icon">🖨️</div>
-                    <h3 class="service-title">B/W Printing</h3>
-                    <p class="service-description">Professional black & white printing for documents, handouts, and academic materials. Fast turnaround at affordable student prices.</p>
-                </div>
-
-                <div class="service-card reveal-on-scroll" data-reveal-delay="100">
-                    <div class="service-icon">🎨</div>
-                    <h3 class="service-title">Color Printing</h3>
-                    <p class="service-description">Vibrant full-color printing for presentations, projects, and promotional materials. High-quality output with professional finish.</p>
-                </div>
-
-                <div class="service-card reveal-on-scroll" data-reveal-delay="200">
-                    <div class="service-icon">👕</div>
-                    <h3 class="service-title">Custom Merchandise</h3>
-                    <p class="service-description">Custom-designed t-shirts, tumblers, hoodies, and more. Perfect for events, giveaways, and student organization branding.</p>
-                </div>
+            <div class="services-bento-grid">
+                @forelse($serviceCategories ?? [] as $category)
+                    @php
+                        $label = $category['name'] ?? 'General';
+                        $count = $category['count'] ?? 0;
+                        $palette = [
+                            ['#8B0000', '#A00000'],
+                            ['#0EA5E9', '#0284C7'],
+                            ['#10B981', '#059669'],
+                            ['#F59E0B', '#D97706'],
+                            ['#8B5CF6', '#7C3AED'],
+                        ];
+                        $swatch = $palette[$loop->index % count($palette)];
+                        $initial = Str::upper(Str::substr($label, 0, 1));
+                    @endphp
+                    <div class="service-bento-card reveal-on-scroll" data-reveal-delay="{{ ($loop->index % 4) * 100 }}">
+                        <div class="service-bento-header">
+                            <div class="service-badge" style="background: linear-gradient(135deg, {{ $swatch[0] }} 0%, {{ $swatch[1] }} 100%);">{{ $initial }}</div>
+                            <div>
+                                <h3>{{ $label }}</h3>
+                                <p style="font-size: 12.5px; color: #6B7280; margin-top: 4px;">{{ $count }} service{{ $count === 1 ? '' : 's' }} available</p>
+                            </div>
+                        </div>
+                        <p>{{ $category['description'] ?? 'Explore options for ' . Str::lower($label) . ' and get fast support tailored to students and orgs.' }}</p>
+                        <a href="{{ route('services.index') }}" class="service-link">View services →</a>
+                    </div>
+                @empty
+                    <div class="service-bento-card" style="grid-column: 1 / -1; text-align: center;">
+                        <div class="service-badge" style="background: linear-gradient(135deg, #8B0000 0%, #A00000 100%); margin: 0 auto 8px;">!</div>
+                        <h3 style="margin: 0 0 6px 0;">Services coming soon</h3>
+                        <p style="margin: 0;">We’re updating categories. Please check back shortly.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -704,12 +799,21 @@
                         Since our establishment, the CICT Student Council has been a trusted partner for quality merchandise in the ISUFST Dingle Campus. Every purchase directly supports student welfare programs, cultural events, and academic initiatives.
                     </p>
                     
-                    <a href="{{ route('services.index') }}" class="about-button">Learn More & Place Orders</a>
                 </div>
                 <div class="about-image reveal-on-scroll" data-reveal-delay="150">
-                    <div style="display: flex; align-items: center; justify-content: center; min-height: 400px;">
-                        <img src="{{ asset('images/cict-logo.png') }}" alt="CICT Student Council Logo" 
-                             style="width: 350px; height: 350px; object-fit: cover; border-radius: 50%; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);">
+                    <div style="display: flex; align-items: center; justify-content: center; min-height: 400px; position: relative;">
+                        <button type="button" class="logo-swap-btn" id="logo-swap-btn" aria-label="Swap logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h13l-3-3m3 13H4l3 3" />
+                            </svg>
+                        </button>
+                        <img
+                            id="about-logo-img"
+                            src="{{ asset('images/cict-logo.png') }}"
+                            data-primary="{{ asset('images/cict-logo.png') }}"
+                            data-alt="{{ asset('images/ctrlp-logo.png') }}"
+                            alt="CICT Student Council Logo"
+                            style="width: 420px; height: 420px; object-fit: cover; border-radius: 50%; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);">
                     </div>
                 </div>
             </div>
@@ -721,6 +825,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Map is now embedded as iframe
+            const logoImg = document.getElementById('about-logo-img');
+            const swapBtn = document.getElementById('logo-swap-btn');
+            if (logoImg && swapBtn) {
+                swapBtn.addEventListener('click', () => {
+                    const primary = logoImg.getAttribute('data-primary');
+                    const alt = logoImg.getAttribute('data-alt');
+                    const current = logoImg.getAttribute('src');
+                    const next = current === primary ? alt : primary;
+                    logoImg.setAttribute('src', next || primary);
+                    logoImg.setAttribute('alt', next === primary ? 'CICT Student Council Logo' : 'Ctrl+P Logo');
+                });
+            }
         });
     </script>
 </x-app-layout>

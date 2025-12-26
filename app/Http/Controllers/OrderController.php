@@ -58,15 +58,36 @@ class OrderController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function customerOrders(): \Illuminate\View\View
+    public function customerOrders(Request $request): \Illuminate\View\View
     {
-        $orders = auth()->user()->orders()
+        $user = auth()->user();
+        $status = $request->query('status', 'all');
+
+        // Build base query and apply status filter if provided
+        $ordersQuery = $user->orders()
             ->with('items')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->orderBy('created_at', 'desc');
+
+        if (in_array($status, ['pending', 'processing', 'completed', 'cancelled'])) {
+            $ordersQuery->where('status', $status);
+        } else {
+            $status = 'all';
+        }
+
+        $orders = $ordersQuery->paginate(10)->appends(['status' => $status]);
+
+        // Status counts for filter chips
+        $statusCounts = [
+            'all' => Order::where('user_id', $user->id)->count(),
+            'pending' => Order::where('user_id', $user->id)->where('status', 'pending')->count(),
+            'processing' => Order::where('user_id', $user->id)->where('status', 'processing')->count(),
+            'completed' => Order::where('user_id', $user->id)->where('status', 'completed')->count(),
+        ];
 
         return view('account.orders', [
             'orders' => $orders,
+            'status' => $status,
+            'statusCounts' => $statusCounts,
         ]);
     }
 

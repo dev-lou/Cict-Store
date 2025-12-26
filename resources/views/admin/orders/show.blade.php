@@ -120,6 +120,25 @@
 </x-admin-layout>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
+@if (session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        Swal.fire({
+            title: 'Status Updated',
+            text: @json(session('success')),
+            icon: 'success',
+            confirmButtonColor: '#4caf50',
+            background: '#0f1419',
+            color: '#ffffff',
+            titleColor: '#4caf50',
+            iconColor: '#4caf50',
+            didOpen: () => {
+                document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+            }
+        });
+    });
+</script>
+@endif
 <script>
     function deleteOrder(orderId) {
         Swal.fire({

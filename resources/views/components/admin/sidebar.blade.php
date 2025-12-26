@@ -4,10 +4,8 @@
     <!-- Logo & Page Title -->
     <div class="px-6 py-6" style="border-bottom: 2px solid #2a3f5f;">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 mb-4 transition-all duration-300" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-            <div class="w-12 h-12 rounded-lg flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #0f6fdd 0%, #1a7fff 100%); border: 2px solid #00d9ff;">
-                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" style="color: #ffffff;">
-                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a1 1 0 001 1h12a1 1 0 00-1-1V6a2 2 0 00-2-2H4zm12 4h1a1 1 0 100-2h-1a1 1 0 100 2zM4 13a1 1 0 011-1h6a1 1 0 110 2H5a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                </svg>
+            <div class="w-12 h-12 rounded-full overflow-hidden shadow-lg" style="border: 2px solid #00d9ff; background: #0b1220;">
+                <img src="{{ asset('images/ctrlp-logo.png') }}" alt="Ctrl+P logo" class="w-full h-full object-cover">
             </div>
             <div>
                 <p class="font-bold text-white text-xl" style="letter-spacing: 0.5px;">{{ config('app.name', 'IGP Hub') }}</p>
@@ -83,6 +81,24 @@
             <span>Buy List</span>
         </a>
 
+        <!-- Services Manager -->
+        <a
+            href="{{ route('admin.services-management.index') }}"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-all duration-300"
+            @if(request()->routeIs('admin.services-management.*'))
+                style="background: linear-gradient(135deg, #0f6fdd 0%, #1a7fff 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(15, 111, 221, 0.4); border: 2px solid #00d9ff;"
+            @else
+                style="color: #b0bcc4; border: 2px solid transparent;"
+                onmouseover="this.style.backgroundColor='rgba(15, 111, 221, 0.15)'; this.style.color='#ffffff'; this.style.borderColor='#2a3f5f'; this.style.transform='translateX(4px)';"
+                onmouseout="this.style.backgroundColor='transparent'; this.style.color='#b0bcc4'; this.style.borderColor='transparent'; this.style.transform='translateX(0)';"
+            @endif
+        >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10M7 16h6m4-9V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2h8"></path>
+            </svg>
+            <span>Services Manager</span>
+        </a>
+
         <!-- Orders (Collapsible Dropdown) -->
         <div x-data="{ ordersOpen: {{ request()->routeIs('admin.orders.*') ? 'true' : 'false' }} }" class="space-y-2">
             <button
@@ -102,8 +118,8 @@
                     @if($pendingOrderCount > 0)
                         <span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background-color: #f44336; color: white;">{{ $pendingOrderCount }}</span>
                     @endif
-                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': ordersOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    <svg class="w-4 h-4 transition-transform duration-300" :class="{ 'rotate-180': ordersOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
             </button>
