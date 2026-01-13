@@ -18,7 +18,6 @@
 /public/storage
 /storage/*.key
 /storage/pail
-# /vendor - Commented out for Vercel deployment (Composer not available)
 Homestead.json
 Homestead.yaml
 Thumbs.db
@@ -72,7 +71,7 @@ yarn-error.log*
 .env.backup
 
 # Composer / vendor
-/vendor/
+# (vendor folder committed for Vercel deployment)
 
 # Laravel storage & logs
 /storage/logs/
