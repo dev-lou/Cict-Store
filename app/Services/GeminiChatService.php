@@ -196,7 +196,7 @@ class GeminiChatService
      */
     private function buildSystemPrompt(): string
     {
-        $siteName = config('app.name', 'Ctrl+P');
+        $siteName = config('app.name', 'TheWerk');
 
         return <<<PROMPT
 You are CICT AI, the official customer support assistant for {$siteName}, the CICT Student Council's merchandise and printing services platform.

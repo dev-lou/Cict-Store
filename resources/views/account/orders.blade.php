@@ -1,4 +1,4 @@
-<x-app-layout :title="'Orders - Ctrl+P'">
+<x-app-layout :title="'Orders - TheWerk'">
     <style>
         :root {
             --ink: #0f172a;

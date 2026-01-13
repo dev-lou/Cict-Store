@@ -1,214 +1,697 @@
 <x-app-layout>
-    @section('title', 'Services - CICT Merch')
+    @section('title', 'Services - ' . config('app.name', 'TheWerk'))
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
+        /* ============ DESIGN TOKENS ============ */
+        :root {
+            --primary: #8B0000;
+            --primary-hover: #6B0000;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F9FAFB;
+            --border: #E5E7EB;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
 
-        body { background: #F8FAFC !important; font-family: 'Inter', sans-serif; color: #111827; font-size: 16px; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; }
+        /* ============ HERO SECTION ============ */
+        .services-hero {
+            min-height: 50vh;
+            padding: 160px 24px 60px;
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: -72px;
+            position: relative;
+            overflow: hidden;
+        }
 
-        .section-title { color: #0F172A !important; font-weight: 800; font-size: 2.1rem; margin-bottom: 8px; letter-spacing: -0.35px; }
-        .section-subtitle { color: #6B7280 !important; font-size: 0.96rem; font-weight: 500; margin-bottom: 28px; }
-        @media (max-width: 768px) { .section-title, .section-subtitle { text-align: center; } }
+        @media (max-width: 768px) {
+            .services-hero {
+                min-height: 55vh;
+                padding-top: 140px;
+                padding-bottom: 40px;
+            }
 
-        .bento-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; grid-auto-flow: dense; grid-auto-rows: minmax(200px, auto); }
-        @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (max-width: 640px) { .bento-grid { grid-template-columns: 1fr; } }
+            .services-hero-content {
+                margin-top: 60px;
+            }
+        }
 
-        .bento-card { background: #FFFFFF; border: 1px solid #E5E7EB; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; min-height: 200px; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1); text-align: left; align-items: flex-start; }
-        .bento-card:hover { box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08); transform: translateY(-3px); border-color: #8B0000; }
+        .services-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('{{ asset("images/cict_hero_bg.png") }}') center/cover;
+            opacity: 0.15;
+        }
 
-        .service-card { background: #FFFFFF; border: 1px solid #E5E7EB; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06); border-radius: 14px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
-        .service-card:hover { box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08); transform: translateY(-3px); border-color: #8B0000; }
+        .services-hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+        }
 
-        .service-card h3, .bento-card h3 { color: #0F172A; font-weight: 800; font-size: 1.08rem; margin: 0; letter-spacing: -0.15px; }
-        .service-card p, .bento-card p { color: #4B5563; font-size: 14px; line-height: 1.6; margin: 0; }
+        .services-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
 
-        .service-icon { background: #FCEEEF; color: #8B0000; border: 1px solid #F4D8D8; border-radius: 12px; margin: 0; }
+        .services-hero-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
 
-        .price-display { background: linear-gradient(135deg, #8B0000 0%, #A00000 100%); color: #FFFFFF; padding: 12px 14px; border-radius: 12px; margin-top: 10px; text-align: left; border: 1px solid rgba(255, 255, 255, 0.14); box-shadow: 0 10px 24px rgba(139, 0, 0, 0.25); }
-        .price-display p { color: #FFFFFF !important; margin: 0; font-size: 12.5px; }
+        .services-hero-subtitle {
+            font-size: clamp(14px, 2vw, 18px);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
 
-        .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; }
-        .price-item { background: #F7F8FB; border: 1px solid #E8EBF0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s ease; }
-        .price-item-label { font-size: 11.5px; color: #667085; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 700; }
-        .price-item-value { color: #8B0000; font-weight: 800; font-size: 17px; }
-        .price-item:hover { border-color: #8B0000; box-shadow: 0 10px 24px rgba(15,23,42,0.10); }
+        /* ============ MAIN CONTENT ============ */
+        .services-content {
+            background: var(--bg-secondary);
+            padding: 60px 24px 80px;
+        }
 
-        .paper-badge { display: inline-block; background: #FCEEEF; color: #8B0000; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        .instruction-card { background: #FFFFFF; border: 1px solid #E8EBF0; border-radius: 16px; box-shadow: 0 12px 36px rgba(15, 23, 42, 0.06); padding: 44px; margin-bottom: 32px; }
-        .instruction-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 28px; }
-        @media (max-width: 768px) { .instruction-steps { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
-        .instruction-step { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
-        .step-number { background: linear-gradient(135deg, #8B0000 0%, #A00000 100%); color: #FFFFFF; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; }
-        .step-content h4 { color: #0F172A !important; font-weight: 800; font-size: 1.05rem; margin: 0; }
-        .step-content p { color: #475467 !important; font-size: 14px; line-height: 1.6; margin: 0; }
-        .cta-section { text-align: center; margin-top: 36px; padding-top: 24px; border-top: 1px solid #E8EBF0; }
+        /* ============ CATEGORY SECTION ============ */
+        .category-section {
+            margin-bottom: 64px;
+        }
 
-        .messenger-btn { display: inline-block; background: linear-gradient(135deg, #8B0000 0%, #A00000 100%); color: #FFFFFF; padding: 14px 38px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 15px; transition: all 0.3s ease; box-shadow: 0 10px 24px rgba(139, 0, 0, 0.24); }
-        .messenger-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(139, 0, 0, 0.28); }
+        .category-section:last-child {
+            margin-bottom: 0;
+        }
 
-        .officer-card { background: #FFFFFF; border: 1px solid #E8EBF0; border-radius: 14px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); padding: 26px 22px; text-align: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 8px; min-height: 200px; }
-        .officer-card:hover { box-shadow: 0 14px 34px rgba(15, 23, 42, 0.1); transform: translateY(-3px); border-color: #8B0000; }
-        .officer-name { color: #0F172A !important; font-weight: 800; font-size: 1.08rem; margin: 0; letter-spacing: -0.1px; }
-        .officer-title { color: #8B0000 !important; font-weight: 700; font-size: 11.5px; letter-spacing: 0.6px; margin: 0; text-transform: uppercase; }
-        .officer-btn { display: inline-block; background: linear-gradient(135deg, #8B0000 0%, #A00000 100%); color: #FFFFFF; padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 10px 24px rgba(139, 0, 0, 0.18); }
-        .officer-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(139, 0, 0, 0.24); }
-        .officer-notice { background: #FFFFFF; border: 1px solid #E8EBF0; border-radius: 12px; padding: 22px; margin-top: 28px; font-size: 15px; color: #475467 !important; line-height: 1.7; text-align: center; box-shadow: inset 0 1px 0 #F4F5F7; }
-        .officer-notice strong { color: #8B0000 !important; font-size: 16px; }
+        .category-header {
+            margin-bottom: 24px;
+        }
 
-        .hours-card { background: linear-gradient(135deg, #8B0000 0%, #A00000 100%); border-radius: 14px; box-shadow: 0 12px 30px rgba(139, 0, 0, 0.2); padding: 48px 32px; text-align: center; margin-top: 48px; }
-        .hours-card h3 { color: #FFFFFF !important; font-weight: 800; font-size: 1.8rem; margin-bottom: 12px; }
-        .hours-content { color: rgba(255, 255, 255, 0.95) !important; font-size: 16px; font-weight: 500; line-height: 1.8; margin: 0; }
-        .hours-time { color: #FFFFFF !important; font-weight: 800; font-size: 20px; margin: 8px 0; }
-        .hours-note { color: rgba(255, 255, 255, 0.8) !important; font-size: 13px; margin-top: 12px; }
+        .category-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .category-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ============ SERVICES GRID ============ */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .service-card {
+                padding: 16px;
+            }
+
+            .service-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .service-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .service-title {
+                font-size: 14px;
+            }
+
+            .service-category-badge {
+                font-size: 10px;
+            }
+
+            .service-description {
+                font-size: 12px;
+                margin-bottom: 12px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .service-footer {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .service-price {
+                font-size: 16px;
+            }
+        }
+
+        /* ============ SERVICE CARD ============ */
+        .service-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.1), rgba(139, 0, 0, 0.05));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .service-title-group {
+            flex: 1;
+        }
+
+        .service-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .service-category-badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        .service-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .service-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .service-price-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .service-link {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .service-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ============ OFFICERS SECTION ============ */
+        .officers-section {
+            margin-top: 64px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .officers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .officers-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .officer-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 16px;
+                gap: 10px;
+            }
+
+            .officer-avatar {
+                width: 56px;
+                height: 56px;
+                font-size: 18px;
+            }
+
+            .officer-info {
+                min-width: 0;
+            }
+
+            .officer-name {
+                font-size: 13px;
+            }
+
+            .officer-title {
+                font-size: 11px;
+            }
+
+            .officer-action {
+                font-size: 12px;
+            }
+        }
+
+        .officer-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .officer-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .officer-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), #5C0000);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .officer-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .officer-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+
+        .officer-title {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .officer-action {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        /* ============ INSTRUCTIONS SECTION ============ */
+        .instructions-section {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            margin-top: 64px;
+        }
+
+        @media (max-width: 640px) {
+            .instructions-section {
+                padding: 24px;
+            }
+        }
+
+        .instructions-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .instructions-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .instructions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .instruction-step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .instructions-cta {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ============ HOURS CARD ============ */
+        .hours-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #5C0000 100%);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            text-align: center;
+            margin-top: 48px;
+            color: #fff;
+        }
+
+        .hours-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hours-time {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .hours-note {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* ============ MOBILE ADJUSTMENTS ============ */
+        @media (max-width: 640px) {
+            .services-hero {
+                min-height: 40vh;
+                padding: 120px 16px 40px;
+            }
+
+            .services-hero-title {
+                font-size: 28px;
+            }
+
+            .services-content {
+                padding: 40px 16px 60px;
+            }
+
+            .service-card {
+                padding: 20px;
+            }
+        }
     </style>
-    
+
     <!-- Hero Section -->
-    <div style="background: linear-gradient(135deg, rgba(139, 0, 0, 0.88) 0%, rgba(160, 0, 0, 0.86) 100%), url('https://www.sumnerone.com/hs-fs/hubfs/Essential%20Printing%20Services%20_%20SumnerOne.jpg?width=663&height=347&name=Essential%20Printing%20Services%20_%20SumnerOne.jpg') center/cover; min-height: 85vh; display: flex; align-items: center; justify-content: center; position: relative; margin-top: -80px; padding-top: 220px; padding-bottom: 140px; border-radius: 0 0 32px 32px; box-shadow: inset 0 -80px 160px rgba(0,0,0,0.18);">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style="text-align: center; color: white; z-index: 10;">
-            <div class="max-w-4xl mx-auto text-center">
-                <h1 class="mb-4 mt-8" style="font-size: 56px; font-weight: 900; color: #FFFFFF; text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); letter-spacing: -2px;">Services & Solutions</h1>
-                <p style="font-size: 20px; color: rgba(255, 255, 255, 0.95); max-width: 600px; margin: 0 auto; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);">Print, IT, and digital support for students, orgs, and events   fast and reliable</p>
+    <section class="services-hero">
+        <div class="services-hero-content">
+            <div class="services-hero-badge">
+                <span>🖨️</span>
+                <span>Professional Services</span>
             </div>
+            <h1 class="services-hero-title gsap-hero-title">Our Services</h1>
+            <p class="services-hero-subtitle gsap-hero-subtitle">
+                Print, IT, and digital solutions for students, organizations, and events.
+            </p>
         </div>
-    </div>
+    </section>
 
-    <!-- Main Content -->
-    <div style="background: #F7F8FB; min-height: auto; width: 100%; padding-top: 0;">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style="background: #F7F8FB; padding: 80px 0;">
-        
-        <!-- Services grouped by category -->
-        @forelse($groupedServices as $category => $categoryServices)
-        <div style="margin-bottom: 96px;">
-            <h2 class="section-title">{{ $category }}</h2>
-            @php $catDesc = $categoryDescriptions[$category] ?? null; @endphp
-            <p class="section-subtitle">{{ $catDesc ?: 'Pick a service to get a quick quote and timeline' }}</p>
-            <div class="bento-grid">
-                @foreach($categoryServices as $service)
-                    @php
-                        $startingPrice = $service->price_bw ?? $service->price_color;
-                        $priceLabel = $service->price_label ? $service->price_label : 'per unit';
-                    @endphp
-                    <div class="bento-card reveal-on-scroll" data-reveal-delay="0">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="service-icon w-14 h-14 rounded-lg flex items-center justify-center">
-                                <span style="font-size: 26px;">{{ $service->icon ?? '🖨️' }}</span>
-                            </div>
-                            <div>
-                                <h3 style="margin:0;">{{ $service->title }}</h3>
-                                <div style="color:#8B0000; font-weight:700; font-size:12px; letter-spacing:0.5px; text-transform:uppercase;">{{ $service->category ?? 'Service' }}</div>
-                            </div>
-                        </div>
-                        <p style="margin:0; color:#555; line-height:1.7;">{{ $service->description }}</p>
-                        @if($startingPrice)
-                        <div class="price-display" style="margin-top:auto;">
-                            <p style="font-size: 13px; opacity: 0.9; margin-bottom: 4px;">Starting from</p>
-                            <p style="font-size: 26px; font-weight: 800;">₱{{ number_format($startingPrice, 2) }}/{{ $priceLabel }}</p>
-                        </div>
-                        @endif
-                        @if($service->options && $service->options->count())
-                            <div style="margin-top: 14px;">
-                                <a href="{{ route('services.show', $service->slug) }}" class="inline-flex items-center gap-2 text-[#8B0000] font-semibold hover:underline">
-                                    View details
-                                    <span aria-hidden="true">→</span>
-                                </a>
-                            </div>
-                        @endif
+    <!-- Services Content -->
+    <div class="services-content">
+        <div class="services-container">
+            @forelse($groupedServices as $category => $categoryServices)
+                <div class="category-section">
+                    <div class="category-header">
+                        <h2 class="category-title">{{ $category }}</h2>
+                        @php $catDesc = $categoryDescriptions[$category] ?? null; @endphp
+                        <p class="category-subtitle">{{ $catDesc ?: 'Browse our available services' }}</p>
                     </div>
-                @endforeach
-            </div>
-        </div>
-        @empty
-            <div class="text-center text-gray-500" style="margin-bottom: 96px;">No services available right now.</div>
-        @endforelse
 
-        <!-- Submission Instructions Section -->
-        <div style="margin-bottom: 96px;">
-            <h2 class="section-title">How to Place a Service Request</h2>
-            <p class="section-subtitle">A simple 4-step flow for any service we offer</p>
-            <div class="instruction-card reveal-on-scroll" data-reveal-delay="0">
-                <div class="instruction-steps">
-                    <div class="instruction-step reveal-on-scroll" data-reveal-delay="0">
+                    <div class="services-grid">
+                        @foreach($categoryServices as $service)
+                            @php
+                                $startingPrice = $service->price_bw ?? $service->price_color;
+                                $priceLabel = $service->price_label ?: 'per unit';
+                            @endphp
+                            <a href="{{ route('services.show', $service->slug) }}" class="service-card reveal-on-scroll">
+                                <div class="service-header">
+                                    <div class="service-icon">{{ $service->icon ?? '🖨️' }}</div>
+                                    <div class="service-title-group">
+                                        <h3 class="service-title">{{ $service->title }}</h3>
+                                        <span class="service-category-badge">{{ $service->category ?? 'Service' }}</span>
+                                    </div>
+                                </div>
+                                <p class="service-description">{{ Str::limit($service->description, 120) }}</p>
+                                <div class="service-footer">
+                                    @if($startingPrice)
+                                        <div>
+                                            <div class="service-price-label">Starting from</div>
+                                            <div class="service-price">₱{{ number_format($startingPrice, 2) }}</div>
+                                        </div>
+                                    @endif
+                                    <span class="service-link">
+                                        Details <span>→</span>
+                                    </span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @empty
+                <div class="empty-state">
+                    <p class="empty-state-text">No services available at the moment.</p>
+                </div>
+            @endforelse
+
+            <!-- Officers Section -->
+            @if(isset($officers) && $officers->count() > 0)
+                <div class="officers-section reveal-on-scroll">
+                    <div class="section-header" style="margin-bottom: 32px;">
+                        <h2 class="section-title">Our Officers</h2>
+                        <p class="section-subtitle">Contact our team for service inquiries and assistance</p>
+                    </div>
+
+                    <div class="officers-grid">
+                        @foreach($officers as $officer)
+                            <a href="{{ $officer->messenger_url }}" target="_blank" class="officer-card">
+                                <div class="officer-avatar">
+                                    {{ $officer->initials }}
+                                </div>
+                                <div class="officer-info">
+                                    <h4 class="officer-name">{{ $officer->name }}</h4>
+                                    <p class="officer-title">{{ $officer->title }}</p>
+                                </div>
+                                <div class="officer-action">
+                                    <span>Message →</span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- Instructions Section -->
+            <div class="instructions-section reveal-on-scroll">
+                <h2 class="instructions-title">How to Request a Service</h2>
+                <p class="instructions-subtitle">Simple 4-step process to get started</p>
+
+                <div class="instructions-grid">
+                    <div class="instruction-step">
                         <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>Tell us what you need</h4>
-                            <p>Share the service type and the outcome you're aiming for</p>
-                        </div>
+                        <h4 class="step-title">Tell Us What You Need</h4>
+                        <p class="step-description">Share the service type and your requirements</p>
                     </div>
-
-                    <div class="instruction-step reveal-on-scroll" data-reveal-delay="100">
+                    <div class="instruction-step">
                         <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>Send files or details</h4>
-                            <p>Upload documents, specs, sizes, or reference photos</p>
-                        </div>
+                        <h4 class="step-title">Send Your Files</h4>
+                        <p class="step-description">Upload documents, specs, or reference photos</p>
                     </div>
-
-                    <div class="instruction-step reveal-on-scroll" data-reveal-delay="200">
+                    <div class="instruction-step">
                         <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>We confirm price & timing</h4>
-                            <p>We’ll reply with cost, options, and schedule before we start</p>
-                        </div>
+                        <h4 class="step-title">We Confirm Details</h4>
+                        <p class="step-description">We'll reply with cost and timeline</p>
                     </div>
-
-                    <div class="instruction-step reveal-on-scroll" data-reveal-delay="300">
+                    <div class="instruction-step">
                         <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h4>Approve & receive</h4>
-                            <p>Approve the quote, then pick up or receive the completed work</p>
-                        </div>
+                        <h4 class="step-title">Approve & Receive</h4>
+                        <p class="step-description">Confirm the quote and pick up your order</p>
                     </div>
                 </div>
 
-                <div class="cta-section">
-                    <a href="https://www.messenger.com/e2ee/t/780806171591045" target="_blank" class="messenger-btn">
-                        <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0C5.373 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.42.09.574-.182.574-.407v-1.77c-2.84.603-3.437-1.184-3.437-1.184-.38-.975-.93-1.235-.93-1.235-.76-.52.056-.508.056-.508.847.06 1.293.867 1.293.867.75 1.288 1.96.916 2.44.7.075-.546.292-.916.532-1.126-1.855-.21-3.8-.927-3.8-4.106 0-.91.325-1.655.865-2.242-.087-.21-.375-1.056.082-2.2 0 0 .704-.224 2.304.848.668-.186 1.383-.278 2.093-.282.71.004 1.425.096 2.093.282 1.6-1.072 2.303-.848 2.303-.848.457 1.144.17 1.99.084 2.2.54.587.865 1.332.865 2.242 0 3.188-1.948 3.893-3.81 4.098.3.258.573.77.573 1.55v2.3c0 .227.153.502.576.407C20.565 21.795 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        Chat with us on Messenger
+                <div class="instructions-cta">
+                    <a href="https://www.messenger.com/e2ee/t/780806171591045" target="_blank" class="btn-primary">
+                        Message Us on Messenger
+                        <span>→</span>
                     </a>
                 </div>
             </div>
-        </div>
 
-        <!-- Officers in Charge Section -->
-        <div style="margin-bottom: 96px;">
-            <h2 class="section-title">Service Contacts</h2>
-            <p class="section-subtitle">Reach our team for printing, IT, or digital requests</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                @forelse($officers as $officer)
-                    <div class="officer-card reveal-on-scroll" data-reveal-delay="0">
-                        <h4 class="officer-name">{{ $officer->name }}</h4>
-                        <p class="officer-title">{{ $officer->title ?? 'SERVICE OFFICER' }}</p>
-                        @if($officer->messenger_url)
-                            <a href="{{ $officer->messenger_url }}" target="_blank" class="officer-btn">Message on FB</a>
-                        @else
-                            <span style="color: #666666; font-size: 14px;">No messenger link available.</span>
-                        @endif
-                    </div>
-                @empty
-                    <div class="col-span-4 text-center text-gray-500">Officers are being updated. Please check back soon.</div>
-                @endforelse
-            </div>
-
-            <div class="officer-notice">
-                <p><strong>📌 Important Note</strong></p>
-                <p>If the Student Council office is closed, please contact any of our officers directly via Facebook Messenger for assistance with any service request.</p>
-            </div>
-        </div>
-
-        <!-- Operating Hours Section -->
-        <div class="hours-card reveal-on-scroll" data-reveal-delay="0">
-            <h3>Operating Hours</h3>
-            <div class="hours-content">
-                <p style="margin: 0;">Monday – Friday</p>
-                <p class="hours-time">8:00 AM – 5:00 PM</p>
+            <!-- Hours Card -->
+            <div class="hours-card reveal-on-scroll">
+                <h3 class="hours-title">Service Hours</h3>
+                <p class="hours-time">Monday – Friday: 8:00 AM – 5:00 PM</p>
                 <p class="hours-note">Closed on weekends and holidays</p>
             </div>
         </div>
     </div>
-    </div>
+
 </x-app-layout>

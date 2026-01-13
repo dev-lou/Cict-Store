@@ -1,7 +1,7 @@
 <x-app-layout :title="'Checkout - CICT Merch'">
-    <div style="background: #F5F7FB; min-height: 100vh; width: 100%; padding-top: 80px;">
+    <div style="background: #F5F7FB; min-height: 100vh; width: 100%; padding-top: 100px;">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
+        /* Fonts already loaded in app-layout */
 
         body {
             background: #FFFFFF !important;
@@ -9,7 +9,8 @@
         }
 
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
         }
 
         /* Page Header */
@@ -395,20 +396,105 @@
         }
 
         @media (max-width: 768px) {
+            .order-item {
+                gap: 12px;
+                padding: 14px;
+            }
+
             .order-item-image {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
+            }
+
+            .order-item-name {
+                font-size: 14px;
+            }
+
+            .order-item-variant {
+                font-size: 12px;
+            }
+
+            .order-item-qty {
+                font-size: 12px;
+            }
+
+            .order-item-price {
+                font-size: 15px;
             }
 
             .checkout-header h1 {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
             }
+
+            .pickup-info .hours {
+                font-size: 14px;
+            }
+
+            .pickup-info .location {
+                font-size: 12px;
+            }
+
+            .checkout-header-badge {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+
+            .checkout-card {
+                padding: 16px;
+                border-radius: 12px;
+            }
+
+            .checkout-card h2 {
+                font-size: 1.4rem;
+                margin-bottom: 20px;
+            }
+
+            .form-label {
+                font-size: 12px;
+            }
+
+            .form-input {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+
+            .checkout-btn {
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+
+            .back-btn {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+
             /* Ensure the order summary card is not sticky on mobile to prevent awkward overlays */
             .order-summary-card {
                 position: static !important;
                 top: auto !important;
                 width: 100% !important;
                 margin-bottom: 16px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .order-item {
+                flex-direction: row;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .order-item-image {
+                width: 60px;
+                height: 60px;
+            }
+
+            .order-item-name {
+                font-size: 13px;
+            }
+
+            .checkout-header h1 {
+                font-size: 1.4rem;
             }
         }
     </style>

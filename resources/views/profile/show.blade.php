@@ -1,4 +1,4 @@
-<x-app-layout :title="'My Profile - Ctrl+P'">
+<x-app-layout :title="'My Profile - TheWerk'">
     <style>
         :root {
             --ink: #0f172a;

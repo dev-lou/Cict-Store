@@ -1,4 +1,4 @@
-<x-app-layout :title="'Cart - Ctrl+P'">
+<x-app-layout :title="'Cart - TheWerk'">
     <style>
         :root {
             --ink: #0f172a;
@@ -60,11 +60,38 @@
         .empty p { margin:0 0 16px 0; color:var(--muted); font-weight:600; }
 
         @media(max-width: 768px) {
-            .cart-shell { padding-top: 90px; }
-            .item { grid-template-columns: 1fr; }
-            .thumb { width:100%; height:180px; }
-            .meta-row { align-items:flex-start; }
-            .cart-grid { gap:12px; }
+            .cart-shell { padding-top: 100px; padding-left: 12px; padding-right: 12px; }
+            .cart-hero { margin-bottom: 16px; }
+            .cart-hero h1 { font-size: 26px; }
+            .cart-hero p { font-size: 13px; }
+            .chip { padding: 6px 10px; font-size: 13px; }
+            .pill-link { padding: 8px 12px; font-size: 13px; }
+            .item { grid-template-columns: 80px 1fr; gap: 12px; padding: 12px; }
+            .thumb { width: 80px; height: 80px; border-radius: 10px; }
+            .item-head h3 { font-size: 14px; }
+            .item-head p { font-size: 11px; }
+            .meta-row { flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 8px; }
+            .qty { padding: 4px; }
+            .qty button { padding: 6px 8px; font-size: 14px; }
+            .qty input { width: 40px; font-size: 14px; }
+            .price { font-size: 15px; }
+            .subtle { font-size: 12px; }
+            .remove { padding: 8px 10px; font-size: 12px; }
+            .cart-grid { gap: 12px; }
+            .card.pad { padding: 14px; }
+            .summary h3 { font-size: 18px; }
+            .summary-row { font-size: 14px; }
+            .summary-total { font-size: 18px; }
+            .primary-btn { padding: 12px; font-size: 15px; }
+            .ghost-btn { padding: 10px; font-size: 14px; }
+            .note { font-size: 12px; }
+            .tag { padding: 5px 8px; font-size: 11px; }
+        }
+
+        @media(max-width: 480px) {
+            .cart-shell { padding-top: 95px; padding-left: 10px; padding-right: 10px; }
+            .cart-hero { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .cart-hero h1 { font-size: 24px; }
         }
     </style>
 

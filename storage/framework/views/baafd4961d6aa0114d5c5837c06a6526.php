@@ -1,5 +1,14 @@
-<x-app-layout>
-    @section('title', $service->title . ' - CICT Merch')
+<?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4619374cef299e94fd7263111d0abc69 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->startSection('title', $service->title . ' - CICT Merch'); ?>
 
     <!-- Decorative Red Header Banner (Behind Navbar) -->
     <div
@@ -260,7 +269,7 @@
 
         <div class="page-shell">
             <div style="margin-bottom: 24px;">
-                <a href="{{ route('services.index') }}" class="back-link">
+                <a href="<?php echo e(route('services.index')); ?>" class="back-link">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                         <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" fill="none" />
@@ -273,19 +282,19 @@
                 <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
                     <div
                         style="width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg,#8B0000 0%,#A00000 100%); color:#fff; display:grid; place-items:center; font-size:32px; box-shadow: 0 8px 20px rgba(139, 0, 0, 0.25);">
-                        {{ $service->icon ?? '🖨️' }}</div>
+                        <?php echo e($service->icon ?? '🖨️'); ?></div>
                     <div>
                         <h1 style="margin:0; font-size:2rem; font-weight:900; color:#1E293B; letter-spacing:-0.5px;">
-                            {{ $service->title }}</h1>
+                            <?php echo e($service->title); ?></h1>
                         <div style="color:#667085; font-size:15px; font-weight:600; margin-top:4px;">
-                            {{ $service->category ?? 'General' }}</div>
+                            <?php echo e($service->category ?? 'General'); ?></div>
                     </div>
                 </div>
                 <p style="margin:0; color:#475569; line-height:1.7; font-size:15.5px; font-weight:500;">
-                    {{ $service->description }}</p>
+                    <?php echo e($service->description); ?></p>
             </div>
 
-            @if($options->count())
+            <?php if($options->count()): ?>
                 <div
                     style="margin-bottom:32px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                     <div>
@@ -295,31 +304,40 @@
                     </div>
                 </div>
                 <div class="options-grid">
-                    @foreach($options as $option)
-                        <div class="paper-card {{ $option->size_class ?? 'standard' }}">
-                            @if($option->badge)
-                                <span class="paper-badge">{{ $option->badge }}</span>
-                            @endif
-                            <h4 style="margin:0; font-weight:800; font-size:1.25rem; color:#1a1a1a;">{{ $option->name }}</h4>
-                            @if($option->dimensions)
-                                <div class="paper-card-dims">{{ $option->dimensions }}</div>
-                            @endif
+                    <?php $__currentLoopData = $options; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $option): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="paper-card <?php echo e($option->size_class ?? 'standard'); ?>">
+                            <?php if($option->badge): ?>
+                                <span class="paper-badge"><?php echo e($option->badge); ?></span>
+                            <?php endif; ?>
+                            <h4 style="margin:0; font-weight:800; font-size:1.25rem; color:#1a1a1a;"><?php echo e($option->name); ?></h4>
+                            <?php if($option->dimensions): ?>
+                                <div class="paper-card-dims"><?php echo e($option->dimensions); ?></div>
+                            <?php endif; ?>
                             <div class="price-grid">
                                 <div class="price-item">
-                                    <div class="price-item-label">{{ $option->price_bw_label ?? 'Price' }}</div>
+                                    <div class="price-item-label"><?php echo e($option->price_bw_label ?? 'Price'); ?></div>
                                     <div class="price-item-value">
-                                        {{ $option->price_bw ? '₱' . number_format($option->price_bw, 2) : '—' }}</div>
+                                        <?php echo e($option->price_bw ? '₱' . number_format($option->price_bw, 2) : '—'); ?></div>
                                 </div>
                                 <div class="price-item">
-                                    <div class="price-item-label">{{ $option->price_color_label ?? 'Secondary' }}</div>
+                                    <div class="price-item-label"><?php echo e($option->price_color_label ?? 'Secondary'); ?></div>
                                     <div class="price-item-value">
-                                        {{ $option->price_color ? '₱' . number_format($option->price_color, 2) : '—' }}</div>
+                                        <?php echo e($option->price_color ? '₱' . number_format($option->price_color, 2) : '—'); ?></div>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4619374cef299e94fd7263111d0abc69)): ?>
+<?php $attributes = $__attributesOriginal4619374cef299e94fd7263111d0abc69; ?>
+<?php unset($__attributesOriginal4619374cef299e94fd7263111d0abc69); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4619374cef299e94fd7263111d0abc69)): ?>
+<?php $component = $__componentOriginal4619374cef299e94fd7263111d0abc69; ?>
+<?php unset($__componentOriginal4619374cef299e94fd7263111d0abc69); ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/services/show.blade.php ENDPATH**/ ?>

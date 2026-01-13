@@ -1,4 +1,4 @@
-<x-app-layout :title="'Notifications - Ctrl+P'">
+<x-app-layout :title="'Notifications - TheWerk'">
     <style>
         :root {
             --ink: #0f172a;

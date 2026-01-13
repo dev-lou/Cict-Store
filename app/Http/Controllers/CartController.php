@@ -53,9 +53,9 @@ class CartController extends Controller
      * Add an item to the cart.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -66,6 +66,9 @@ class CartController extends Controller
         $product = Product::find($validated['product_id']);
 
         if (!$product) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Product not found.'], 404);
+            }
             return redirect()->back()->with('error', 'Product not found.');
         }
 
@@ -87,6 +90,15 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
+
+        // Return JSON for AJAX requests
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product added to cart!',
+                'cart_count' => count($cart),
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Product added to cart!');
     }

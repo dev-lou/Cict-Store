@@ -72,7 +72,7 @@
         <div class="paper" id="receipt-content">
             <div class="header">
                 <div>
-                    <div class="brand">{{ config('app.name', 'IGP Hub') }}</div>
+                    <div class="brand">{{ config('app.name', 'TheWerk') }}</div>
                     <div class="tagline">Official receipt • CICT Student Council Office</div>
                 </div>
                 <div style="text-align:right;">

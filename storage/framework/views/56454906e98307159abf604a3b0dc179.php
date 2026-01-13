@@ -8,682 +8,702 @@
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-    <?php $__env->startSection('title', 'Services - CICT Merch'); ?>
+    <?php $__env->startSection('title', 'Services - ' . config('app.name', 'TheWerk')); ?>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
-
-        body {
-            background: #FFFAF1 !important;
-            font-family: 'Inter', sans-serif;
+        /* ============ DESIGN TOKENS ============ */
+        :root {
+            --primary: #8B0000;
+            --primary-hover: #6B0000;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F9FAFB;
+            --border: #E5E7EB;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* Section Headers */
-        .section-title {
-            color: #1a1a1a !important;
-            font-weight: 700;
-            font-size: 2.25rem;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .section-subtitle {
-            color: #888888 !important;
-            font-size: 1rem;
-            font-weight: 400;
-            margin-bottom: 48px;
-        }
-
-        /* Mobile: Center section titles */
-        @media (max-width: 768px) {
-            .section-title,
-            .section-subtitle {
-                text-align: center;
-            }
-        }
-
+        /* ============ HERO SECTION ============ */
         .services-hero {
-            background: transparent !important;
-        }
-
-        .service-card {
-            background: #FFFFFF;
-            border: 1px solid #F0F0F0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 50vh;
+            padding: 160px 24px 60px;
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: -72px;
+            position: relative;
             overflow: hidden;
         }
 
-        /* Mobile: Center service card text */
         @media (max-width: 768px) {
-            .service-card {
-                text-align: center;
+            .services-hero {
+                min-height: 55vh;
+                padding-top: 140px;
+                padding-bottom: 40px;
             }
-            
-            .service-icon {
-                margin: 0 auto;
+
+            .services-hero-content {
+                margin-top: 60px;
             }
         }
 
-        .service-card:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transform: translateY(-4px);
-            border-color: #8B0000;
+        .services-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('<?php echo e(asset("images/cict_hero_bg.png")); ?>') center/cover;
+            opacity: 0.15;
         }
 
-        .service-card h3 {
-            color: #1a1a1a !important;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 1.35rem;
-            margin-bottom: 12px;
+        .services-hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
         }
 
-        .service-card p {
-            color: #666666 !important;
-            font-size: 15px;
-            line-height: 1.7;
+        .services-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .services-hero-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .services-hero-subtitle {
+            font-size: clamp(14px, 2vw, 18px);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        /* ============ MAIN CONTENT ============ */
+        .services-content {
+            background: var(--bg-secondary);
+            padding: 60px 24px 80px;
+        }
+
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ============ CATEGORY SECTION ============ */
+        .category-section {
+            margin-bottom: 64px;
+        }
+
+        .category-section:last-child {
             margin-bottom: 0;
         }
 
-        .service-icon {
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            border-radius: 10px;
+        .category-header {
+            margin-bottom: 24px;
         }
 
-        .price-display {
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 16px;
-            text-align: center;
+        .category-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
         }
 
-        .price-display p {
-            color: #FFFFFF !important;
-            margin: 0;
+        .category-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
         }
 
-        /* Paper Size Card */
-        .paper-card {
-            background: #FFFFFF;
-            border: 1px solid #F0F0F0;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+        /* ============ SERVICES GRID ============ */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .service-card {
+                padding: 16px;
+            }
+
+            .service-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .service-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .service-title {
+                font-size: 14px;
+            }
+
+            .service-category-badge {
+                font-size: 10px;
+            }
+
+            .service-description {
+                font-size: 12px;
+                margin-bottom: 12px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .service-footer {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .service-price {
+                font-size: 16px;
+            }
+        }
+
+        /* ============ SERVICE CARD ============ */
+        .service-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            text-decoration: none;
         }
 
-        .paper-card.short {
-            height: 300px;
-            padding: 24px 28px;
-        }
-
-        .paper-card.standard {
-            height: 420px;
-            padding: 40px 28px;
-        }
-
-        .paper-card.long {
-            height: 540px;
-            padding: 56px 28px;
-        }
-
-        .paper-card:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .service-card:hover {
             transform: translateY(-4px);
-            border-color: #8B0000;
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
         }
 
-        .paper-card h4 {
-            color: #1a1a1a !important;
-            font-weight: 700;
+        .service-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
             margin-bottom: 16px;
-            margin-top: 0;
         }
 
-        .paper-card.short h4 {
-            font-size: 1.6rem;
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.1), rgba(139, 0, 0, 0.05));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
         }
 
-        .paper-card.standard h4 {
-            font-size: 2.2rem;
+        .service-title-group {
+            flex: 1;
         }
 
-        .paper-card.long h4 {
-            font-size: 2.8rem;
-        }
-
-        .paper-card-dims {
-            color: #888888 !important;
-            font-size: 13px;
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-
-        .paper-badge {
-            display: inline-block;
-            background: #F0F0F0;
-            color: #666666;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
+        .service-title {
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 12px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .service-category-badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .price-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-top: auto;
+        .service-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            flex: 1;
         }
 
-        .price-item {
-            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
-            padding: 24px 16px;
-            border-radius: 10px;
-            border: 1px solid #F0F0F0;
-            transition: all 0.3s ease;
+        .service-footer {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 80px;
-        }
-
-        .price-item:hover {
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            border-color: #8B0000;
-        }
-
-        .price-item-label {
-            font-size: 12px;
-            color: #999999 !important;
-            margin-bottom: 8px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            transition: color 0.3s ease;
-        }
-
-        .price-item:hover .price-item-label {
-            color: rgba(255, 255, 255, 0.8) !important;
-        }
-
-        .price-item-value {
-            color: #8B0000 !important;
-            font-weight: 700;
-            font-size: 20px;
-            transition: color 0.3s ease;
-        }
-
-        .price-item:hover .price-item-value {
-            color: #FFFFFF !important;
-        }
-
-        /* Instructions Section */
-        .instruction-card {
-            background: #FFFFFF;
-            border: 1px solid #F0F0F0;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            padding: 48px;
-            margin-bottom: 32px;
-        }
-
-        .instruction-steps {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 48px;
-            margin-bottom: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .instruction-steps {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-        }
-
-        .instruction-step {
-            display: flex;
-            flex-direction: column;
             align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .service-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .service-price-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .service-link {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .service-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ============ OFFICERS SECTION ============ */
+        .officers-section {
+            margin-top: 64px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
             text-align: center;
         }
 
-        .step-number {
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            width: 56px;
-            height: 56px;
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .officers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .officers-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .officer-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 16px;
+                gap: 10px;
+            }
+
+            .officer-avatar {
+                width: 56px;
+                height: 56px;
+                font-size: 18px;
+            }
+
+            .officer-info {
+                min-width: 0;
+            }
+
+            .officer-name {
+                font-size: 13px;
+            }
+
+            .officer-title {
+                font-size: 11px;
+            }
+
+            .officer-action {
+                font-size: 12px;
+            }
+        }
+
+        .officer-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .officer-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .officer-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), #5C0000);
+            color: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
             font-weight: 700;
-            font-size: 22px;
-            margin-bottom: 16px;
             flex-shrink: 0;
         }
 
-        .step-content h4 {
-            color: #1a1a1a !important;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .step-content p {
-            color: #666666 !important;
-            font-size: 14px;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .cta-section {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 32px;
-            border-top: 1px solid #F0F0F0;
-        }
-
-        .messenger-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            padding: 14px 40px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.2);
-        }
-
-        .messenger-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(139, 0, 0, 0.3);
-        }
-
-        /* Officers Section */
-        .officer-card {
-            background: #FFFFFF;
-            border: 1px solid #F0F0F0;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            padding: 32px 28px;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 200px;
-        }
-
-        .officer-card:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transform: translateY(-4px);
-            border-color: #8B0000;
-        }
-
-        /* Mobile: Officers 2 columns */
-        @media (max-width: 768px) {
-            .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 16px !important;
-            }
+        .officer-info {
+            flex: 1;
+            min-width: 0;
         }
 
         .officer-name {
-            color: #1a1a1a !important;
-            font-weight: 700;
-            font-size: 1.15rem;
-            margin-bottom: 6px;
-            margin-top: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
         }
 
         .officer-title {
-            color: #8B0000 !important;
-            font-weight: 600;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
         }
 
-        .officer-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
+        .officer-action {
+            font-size: 13px;
             font-weight: 600;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        /* ============ INSTRUCTIONS SECTION ============ */
+        .instructions-section {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            margin-top: 64px;
+        }
+
+        @media (max-width: 640px) {
+            .instructions-section {
+                padding: 24px;
+            }
+        }
+
+        .instructions-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .instructions-subtitle {
             font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.2);
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 32px;
         }
 
-        .officer-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(139, 0, 0, 0.3);
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
         }
 
-        .officer-notice {
-            background: linear-gradient(135deg, #FFF9F0 0%, #FFFBF5 100%);
-            border: 2px solid #FFD9B3;
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 32px;
-            font-size: 15px;
-            color: #333333 !important;
-            line-height: 1.8;
+        @media (max-width: 768px) {
+            .instructions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .instruction-step {
             text-align: center;
         }
 
-        .officer-notice strong {
-            color: #8B0000 !important;
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+
+        .step-title {
             font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
         }
 
-        .officer-notice p {
-            margin: 0;
-            color: #555555 !important;
+        .step-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
         }
 
-        /* Hours Section */
+        .instructions-cta {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ============ HOURS CARD ============ */
         .hours-card {
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(139, 0, 0, 0.15);
-            padding: 48px 32px;
+            background: linear-gradient(135deg, var(--primary) 0%, #5C0000 100%);
+            border-radius: var(--radius-lg);
+            padding: 48px;
             text-align: center;
             margin-top: 48px;
+            color: #fff;
         }
 
-        .hours-card h3 {
-            color: #FFFFFF !important;
+        .hours-title {
+            font-size: 24px;
             font-weight: 700;
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-        }
-
-        .hours-content {
-            color: rgba(255, 255, 255, 0.95) !important;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.8;
-            margin: 0;
+            margin-bottom: 16px;
         }
 
         .hours-time {
-            color: #FFFFFF !important;
-            font-weight: 700;
             font-size: 20px;
-            margin: 8px 0;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
         .hours-note {
-            color: rgba(255, 255, 255, 0.7) !important;
-            font-size: 13px;
-            margin-top: 12px;
+            font-size: 14px;
+            opacity: 0.9;
         }
 
-        /* Hero Typography */
-        .services-hero h1 {
-            font-family: 'Poppins', sans-serif;
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
         }
 
-        .services-hero p {
+        .empty-state-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* ============ MOBILE ADJUSTMENTS ============ */
+        @media (max-width: 640px) {
+            .services-hero {
+                min-height: 40vh;
+                padding: 120px 16px 40px;
+            }
+
+            .services-hero-title {
+                font-size: 28px;
+            }
+
+            .services-content {
+                padding: 40px 16px 60px;
+            }
+
+            .service-card {
+                padding: 20px;
+            }
         }
     </style>
-    
+
     <!-- Hero Section -->
-    <div style="background: linear-gradient(135deg, rgba(139, 0, 0, 0.9) 0%, rgba(160, 0, 0, 0.9) 100%), url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=500&fit=crop') center/cover; min-height: 550px; display: flex; align-items: center; justify-content: center; position: relative; margin-top: 0;">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style="text-align: center; color: white; z-index: 10;">
-            <div class="max-w-4xl mx-auto text-center">
-                <h1 class="mb-4 mt-8" style="font-size: 56px; font-weight: 900; color: #FFFFFF; text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); letter-spacing: -2px;">Printing Services</h1>
-                <p style="font-size: 20px; color: rgba(255, 255, 255, 0.95); max-width: 600px; margin: 0 auto; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);">Fast, affordable, and professional printing solutions for all your needs</p>
+    <section class="services-hero">
+        <div class="services-hero-content">
+            <div class="services-hero-badge">
+                <span>🖨️</span>
+                <span>Professional Services</span>
             </div>
+            <h1 class="services-hero-title gsap-hero-title">Our Services</h1>
+            <p class="services-hero-subtitle gsap-hero-subtitle">
+                Print, IT, and digital solutions for students, organizations, and events.
+            </p>
         </div>
-    </div>
+    </section>
 
-    <!-- Main Content -->
-    <div style="background: #FFFAF1; min-height: auto; width: 100%; padding-top: 0;">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style="background: #FFFAF1; padding: 80px 0;">
-        
-        <!-- Service Options Section -->
-        <div style="margin-bottom: 96px;">
-            <h2 class="section-title">Service Options</h2>
-            <p class="section-subtitle">Choose between black & white or vibrant color printing</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Black & White Printing -->
-                <div class="service-card p-8 reveal-on-scroll" data-reveal-delay="0">
-                    <div class="service-icon w-16 h-16 rounded-lg flex items-center justify-center mb-8">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m0 0H7m10 0v2a2 2 0 01-2 2H9a2 2 0 01-2-2v-2m6-4V9a2 2 0 00-2-2m0 0V7a2 2 0 00-2-2m0 0H7a2 2 0 00-2 2v4m0 0v2a2 2 0 002 2h10a2 2 0 002-2v-2"></path>
-                        </svg>
+    <!-- Services Content -->
+    <div class="services-content">
+        <div class="services-container">
+            <?php $__empty_1 = true; $__currentLoopData = $groupedServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category => $categoryServices): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <div class="category-section">
+                    <div class="category-header">
+                        <h2 class="category-title"><?php echo e($category); ?></h2>
+                        <?php $catDesc = $categoryDescriptions[$category] ?? null; ?>
+                        <p class="category-subtitle"><?php echo e($catDesc ?: 'Browse our available services'); ?></p>
                     </div>
-                    <h3>Black & White Printing</h3>
-                    <p>High-quality black and white printing on premium paper. Ideal for documents, assignments, and professional materials.</p>
-                    <div class="price-display">
-                        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">Starting from</p>
-                        <p style="font-size: 28px; font-weight: 700;">₱2.00/page</p>
+
+                    <div class="services-grid">
+                        <?php $__currentLoopData = $categoryServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php
+                                $startingPrice = $service->price_bw ?? $service->price_color;
+                                $priceLabel = $service->price_label ?: 'per unit';
+                            ?>
+                            <a href="<?php echo e(route('services.show', $service->slug)); ?>" class="service-card reveal-on-scroll">
+                                <div class="service-header">
+                                    <div class="service-icon"><?php echo e($service->icon ?? '🖨️'); ?></div>
+                                    <div class="service-title-group">
+                                        <h3 class="service-title"><?php echo e($service->title); ?></h3>
+                                        <span class="service-category-badge"><?php echo e($service->category ?? 'Service'); ?></span>
+                                    </div>
+                                </div>
+                                <p class="service-description"><?php echo e(Str::limit($service->description, 120)); ?></p>
+                                <div class="service-footer">
+                                    <?php if($startingPrice): ?>
+                                        <div>
+                                            <div class="service-price-label">Starting from</div>
+                                            <div class="service-price">₱<?php echo e(number_format($startingPrice, 2)); ?></div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <span class="service-link">
+                                        Details <span>→</span>
+                                    </span>
+                                </div>
+                            </a>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                <div class="empty-state">
+                    <p class="empty-state-text">No services available at the moment.</p>
+                </div>
+            <?php endif; ?>
 
-                <!-- Color Printing -->
-                <div class="service-card p-8 reveal-on-scroll" data-reveal-delay="100">
-                    <div class="service-icon w-16 h-16 rounded-lg flex items-center justify-center mb-8">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
-                        </svg>
+            <!-- Officers Section -->
+            <?php if(isset($officers) && $officers->count() > 0): ?>
+                <div class="officers-section reveal-on-scroll">
+                    <div class="section-header" style="margin-bottom: 32px;">
+                        <h2 class="section-title">Our Officers</h2>
+                        <p class="section-subtitle">Contact our team for service inquiries and assistance</p>
                     </div>
-                    <h3>Color Printing</h3>
-                    <p>Vibrant color printing for presentations, brochures, and creative projects. Stunning results on every page.</p>
-                    <div class="price-display">
-                        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">Starting from</p>
-                        <p style="font-size: 28px; font-weight: 700;">₱5.00/page</p>
+
+                    <div class="officers-grid">
+                        <?php $__currentLoopData = $officers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $officer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <a href="<?php echo e($officer->messenger_url); ?>" target="_blank" class="officer-card">
+                                <div class="officer-avatar">
+                                    <?php echo e($officer->initials); ?>
+
+                                </div>
+                                <div class="officer-info">
+                                    <h4 class="officer-name"><?php echo e($officer->name); ?></h4>
+                                    <p class="officer-title"><?php echo e($officer->title); ?></p>
+                                </div>
+                                <div class="officer-action">
+                                    <span>Message →</span>
+                                </div>
+                            </a>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
-            </div>
-        </div>
+            <?php endif; ?>
 
-        <!-- Paper Sizes & Pricing Section -->
-        <div style="margin-bottom: 96px;">
-            <h2 class="section-title">Paper Sizes & Pricing</h2>
-            <p class="section-subtitle">All prices per page (B&W and Color)</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- A4 Paper -->
-                <div class="paper-card standard reveal-on-scroll" data-reveal-delay="0">
-                    <h4>A4 Paper</h4>
-                    <div class="price-grid">
-                        <div class="price-item">
-                            <div class="price-item-label">B&W</div>
-                            <div class="price-item-value">₱2.00</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="price-item-label">Color</div>
-                            <div class="price-item-value">₱5.00</div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Instructions Section -->
+            <div class="instructions-section reveal-on-scroll">
+                <h2 class="instructions-title">How to Request a Service</h2>
+                <p class="instructions-subtitle">Simple 4-step process to get started</p>
 
-                <!-- Short Bond -->
-                <div class="paper-card short reveal-on-scroll" data-reveal-delay="100">
-                    <h4>Short Bond</h4>
-                    <div class="price-grid">
-                        <div class="price-item">
-                            <div class="price-item-label">B&W</div>
-                            <div class="price-item-value">₱1.50</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="price-item-label">Color</div>
-                            <div class="price-item-value">₱4.00</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Long Bond -->
-                <div class="paper-card long reveal-on-scroll" data-reveal-delay="200">
-                    <h4>Long Bond</h4>
-                    <div class="price-grid">
-                        <div class="price-item">
-                            <div class="price-item-label">B&W</div>
-                            <div class="price-item-value">₱2.50</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="price-item-label">Color</div>
-                            <div class="price-item-value">₱6.00</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Submission Instructions Section -->
-        <div style="margin-bottom: 96px;">
-            <h2 class="section-title">How to Submit Your Print Job</h2>
-            <p class="section-subtitle">Simple 4-step process to get your documents printed</p>
-            <div class="instruction-card reveal-on-scroll" data-reveal-delay="0">
-                <div class="instruction-steps">
-                    <div class="instruction-step reveal-on-scroll" data-reveal-delay="0">
+                <div class="instructions-grid">
+                    <div class="instruction-step">
                         <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>Prepare Your Files</h4>
-                            <p>Get your documents ready in PDF, Word, or image format</p>
-                        </div>
+                        <h4 class="step-title">Tell Us What You Need</h4>
+                        <p class="step-description">Share the service type and your requirements</p>
                     </div>
-
-                    <div class="instruction-step reveal-on-scroll" data-reveal-delay="100">
+                    <div class="instruction-step">
                         <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>Contact via Messenger</h4>
-                            <p>Send us details about your print job and preferences</p>
-                        </div>
+                        <h4 class="step-title">Send Your Files</h4>
+                        <p class="step-description">Upload documents, specs, or reference photos</p>
                     </div>
-
-                    <div class="instruction-step reveal-on-scroll" data-reveal-delay="200">
+                    <div class="instruction-step">
                         <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>Upload Your Files</h4>
-                            <p>Share your documents through Facebook Messenger</p>
-                        </div>
+                        <h4 class="step-title">We Confirm Details</h4>
+                        <p class="step-description">We'll reply with cost and timeline</p>
                     </div>
-
-                    <div class="instruction-step reveal-on-scroll" data-reveal-delay="300">
+                    <div class="instruction-step">
                         <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h4>Pickup Your Order</h4>
-                            <p>Collect your printed materials at the CICT office</p>
-                        </div>
+                        <h4 class="step-title">Approve & Receive</h4>
+                        <p class="step-description">Confirm the quote and pick up your order</p>
                     </div>
                 </div>
 
-                <div class="cta-section">
-                    <a href="https://www.messenger.com/e2ee/t/780806171591045" target="_blank" class="messenger-btn">
-                        <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0C5.373 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.42.09.574-.182.574-.407v-1.77c-2.84.603-3.437-1.184-3.437-1.184-.38-.975-.93-1.235-.93-1.235-.76-.52.056-.508.056-.508.847.06 1.293.867 1.293.867.75 1.288 1.96.916 2.44.7.075-.546.292-.916.532-1.126-1.855-.21-3.8-.927-3.8-4.106 0-.91.325-1.655.865-2.242-.087-.21-.375-1.056.082-2.2 0 0 .704-.224 2.304.848.668-.186 1.383-.278 2.093-.282.71.004 1.425.096 2.093.282 1.6-1.072 2.303-.848 2.303-.848.457 1.144.17 1.99.084 2.2.54.587.865 1.332.865 2.242 0 3.188-1.948 3.893-3.81 4.098.3.258.573.77.573 1.55v2.3c0 .227.153.502.576.407C20.565 21.795 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        Message us on Facebook
+                <div class="instructions-cta">
+                    <a href="https://www.messenger.com/e2ee/t/780806171591045" target="_blank" class="btn-primary">
+                        Message Us on Messenger
+                        <span>→</span>
                     </a>
                 </div>
             </div>
-        </div>
 
-        <!-- Officers in Charge Section -->
-        <div style="margin-bottom: 96px;">
-            <h2 class="section-title">Printing Officers</h2>
-            <p class="section-subtitle">Meet our dedicated printing team</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Officer 1 -->
-                <div class="officer-card reveal-on-scroll" data-reveal-delay="0">
-                    <h4 class="officer-name">Kate Russel Relator</h4>
-                    <p class="officer-title">PRINTING OFFICER</p>
-                    <a href="https://www.messenger.com/e2ee/t/9440180662663186" target="_blank" class="officer-btn">Message on FB</a>
-                </div>
-
-                <!-- Officer 2 -->
-                <div class="officer-card reveal-on-scroll" data-reveal-delay="100">
-                    <h4 class="officer-name">Aleila Eunice Escoton</h4>
-                    <p class="officer-title">PRINTING OFFICER</p>
-                    <a href="https://www.messenger.com/e2ee/t/1861893691098871" target="_blank" class="officer-btn">Message on FB</a>
-                </div>
-
-                <!-- Officer 3 -->
-                <div class="officer-card reveal-on-scroll" data-reveal-delay="200">
-                    <h4 class="officer-name">Lorraine Grace Dangautan</h4>
-                    <p class="officer-title">PRINTING OFFICER</p>
-                    <a href="https://www.messenger.com/e2ee/t/8770965666351694" target="_blank" class="officer-btn">Message on FB</a>
-                </div>
-
-                <!-- Officer 4 -->
-                <div class="officer-card reveal-on-scroll" data-reveal-delay="300">
-                    <h4 class="officer-name">Karl Calimotan</h4>
-                    <p class="officer-title">PRINTING OFFICER</p>
-                    <a href="https://www.messenger.com/e2ee/t/7459672660760522" target="_blank" class="officer-btn">Message on FB</a>
-                </div>
-
-                <!-- Officer 5 -->
-                <div class="officer-card reveal-on-scroll" data-reveal-delay="0">
-                    <h4 class="officer-name">Jan Allysandra Espia</h4>
-                    <p class="officer-title">PRINTING OFFICER</p>
-                    <a href="https://www.messenger.com/e2ee/t/9341669029194575" target="_blank" class="officer-btn">Message on FB</a>
-                </div>
-
-                <!-- Officer 6 -->
-                <div class="officer-card reveal-on-scroll" data-reveal-delay="100">
-                    <h4 class="officer-name">Katherine Bicode</h4>
-                    <p class="officer-title">PRINTING OFFICER</p>
-                    <a href="https://www.messenger.com/e2ee/t/27543992281913946" target="_blank" class="officer-btn">Message on FB</a>
-                </div>
-
-                <!-- Officer 7 -->
-                <div class="officer-card reveal-on-scroll" data-reveal-delay="200">
-                    <h4 class="officer-name">Selwyn Adia</h4>
-                    <p class="officer-title">PRINTING OFFICER</p>
-                    <a href="https://www.messenger.com/e2ee/t/1821283922599976" target="_blank" class="officer-btn">Message on FB</a>
-                </div>
-
-                <!-- Officer 8 -->
-                <div class="officer-card reveal-on-scroll" data-reveal-delay="300">
-                    <h4 class="officer-name">Jeff Martinez</h4>
-                    <p class="officer-title">PRINTING OFFICER</p>
-                    <a href="https://www.messenger.com/t/100009387982974" target="_blank" class="officer-btn">Message on FB</a>
-                </div>
-            </div>
-
-            <div class="officer-notice">
-                <p><strong>📌 Important Note</strong></p>
-                <p>If the Student Council office is closed, please contact any of our printing officers directly via Facebook Messenger for assistance with your print jobs.</p>
-            </div>
-        </div>
-
-        <!-- Operating Hours Section -->
-        <div class="hours-card reveal-on-scroll" data-reveal-delay="0">
-            <h3>Operating Hours</h3>
-            <div class="hours-content">
-                <p style="margin: 0;">Monday – Friday</p>
-                <p class="hours-time">8:00 AM – 5:00 PM</p>
+            <!-- Hours Card -->
+            <div class="hours-card reveal-on-scroll">
+                <h3 class="hours-title">Service Hours</h3>
+                <p class="hours-time">Monday – Friday: 8:00 AM – 5:00 PM</p>
                 <p class="hours-note">Closed on weekends and holidays</p>
             </div>
         </div>
     </div>
-    </div>
+
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4619374cef299e94fd7263111d0abc69)): ?>
@@ -693,5 +713,4 @@
 <?php if (isset($__componentOriginal4619374cef299e94fd7263111d0abc69)): ?>
 <?php $component = $__componentOriginal4619374cef299e94fd7263111d0abc69; ?>
 <?php unset($__componentOriginal4619374cef299e94fd7263111d0abc69); ?>
-<?php endif; ?>
-<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/services/index.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/services/index.blade.php ENDPATH**/ ?>
