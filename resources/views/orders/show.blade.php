@@ -1,4 +1,4 @@
-<x-app-layout :title="'Order Details - TheWerk'">
+<x-app-layout :title="'Order Details - CICT-DG'">
     <style>
         :root {
             --ink: #0f172a;

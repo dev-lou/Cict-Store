@@ -1,4 +1,4 @@
-<x-app-layout :title="'Receipt - TheWerk'">
+<x-app-layout :title="'Receipt - CICT-DG'">
     <style>
         :root {
             --ink: #0f172a;
@@ -64,7 +64,7 @@
         <div class="paper" id="receipt-content">
             <div class="header">
                 <div>
-                    <div class="brand">{{ config('app.name', 'TheWerk') }}</div>
+                    <div class="brand">{{ config('app.name', 'CICT-DG') }}</div>
                     <div class="tagline">Official receipt • CICT Student Council Office</div>
                 </div>
                 <div style="text-align:right;">

@@ -1,7 +1,7 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['title' => 'TheWerk']));
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['title' => 'CICT-DG']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -16,7 +16,7 @@ $attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
 unset($__propNames);
 unset($__newAttributes);
 
-foreach (array_filter((['title' => 'TheWerk']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+foreach (array_filter((['title' => 'CICT-DG']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 }
 
@@ -78,9 +78,66 @@ unset($__defined_vars); ?>
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo e(asset('images/ctrlp-logo.png')); ?>">
     <link rel="shortcut icon" href="<?php echo e(asset('images/ctrlp-logo.png')); ?>">
 
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <!-- Animations handled by CSS transitions -->
 
     <style>
+        /* Prevent underline on buttons and cards */
+        .product-card,
+        .service-card,
+        .bento-card,
+        .contact-block,
+        .social-card,
+        .contact-card,
+        .officer-card,
+        .related-card,
+        .social-link,
+        .btn,
+        .btn-primary,
+        .btn-secondary,
+        .btn-outline,
+        .auth-button,
+        .checkout-btn,
+        .view-all-btn,
+        .hero-button,
+        button:not(.no-animate),
+        a.product-card,
+        a.service-card,
+        a.btn-primary,
+        a.btn-secondary,
+        a.btn-outline {
+            text-decoration: none !important;
+        }
+
+        .product-card:hover,
+        .service-card:hover,
+        .bento-card:hover,
+        .contact-block:hover,
+        .social-card:hover,
+        .contact-card:hover,
+        .officer-card:hover,
+        .related-card:hover,
+        .social-link:hover,
+        .btn:hover,
+        .btn-primary:hover,
+        .btn-secondary:hover,
+        .btn-outline:hover,
+        .auth-button:hover,
+        .checkout-btn:hover,
+        .view-all-btn:hover,
+        .hero-button:hover,
+        button:not(.no-animate):hover,
+        a.product-card:hover,
+        a.service-card:hover,
+        a.btn-primary:hover,
+        a.btn-secondary:hover,
+        a.btn-outline:hover {
+            text-decoration: none !important;
+        }
+
         @keyframes bounce-slow {
 
             0%,
@@ -226,13 +283,19 @@ unset($__defined_vars); ?>
                                 style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center;">
                                 <div
                                     style="width:80px; height:80px; border-radius:9999px; overflow:hidden; background:#fff;">
-                                    <img src="<?php echo e(asset('images/ctrlp-logo.png')); ?>" alt="TheWerk logo"
+                                    <?php
+                                        $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
+                                        $logoUrl = $logoSetting && $logoSetting->value 
+                                            ? \Storage::disk('supabase')->url($logoSetting->value) 
+                                            : asset('images/ctrlp-logo.png');
+                                    ?>
+                                    <img src="<?php echo e($logoUrl); ?>" alt="CICT-DG logo"
                                         class="w-full h-full object-cover" style="display:block; border-radius:9999px;">
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <div class="space-y-1">
-                                    <h3 class="font-bold text-xl text-white m-0">TheWerk</h3>
+                                    <h3 class="font-bold text-xl text-white m-0">CICT-DG</h3>
                                     <p class="text-sm m-0" style="color: rgba(255,255,255,0.75);">ISUFST Dingle Campus ·
                                         Shop & Services</p>
                                 </div>
@@ -277,7 +340,7 @@ unset($__defined_vars); ?>
 
                     <div class="pt-4 text-sm flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2 sm:gap-4"
                         style="border-top: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); flex-wrap: wrap;">
-                        <p class="m-0">&copy; 2025 TheWerk · ISUFST Dingle Campus</p>
+                        <p class="m-0">&copy; 2025 CICT-DG · ISUFST Dingle Campus</p>
                         <p class="m-0 text-xs" style="color: rgba(255,255,255,0.65);">All rights reserved.</p>
                     </div>
                 </div>

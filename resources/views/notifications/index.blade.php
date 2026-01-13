@@ -1,4 +1,4 @@
-<x-app-layout :title="'Notifications - TheWerk'">
+<x-app-layout :title="'Notifications - CICT-DG'">
     <style>
         :root {
             --ink: #0f172a;

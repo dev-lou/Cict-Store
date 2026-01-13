@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('title', 'Shop - ' . config('app.name', 'TheWerk'))
+    @section('title', 'Shop - ' . config('app.name', 'CICT-DG'))
 
     <style>
         /* ============ DESIGN TOKENS ============ */
@@ -168,7 +168,6 @@
         .product-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-xl);
-            border-color: var(--primary);
         }
 
         .product-badge {

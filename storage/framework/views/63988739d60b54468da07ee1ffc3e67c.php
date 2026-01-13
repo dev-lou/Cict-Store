@@ -1,5 +1,14 @@
-<x-admin-layout>
-    @section('page-title', 'Admin Settings')
+<?php if (isset($component)) { $__componentOriginale0f1cdd055772eb1d4a99981c240763e = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale0f1cdd055772eb1d4a99981c240763e = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-layout','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->startSection('page-title', 'Admin Settings'); ?>
 
     <!-- Page Header -->
     <div class="mb-12">
@@ -18,14 +27,15 @@
     </div>
 
     <!-- Success Message -->
-    @if(session('success'))
+    <?php if(session('success')): ?>
         <div class="mb-6 p-4 rounded-lg" style="background-color: #4caf50; color: white; border: 2px solid #45a049; display: flex; align-items: center; gap: 12px;">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
-            {{ session('success') }}
+            <?php echo e(session('success')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Settings Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -47,8 +57,8 @@
                     </div>
                 </div>
 
-                <form class="space-y-6" id="settingsForm" method="POST" action="{{ route('admin.settings.update') }}">
-                    @csrf
+                <form class="space-y-6" id="settingsForm" method="POST" action="<?php echo e(route('admin.settings.update')); ?>">
+                    <?php echo csrf_field(); ?>
 
                     <!-- System Name -->
                     <div>
@@ -62,16 +72,23 @@
                             type="text" 
                             name="site_name"
                             id="site_name"
-                            value="{{ $siteName }}"
+                            value="<?php echo e($siteName); ?>"
                             class="w-full rounded-lg px-4 py-3 text-base font-medium transition-all"
                             style="border: 2px solid #b0bcc4; background-color: #0f0707; color: #ffffff; caret-color: #b0bcc4;"
                             onfocus="this.style.borderColor='#ffffff'; this.style.boxShadow='0 0 0 3px rgba(218, 165, 32, 0.1)'"
                             onblur="this.style.borderColor='#b0bcc4'; this.style.boxShadow=''"
                         />
                         <p class="text-xs mt-2" style="color: #999;">Change your platform's main name</p>
-                        @error('site_name')
-                            <p class="text-xs mt-2" style="color: #ff6b6b;">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['site_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-xs mt-2" style="color: #ff6b6b;"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <!-- Platform Status -->
@@ -143,25 +160,25 @@
                     <!-- Stat Item 1 -->
                     <div style="padding: 12px; border-radius: 10px; background-color: #0f0707; border: 2px solid #444; display: flex; justify-content: space-between; align-items: center;">
                         <span style="color: #b0bcc4; font-size: 0.875rem; font-weight: 500;">Total Users</span>
-                        <span style="color: #ffffff; font-size: 1.25rem; font-weight: bold;">{{ $stats['total_users'] }}</span>
+                        <span style="color: #ffffff; font-size: 1.25rem; font-weight: bold;"><?php echo e($stats['total_users']); ?></span>
                     </div>
 
                     <!-- Stat Item 2 -->
                     <div style="padding: 12px; border-radius: 10px; background-color: #0f0707; border: 2px solid #444; display: flex; justify-content: space-between; align-items: center;">
                         <span style="color: #b0bcc4; font-size: 0.875rem; font-weight: 500;">Total Orders</span>
-                        <span style="color: #ffffff; font-size: 1.25rem; font-weight: bold;">{{ $stats['total_orders'] }}</span>
+                        <span style="color: #ffffff; font-size: 1.25rem; font-weight: bold;"><?php echo e($stats['total_orders']); ?></span>
                     </div>
 
                     <!-- Stat Item 3 -->
                     <div style="padding: 12px; border-radius: 10px; background-color: #0f0707; border: 2px solid #444; display: flex; justify-content: space-between; align-items: center;">
                         <span style="color: #b0bcc4; font-size: 0.875rem; font-weight: 500;">Active Inventory</span>
-                        <span style="color: #ffffff; font-size: 1.25rem; font-weight: bold;">{{ $stats['active_inventory'] }}</span>
+                        <span style="color: #ffffff; font-size: 1.25rem; font-weight: bold;"><?php echo e($stats['active_inventory']); ?></span>
                     </div>
 
                     <!-- Stat Item 4 -->
                     <div style="padding: 12px; border-radius: 10px; background-color: #0f0707; border: 2px solid #444; display: flex; justify-content: space-between; align-items: center;">
                         <span style="color: #b0bcc4; font-weight: 500;">System Uptime</span>
-                        <span style="color: #4caf50; font-size: 1.25rem; font-weight: bold;">{{ $stats['system_uptime'] }}</span>
+                        <span style="color: #4caf50; font-size: 1.25rem; font-weight: bold;"><?php echo e($stats['system_uptime']); ?></span>
                     </div>
                 </div>
             </div>
@@ -185,23 +202,23 @@
                 </div>
             </div>
 
-            <form action="{{ route('admin.settings.update-logo') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+            <form action="<?php echo e(route('admin.settings.update-logo')); ?>" method="POST" enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Logo Preview -->
                     <div>
                         <label style="display: block; color: #b0bcc4; font-weight: 600; margin-bottom: 12px; font-size: 0.875rem;">Current Logo</label>
                         <div style="width: 200px; height: 200px; border-radius: 50%; border: 2px solid #444; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #0f0707;">
-                            @if($logo && $logo->value)
-                                <img src="{{ Storage::disk('supabase')->url($logo->value) }}" alt="Site Logo" id="logoPreview" style="width: 100%; height: 100%; object-fit: cover;">
-                            @else
+                            <?php if($logo && $logo->value): ?>
+                                <img src="<?php echo e(Storage::disk('supabase')->url($logo->value)); ?>" alt="Site Logo" id="logoPreview" style="width: 100%; height: 100%; object-fit: cover;">
+                            <?php else: ?>
                                 <div id="logoPreview" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #666; font-size: 3rem;">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 80px; height: 80px;">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -275,7 +292,7 @@
                 <!-- PHP Version -->
                 <div style="padding: 16px; border-radius: 12px; background: linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(139, 0, 0, 0.05)); border: 2px solid #444; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#b0bcc4'; this.style.background='linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(139, 0, 0, 0.1))'" onmouseout="this.style.borderColor='#444'; this.style.background='linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(139, 0, 0, 0.05))'">
                     <p class="text-xs font-bold mb-2" style="color: #b0bcc4;">PHP Version</p>
-                    <p class="text-lg font-bold" style="color: #ffffff;">{{ phpversion() }}</p>
+                    <p class="text-lg font-bold" style="color: #ffffff;"><?php echo e(phpversion()); ?></p>
                     <p class="text-xs mt-2" style="color: #999;">Current runtime</p>
                 </div>
 
@@ -318,7 +335,7 @@
                 <!-- Right Button -->
                 <div style="display: flex; justify-content: flex-start; md:justify-content: flex-end; align-items: center;">
                     <a 
-                        href="{{ route('admin.users.index') }}" 
+                        href="<?php echo e(route('admin.users.index')); ?>" 
                         class="px-8 py-4 rounded-xl font-bold text-base transition-all duration-300 flex items-center gap-3"
                         style="background: linear-gradient(135deg, #ff9500 0%, #ff8500 100%); color: white; border: 3px solid #ff8500; box-shadow: 0 6px 20px rgba(255, 149, 0, 0.3);"
                         onmouseover="this.style.boxShadow='0 12px 32px rgba(255, 149, 0, 0.4)'; this.style.transform='translateY(-3px)'; this.style.background='linear-gradient(135deg, #ffb000 0%, #ff9500 100%)'"
@@ -350,7 +367,7 @@
             const formData = new FormData(this);
             const csrfToken = document.querySelector('input[name="_token"]').value;
             
-            fetch('{{ route("admin.settings.update") }}', {
+            fetch('<?php echo e(route("admin.settings.update")); ?>', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -440,10 +457,10 @@
         }
 
         // Show SweetAlert if success message is present in session (for page reload scenarios)
-        @if(session('success'))
+        <?php if(session('success')): ?>
             Swal.fire({
                 title: 'Success!',
-                text: '{{ session('success') }}',
+                text: '<?php echo e(session('success')); ?>',
                 icon: 'success',
                 confirmButtonColor: '#4caf50',
                 background: '#0f1419',
@@ -460,6 +477,16 @@
                     location.reload();
                 }
             });
-        @endif
+        <?php endif; ?>
     </script>
-</x-admin-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale0f1cdd055772eb1d4a99981c240763e)): ?>
+<?php $attributes = $__attributesOriginale0f1cdd055772eb1d4a99981c240763e; ?>
+<?php unset($__attributesOriginale0f1cdd055772eb1d4a99981c240763e); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale0f1cdd055772eb1d4a99981c240763e)): ?>
+<?php $component = $__componentOriginale0f1cdd055772eb1d4a99981c240763e; ?>
+<?php unset($__componentOriginale0f1cdd055772eb1d4a99981c240763e); ?>
+<?php endif; ?>
+<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/admin/settings/index.blade.php ENDPATH**/ ?>

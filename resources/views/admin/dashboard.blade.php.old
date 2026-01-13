@@ -282,7 +282,7 @@
                     </div>
                     <h3 class="text-lg font-semibold text-white" style="letter-spacing: 0.5px;">📈 Top Selling Products</h3>
                 </div>
-
+                <a href="{{ route('admin.analytics.index') }}" class="text-sm font-semibold transition-all duration-300" style="color: #00d9ff;" onmouseover="this.style.color='#ffffff'; this.style.textDecoration='underline'" onmouseout="this.style.color='#00d9ff'; this.style.textDecoration='none'">View all →</a>
             </div>
 
             @if ($topProducts->count() > 0)

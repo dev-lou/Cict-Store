@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('title', 'Contact - ' . config('app.name', 'TheWerk'))
+    @section('title', 'Contact - ' . config('app.name', 'CICT-DG'))
 
     <style>
         /* ============ DESIGN TOKENS ============ */
@@ -153,7 +153,6 @@
 
         .contact-card:hover {
             box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
         }
 
         .contact-card-header {
@@ -204,7 +203,6 @@
 
         .social-link:hover {
             box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
             transform: translateX(4px);
         }
 

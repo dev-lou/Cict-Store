@@ -2,11 +2,25 @@
     @section('page-title', 'Buy List Management')
 
     <style>
-        /* Modern admin table styling with dark theme compatibility */
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            --border: #334155;
+            --border-hover: #475569;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
         #buyListTable {
-            /* make table fit container and distribute columns cleanly */
             width: 100%;
-            table-layout: fixed; /* prevents the table from expanding with long content */
+            table-layout: fixed;
             border-collapse: separate;
             border-spacing: 0;
             font-family: 'Inter', 'Roboto', 'Arial', sans-serif;
@@ -15,42 +29,39 @@
         }
 
         #buyListTable thead th {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            color: #ffffff;
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-weight: 600;
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 14px 12px;
-            border: 1px solid #3b82f6;
-            border-right: 1px solid rgba(59, 130, 246, 0.3);
+            border: 1px solid var(--border);
+            border-right: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 10;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         #buyListTable tbody tr {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(8px);
+            background: var(--bg-card);
             transition: all 0.2s ease;
-            border-bottom: 1px solid rgba(71, 85, 105, 0.4);
+            border-bottom: 1px solid var(--border);
         }
 
         #buyListTable tbody tr:hover {
-            background: rgba(51, 65, 85, 0.8);
+            background: var(--bg-hover);
             transform: translateX(2px);
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
         }
 
         #buyListTable tbody tr.selected {
-            background: rgba(30, 58, 138, 0.5) !important;
-            border-left: 3px solid #3b82f6;
+            background: rgba(59, 130, 246, 0.1) !important;
+            border-left: 3px solid var(--primary);
         }
 
         #buyListTable tbody tr.row-new {
-            background: rgba(34, 197, 94, 0.15);
-            border-left: 3px solid #22c55e;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid var(--success);
             animation: slideIn 0.3s ease;
         }
 
@@ -60,10 +71,10 @@
         }
 
         #buyListTable tbody td {
-            border: 1px solid rgba(71, 85, 105, 0.3);
-            border-top: 1px solid rgba(71, 85, 105, 0.2);
+            border: 1px solid var(--border);
+            border-top: 1px solid var(--border);
             padding: 0;
-            color: #e2e8f0;
+            color: var(--text-primary);
             vertical-align: middle;
             position: relative;
         }
@@ -75,7 +86,7 @@
             display: flex;
             align-items: center;
             width: 100%;
-            color: #e2e8f0;
+            color: var(--text-primary);
         }
 
         /* target long text columns so the table won't expand and cause extra right padding */
@@ -92,17 +103,16 @@
         }
 
         .cell-content:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-            outline: 1px solid #3b82f6;
+            background-color: rgba(59, 130, 246, 0.05);
+            outline: 1px solid var(--primary);
             outline-offset: -1px;
         }
 
         .cell-content.editing {
             padding: 0;
-            background: rgba(15, 23, 42, 0.95);
-            outline: 2px solid #3b82f6;
+            background: var(--bg-main);
+            outline: 2px solid var(--primary);
             outline-offset: -2px;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
         .cell-content input,
@@ -111,8 +121,8 @@
             width: 100%;
             padding: 10px 12px;
             border: none;
-            background: rgba(15, 23, 42, 0.95);
-            color: #f1f5f9;
+            background: var(--bg-main);
+            color: var(--text-primary);
             font-family: 'Inter', 'Roboto', 'Arial', sans-serif;
             font-size: 13px;
             outline: none;
@@ -120,7 +130,7 @@
 
         .cell-content input::placeholder,
         .cell-content textarea::placeholder {
-            color: #64748b;
+            color: var(--text-muted);
         }
 
         .cell-content textarea {
@@ -146,7 +156,6 @@
         .col-notes { width: 20%; }
         .col-actions { width: 8%; text-align: center; }
 
-        /* Priority badges - Enhanced for dark theme */
         .priority-badge {
             display: inline-flex;
             align-items: center;
@@ -156,25 +165,26 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.3px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .priority-high {
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-            color: #ffffff;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
         }
 
         .priority-medium {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: #ffffff;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--warning);
         }
 
         .priority-low {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: #ffffff;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
         }
 
-        /* Bought status badges */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -182,66 +192,64 @@
             border-radius: 6px;
             font-size: 11px;
             font-weight: 600;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .bought-true {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: #ffffff;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
         }
 
         .bought-false {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: #ffffff;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
         }
 
-        /* Action buttons */
         .action-btn {
             padding: 6px 10px;
-            border: none;
+            border: 1px solid var(--border);
             border-radius: 6px;
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            background: rgba(71, 85, 105, 0.4);
-            color: #cbd5e1;
+            background: transparent;
+            color: var(--text-secondary);
         }
 
         .action-btn:hover {
-            background: rgba(71, 85, 105, 0.8);
+            background: var(--bg-hover);
             transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
         .action-btn.save {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: #ffffff;
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
         }
 
         .action-btn.save:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
         }
 
         .action-btn.delete {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: #ffffff;
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
         }
 
         .action-btn.delete:hover {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            background: #dc2626;
+            border-color: #dc2626;
         }
 
-        /* Table container */
         .table-container {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.1);
         }
 
         .table-wrapper {
@@ -262,12 +270,12 @@
         }
 
         .table-wrapper::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: var(--primary);
             border-radius: 10px;
         }
 
         .table-wrapper::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            background: var(--primary-hover);
         }
 
         /* Empty state */
@@ -290,33 +298,30 @@
 
         /* SweetAlert2 Dark Theme Overrides */
         .swal2-popup.dark-popup {
-            background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%) !important;
-            border: 2px solid #3b82f6 !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
         }
 
         .swal2-popup.dark-popup .swal2-title {
-            color: #ffffff !important;
-            font-weight: 700 !important;
+            color: var(--text-primary) !important;
+            font-weight: 600 !important;
             font-size: 1.5rem !important;
         }
 
         .swal2-popup.dark-popup .swal2-html-container {
-            color: #e2e8f0 !important;
+            color: var(--text-secondary) !important;
             font-size: 1rem !important;
         }
 
         .swal2-popup.dark-popup .swal2-confirm {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+            background: var(--primary) !important;
             border: none !important;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
             font-weight: 600 !important;
         }
 
         .swal2-popup.dark-popup .swal2-cancel {
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important;
+            background: var(--border) !important;
             border: none !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
             font-weight: 600 !important;
         }
 
@@ -342,13 +347,15 @@
             font-weight: 600 !important;
         }
 
-        /* Header controls */
         .header-controls {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 24px;
-            padding: 20px 0;
+            padding: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
         }
 
         .add-row-btn {
@@ -356,26 +363,23 @@
             align-items: center;
             gap: 10px;
             padding: 12px 24px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: #ffffff;
+            background: var(--primary);
+            color: white;
             border: none;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .add-row-btn:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+            background: var(--primary-hover);
             transform: translateY(-2px);
         }
 
         .add-row-btn:active {
             transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
         }
 
         /* Price styling */
@@ -394,11 +398,11 @@
     <!-- Header Section -->
     <div class="header-controls">
         <div>
-            <h2 style="font-size: 28px; font-weight: 700; color: #f1f5f9; margin: 0 0 6px 0; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);">
-                📋 Buy List Management
+            <h2 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">
+                Buy List Management
             </h2>
-            <p style="font-size: 14px; color: #94a3b8; margin: 0;">
-                Click any cell to edit • Changes save automatically
+            <p style="font-size: 14px; color: var(--text-secondary); margin: 0;">
+                Click any cell to edit - Changes save automatically
             </p>
         </div>
         <button onclick="addNewRow()" class="add-row-btn">

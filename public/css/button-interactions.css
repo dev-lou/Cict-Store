@@ -130,25 +130,22 @@ button.loading::after {
     animation: spin 0.6s linear infinite;
 }
 
-/* Link hover effects */
-a:not(.no-animate) {
-    position: relative;
-    transition: color 0.2s ease;
-}
-
-a:not(.no-animate)::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: currentColor;
-    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-a:not(.no-animate):hover::after {
-    width: 100%;
+/* Link hover effects - DISABLED for cards and buttons */
+/* Removed to prevent underline on card and button hovers */
+a.product-card::after,
+a.service-card::after,
+a.bento-card::after,
+a.contact-card::after,
+a.officer-card::after,
+a.social-link::after,
+a.related-card::after,
+a.btn::after,
+a.btn-primary::after,
+a.btn-secondary::after,
+a.btn-outline::after,
+a[class*="btn"]::after,
+a[class*="card"]::after {
+    display: none !important;
 }
 
 /* Accessibility: Respect reduced motion */
