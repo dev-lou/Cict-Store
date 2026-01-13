@@ -18,171 +18,262 @@
     @endphp
 
     <style>
-        /* Admin palette */
+        /* Modern Admin Palette */
         :root {
-            --bg-main: linear-gradient(135deg, #0f0f1e 0%, #1a1a3e 50%, #0f0f1e 100%);
-            --bg-card: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-            --border: #2a3f5f;
-            --blue: linear-gradient(135deg, #0f6fdd 0%, #1a7fff 100%);
-            --cyan: #00d9ff;
-            --text: #b0bcc4;
-            --white: #ffffff;
-            --success: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
-            --danger: linear-gradient(135deg, #ff6b6b 0%, #cc0000 100%);
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            --border: #334155;
+            --border-hover: #475569;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
         }
 
         .page-shell {
             background: var(--bg-main);
-            border: 2px solid var(--border);
-            border-radius: 18px;
-            padding: 28px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+            min-height: calc(100vh - 4rem);
         }
 
-        .stats-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
-            border-radius: 999px;
-            background: rgba(15, 111, 221, 0.12);
-            border: 1px solid rgba(0, 217, 255, 0.35);
-            color: var(--white);
+        /* Header Section */
+        .page-header {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .page-title {
+            color: var(--text-primary);
+            font-size: 24px;
             font-weight: 700;
-            letter-spacing: 0.2px;
+            margin-bottom: 4px;
         }
 
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            color: var(--text-primary);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Services Grid */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 20px;
+            margin-bottom: 40px;
         }
 
         .service-card {
             background: var(--bg-card);
-            border: 2px solid var(--border);
-            border-radius: 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
             overflow: hidden;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             position: relative;
         }
 
         .service-card:hover {
-            border-color: var(--cyan);
-            box-shadow: 0 14px 32px rgba(15, 111, 221, 0.35);
-            transform: translateY(-3px);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
         }
 
-        .service-card.inactive { opacity: 0.55; }
+        .service-card.inactive {
+            opacity: 0.5;
+        }
 
         .service-head {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 20px;
+            padding: 20px;
             border-bottom: 1px solid var(--border);
-            background: rgba(15, 111, 221, 0.08);
         }
 
         .service-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            background: var(--blue);
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
             display: grid;
             place-items: center;
-            font-size: 26px;
-            color: var(--white);
-            border: 2px solid var(--cyan);
-            box-shadow: 0 8px 16px rgba(15, 111, 221, 0.4);
+            font-size: 24px;
+            color: var(--text-primary);
+            flex-shrink: 0;
         }
 
         .service-body {
-            padding: 18px 20px 12px;
-            color: var(--text);
+            padding: 20px;
+            color: var(--text-secondary);
             font-size: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            line-height: 1.5;
         }
 
-        .meta-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            border-radius: 10px;
-            background: rgba(0, 217, 255, 0.12);
-            border: 1px solid rgba(0, 217, 255, 0.25);
-            color: var(--white);
+        .service-title {
+            color: var(--text-primary);
             font-weight: 600;
-            font-size: 12px;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .service-category {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .price-chip {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            background: rgba(76, 175, 80, 0.12);
-            border: 1px solid rgba(76, 175, 80, 0.35);
-            color: #9ef6a7;
-            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(148, 163, 184, 0.1);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 12px;
         }
 
         .actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
             padding: 16px;
             border-top: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(15, 23, 42, 0.5);
         }
 
-        .btn-ghost {
-            padding: 10px 12px;
-            border-radius: 10px;
+        .btn-action {
+            padding: 10px 14px;
+            border-radius: 8px;
             border: 1px solid var(--border);
-            color: var(--white);
+            color: var(--text-primary);
             background: transparent;
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 13px;
             transition: all 0.2s ease;
+            cursor: pointer;
         }
 
-        .btn-ghost:hover { border-color: var(--cyan); color: var(--white); }
+        .btn-action:hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+
+        .btn-action.danger:hover {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
 
         .toggle {
-            width: 50px;
-            height: 26px;
-            border-radius: 20px;
-            background: #3a4b68;
+            width: 48px;
+            height: 24px;
+            border-radius: 12px;
+            background: var(--border);
             position: relative;
-            border: 1px solid var(--border);
             cursor: pointer;
             transition: all 0.2s ease;
+            flex-shrink: 0;
         }
         .toggle::after {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 2px;
+            width: 18px;
+            height: 18px;
+            top: 3px;
             left: 3px;
             border-radius: 50%;
-            background: var(--white);
+            background: var(--text-primary);
             transition: all 0.2s ease;
         }
         .toggle.active {
             background: var(--success);
-            border-color: rgba(76, 175, 80, 0.6);
         }
-        .toggle.active::after { left: 26px; }
+        .toggle.active::after {
+            left: 27px;
+        }
 
-        /* Officers */
+        /* Officers Section */
         .officer-card {
             background: var(--bg-card);
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 16px;
             display: flex;
@@ -190,93 +281,234 @@
             gap: 14px;
             transition: all 0.2s ease;
         }
-        .officer-card:hover { border-color: var(--cyan); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35); }
+        .officer-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
         .avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            background: var(--blue);
-            border: 2px solid var(--cyan);
-            color: var(--white);
-            font-weight: 800;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            color: var(--text-primary);
+            font-weight: 700;
             display: grid;
             place-items: center;
-            font-size: 18px;
+            font-size: 16px;
+            flex-shrink: 0;
         }
 
         /* Modals */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50; }
-        .modal-overlay.active { display: flex; }
-        .modal-card { background: var(--bg-card); border: 2px solid var(--cyan); border-radius: 16px; width: 100%; max-width: 620px; max-height: 90vh; overflow: auto; box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
-        .modal-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--white); }
-        .modal-body { padding: 18px 20px; color: var(--white); }
-        .modal-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 50;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 90vh;
+            overflow: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .modal-body {
+            padding: 24px;
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            background: rgba(15, 23, 42, 0.5);
+        }
         .input {
             width: 100%;
-            background: rgba(255,255,255,0.03);
+            background: var(--bg-main);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 12px 14px;
-            color: var(--white);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s ease;
         }
-        /* Modal dropdowns use consistent light text, even when hovered/selected */
         select.input,
         select.input:focus,
-        select.input:hover { color: var(--white) !important; background-color: #0f1419 !important; }
+        select.input:hover {
+            color: var(--text-primary) !important;
+            background-color: var(--bg-main) !important;
+        }
         select.input option,
         select.input option:checked,
         select.input option:active,
-        select.input option:hover { color: var(--white) !important; background-color: #1d2735 !important; }
-        .input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,217,255,0.15); }
-        .label { font-weight: 700; color: var(--text); margin-bottom: 6px; display: block; font-size: 13px; }
-        .btn-primary { background: var(--blue); color: var(--white); border: 0; border-radius: 10px; padding: 12px 16px; font-weight: 800; }
-        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-weight: 700; }
+        select.input option:hover {
+            color: var(--text-primary) !important;
+            background-color: var(--bg-card) !important;
+        }
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: block;
+            font-size: 13px;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: 0;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
 
-        .icon-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
-        .icon-pick { border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center; cursor: pointer; }
-        .icon-pick.selected { border-color: var(--cyan); background: rgba(0,217,255,0.15); }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+        }
+        .icon-pick {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 20px;
+        }
+        .icon-pick:hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        .icon-pick.selected {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
 
-        .helper-text { color: var(--text); font-size: 12px; margin-top: 6px; }
+        .helper-text {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 6px;
+        }
 
-        .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 18px; border-radius: 12px; color: #fff; font-weight: 700; z-index: 60; box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 60;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
     </style>
 
-    <div class="page-shell">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-            <div>
-                <h1 style="color: var(--white); font-size: 26px; font-weight: 900; letter-spacing: 0.5px;">Services Manager</h1>
-                <p style="color: var(--text);">Manage services, paper sizes, and printing officers.</p>
-            </div>
-            <div class="flex flex-wrap gap-2">
-                <span class="stats-pill">📦 Total: {{ $stats['total_services'] }}</span>
-                <span class="stats-pill">✅ Active: {{ $stats['active_services'] }}</span>
-                <span class="stats-pill">👥 Officers: {{ $stats['total_officers'] }}</span>
+    <div class="page-shell p-6">
+        <div class="page-header">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="page-title">Services Management</h1>
+                    <p class="page-subtitle">Manage services, options, and officers</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="btn-primary" onclick="openServiceModal()">Add Service</button>
+                    <button class="btn-secondary" onclick="openOfficerModal()">Add Officer</button>
+                </div>
             </div>
         </div>
 
-        <div class="flex flex-wrap gap-3 mb-6">
-            <button class="btn-primary" onclick="openServiceModal()">➕ Add Service</button>
-            <button class="btn-secondary" onclick="openOfficerModal()">👤 Add Officer</button>
-            <a href="{{ route('services.index') }}" target="_blank" class="btn-secondary" style="text-decoration: none;">🔍 View Customer Page</a>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Services</div>
+                <div class="stat-value">{{ $stats['total_services'] }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Services</div>
+                <div class="stat-value">{{ $stats['active_services'] }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Officers</div>
+                <div class="stat-value">{{ $stats['total_officers'] }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Officers</div>
+                <div class="stat-value">{{ $stats['active_officers'] }}</div>
+            </div>
         </div>
 
-        <h2 style="color: var(--white); font-weight: 800; margin-bottom: 10px;">Services</h2>
-        <div class="services-grid" id="servicesGrid" style="margin-bottom: 28px;">
+        <h2 class="section-title">Services</h2>
+        <div class="services-grid" id="servicesGrid">
             @forelse($services as $service)
                 <div class="service-card {{ $service->is_active ? '' : 'inactive' }}" data-id="{{ $service->id }}">
                     <div class="service-head">
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
                             <div class="service-icon">{{ $service->icon ?? '🖨️' }}</div>
-                            <div>
-                                <div style="color: var(--white); font-weight: 800; font-size: 16px;">{{ $service->title }}</div>
-                                <div class="meta-badge">{{ strtoupper($service->category) }}</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="service-title">{{ $service->title }}</div>
+                                <div class="service-category">{{ strtoupper($service->category) }}</div>
                             </div>
                         </div>
                         <div class="toggle {{ $service->is_active ? 'active' : '' }}" onclick="toggleService({{ $service->id }})"></div>
                     </div>
                     <div class="service-body">
-                        <p style="margin-bottom: 6px;">{{ \Illuminate\Support\Str::limit($service->description, 140) }}</p>
-                        <div class="flex flex-wrap gap-2">
+                        <p class="service-description">{{ \Illuminate\Support\Str::limit($service->description, 140) }}</p>
+                        <div class="meta-row">
                             @php $displayPrice = $service->price_bw ?? $service->price_color; @endphp
                             @if($displayPrice)
                                 <span class="price-chip">₱{{ number_format($displayPrice, 2) }}</span>
@@ -285,43 +517,43 @@
                                 <span class="meta-badge">{{ $service->price_label }}</span>
                             @endif
                             @if($service->options->count())
-                                <span class="meta-badge">📄 {{ $service->options->count() }} options</span>
+                                <span class="meta-badge">{{ $service->options->count() }} options</span>
                             @endif
                         </div>
                     </div>
                     <div class="actions">
-                        <button class="btn-ghost" onclick="editService({{ $service->id }})">✏️ Edit</button>
-                        <button class="btn-ghost" onclick="manageOptions({{ $service->id }})">📄 Options</button>
-                        <button class="btn-ghost" style="border-color: rgba(255,107,107,0.5); color: #ffb3b3;" onclick="deleteService({{ $service->id }})">🗑 Delete</button>
+                        <button class="btn-action" onclick="editService({{ $service->id }})">Edit</button>
+                        <button class="btn-action" onclick="manageOptions({{ $service->id }})">Options</button>
+                        <button class="btn-action danger" onclick="deleteService({{ $service->id }})">Delete</button>
                     </div>
                 </div>
             @empty
-                <div style="color: var(--text);">No services found.</div>
+                <div style="color: var(--text-secondary); padding: 20px;">No services found.</div>
             @endforelse
         </div>
 
         <div class="mt-10 mb-4 flex items-center justify-between">
-            <h2 style="color: var(--white); font-weight: 800;">Printing Officers</h2>
-            <button class="btn-secondary" onclick="openOfficerModal()">+ Add Officer</button>
+            <h2 class="section-title">Officers</h2>
+            <button class="btn-secondary" onclick="openOfficerModal()">Add Officer</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             @forelse($officers as $officer)
                 <div class="officer-card" data-id="{{ $officer->id }}">
                     <div class="avatar">{{ $officer->initials }}</div>
                     <div class="flex-1 min-w-0">
-                        <div style="color: var(--white); font-weight: 800;">{{ $officer->name }}</div>
-                        <div style="color: var(--text); font-size: 12px;">{{ $officer->title ?? 'PRINTING OFFICER' }}</div>
+                        <div style="color: var(--text-primary); font-weight: 600; font-size: 15px;">{{ $officer->name }}</div>
+                        <div style="color: var(--text-secondary); font-size: 12px;">{{ $officer->title ?? 'OFFICER' }}</div>
                         @if($officer->messenger_url)
-                            <a href="{{ $officer->messenger_url }}" target="_blank" style="color: var(--cyan); font-size: 12px;">Messenger</a>
+                            <a href="{{ $officer->messenger_url }}" target="_blank" style="color: var(--primary); font-size: 12px; text-decoration: none;">Messenger</a>
                         @endif
                     </div>
                     <div class="flex gap-2">
-                        <button class="btn-ghost" onclick="editOfficer({{ $officer->id }})">✏️</button>
-                        <button class="btn-ghost" style="border-color: rgba(255,107,107,0.5); color: #ffb3b3;" onclick="deleteOfficer({{ $officer->id }})">🗑</button>
+                        <button class="btn-action" onclick="editOfficer({{ $officer->id }})">Edit</button>
+                        <button class="btn-action danger" onclick="deleteOfficer({{ $officer->id }})">Delete</button>
                     </div>
                 </div>
             @empty
-                <div style="color: var(--text);">No officers yet.</div>
+                <div style="color: var(--text-secondary); padding: 20px;">No officers yet.</div>
             @endforelse
         </div>
     </div>
@@ -331,7 +563,7 @@
         <div class="modal-card">
             <div class="modal-header">
                 <div id="serviceModalTitle">Add Service</div>
-                <button class="btn-ghost" onclick="closeServiceModal()">✕</button>
+                <button class="btn-action" onclick="closeServiceModal()" style="border: none; padding: 8px;">✕</button>
             </div>
             <form id="serviceForm" onsubmit="submitService(event)">
                 @csrf
@@ -344,27 +576,27 @@
                             <div class="icon-pick" data-icon="{{ $emoji }}" onclick="pickIcon('{{ $emoji }}')">{{ $emoji }}</div>
                         @endforeach
                     </div>
-                    <div class="helper-text">Choose a simple emoji that matches the service so admins and customers can identify it quickly.</div>
+                    <div class="helper-text">Choose an emoji icon for the service</div>
 
-                    <label class="label">Title</label>
+                    <label class="label mt-4">Title</label>
                     <input class="input mb-1" id="serviceTitle" placeholder="Ex: Color Printing, Laptop Repair" required>
-                    <div class="helper-text">Keep it short and action-oriented. This is the name shown on the customer page.</div>
+                    <div class="helper-text">Keep it short and descriptive</div>
 
-                    <label class="label">Description</label>
+                    <label class="label mt-4">Description</label>
                     <textarea class="input mb-1" id="serviceDescription" rows="3" placeholder="Ex: Vibrant full-color prints for presentations and projects." required></textarea>
-                    <div class="helper-text">One or two sentences is enough. Focus on what the service does and who it helps.</div>
+                    <div class="helper-text">One or two sentences describing the service</div>
 
-                    <div>
+                    <div class="mt-4">
                         <label class="label">Price (₱)</label>
                         <input class="input" type="number" step="0.01" id="servicePriceBw" placeholder="Optional">
                     </div>
-                    <div class="helper-text">Leave empty for free or on-request services.</div>
+                    <div class="helper-text">Leave empty for free or on-request services</div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
                         <div>
                             <label class="label">Price Label</label>
-                            <input class="input" id="servicePriceLabel" placeholder="per page, per set, starting rate">
-                            <div class="helper-text">Short note that appears beside the price.</div>
+                            <input class="input" id="servicePriceLabel" placeholder="per page, per set">
+                            <div class="helper-text">Optional price note</div>
                         </div>
                         <div>
                             <label class="label">Category</label>
@@ -372,28 +604,28 @@
                                 @foreach($categories as $cat)
                                     <option value="{{ $cat['name'] }}">{{ $cat['name'] }}</option>
                                 @endforeach
-                                <option value="__new__">➕ Create new category</option>
+                                <option value="__new__">Create new category</option>
                             </select>
-                            <div class="helper-text">Choose an existing category or add a new one.</div>
+                            <div class="helper-text">Choose or create category</div>
                         </div>
                     </div>
 
-                    <div id="categoryNameGroup" class="mt-3" style="display:none;">
+                    <div id="categoryNameGroup" class="mt-4" style="display:none;">
                         <label class="label">New Category Name</label>
                         <input class="input" id="serviceCategory" placeholder="Ex: Document Processing, IT Support" />
                     </div>
 
-                    <div id="categoryDescriptionGroup" class="mt-3">
+                    <div id="categoryDescriptionGroup" class="mt-4">
                         <label class="label">Category Description</label>
-                        <textarea class="input" id="serviceCategoryDescription" rows="2" placeholder="Short blurb shown with this category."></textarea>
-                        <div class="helper-text">Admins can edit this for existing categories or set it when creating a new one.</div>
+                        <textarea class="input" id="serviceCategoryDescription" rows="2" placeholder="Short description for this category"></textarea>
+                        <div class="helper-text">Optional description for the category</div>
                     </div>
 
-                    <div class="flex items-center gap-4 mt-3">
-                        <label class="flex items-center gap-2 text-sm" style="color: var(--text);">
+                    <div class="flex items-center gap-4 mt-4">
+                        <label class="flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
                             <input type="checkbox" id="serviceActive" checked> Active
                         </label>
-                        <div class="helper-text">Turn off to hide the service from customers without deleting it.</div>
+                        <div class="helper-text">Turn off to hide from customers</div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -409,16 +641,16 @@
         <div class="modal-card" style="max-width: 720px;">
             <div class="modal-header">
                 <div>Manage Options</div>
-                <button class="btn-ghost" onclick="closeOptionsModal()">✕</button>
+                <button class="btn-action" onclick="closeOptionsModal()" style="border: none; padding: 8px;">✕</button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="currentServiceId">
                 <div id="optionsList" class="space-y-2 mb-4"></div>
 
-                <form style="border-top: 1px solid var(--border); padding-top: 12px;" onsubmit="submitOption(event)">
+                <form style="border-top: 1px solid var(--border); padding-top: 16px;" onsubmit="submitOption(event)">
                     @csrf
                     <input type="hidden" id="optId">
-                    <h4 style="color: var(--white); font-weight: 800;" id="optFormTitle">Add Option</h4>
+                    <h4 style="color: var(--text-primary); font-weight: 600; margin-bottom: 16px;" id="optFormTitle">Add Option</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label class="label">Name</label>
@@ -426,7 +658,7 @@
                         </div>
                         <div>
                             <label class="label">Details (optional)</label>
-                            <input class="input" id="optDimensions" placeholder="e.g. Duration, size, or variant note">
+                            <input class="input" id="optDimensions" placeholder="e.g. Size, duration">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
@@ -435,14 +667,14 @@
                             <input class="input" type="number" step="0.01" id="optPriceBw" placeholder="Optional">
                         </div>
                         <div>
-                            <label class="label">Secondary price (optional)</label>
+                            <label class="label">Secondary price</label>
                             <input class="input" type="number" step="0.01" id="optPriceColor" placeholder="Optional">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                         <div>
                             <label class="label">Price label</label>
-                            <input class="input" id="optPriceBwLabel" placeholder="e.g. B/W, Standard, Base">
+                            <input class="input" id="optPriceBwLabel" placeholder="e.g. B/W, Standard">
                         </div>
                         <div>
                             <label class="label">Secondary label</label>
@@ -464,12 +696,12 @@
                         </div>
                     </div>
                     <div class="mt-3 flex items-center gap-3">
-                        <label class="flex items-center gap-2 text-sm" style="color: var(--text);">
+                        <label class="flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
                             <input type="checkbox" id="optActive" checked> Active
                         </label>
-                        <div class="helper-text">If you need to pause a size, turn it off instead of deleting.</div>
+                        <div class="helper-text">Pause option without deleting</div>
                     </div>
-                    <div class="flex gap-2 mt-3">
+                    <div class="flex gap-2 mt-4">
                         <button type="submit" class="btn-primary" id="optSubmitBtn">Save Option</button>
                         <button type="button" class="btn-secondary" onclick="resetOptionForm()">Clear</button>
                     </div>
@@ -483,22 +715,22 @@
         <div class="modal-card">
             <div class="modal-header">
                 <div id="officerModalTitle">Add Officer</div>
-                <button class="btn-ghost" onclick="closeOfficerModal()">✕</button>
+                <button class="btn-action" onclick="closeOfficerModal()" style="border: none; padding: 8px;">✕</button>
             </div>
             <form id="officerForm" onsubmit="submitOfficer(event)">
                 @csrf
                 <input type="hidden" id="officerId">
                 <div class="modal-body">
                     <label class="label">Name</label>
-                    <input class="input mb-3" id="officerName" required>
+                    <input class="input mb-4" id="officerName" required>
 
                     <label class="label">Title</label>
-                    <input class="input mb-3" id="officerTitle" placeholder="PRINTING OFFICER">
+                    <input class="input mb-4" id="officerTitle" placeholder="OFFICER">
 
                     <label class="label">Messenger URL</label>
-                    <input class="input mb-3" id="officerMessenger" placeholder="https://www.messenger.com/...">
+                    <input class="input mb-4" id="officerMessenger" placeholder="https://www.messenger.com/...">
 
-                    <label class="flex items-center gap-2 text-sm" style="color: var(--text);">
+                    <label class="flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
                         <input type="checkbox" id="officerActive" checked> Active
                     </label>
                 </div>
@@ -521,7 +753,7 @@
             el.textContent = msg;
             if (type === 'success') el.style.background = 'var(--success)';
             else if (type === 'error') el.style.background = 'var(--danger)';
-            else el.style.background = 'var(--blue)';
+            else el.style.background = 'var(--primary)';
             document.body.appendChild(el);
             setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(10px)'; }, 2500);
             setTimeout(() => el.remove(), 3200);

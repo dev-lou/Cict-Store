@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\InventoryProductController;
 use App\Http\Controllers\Admin\InventoryStockController;
 use App\Http\Controllers\Admin\BuyListController;
 use App\Http\Controllers\Admin\OrderManageController;
-use App\Http\Controllers\Admin\AnalyticsController;
+
 use App\Http\Controllers\Admin\UserManageController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\ReceiptPdfController;
@@ -269,26 +269,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/{order}/assign-staff', [OrderManageController::class, 'assignStaff'])->name('assign-staff');
         Route::get('/{order}/download-file', [OrderManageController::class, 'downloadFile'])->name('download-file');
     });
-    
-    // ========================================================================
-    // Analytics
-    // ========================================================================
-    Route::prefix('analytics')->name('analytics.')->group(function () {
-        Route::get('/', [AnalyticsController::class, 'index'])->name('index');
-        Route::get('/revenue', [AnalyticsController::class, 'getRevenue'])->name('revenue');
-        Route::get('/categories', [AnalyticsController::class, 'getCategories'])->name('categories');
-        Route::get('/top-products', [AnalyticsController::class, 'getTopProducts'])->name('top-products');
-        Route::get('/kpis', [AnalyticsController::class, 'getKpis'])->name('kpis');
-        Route::get('/daily-orders', [AnalyticsController::class, 'getDailyOrders'])->name('daily-orders');
-        Route::get('/order-status', [AnalyticsController::class, 'getOrderStatus'])->name('order-status');
-        Route::get('/top-customers', [AnalyticsController::class, 'getTopCustomers'])->name('top-customers');
-        Route::get('/peak-hours', [AnalyticsController::class, 'getPeakHours'])->name('peak-hours');
-        Route::get('/weekly-comparison', [AnalyticsController::class, 'getWeeklyComparison'])->name('weekly-comparison');
-        Route::get('/conversion-metrics', [AnalyticsController::class, 'getConversionMetrics'])->name('conversion-metrics');
-        Route::get('/payment-methods', [AnalyticsController::class, 'getPaymentMethods'])->name('payment-methods');
-        Route::get('/inventory-performance', [AnalyticsController::class, 'getInventoryPerformance'])->name('inventory-performance');
-        Route::get('/monthly-revenue', [AnalyticsController::class, 'getMonthlyRevenue'])->name('monthly-revenue');
-    });
 
     // Admin Gemini diagnostics (safe, admin-only)
     Route::get('/gemini/diagnose', [\App\Http\Controllers\Admin\GeminiDiagController::class, 'index'])->name('gemini.diagnose');
@@ -307,6 +287,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/', [UserManageController::class, 'settings'])->name('index');
         Route::post('/', [UserManageController::class, 'updateSettings'])->name('update');
+        Route::post('/logo', [UserManageController::class, 'updateLogo'])->name('update-logo');
     });
     
     Route::prefix('users')->name('users.')->group(function () {
@@ -319,8 +300,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::delete('/{user}', [UserManageController::class, 'destroy'])->name('destroy');
         Route::patch('/{user}/assign-role', [UserManageController::class, 'assignRole'])->name('assign-role');
     });
-    
-});// ============================================================================
+});
+
+// ============================================================================
 // AUTHENTICATION ROUTES
 // ============================================================================
 Route::get('/login', function () {

@@ -14,8 +14,8 @@ class GeminiChatService
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key') ?? '';
-        // Use gemini-2.5-flash (stable version from June 2025)
-        $this->model = config('services.gemini.model', 'gemini-2.5-flash');
+        // Use gemini-3-flash-preview (latest Gemini 3 Flash model as of January 2026)
+        $this->model = config('services.gemini.model', 'gemini-3-flash-preview');
         // Using v1beta API endpoint
         $this->apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent";
     }
@@ -196,7 +196,7 @@ class GeminiChatService
      */
     private function buildSystemPrompt(): string
     {
-        $siteName = config('app.name', 'TheWerk');
+        $siteName = config('app.name', 'CICT-DG');
 
         return <<<PROMPT
 You are CICT AI, the official customer support assistant for {$siteName}, the CICT Student Council's merchandise and printing services platform.

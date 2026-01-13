@@ -1,4 +1,4 @@
-<x-app-layout :title="'My Profile - TheWerk'">
+<x-app-layout :title="'My Profile - CICT-DG'">
     <style>
         :root {
             --ink: #0f172a;

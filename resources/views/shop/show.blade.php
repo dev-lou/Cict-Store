@@ -1,5 +1,5 @@
 ﻿<x-app-layout>
-    @section('title', $product->name . ' - ' . config('app.name', 'TheWerk'))
+    @section('title', $product->name . ' - ' . config('app.name', 'CICT-DG'))
 
     <style>
         /* ============ DESIGN TOKENS ============ */

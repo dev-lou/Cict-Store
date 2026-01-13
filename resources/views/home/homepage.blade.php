@@ -1,4 +1,4 @@
-<x-app-layout :title="'TheWerk — Merchandise & Services'">
+<x-app-layout :title="'CICT-DG — Merchandise & Services'">
     <style>
         /* ============ DESIGN TOKENS ============ */
         :root {
@@ -248,7 +248,6 @@
         .product-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-xl);
-            border-color: var(--primary);
         }
 
         .product-image {
@@ -365,7 +364,6 @@
         .service-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
         }
 
         .service-icon {
@@ -646,41 +644,25 @@
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="section">
-        <div class="section-container">
-            <div class="stats-grid">
-                <div class="stat-item reveal-on-scroll">
-                    <div class="stat-number" data-gsap="counter" data-target="500">500</div>
-                    <div class="stat-label">Happy Customers</div>
-                </div>
-                <div class="stat-item reveal-on-scroll">
-                    <div class="stat-number" data-gsap="counter" data-target="50">50</div>
-                    <div class="stat-label">Products</div>
-                </div>
-                <div class="stat-item reveal-on-scroll">
-                    <div class="stat-number" data-gsap="counter" data-target="15">15</div>
-                    <div class="stat-label">Services</div>
-                </div>
-                <div class="stat-item reveal-on-scroll">
-                    <div class="stat-number" data-gsap="counter" data-target="4">4</div>
-                    <div class="stat-label">Years Serving</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- About Section -->
     <section class="section section-alt">
         <div class="section-container">
             <div class="about-grid">
                 <div class="about-image reveal-on-scroll">
-                    <img src="{{ asset('images/cict_hero_bg.png') }}" alt="CICT Student Council">
+                    @php
+                        $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
+                        $logoUrl = $logoSetting && $logoSetting->value 
+                            ? \Storage::disk('supabase')->url($logoSetting->value) 
+                            : asset('images/ctrlp-logo.png');
+                    @endphp
+                    <div style="width: 100%; max-width: 400px; aspect-ratio: 1; margin: 0 auto; border-radius: 50%; overflow: hidden; background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%); box-shadow: 0 20px 60px rgba(139, 0, 0, 0.4); border: 4px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <img src="{{ $logoUrl }}" alt="CICT-DG Logo" style="width: 80%; height: 80%; object-fit: cover; border-radius: 50%;">
+                    </div>
                 </div>
                 <div class="about-content reveal-on-scroll">
-                    <h2>About TheWerk</h2>
+                    <h2>About CICT-DG</h2>
                     <p>
-                        TheWerk is the official merchandise and services platform of the CICT Student Council
+                        CICT-DG is the official merchandise and services platform of the CICT Student Council
                         at ISUFST Dingle Campus. We provide quality products and professional services
                         to support student needs and fund campus initiatives.
                     </p>

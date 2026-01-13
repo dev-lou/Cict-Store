@@ -3,22 +3,19 @@
 
     <!-- Flash Messages -->
     @if(session('success'))
-        <div style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); border: 2px solid #66bb6a; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 24px;">✅</span>
+        <div style="background: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
             <span style="color: #ffffff; font-weight: 600;">{{ session('success') }}</span>
         </div>
     @endif
     
     @if(session('warning'))
-        <div style="background: linear-gradient(135deg, #ff9500 0%, #cc7700 100%); border: 2px solid #ffd700; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 24px;">⚠️</span>
+        <div style="background: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
             <span style="color: #ffffff; font-weight: 600;">{{ session('warning') }}</span>
         </div>
     @endif
     
     @if(session('error'))
-        <div style="background: linear-gradient(135deg, #f44336 0%, #c62828 100%); border: 2px solid #ef5350; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 24px;">❌</span>
+        <div style="background: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
             <span style="color: #ffffff; font-weight: 600;">{{ session('error') }}</span>
         </div>
     @endif
@@ -39,7 +36,7 @@
             left: 0;
             width: 80px;
             height: 3px;
-            background: linear-gradient(90deg, #3b82f6 0%, transparent 100%);
+            background: #3b82f6;
             border-radius: 2px;
         }
         .form-group {
@@ -100,10 +97,12 @@
             width: 60px;
             height: 2px;
             background: #3b82f6;
+            height: 2px;
+            background: #3b82f6;
         }
         .btn-primary {
             padding: 10px 20px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: #3b82f6;
             color: #ffffff;
             border: none;
             border-radius: 6px;
@@ -111,16 +110,12 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
         }
         .btn-primary:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            background: #2563eb;
         }
         .btn-primary:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
+            background: #1d4ed8;
         }
         .btn-cancel {
             background: rgba(30, 41, 59, 0.6);
@@ -230,9 +225,8 @@
             to { opacity: 1; }
         }
         .modal-content {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(59, 130, 246, 0.4);
+            background: #1e293b;
+            border: 1px solid #334155;
             border-radius: 12px;
             padding: 28px;
             max-width: 700px;
@@ -243,7 +237,7 @@
                 margin: auto;
             overflow-y: auto;
             animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 100px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
@@ -284,7 +278,7 @@
             border-color: rgba(100, 116, 139, 0.6);
         }
         .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: #ef4444;
             color: white;
             border: none;
             padding: 8px 14px;
@@ -293,15 +287,12 @@
             font-weight: 600;
             font-size: 0.85rem;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
         }
         .btn-danger:hover {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35);
+            background: #dc2626;
         }
         .btn-danger:active {
-            transform: translateY(0);
+            background: #b91c1c;
         }
 
         /* Responsive Design */
@@ -352,7 +343,7 @@
     </style>
 
     <!-- Breadcrumb Navigation -->
-    <nav style="margin-bottom: 24px; padding: 14px 20px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.6) 100%); backdrop-filter: blur(10px); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; display: flex; align-items: center; gap: 8px;">
+    <nav style="margin-bottom: 24px; padding: 14px 20px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; display: flex; align-items: center; gap: 8px;">
         <a href="{{ route('admin.dashboard') }}" style="color: #94a3b8; font-weight: 500; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='#94a3b8'">Dashboard</a>
         <span style="color: #475569; font-weight: 600;">›</span>
         <a href="{{ route('admin.inventory.index') }}" style="color: #94a3b8; font-weight: 500; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='#94a3b8'">Inventory</a>
@@ -365,7 +356,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
             <div>
                 <h1 style="color: #f1f5f9; font-size: 2.2rem; margin: 0 0 8px 0; font-weight: 600; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px;">
-                    <span style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 8px; font-size: 1.3rem;">✚</span>
+                    <span style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: #3b82f6; border-radius: 8px; font-size: 1.3rem;">+</span>
                     Create Product
                 </h1>
                 <p style="color: #94a3b8; margin: 0 0 0 56px; font-size: 0.95rem; font-weight: 400;">Add a new product to your inventory system</p>
@@ -386,10 +377,7 @@
                 <!-- Product Details Section -->
                 <div class="section-container">
                     <div class="section-header">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <span style="font-size: 1.3rem;">📝</span>
-                            <span>Product Information</span>
-                        </span>
+                        <span>Product Information</span>
                     </div>
 
                     <div class="form-group">
@@ -489,10 +477,10 @@
                     </div>
 
                     <!-- Variants Table View -->
-                    <div id="variantTableContainer" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; overflow: hidden; margin-bottom: 24px; display: none;">
+                    <div id="variantTableContainer" style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; overflow: hidden; margin-bottom: 24px; display: none;">
                         <table style="width: 100%; border-collapse: collapse;">
                             <thead>
-                                <tr style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-bottom: 1px solid rgba(59, 130, 246, 0.3);">
+                                <tr style="background: #3b82f6; border-bottom: 1px solid #334155;">
                                     <th style="padding: 14px 16px; text-align: left; color: #ffffff; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.3px;">Variant Name</th>
                                     <th style="padding: 14px 16px; text-align: center; color: #ffffff; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.3px;">Stock</th>
                                     <th style="padding: 14px 16px; text-align: center; color: #ffffff; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.3px;">Price Modifier</th>
@@ -509,8 +497,7 @@
                     </div>
 
                     <!-- Empty State -->
-                    <div id="emptyState" style="background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 48px 32px; text-align: center; margin-bottom: 24px;">
-                        <div style="font-size: 4rem; margin-bottom: 16px; opacity: 0.5;">📦</div>
+                    <div id="emptyState" style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 48px 32px; text-align: center; margin-bottom: 24px;">
                         <p style="color: #94a3b8; font-size: 1rem; margin: 0;">No variants added yet. Click "Add Variant" to get started.</p>
                     </div>
 
@@ -519,12 +506,10 @@
 
                 <!-- Action Buttons -->
                 <div style="display: flex; gap: 12px; margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(71, 85, 105, 0.3); flex-wrap: wrap;">
-                    <button type="button" id="saveBtn" style="flex: 1; min-width: 140px; padding: 12px 20px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.2s ease; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(59, 130, 246, 0.4)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.boxShadow='0 2px 8px rgba(59, 130, 246, 0.3)'; this.style.transform='translateY(0)';">
-                        <span style="font-size: 1.1rem;">✓</span>
+                    <button type="button" id="saveBtn" style="flex: 1; min-width: 140px; padding: 12px 20px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.2s ease; letter-spacing: 0.3px; display: flex; align-items: center; justify-content: center; gap: 8px;" onmouseover="this.style.background='#2563eb';" onmouseout="this.style.background='#3b82f6';">
                         <span>Create Product</span>
                     </button>
                     <a href="{{ route('admin.inventory.index') }}" class="btn-cancel" style="flex: 1; min-width: 140px; padding: 12px 20px; font-size: 1rem; font-weight: 600; letter-spacing: 0.3px; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <span style="font-size: 1.1rem;">✕</span>
                         <span>Cancel</span>
                     </a>
                 </div>
@@ -536,13 +521,11 @@
         <!-- Right Panel: Image -->
         <div style="background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(71, 85, 105, 0.3); border-radius: 8px; padding: 20px; height: fit-content; position: sticky; top: 20px; z-index: 1; transition: all 0.3s ease;" onmouseover="this.style.borderColor='rgba(59, 130, 246, 0.4)'; this.style.background='rgba(30, 41, 59, 0.5)';" onmouseout="this.style.borderColor='rgba(71, 85, 105, 0.3)'; this.style.background='rgba(30, 41, 59, 0.4)';">
             <h3 style="color: #cbd5e1; font-weight: 600; margin: 0 0 16px 0; font-size: 0.95rem; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 1.2rem;">🖼️</span>
                 <span>Product Image</span>
             </h3>
 
-            <label for="imageInput" id="imagePreview" style="width: 100%; aspect-ratio: 1; background: rgba(15, 23, 42, 0.6); border: 2px dashed rgba(100, 116, 139, 0.5); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 16px; overflow: hidden; transition: all 0.25s ease;" onmouseover="this.style.borderColor='#3b82f6'; this.style.backgroundColor='rgba(59, 130, 246, 0.05)'; this.style.boxShadow='0 0 20px rgba(59, 130, 246, 0.15)'; this.style.transform='scale(1.01)';" onmouseout="this.style.borderColor='rgba(100, 116, 139, 0.5)'; this.style.backgroundColor='rgba(15, 23, 42, 0.6)'; this.style.boxShadow='none'; this.style.transform='scale(1)';">
+            <label for="imageInput" id="imagePreview" style="width: 100%; aspect-ratio: 1; background: rgba(15, 23, 42, 0.6); border: 2px dashed rgba(100, 116, 139, 0.5); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 16px; overflow: hidden; transition: all 0.25s ease;" onmouseover="this.style.borderColor='#3b82f6'; this.style.backgroundColor='rgba(59, 130, 246, 0.05)'; this.style.transform='scale(1.01)';" onmouseout="this.style.borderColor='rgba(100, 116, 139, 0.5)'; this.style.backgroundColor='rgba(15, 23, 42, 0.6)'; this.style.transform='scale(1)';">
                 <div style="text-align: center;">
-                    <div style="font-size: 56px; margin-bottom: 12px; opacity: 0.7;">📸</div>
                     <p style="color: #cbd5e1; font-weight: 600; margin: 0; font-size: 1rem;">Click to Upload</p>
                     <p style="color: #64748b; font-size: 0.85rem; margin: 6px 0 0 0;">or drag & drop</p>
                 </div>
@@ -553,8 +536,7 @@
             <div id="imageDebug" style="display:none; color:#94a3b8; font-size:0.8rem; margin-top:6px; padding:8px; background: rgba(2,6,23,0.3); border-radius:6px; max-height:120px; overflow:auto; white-space:pre-wrap; font-family: monospace;">Debug log (events will appear here)</div>
 
             <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; padding: 12px; text-align: center; margin-bottom: 16px;">
-                <p style="color: #cbd5e1; font-weight: 600; margin: 0 0 4px 0; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <span>📋</span>
+                <p style="color: #cbd5e1; font-weight: 600; margin: 0 0 4px 0; font-size: 0.85rem;">
                     <span>Image Guidelines</span>
                 </p>
                 <p style="color: #94a3b8; font-size: 0.8rem; margin: 0; line-height: 1.5;">JPG, PNG, GIF, WebP • Max 5MB</p>

@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('title', 'Services - ' . config('app.name', 'TheWerk'))
+    @section('title', 'Services - ' . config('app.name', 'CICT-DG'))
 
     <style>
         /* ============ DESIGN TOKENS ============ */
@@ -201,7 +201,6 @@
         .service-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
         }
 
         .service-header {

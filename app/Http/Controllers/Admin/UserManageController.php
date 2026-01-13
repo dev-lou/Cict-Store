@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\AuditLog;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -203,8 +204,9 @@ class UserManageController extends Controller
         ];
 
         $siteName = config('app.name', 'IGP Hub');
+        $logo = Setting::where('key', 'site_logo')->first();
 
-        return view('admin.settings.index', compact('stats', 'siteName'));
+        return view('admin.settings.index', compact('stats', 'siteName', 'logo'));
     }
 
     /**
@@ -296,6 +298,47 @@ class UserManageController extends Controller
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 422);
+        }
+    }
+
+    /**
+     * Update site logo.
+     */
+    public function updateLogo(Request $request)
+    {
+        $request->validate([
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        ]);
+
+        try {
+            $setting = Setting::firstOrCreate(['key' => 'site_logo']);
+
+            // Delete old logo if exists and it's not the default
+            if ($setting->value && $setting->value !== 'images/ctrlp-logo.png' && Storage::disk('supabase')->exists($setting->value)) {
+                Storage::disk('supabase')->delete($setting->value);
+            }
+
+            // Store new logo in Supabase
+            $path = $request->file('logo')->store('logos', 'supabase');
+            $setting->value = $path;
+            $setting->save();
+
+            // Log action
+            AuditLog::create([
+                'user_id' => auth()->id(),
+                'action' => 'update',
+                'model' => 'Setting',
+                'model_id' => $setting->id,
+                'new_values' => ['logo' => $path],
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+
+            return redirect()->route('admin.settings.index')
+                ->with('success', 'Logo updated successfully! The new logo is now displayed across your site.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Failed to update logo: ' . $e->getMessage());
         }
     }
 }

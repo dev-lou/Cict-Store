@@ -309,7 +309,7 @@ unset($__defined_vars); ?>
                 <!-- Logo -->
                 <div class="flex items-center">
                     <a href="/" class="text-2xl font-bold text-black"
-                        style="font-family: 'Inter', sans-serif; font-size: 24px;"><?php echo e(config('app.name', 'TheWerk')); ?></a>
+                        style="font-family: 'Inter', sans-serif; font-size: 24px;"><?php echo e(config('app.name', 'CICT-DG')); ?></a>
                 </div>
 
                 <!-- Navigation Links (Center - Hidden on Mobile) -->

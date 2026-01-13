@@ -123,7 +123,7 @@ return [
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_STRINGIFY_FETCHES => false,
             ] : [],
-            'application_name' => env('APP_NAME', 'TheWerk'),
+            'application_name' => env('APP_NAME', 'CICT-DG'),
         ],
 
         'sqlsrv' => [
