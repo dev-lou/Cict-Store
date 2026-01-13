@@ -1,5 +1,0 @@
-<?php
-
-return [
-    'translatable' => 'traducción',
-];
