@@ -1,84 +1,164 @@
 <?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4619374cef299e94fd7263111d0abc69 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => 'Council IGP - Merchandise & Printing Services']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => 'TheWerk — Merchandise & Services']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('app-layout'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Council IGP - Merchandise & Printing Services')]); ?>
-    <!-- SweetAlert2 for notifications -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('TheWerk — Merchandise & Services')]); ?>
     <style>
+        /* ============ DESIGN TOKENS ============ */
         :root {
-            --primary-blue: #8B0000;
-            --primary-blue-light: #A00000;
-            --primary-text: #1F1F1F;
-            --secondary-text: #555555;
-            --light-bg: #FFFAF1;
-            --white: #FFFFFF;
-            --border-light: #E8DCC8;
-            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --primary: #8B0000;
+            --primary-hover: #6B0000;
+            --accent: #D97706;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F9FAFB;
+            --border: #E5E7EB;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
         }
 
         /* ============ HERO SECTION ============ */
-        .hero-section {
-            background: transparent;
-            padding: 120px 20px 100px;
+        .hero {
+            min-height: 70vh;
+            padding: 180px 24px 80px;
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            margin-top: 0;
+            margin-top: -72px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 60vh;
+                padding: 160px 20px 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding-top: 180px;
+            }
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('<?php echo e(asset("images/cict_hero_bg.png")); ?>') center/cover;
+            opacity: 0.15;
         }
 
         .hero-content {
-            max-width: 900px;
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
             margin: 0 auto;
         }
 
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            backdrop-filter: blur(4px);
+        }
+
         .hero-title {
-            font-size: 56px;
+            font-size: clamp(36px, 6vw, 56px);
             font-weight: 800;
-            color: var(--primary-text);
-            margin-bottom: 16px;
-            line-height: 1.2;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 20px;
             letter-spacing: -1px;
         }
 
         .hero-subtitle {
-            font-size: 20px;
-            color: var(--secondary-text);
-            margin-bottom: 48px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
+            font-size: clamp(16px, 2vw, 20px);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .hero-button {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            color: white;
-            padding: 16px 40px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: #fff;
+            color: var(--primary);
             font-size: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 16px rgba(0, 58, 150, 0.2);
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-lg);
         }
 
-        .hero-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0, 58, 150, 0.3);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
         }
 
-        /* ============ FEATURED PRODUCTS SECTION ============ */
-        .featured-section {
-            padding: 80px 20px;
-            background: var(--light-bg);
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: transparent;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        /* ============ SECTIONS ============ */
+        .section {
+            padding: 80px 24px;
+            background: var(--bg-secondary);
+        }
+
+        .section-alt {
+            background: var(--bg-primary);
         }
 
         .section-container {
@@ -86,50 +166,103 @@
             margin: 0 auto;
         }
 
-        .section-heading {
-            font-size: 42px;
-            font-weight: 800;
-            color: var(--primary-text);
-            margin-bottom: 60px;
+        .section-header {
             text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
             letter-spacing: -0.5px;
         }
 
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ============ PRODUCT CARDS ============ */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 28px;
-            margin-bottom: 60px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .product-card {
+                border-radius: 12px;
+            }
+
+            .product-card:hover {
+                transform: translateY(-4px);
+            }
+
+            .product-image {
+                aspect-ratio: 1/1;
+            }
+
+            .product-info {
+                padding: 12px;
+            }
+
+            .product-title {
+                font-size: 13px;
+                margin-bottom: 4px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .product-price {
+                font-size: 15px;
+            }
         }
 
         .product-card {
-            background: var(--white);
-            border: 1px solid var(--border-light);
-            border-radius: 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            cursor: pointer;
+            text-decoration: none;
         }
 
         .product-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-medium);
-            border-color: var(--primary-blue);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
         }
 
         .product-image {
-            width: 100%;
-            height: 260px;
-            background: linear-gradient(135deg, #F0F0F0 0%, #E8E8E8 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #999999;
-            font-weight: 500;
+            aspect-ratio: 4/3;
+            background: var(--bg-secondary);
             overflow: hidden;
         }
 
@@ -137,215 +270,165 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
         }
 
         .product-info {
-            padding: 24px;
-            flex-grow: 1;
+            padding: 20px;
+            flex: 1;
             display: flex;
             flex-direction: column;
         }
 
         .product-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-text);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 8px;
             line-height: 1.4;
         }
 
         .product-price {
             font-size: 20px;
-            font-weight: 800;
-            color: var(--primary-blue);
-            margin-bottom: 12px;
-        }
-
-        .product-description {
-            font-size: 14px;
-            color: var(--secondary-text);
-            margin-bottom: 16px;
-            flex-grow: 1;
-        }
-
-        .product-link {
-            display: inline-block;
-            color: var(--primary-blue);
-            text-decoration: none;
             font-weight: 700;
-            font-size: 14px;
-            transition: all 0.3s;
-            letter-spacing: 0.3px;
+            color: var(--primary);
+            margin-top: auto;
         }
 
-        .product-link:hover {
-            color: var(--primary-blue-light);
-            transform: translateX(4px);
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 6px 12px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
         }
 
-        .view-all-btn {
-            display: inline-block;
-            margin: 0 auto;
-            background: transparent;
-            border: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
-            padding: 14px 36px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            letter-spacing: 0.5px;
-        }
-
-        .view-all-btn:hover {
-            background: var(--primary-blue);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 58, 150, 0.2);
-        }
-
-        /* ============ SERVICES SECTION ============ */
-        .services-section {
-            padding: 80px 20px;
-            background: #FFFAF1;
-        }
-
+        /* ============ SERVICE CARDS ============ */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 32px;
-            margin-top: 60px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .service-card {
+                padding: 20px;
+            }
+
+            .service-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+                margin-bottom: 14px;
+            }
+
+            .service-title {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
+
+            .service-desc {
+                font-size: 12px;
+                margin-bottom: 12px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .service-price {
+                font-size: 14px;
+            }
         }
 
         .service-card {
-            background: var(--white);
-            border: 1px solid var(--border-light);
-            border-radius: 14px;
-            padding: 40px 32px;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-light);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
         }
 
         .service-card:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-medium);
-            border-color: var(--primary-blue);
-        }
-
-        .service-card:hover::before {
-            transform: scaleX(1);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
         }
 
         .service-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 24px;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            border-radius: 12px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.1), rgba(139, 0, 0, 0.05));
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 58, 150, 0.15);
+            font-size: 28px;
+            margin-bottom: 20px;
         }
 
         .service-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--primary-text);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 12px;
-            letter-spacing: -0.3px;
         }
 
-        .service-description {
-            font-size: 15px;
-            color: var(--secondary-text);
-            line-height: 1.8;
+        .service-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .service-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
         }
 
         /* ============ ABOUT SECTION ============ */
-        .about-section {
-            padding: 80px 20px;
-            background: var(--light-bg);
-        }
-
         .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: 64px;
             align-items: center;
-            margin-top: 40px;
         }
 
-        .about-content h3 {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary-text);
-            margin-bottom: 24px;
-            letter-spacing: -0.5px;
-        }
-
-        .about-text {
-            font-size: 16px;
-            color: var(--secondary-text);
-            line-height: 1.9;
-            margin-bottom: 32px;
-        }
-
-        .about-button {
-            display: inline-block;
-            background: transparent;
-            border: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
-            padding: 14px 32px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            letter-spacing: 0.5px;
-        }
-
-        .about-button:hover {
-            background: var(--primary-blue);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 58, 150, 0.2);
+        @media (max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
         }
 
         .about-image {
-            width: 100%;
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, #F0F0F0 0%, #E8E8E8 100%);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #999999;
-            font-weight: 500;
+            border-radius: var(--radius-xl);
             overflow: hidden;
-            box-shadow: var(--shadow-light);
+            aspect-ratio: 4/3;
+            background: var(--bg-secondary);
         }
 
         .about-image img {
@@ -354,384 +437,292 @@
             object-fit: cover;
         }
 
-        /* ============ CONTACT SECTION ============ */
-        .contact-section {
-            padding: 80px 20px;
-            background: #FFFAF1;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            margin-top: 40px;
-            align-items: start;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-
-        .contact-block {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .contact-label {
-            font-size: 13px;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--secondary-text);
-            letter-spacing: 1px;
-        }
-
-        .contact-value {
-            font-size: 18px;
+        .about-content h2 {
+            font-size: clamp(28px, 4vw, 36px);
             font-weight: 700;
-            color: var(--primary-text);
-            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
         }
 
-        .contact-links {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
+        .about-content p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
         }
 
-        .contact-link {
+        .btn-outline {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 14px;
-            transition: all 0.3s;
-            letter-spacing: 0.3px;
-        }
-
-        .contact-link:hover {
-            color: var(--primary-blue-light);
-            transform: translateX(4px);
-        }
-
-        .map-container {
-            width: 100%;
-            height: 500px;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: var(--shadow-light);
-            border: 1px solid var(--border-light);
-            display: block;
-            position: relative;
-            margin: 0;
-            padding: 0;
-        }
-
-        .map-link {
-            display: block;
-            width: 100%;
-            height: 100%;
-            position: relative;
-            text-decoration: none;
-        }
-
-        .map-link img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .map-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .map-link:hover .map-overlay {
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .map-text {
-            color: white;
-            font-size: 16px;
+            padding: 14px 28px;
+            background: transparent;
+            color: var(--primary);
+            font-size: 15px;
             font-weight: 600;
-            opacity: 0;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.2s ease;
         }
 
-        .map-link:hover .map-text {
-            opacity: 1;
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
         }
 
-        .map-container iframe {
-            width: 100% !important;
-            height: 100% !important;
-            border: none !important;
-            display: block !important;
-            margin: 0 !important;
-            padding: 0 !important;
+        /* ============ VIEW ALL BUTTON ============ */
+        .view-all-wrapper {
+            text-align: center;
+            margin-top: 48px;
         }
 
-        /* ============ RESPONSIVE ============ */
+        /* ============ STATS SECTION ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 36px;
-            }
-
-            .hero-subtitle {
-                font-size: 16px;
-                margin-bottom: 32px;
-            }
-
-            .section-heading {
-                font-size: 32px;
-                margin-bottom: 40px;
-            }
-
-            .about-grid,
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .products-grid {
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-section {
-                padding: 80px 20px 60px;
-            }
-
-            .featured-section,
-            .services-section,
-            .about-section,
-            .contact-section {
-                padding: 60px 20px;
-            }
-
-            .contact-grid {
-                gap: 40px;
-            }
-
-            .map-container {
-                height: 350px;
             }
         }
 
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 1.5rem !important;
-                margin-bottom: 8px !important;
-                letter-spacing: -0.5px !important;
-            }
-            
-            .hero-section h2 {
-                font-size: 1.125rem !important;
-                margin-bottom: 12px !important;
-            }
-
-            .hero-subtitle {
-                font-size: 0.8125rem !important;
-                margin-bottom: 24px !important;
-                line-height: 1.5 !important;
-            }
-
-            .section-heading {
-                font-size: 24px;
-                margin-bottom: 32px;
-            }
-
-            .hero-button {
-                padding: 12px 28px;
-                font-size: 14px;
-            }
-
-            .product-card {
-                margin: 0;
-            }
-
-            .product-image {
-                height: 180px;
-            }
-
-            .product-info {
-                padding: 16px;
-            }
-
-            .contact-value {
-                font-size: 14px;
-            }
-
-            .map-container {
-                height: 250px;
-            }
+        .stat-item {
+            padding: 24px;
         }
 
-        /* ============ SMOOTH SCROLL ============ */
-        html {
-            scroll-behavior: smooth;
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 8px;
         }
 
-        /* ============ ANIMATIONS ============ */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
-        .section-container {
-            animation: fadeInUp 0.6s ease-out;
+        /* ============ CTA SECTION ============ */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #5C0000 100%);
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 
-    <div style="background: #FFFAF1; min-height: 100vh; width: 100%; padding-top: 0;">
-
-    <!-- ============ HERO SECTION ============ -->
-    <section class="hero-section" style="background: linear-gradient(135deg, rgba(139, 0, 0, 0.9) 0%, rgba(160, 0, 0, 0.9) 100%), url('https://images.unsplash.com/photo-1557821552-17105176677c?w=1200&h=600&fit=crop') center/cover; min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative;">
-        <div class="hero-content" style="text-align: center; color: white; z-index: 10; padding: 20px;">
-            <h1 class="hero-title" style="font-size: 64px; font-weight: 900; margin-bottom: 20px; color: #FFFFFF; text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); letter-spacing: -2px;">CICT Student Council</h1>
-            <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 24px; color: #FFD700; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);">Merchandise & Printing Services</h2>
-            <p class="hero-subtitle" style="font-size: 22px; color: rgba(255, 255, 255, 0.95); margin-bottom: 48px; max-width: 700px; margin-left: auto; margin-right: auto; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); font-weight: 500;">Quality merchandise and professional printing services proudly brought to you by ISUFST Dingle Campus CICT Student Council</p>
-            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                <a href="<?php echo e(route('shop.index')); ?>" class="hero-button" style="background: #FFD700; color: #1a1a1a; padding: 16px 48px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 16px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4); border: none; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 32px rgba(255, 215, 0, 0.6)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(255, 215, 0, 0.4)';">Shop Now</a>
-                <a href="<?php echo e(route('contact.index')); ?>" class="hero-button" style="background: #FFFFFF; color: #8B0000; padding: 16px 48px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 16px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 32px rgba(255, 255, 255, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(255, 255, 255, 0.3)';">Contact Us</a>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>🎓</span>
+                <span>CICT Student Council Store</span>
+            </div>
+            <h1 class="hero-title gsap-hero-title">Campus Merch & Services</h1>
+            <p class="hero-subtitle gsap-hero-subtitle">
+                Quality merchandise and professional services for the ISUFST community.
+                Every purchase supports student initiatives.
+            </p>
+            <div class="hero-buttons">
+                <a href="<?php echo e(route('shop.index')); ?>" class="btn-primary">
+                    <span>Shop Now</span>
+                    <span>→</span>
+                </a>
+                <a href="<?php echo e(route('services.index')); ?>" class="btn-secondary">
+                    View Services
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- ============ FEATURED PRODUCTS SECTION ============ -->
-    <section class="featured-section">
+    <!-- Featured Products Section -->
+    <section class="section">
         <div class="section-container">
-            <h2 class="section-heading">Popular Merchandise</h2>
-            
+            <div class="section-header">
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-subtitle">Our most popular campus merchandise</p>
+            </div>
+
             <div class="products-grid">
-                <?php /** @var \App\Models\Product[]|\Illuminate\Support\Collection $featuredProducts */ ?>
-                <?php $__empty_1 = true; $__currentLoopData = $featuredProducts ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <?php if($product): ?>
-                        <a href="<?php echo e(route('shop.show', $product)); ?>" class="product-card reveal-on-scroll" data-reveal-delay="<?php echo e(($loop->index % 4) * 100); ?>">
-                    <?php else: ?>
-                        <div class="product-card disabled reveal-on-scroll" data-reveal-delay="<?php echo e(($loop->index % 4) * 100); ?>">
-                    <?php endif; ?>
+                <?php
+                    $featuredProducts = \App\Models\Product::where('status', 'active')
+                        ->orderByDesc('created_at')
+                        ->take(4)
+                        ->get();
+                ?>
+
+                <?php $__empty_1 = true; $__currentLoopData = $featuredProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <a href="<?php echo e(route('shop.show', $product->slug)); ?>" class="product-card reveal-on-scroll">
                         <div class="product-image">
-                            <?php if(!empty($product?->image_url)): ?>
-                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name ?? 'Product'); ?>">
-                            <?php elseif(!empty($product?->image_path)): ?>
-                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product?->name ?? 'Product'); ?>">
+                            <?php if(!empty($product->image_url)): ?>
+                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>">
                             <?php else: ?>
-                                <span>No Image</span>
+                                <div
+                                    style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                                    No Image
+                                </div>
                             <?php endif; ?>
                         </div>
                         <div class="product-info">
-                            <h3 class="product-title"><?php echo e($product?->name ?? 'Unknown Product'); ?></h3>
-                            <p class="product-price">₱<?php echo e(number_format($product?->base_price ?? 0, 2)); ?></p>
-                            <p class="product-description"><?php echo e(Str::limit($product?->description ?? '', 80)); ?></p>
-                            <span class="product-link">View Details →</span>
+                            <h3 class="product-title"><?php echo e($product->name); ?></h3>
+                            <div class="product-price">₱<?php echo e(number_format($product->base_price, 0)); ?></div>
                         </div>
-                    <?php if($product): ?>
                     </a>
-                    <?php else: ?>
-                        </div>
-                    <?php endif; ?>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #999;">
-                        <p style="font-size: 16px;">No featured products available yet.</p>
-                    </div>
+                    <p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">
+                        No products available yet.
+                    </p>
                 <?php endif; ?>
             </div>
 
-            <a href="<?php echo e(route('shop.index')); ?>" class="view-all-btn">View All Products</a>
+            <?php if($featuredProducts->count() > 0): ?>
+                <div class="view-all-wrapper">
+                    <a href="<?php echo e(route('shop.index')); ?>" class="btn-outline">
+                        View All Products
+                        <span>→</span>
+                    </a>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 
-    <!-- ============ SERVICES SECTION ============ -->
-    <section class="services-section">
+    <!-- Services Section -->
+    <section class="section section-alt">
         <div class="section-container">
-            <h2 class="section-heading">Our Services</h2>
-            
+            <div class="section-header">
+                <h2 class="section-title">Our Services</h2>
+                <p class="section-subtitle">Professional printing and digital solutions for students and organizations
+                </p>
+            </div>
+
             <div class="services-grid">
-                <div class="service-card reveal-on-scroll" data-reveal-delay="0">
-                    <div class="service-icon">🖨️</div>
-                    <h3 class="service-title">B/W Printing</h3>
-                    <p class="service-description">Professional black & white printing for documents, handouts, and academic materials. Fast turnaround at affordable student prices.</p>
-                </div>
+                <?php
+                    $featuredServices = \App\Models\Service::where('is_active', true)
+                        ->orderByDesc('created_at')
+                        ->take(3)
+                        ->get();
+                ?>
 
-                <div class="service-card reveal-on-scroll" data-reveal-delay="100">
-                    <div class="service-icon">🎨</div>
-                    <h3 class="service-title">Color Printing</h3>
-                    <p class="service-description">Vibrant full-color printing for presentations, projects, and promotional materials. High-quality output with professional finish.</p>
-                </div>
+                <?php $__empty_1 = true; $__currentLoopData = $featuredServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <a href="<?php echo e(route('services.show', $service->slug)); ?>" class="service-card reveal-on-scroll">
+                        <div class="service-icon"><?php echo e($service->icon ?? '🖨️'); ?></div>
+                        <h3 class="service-title"><?php echo e($service->title); ?></h3>
+                        <p class="service-desc"><?php echo e(Str::limit($service->description, 100)); ?></p>
+                        <?php if($service->price_bw || $service->price_color): ?>
+                            <div class="service-price">
+                                From ₱<?php echo e(number_format($service->price_bw ?? $service->price_color, 2)); ?>
 
-                <div class="service-card reveal-on-scroll" data-reveal-delay="200">
-                    <div class="service-icon">👕</div>
-                    <h3 class="service-title">Custom Merchandise</h3>
-                    <p class="service-description">Custom-designed t-shirts, tumblers, hoodies, and more. Perfect for events, giveaways, and student organization branding.</p>
-                </div>
+                            </div>
+                        <?php endif; ?>
+                    </a>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                    <p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">
+                        No services available yet.
+                    </p>
+                <?php endif; ?>
             </div>
+
+            <?php if($featuredServices->count() > 0): ?>
+                <div class="view-all-wrapper">
+                    <a href="<?php echo e(route('services.index')); ?>" class="btn-outline">
+                        View All Services
+                        <span>→</span>
+                    </a>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 
-    <!-- ============ ABOUT SECTION ============ -->
-    <section class="about-section">
+    <!-- Stats Section -->
+    <section class="section">
         <div class="section-container">
-            <h2 class="section-heading">About CICT Council</h2>
-            
-            <div class="about-grid">
-                <div class="about-content reveal-on-scroll" data-reveal-delay="0">
-                    <h3>Your Student-Run Enterprise</h3>
-                    <p class="about-text">
-                        The CICT (College of Information and Communication Technology) Student Council operates this enterprise to serve the entire ISUFST Dingle Campus community. We are dedicated to providing high-quality merchandise and professional printing services at student-friendly prices, supporting both campus needs and student organization fundraising efforts.
-                    </p>
-                    
-                    <h4 style="margin-top: 24px; margin-bottom: 12px; font-size: 16px; font-weight: 600; color: #333;">Our Mission</h4>
-                    <p class="about-text" style="margin-bottom: 24px;">
-                        To support CICT students by providing high-quality merchandise and professional printing services at affordable prices, generating sustainable revenue for student programs and activities.
-                    </p>
-                    
-                    <p class="about-text" style="font-size: 14px; color: #666; margin-bottom: 24px;">
-                        Since our establishment, the CICT Student Council has been a trusted partner for quality merchandise in the ISUFST Dingle Campus. Every purchase directly supports student welfare programs, cultural events, and academic initiatives.
-                    </p>
-                    
-                    <a href="<?php echo e(route('services.index')); ?>" class="about-button">Learn More & Place Orders</a>
+            <div class="stats-grid">
+                <div class="stat-item reveal-on-scroll">
+                    <div class="stat-number" data-gsap="counter" data-target="500">500</div>
+                    <div class="stat-label">Happy Customers</div>
                 </div>
-                <div class="about-image reveal-on-scroll" data-reveal-delay="150">
-                    <div style="display: flex; align-items: center; justify-content: center; min-height: 400px;">
-                        <img src="<?php echo e(asset('images/cict-logo.png')); ?>" alt="CICT Student Council Logo" 
-                             style="width: 350px; height: 350px; object-fit: cover; border-radius: 50%; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);">
-                    </div>
+                <div class="stat-item reveal-on-scroll">
+                    <div class="stat-number" data-gsap="counter" data-target="50">50</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-item reveal-on-scroll">
+                    <div class="stat-number" data-gsap="counter" data-target="15">15</div>
+                    <div class="stat-label">Services</div>
+                </div>
+                <div class="stat-item reveal-on-scroll">
+                    <div class="stat-number" data-gsap="counter" data-target="4">4</div>
+                    <div class="stat-label">Years Serving</div>
                 </div>
             </div>
         </div>
     </section>
 
-    </div>
+    <!-- About Section -->
+    <section class="section section-alt">
+        <div class="section-container">
+            <div class="about-grid">
+                <div class="about-image reveal-on-scroll">
+                    <img src="<?php echo e(asset('images/cict_hero_bg.png')); ?>" alt="CICT Student Council">
+                </div>
+                <div class="about-content reveal-on-scroll">
+                    <h2>About TheWerk</h2>
+                    <p>
+                        TheWerk is the official merchandise and services platform of the CICT Student Council
+                        at ISUFST Dingle Campus. We provide quality products and professional services
+                        to support student needs and fund campus initiatives.
+                    </p>
+                    <p>
+                        From printed materials to custom merchandise, we're here to serve the academic community
+                        with reliability and excellence.
+                    </p>
+                    <a href="<?php echo e(route('contact.index')); ?>" class="btn-outline">
+                        Get in Touch
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Map is now embedded as iframe
-        });
-    </script>
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="section-container">
+            <h2 class="cta-title">Ready to Order?</h2>
+            <p class="cta-subtitle">
+                Browse our collection of campus merchandise or request a service today.
+            </p>
+            <div class="hero-buttons">
+                <a href="<?php echo e(route('shop.index')); ?>" class="btn-primary">
+                    <span>Start Shopping</span>
+                    <span>→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4619374cef299e94fd7263111d0abc69)): ?>
@@ -741,5 +732,4 @@
 <?php if (isset($__componentOriginal4619374cef299e94fd7263111d0abc69)): ?>
 <?php $component = $__componentOriginal4619374cef299e94fd7263111d0abc69; ?>
 <?php unset($__componentOriginal4619374cef299e94fd7263111d0abc69); ?>
-<?php endif; ?>
-<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/home/homepage.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/home/homepage.blade.php ENDPATH**/ ?>

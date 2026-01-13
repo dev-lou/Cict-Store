@@ -6,10 +6,10 @@
     <div class="px-6 py-6" style="border-bottom: 2px solid #2a3f5f;">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 mb-4 transition-all duration-300" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
             <div class="w-12 h-12 rounded-full overflow-hidden shadow-lg" style="border: 2px solid #00d9ff; background: #0b1220;">
-                <img src="{{ asset('images/ctrlp-logo.png') }}" alt="Ctrl+P logo" class="w-full h-full object-cover">
+                <img src="{{ asset('images/ctrlp-logo.png') }}" alt="TheWerk logo" class="w-full h-full object-cover">
             </div>
             <div>
-                <p class="font-bold text-white text-xl" style="letter-spacing: 0.5px;">{{ config('app.name', 'IGP Hub') }}</p>
+                <p class="font-bold text-white text-xl" style="letter-spacing: 0.5px;">{{ config('app.name', 'TheWerk') }}</p>
                 <p class="text-xs font-semibold" style="color: #00d9ff;">Admin Panel</p>
             </div>
         </a>

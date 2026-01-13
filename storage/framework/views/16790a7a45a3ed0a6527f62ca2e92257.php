@@ -8,396 +8,469 @@
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-    <?php $__env->startSection('title', 'Shop - ' . config('app.name', 'IGP Hub')); ?>
+    <?php $__env->startSection('title', 'Shop - ' . config('app.name', 'TheWerk')); ?>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
-
-        body {
-            background: #FFFAF1 !important;
-            font-family: 'Inter', sans-serif;
+        /* ============ DESIGN TOKENS ============ */
+        :root {
+            --primary: #8B0000;
+            --primary-hover: #6B0000;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F9FAFB;
+            --border: #E5E7EB;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* Mobile-First Styles (< 640px) */
-        @media (max-width: 639px) {
-            /* Red hero section - extends below navbar with more height */
-            div[style*="min-height: 550px"] {
-                min-height: 320px !important;
-                padding: 1.5rem 1rem 2.5rem 1rem !important;
-                margin-top: 0 !important;
-                padding-top: 5rem !important;
-            }
-            
-            /* Hero text on red background */
-            div[style*="min-height: 550px"] p:first-of-type {
-                font-size: 0.875rem !important;
-                margin-bottom: 0.5rem !important;
-            }
-            
-            div[style*="min-height: 550px"] h1 {
-                font-size: 1.75rem !important;
-                letter-spacing: -0.5px !important;
-                margin-bottom: 0.75rem !important;
-                line-height: 1.2 !important;
-            }
-            
-            div[style*="min-height: 550px"] p:last-of-type {
-                font-size: 0.8125rem !important;
-                line-height: 1.5 !important;
-            }
-            
-            /* White background starts at Featured Products */
-            .shop-content {
-                background: #FFFFFF !important;
-                padding-top: 1.5rem !important;
-            }
-            
-            .products-header {
-                margin-top: 0 !important;
-            }
-            
-            /* Mobile Grid: 2 columns */
-            .grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.5rem !important;
-                padding: 0.5rem !important;
-            }
-            
-            /* Mobile Product Card */
-            .product-card {
-                border-radius: 0.5rem !important;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
-            }
-            
-            .product-card:hover {
-                transform: none !important;
-            }
-            
-            /* Mobile Image: Square 1:1 */
-            .product-image-container {
-                height: 0 !important;
-                padding-bottom: 100% !important;
-                position: relative !important;
-            }
-            
-            .product-image {
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: cover !important;
-            }
-            
-            /* Mobile Product Info - Compact */
-            .product-info {
-                padding: 0.5rem !important;
-            }
-            
-            .product-card h3 {
-                font-size: 0.7rem !important;
-                line-height: 1.1 !important;
-                margin-bottom: 0.25rem !important;
-                display: -webkit-box !important;
-                -webkit-line-clamp: 2 !important;
-                -webkit-box-orient: vertical !important;
-                overflow: hidden !important;
-                font-weight: 600 !important;
-            }
-            
-            .product-card p {
-                display: none !important;
-            }
-            
-            /* Mobile Price */
-            .product-price {
-                font-size: 0.8rem !important;
-                margin-bottom: 0.375rem !important;
-                font-weight: 800 !important;
-            }
-            
-            /* Mobile Button */
-            .btn-view-details {
-                padding: 0.5rem !important;
-                font-size: 0.75rem !important;
-            }
-            
-            /* Mobile Badges */
-            .product-badge {
-                font-size: 0.625rem !important;
-                padding: 0.25rem 0.5rem !important;
-            }
-            
-            div[style*="position: absolute"][style*="top: 12px"][style*="right: 12px"] {
-                font-size: 0.625rem !important;
-                padding: 0.25rem 0.5rem !important;
-            }
-        }
-
+        /* ============ HERO SECTION ============ */
         .shop-hero {
-            background: linear-gradient(135deg, #FFFAF1 0%, #FFFFFF 100%);
-            border-bottom: 2px solid #F0F0F0;
+            min-height: 50vh;
+            padding: 160px 24px 60px;
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: -72px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .shop-hero h1 {
-            color: #1a1a1a !important;
+        @media (max-width: 768px) {
+            .shop-hero {
+                min-height: 55vh;
+                padding-top: 140px;
+                padding-bottom: 40px;
+            }
+
+            .shop-hero-content {
+                margin-top: 60px;
+            }
+        }
+
+        .shop-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('<?php echo e(asset("images/cict_hero_bg.png")); ?>') center/cover;
+            opacity: 0.15;
+        }
+
+        .shop-hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+        }
+
+        .shop-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .shop-hero-title {
+            font-size: clamp(32px, 5vw, 48px);
             font-weight: 800;
-            font-size: 2.8rem;
-            margin-bottom: 12px;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
         }
 
-        .shop-hero .hero-subtitle {
-            color: #8B0000;
-            font-weight: 700;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
+        .shop-hero-subtitle {
+            font-size: clamp(14px, 2vw, 18px);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
         }
 
-        .shop-hero p {
-            color: #666666 !important;
-            font-size: 1.05rem;
-            font-weight: 400;
-            line-height: 1.7;
-            max-width: 600px;
+        /* ============ MAIN CONTENT ============ */
+        .shop-content {
+            background: var(--bg-secondary);
+            padding: 60px 24px 80px;
+            min-height: 60vh;
+        }
+
+        .shop-container {
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        .shop-content {
-            background: #FFFAF1;
-        }
-
-        .products-header {
+        /* ============ HEADER ============ */
+        .shop-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 32px;
-            padding-bottom: 24px;
-            border-bottom: 2px solid #F0F0F0;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
-        .products-header-left h2 {
-            color: #1a1a1a;
-            font-size: 1.8rem;
-            margin: 0;
-            margin-bottom: 4px;
+        .shop-header-left h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
         }
 
-        .products-header-left p {
-            color: #888888;
-            margin: 0;
+        .shop-header-left p {
             font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
         }
 
+        /* ============ PRODUCT GRID ============ */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        /* ============ PRODUCT CARD ============ */
         .product-card {
-            background: #FFFFFF;
-            border: 1px solid #F0F0F0;
-            border-radius: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            height: 100%;
+            text-decoration: none;
             position: relative;
         }
 
         .product-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-            border-color: #8B0000;
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
         }
 
         .product-badge {
             position: absolute;
             top: 12px;
-            right: 12px;
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            padding: 8px 14px;
-            border-radius: 20px;
+            left: 12px;
+            padding: 6px 12px;
+            background: var(--primary);
+            color: #fff;
             font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            z-index: 10;
-            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            z-index: 5;
         }
 
-        .product-image-container {
-            background: linear-gradient(135deg, #F5F5F5 0%, #EEEEEE 100%);
-            height: 240px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
+        .product-badge.warning {
+            background: #F59E0B;
+        }
+
+        .product-badge.danger {
+            background: #DC2626;
         }
 
         .product-image {
+            aspect-ratio: 1/1;
+            background: var(--bg-secondary);
+            overflow: hidden;
+        }
+
+        .product-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 13px;
         }
 
         .product-info {
-            padding: 20px;
+            padding: 16px;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
         }
 
-        .product-card h3 {
-            color: #1a1a1a !important;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 1.05rem;
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 8px;
-            margin-top: 0;
             line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .product-card p {
-            color: #888888 !important;
-            font-size: 13px;
+        .product-description {
+            font-size: 12px;
+            color: var(--text-secondary);
             line-height: 1.5;
-            margin: 0 0 12px 0;
-            flex-grow: 1;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .product-price {
-            color: #8B0000 !important;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            font-size: 1.4rem;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-
-        .price-label {
-            font-size: 11px;
-            color: #999999;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .btn-view-details {
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
+            font-size: 18px;
             font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.2);
-            text-decoration: none;
-            text-align: center;
-            display: block;
-            cursor: pointer;
+            color: var(--primary);
+            margin-top: auto;
+            margin-bottom: 12px;
         }
 
-        .btn-view-details:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(139, 0, 0, 0.3);
-            background: linear-gradient(135deg, #A00000 0%, #B00000 100%);
+        .product-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s ease;
+        }
+
+        .product-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* ============ PAGINATION ============ */
+        .pagination-wrapper {
+            margin-top: 48px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination-wrapper nav {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
         }
 
         .empty-state-text {
-            color: #1a1a1a;
-            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ============ MOBILE ADJUSTMENTS ============ */
+        @media (max-width: 640px) {
+            .shop-hero {
+                min-height: 35vh;
+                padding: 120px 16px 40px;
+            }
+
+            .shop-hero-title {
+                font-size: 26px;
+            }
+
+            .shop-hero-subtitle {
+                font-size: 13px;
+            }
+
+            .shop-content {
+                padding: 32px 12px 60px;
+            }
+
+            .products-grid {
+                gap: 10px;
+            }
+
+            .product-card {
+                border-radius: 12px;
+            }
+
+            .product-image {
+                aspect-ratio: 1/1;
+            }
+
+            .product-info {
+                padding: 10px;
+            }
+
+            .product-title {
+                font-size: 12px;
+                margin-bottom: 4px;
+                -webkit-line-clamp: 2;
+            }
+
+            .product-description {
+                display: none;
+            }
+
+            .product-price {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+
+            .product-btn {
+                padding: 8px;
+                font-size: 11px;
+                border-radius: 6px;
+            }
+
+            .product-badge {
+                top: 8px;
+                left: 8px;
+                padding: 4px 8px;
+                font-size: 9px;
+            }
+
+            .shop-header {
+                margin-bottom: 20px;
+                padding-bottom: 16px;
+            }
+
+            .shop-header-left h2 {
+                font-size: 20px;
+            }
+
+            .shop-header-left p {
+                font-size: 13px;
+            }
         }
     </style>
 
     <!-- Hero Section -->
-    <div style="background: linear-gradient(135deg, rgba(139, 0, 0, 0.9) 0%, rgba(160, 0, 0, 0.9) 100%), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=500&fit=crop') center/cover; min-height: 550px; display: flex; align-items: center; justify-content: center; position: relative;">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style="text-align: center; color: white; z-index: 10;">
-            <div class="max-w-4xl mx-auto text-center">
-                <p style="font-size: 22px; color: rgba(255, 255, 255, 0.98); text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5); letter-spacing: 0.5px; margin-bottom: 12px;">📦 CICT Student Council Store</p>
-                <h1 style="font-size: 62px; font-weight: 900; color: #FFFFFF; text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6); letter-spacing: -2px; margin-bottom: 16px; line-height: 1.2;">Premium Merchandise</h1>
-                <p style="font-size: 19px; color: rgba(255, 255, 255, 0.98); max-width: 750px; margin: 0 auto; text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5); line-height: 1.6;">Discover exclusive, high-quality merchandise from ISUFST Dingle Campus CICT Student Council. Every purchase supports student initiatives and campus activities.</p>
+    <section class="shop-hero">
+        <div class="shop-hero-content">
+            <div class="shop-hero-badge">
+                <span>🛍️</span>
+                <span>CICT Student Council Store</span>
             </div>
+            <h1 class="shop-hero-title gsap-hero-title">Shop Merchandise</h1>
+            <p class="shop-hero-subtitle gsap-hero-subtitle">
+                Browse our collection of premium campus merchandise. Every purchase supports student initiatives.
+            </p>
         </div>
-    </div>
+    </section>
 
-    <!-- Products Section Wrapper -->
-    <div style="background: #FFFFFF; min-height: auto; width: 100%; padding-top: 0;">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 shop-content">
-        <?php if($products->count() > 0): ?>
-            <div class="products-header" style="margin-top: 0px;">
-                <div class="products-header-left">
-                    <h2>Featured Products</h2>
-                    <p><?php echo e($products->total()); ?> items available for purchase</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <div class="product-card reveal-on-scroll" data-reveal-delay="<?php echo e(($loop->index % 4) * 100); ?>">
-                        <div class="product-badge">Campus</div>
-                        
-                        <!-- Stock Indicator Badge -->
-                        <?php if($product->current_stock > 0 && $product->current_stock <= $product->low_stock_threshold): ?>
-                            <div style="position: absolute; top: 12px; right: 12px; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4); animation: pulse 2s infinite;">
-                                ⚠️ Only <?php echo e($product->current_stock); ?> left!
-                            </div>
-                        <?php elseif($product->current_stock == 0): ?>
-                            <div style="position: absolute; top: 12px; right: 12px; background: linear-gradient(135deg, #dc2626, #991b1b); color: white; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);">
-                                ❌ Out of Stock
-                            </div>
-                        <?php endif; ?>
-                        
-                        <!-- Product Image -->
-                        <div class="product-image-container">
-                            <?php if(!empty($product->image_url)): ?>
-                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>" class="product-image">
-                            <?php elseif(!empty($product->image_path)): ?>
-                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>" class="product-image">
-                            <?php else: ?>
-                                <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #AAAAAA; font-size: 14px; font-weight: 500;">
-                                    No Image
-                                </div>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Product Info -->
-                        <div class="product-info">
-                            <h3><?php echo e($product->name); ?></h3>
-                            <p><?php echo e(Str::limit($product->description, 70)); ?></p>
-                            <div class="product-price">
-                                <span>₱<?php echo e(number_format($product->base_price, 2)); ?></span>
-                            </div>
-                            <a href="<?php echo e(route('shop.show', $product->slug)); ?>" class="btn-view-details">View Details</a>
-                        </div>
+    <!-- Products Section -->
+    <div class="shop-content">
+        <div class="shop-container">
+            <?php if($products->count() > 0): ?>
+                <div class="shop-header">
+                    <div class="shop-header-left">
+                        <h2>All Products</h2>
+                        <p><?php echo e($products->total()); ?> items available</p>
                     </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-            </div>
+                </div>
 
-            <!-- Pagination -->
-            <?php if($products->hasPages()): ?>
-                <div class="mt-20 flex justify-center mb-12">
-                    <div style="background: #FFFFFF; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);">
+                <div class="products-grid">
+                    <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php
+                            $stock = $product->current_stock;
+                            $isLowStock = $stock > 0 && $stock <= $product->low_stock_threshold;
+                            $isOutOfStock = $stock == 0;
+                        ?>
+                        <a href="<?php echo e(route('shop.show', $product->slug)); ?>" class="product-card reveal-on-scroll">
+                            <?php if($isOutOfStock): ?>
+                                <span class="product-badge danger">Out of Stock</span>
+                            <?php elseif($isLowStock): ?>
+                                <span class="product-badge warning">Only <?php echo e($stock); ?> left</span>
+                            <?php endif; ?>
+
+                            <div class="product-image">
+                                <?php if(!empty($product->image_url)): ?>
+                                    <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>">
+                                <?php else: ?>
+                                    <div class="product-image-placeholder">No Image</div>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="product-info">
+                                <h3 class="product-title"><?php echo e($product->name); ?></h3>
+                                <p class="product-description"><?php echo e(Str::limit($product->description, 60)); ?></p>
+                                <div class="product-price">₱<?php echo e(number_format($product->base_price, 0)); ?></div>
+                                <span class="product-btn">View Details</span>
+                            </div>
+                        </a>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+
+                <?php if($products->hasPages()): ?>
+                    <div class="pagination-wrapper">
                         <?php echo e($products->links()); ?>
 
                     </div>
+                <?php endif; ?>
+            <?php else: ?>
+                <div class="empty-state">
+                    <div class="empty-state-icon">🛒</div>
+                    <h3 class="empty-state-title">No Products Available</h3>
+                    <p class="empty-state-text">Check back soon for new items!</p>
                 </div>
             <?php endif; ?>
-        <?php else: ?>
-            <div style="text-align: center; padding: 80px 0;">
-                <p class="empty-state-text" style="font-size: 18px; margin-bottom: 10px;">No products available</p>
-                <p style="color: #999999; font-size: 14px;">Check back soon for new items!</p>
-            </div>
-        <?php endif; ?>
+        </div>
     </div>
-    </div>
+
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4619374cef299e94fd7263111d0abc69)): ?>
@@ -407,5 +480,4 @@
 <?php if (isset($__componentOriginal4619374cef299e94fd7263111d0abc69)): ?>
 <?php $component = $__componentOriginal4619374cef299e94fd7263111d0abc69; ?>
 <?php unset($__componentOriginal4619374cef299e94fd7263111d0abc69); ?>
-<?php endif; ?>
-<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/shop/index.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/shop/index.blade.php ENDPATH**/ ?>

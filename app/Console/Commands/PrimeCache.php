@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HomepageController;
 
 class PrimeCache extends Command
@@ -29,19 +28,16 @@ class PrimeCache extends Command
             // Easiest way is to instantiate controllers and call methods
             // Prime controllers (caches) and write local fallback data files
             $homepageData = app(HomepageController::class)->index();
-            $homeData = app(HomeController::class)->index();
 
-            // Capture featuredProducts from both controllers if present
+            // Capture featuredProducts from controller if present
             try {
                 $featured = cache('homepage.featured_products') ?: collect([]);
-                $announcements = cache('home.announcements') ?: collect([]);
                 // Write local JSON fallback files (public storage)
                 $fallbackDir = storage_path('app/public/fallback');
                 if (!file_exists($fallbackDir)) {
                     mkdir($fallbackDir, 0755, true);
                 }
                 file_put_contents($fallbackDir . '/products.json', json_encode($featured, JSON_PRETTY_PRINT));
-                file_put_contents($fallbackDir . '/announcements.json', json_encode($announcements, JSON_PRETTY_PRINT));
                 $this->info('Wrote fallback JSON files to storage/app/public/fallback');
             } catch (\Throwable $e) {
                 $this->error('Failed to write fallback files: ' . $e->getMessage());

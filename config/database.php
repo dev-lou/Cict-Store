@@ -105,28 +105,25 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            // Support full DATABASE_URL connection strings (preferred for Neon)
+            // Support full DATABASE_URL connection strings (preferred for Supabase)
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'neondb'),
-            'username' => env('DB_USERNAME', 'neondb_owner'),
+            'database' => env('DB_DATABASE', 'postgres'),
+            'username' => env('DB_USERNAME', 'postgres'),
             'password' => env('DB_PASSWORD', ''),
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'require'),
-            // Neon-specific endpoint id to ensure SNI endpoint is present in the DSN
-            'neon_endpoint' => env('DB_NEON_ENDPOINT'),
             // PDO options with connection timeout for reliability
-            // Ensure PDO options is always an array - Laravel may parse a string 'options' from DATABASE_URL
             'options' => extension_loaded('pdo_pgsql') ? [
-                PDO::ATTR_TIMEOUT => 10,                // 10 second connection timeout
+                PDO::ATTR_TIMEOUT => 10,
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_STRINGIFY_FETCHES => false,
             ] : [],
-            'application_name' => env('APP_NAME', 'ctrl-p'),
+            'application_name' => env('APP_NAME', 'TheWerk'),
         ],
 
         'sqlsrv' => [
@@ -179,7 +176,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-database-'),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 

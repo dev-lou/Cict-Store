@@ -98,29 +98,6 @@ class SupabaseFallback
         });
     }
 
-    public function getAnnouncements(int $limit = 3)
-    {
-        $params = [
-            'select' => 'id,title,body,pinned,created_at',
-            'pinned' => 'eq.true',
-            'order' => 'created_at.desc',
-            'limit' => $limit,
-        ];
-
-        $data = $this->getFromRest('announcements', $params);
-        if (! $data) {
-            $local = $this->readLocalFallback('announcements');
-            if ($local) {
-                return $local->take($limit);
-            }
-            return null;
-        }
-
-        return collect($data)->map(function ($item) {
-            return (object) $item;
-        });
-    }
-
     // Generic product list with pagination support (offset + limit)
     public function getProducts(array $filters = [], int $limit = 12, int $offset = 0)
     {

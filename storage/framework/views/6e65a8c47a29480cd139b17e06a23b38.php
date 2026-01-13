@@ -1,7 +1,7 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['title' => config('app.name', 'IGP Hub') . ' - Student Council Inventory & Services']));
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['title' => 'TheWerk']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -16,7 +16,7 @@ $attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
 unset($__propNames);
 unset($__newAttributes);
 
-foreach (array_filter((['title' => config('app.name', 'IGP Hub') . ' - Student Council Inventory & Services']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+foreach (array_filter((['title' => 'TheWerk']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 }
 
@@ -30,6 +30,7 @@ unset($__defined_vars); ?>
 
 <!DOCTYPE html>
 <html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,10 +49,10 @@ unset($__defined_vars); ?>
         window.APP_DEBUG = <?php echo json_encode(config('app.debug'), 15, 512) ?>;
         if (!window.APP_DEBUG) {
             // Replace console methods with no-ops in production to avoid noisy logs
-            console.log = function() {};
-            console.debug = function() {};
-            console.info = function() {};
-            console.warn = function() {};
+            console.log = function () { };
+            console.debug = function () { };
+            console.info = function () { };
+            console.warn = function () { };
         }
     </script>
     <?php $viteManifestPath = public_path('build/manifest.json'); ?>
@@ -62,55 +63,91 @@ unset($__defined_vars); ?>
         <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
         <script src="<?php echo e(asset('js/app.js')); ?>" defer></script>
     <?php endif; ?>
-    
+
     <!-- Page Transition Styles -->
     <link rel="stylesheet" href="<?php echo e(asset('css/page-transitions.css')); ?>">
 
+    <!-- Performance-Optimized Animation Styles -->
+    <link rel="stylesheet" href="<?php echo e(asset('css/micro-interactions.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/text-animations.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/button-interactions.css')); ?>">
+
+    <!-- Animation Utilities -->
+    <link rel="stylesheet" href="<?php echo e(asset('css/animation-utilities.css')); ?>">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo e(asset('images/ctrlp-logo.png')); ?>">
+    <link rel="shortcut icon" href="<?php echo e(asset('images/ctrlp-logo.png')); ?>">
+
+    <!-- Animations handled by CSS transitions -->
+
     <style>
         @keyframes bounce-slow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
         }
+
         @keyframes slideInUp {
-            from { 
-                opacity: 0; 
+            from {
+                opacity: 0;
                 transform: translateY(20px) scale(0.95);
             }
-            to { 
-                opacity: 1; 
+
+            to {
+                opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
+
         .chat-window-enter {
             animation: slideInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
         .message-enter {
             animation: fadeIn 0.2s ease-out;
         }
+
         /* Custom scrollbar for chat */
         #cict-chat-messages::-webkit-scrollbar {
             width: 6px;
         }
+
         #cict-chat-messages::-webkit-scrollbar-track {
             background: transparent;
         }
+
         #cict-chat-messages::-webkit-scrollbar-thumb {
             background: rgba(139, 0, 0, 0.2);
             border-radius: 3px;
         }
+
         #cict-chat-messages::-webkit-scrollbar-thumb:hover {
             background: rgba(139, 0, 0, 0.3);
         }
+
         /* On mobile reduce area and avoid overlapping notification dropdown */
         @media (max-width: 768px) {
             #cict-chatbot {
                 right: 8px !important;
                 bottom: 8px !important;
             }
+
             #cict-chatbot-window {
                 right: 8px !important;
                 left: 8px !important;
@@ -120,20 +157,24 @@ unset($__defined_vars); ?>
                 height: calc(100vh - 120px) !important;
             }
         }
-        [x-cloak] { display: none !important; }
-        
+
+        [x-cloak] {
+            display: none !important;
+        }
+
         /* Scroll Reveal Animations */
         .reveal-on-scroll {
             opacity: 0;
             transform: translateY(30px) scale(0.96);
             transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                        transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            will-change: opacity, transform;
+                transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+
         .reveal-on-scroll.revealed {
             opacity: 1;
             transform: translateY(0) scale(1);
         }
+
         /* Respect reduced motion preference */
         @media (prefers-reduced-motion: reduce) {
             .reveal-on-scroll {
@@ -144,6 +185,7 @@ unset($__defined_vars); ?>
         }
     </style>
 </head>
+
 <body class="bg-white text-gray-900 font-inter antialiased">
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->
@@ -174,70 +216,311 @@ unset($__defined_vars); ?>
 
         </main>
 
-        <!-- Footer -->
-        <footer class="bg-gray-900 text-gray-300 py-8 border-t border-gray-800 mt-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <p class="text-center text-sm">&copy; 2025 Ctrl+P. All rights reserved.</p>
-            </div>
-        </footer>
+        <?php if (! (request()->is('admin*'))): ?>
+            <!-- Footer -->
+            <footer class="bg-gray-900 text-gray-200 py-16 border-t border-gray-800 mt-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-12 items-start">
+                        <div class="col-span-1 flex items-start gap-6">
+                            <div class="flex-shrink-0"
+                                style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center;">
+                                <div
+                                    style="width:80px; height:80px; border-radius:9999px; overflow:hidden; background:#fff;">
+                                    <img src="<?php echo e(asset('images/ctrlp-logo.png')); ?>" alt="TheWerk logo"
+                                        class="w-full h-full object-cover" style="display:block; border-radius:9999px;">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="space-y-1">
+                                    <h3 class="font-bold text-xl text-white m-0">TheWerk</h3>
+                                    <p class="text-sm m-0" style="color: rgba(255,255,255,0.75);">ISUFST Dingle Campus ·
+                                        Shop & Services</p>
+                                </div>
+                                <p class="text-sm m-0"
+                                    style="color: rgba(255,255,255,0.7); line-height:1.7; max-width: 22rem;">Campus-run
+                                    store and services delivering print, merch, and digital support for students and orgs.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-span-1 flex flex-col gap-6 mt-0 md:mt-0">
+                            <div class="p-4 rounded-xl flex items-start gap-3"
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); align-self:flex-end; max-width:420px; width:100%;">
+                                <span class="inline-flex h-9 w-9 items-center justify-center rounded-full"
+                                    style="background: linear-gradient(135deg,#8B0000,#A00000); color:white; box-shadow: 0 8px 20px rgba(0,0,0,0.18);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.6" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 18.25c-2.548 0-4.93-.862-6.772-2.25a.75.75 0 0 1-.228-.834l1.115-3.34a.75.75 0 0 1 .713-.519h1.547A.75.75 0 0 0 9.125 10v-.25A3.625 3.625 0 0 1 12.75 6.125h1.25A3.625 3.625 0 0 1 17.625 9.75v.25a.75.75 0 0 0 .75.75h1.547a.75.75 0 0 1 .713.519l1.115 3.34a.75.75 0 0 1-.228.834A12.433 12.433 0 0 1 12 18.25Z" />
+                                    </svg>
+                                </span>
+                                <div>
+                                    <p class="text-sm font-semibold text-white m-0">Support</p>
+                                    <p class="text-sm mt-2" style="color: rgba(255,255,255,0.78);">Need help? Ask the
+                                        chatbot on the bottom-right — it is always on.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-12 flex flex-col gap-4 mt-4 md:mt-0">
+                            <h4 class="font-semibold text-sm text-white">Credits</h4>
+                            <div class="flex flex-wrap gap-3 text-sm" style="color: rgba(255,255,255,0.92);">
+                                <span class="px-4 py-3 rounded-xl"
+                                    style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); font-weight: 700;">Lou
+                                    Vincent Baroro — Developer</span>
+                                <span class="px-4 py-3 rounded-xl"
+                                    style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); font-weight: 700;">Karl
+                                    Calitamon — UX/UI Designer</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 text-sm flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2 sm:gap-4"
+                        style="border-top: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); flex-wrap: wrap;">
+                        <p class="m-0">&copy; 2025 TheWerk · ISUFST Dingle Campus</p>
+                        <p class="m-0 text-xs" style="color: rgba(255,255,255,0.65);">All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+        <?php endif; ?>
     </div>
 
-    <!-- Chatbot widget (bottom-right) - pure JS implementation (no Alpine directives) -->
-    <div id="cict-chatbot" class="fixed z-50" style="position: fixed !important; bottom: 24px !important; right: 24px !important; z-index: 2147483647 !important; pointer-events: auto !important;">
+    <!-- Modern Chatbot Widget -->
+    <div id="cict-chatbot" class="fixed z-50"
+        style="position: fixed !important; bottom: 24px !important; right: 24px !important; z-index: 2147483647 !important; pointer-events: auto !important;">
 
-        <!-- Floating button -->
-        <button aria-label="Open CICT AI Assistant" id="cict-chatbot-btn" class="group relative w-16 h-16 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_20px_60px_rgba(139,0,0,0.4)]" style="background: linear-gradient(135deg,#8B0000 0%,#A00000 100%); animation: bounce-slow 2s infinite; display:flex !important; pointer-events: auto !important;">
-            <div class="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <svg class="w-7 h-7 text-white relative z-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        <!-- Animated Floating Button with AI Assistant Icon -->
+        <button aria-label="Open CICT AI Assistant" id="cict-chatbot-btn" class="chatbot-btn-animated" style="
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(145deg, #8B0000 0%, #6B0000 100%);
+                box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 0 rgba(139, 0, 0, 0.4);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: auto !important;
+                position: relative;
+                overflow: visible;
+            "
+            onmouseover="this.style.transform='scale(1.1) translateY(-4px)'; this.style.boxShadow='0 16px 48px rgba(139, 0, 0, 0.5), 0 0 0 0 rgba(139, 0, 0, 0)';"
+            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 0 rgba(139, 0, 0, 0.4)';">
+
+            <!-- AI Sparkle/Brain Icon - Better for AI Assistant -->
+            <svg style="width: 28px; height: 28px;" viewBox="0 0 24 24" fill="none">
+                <!-- Sparkle star shape representing AI -->
+                <path
+                    d="M12 2L13.09 8.26L18 6L15.74 10.91L22 12L15.74 13.09L18 18L13.09 15.74L12 22L10.91 15.74L6 18L8.26 13.09L2 12L8.26 10.91L6 6L10.91 8.26L12 2Z"
+                    fill="white" stroke="white" stroke-width="0.5" />
             </svg>
-            <span class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse shadow-lg"></span>
+
+            <!-- Online indicator - positioned outside button overflow -->
+            <span style="
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                width: 16px;
+                height: 16px;
+                background: #22C55E;
+                border-radius: 50%;
+                border: 3px solid white;
+                box-shadow: 0 2px 8px rgba(34, 197, 94, 0.5);
+                z-index: 10;
+            "></span>
+
+            <!-- Ripple animation ring -->
+            <span class="chatbot-ripple"></span>
         </button>
 
-        <!-- Chat window (fixed & topmost) -->
-        <!--
-            Notes:
-            - Keep this fixed to bottom-right so it always stays visible while scrolling
-            - Use max-height based on viewport so the window grows upward instead of increasing bottom space
-            - Reduced width and increased height per user request
-        -->
-        <div id="cict-chatbot-window" class="hidden fixed right-6 w-80 rounded-2xl shadow-2xl flex flex-col overflow-hidden chat-window" role="dialog" aria-label="CICT Assistant" aria-hidden="true" style="display:none; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(139,0,0,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(139,0,0,0.05); z-index:2147483647 !important; bottom:24px; height:480px; width:320px;">
+        <style>
+            /* Pulse animation for chatbot button */
+            .chatbot-btn-animated {
+                animation: chatbot-pulse 3s ease-in-out infinite;
+            }
+
+            @keyframes chatbot-pulse {
+
+                0%,
+                100% {
+                    box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 0 rgba(139, 0, 0, 0.4);
+                }
+
+                50% {
+                    box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 12px rgba(139, 0, 0, 0);
+                }
+            }
+
+            /* Ripple effect */
+            .chatbot-ripple {
+                position: absolute;
+                inset: -4px;
+                border-radius: 50%;
+                border: 2px solid rgba(139, 0, 0, 0.3);
+                animation: chatbot-ripple-anim 2s ease-out infinite;
+                pointer-events: none;
+            }
+
+            @keyframes chatbot-ripple-anim {
+                0% {
+                    transform: scale(1);
+                    opacity: 0.6;
+                }
+
+                100% {
+                    transform: scale(1.4);
+                    opacity: 0;
+                }
+            }
+
+            /* Hover stops the pulse animation */
+            .chatbot-btn-animated:hover {
+                animation: none;
+            }
+
+            .chatbot-btn-animated:hover .chatbot-ripple {
+                animation: none;
+                opacity: 0;
+            }
+        </style>
+
+        <!-- Modern Chat Window -->
+        <div id="cict-chatbot-window" class="hidden fixed" role="dialog" aria-label="CICT Assistant" aria-hidden="true"
+            style="
+                display: none;
+                right: 24px;
+                bottom: 24px;
+                width: 320px;
+                height: 480px;
+                background: #FFFFFF;
+                border-radius: 20px;
+                box-shadow: 0 25px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.05);
+                z-index: 2147483647 !important;
+                overflow: hidden;
+                flex-direction: column;
+            ">
 
             <!-- Header -->
-            <div class="px-3 py-2.5 flex items-center justify-between" style="background: linear-gradient(135deg,#8B0000 0%,#A00000 100%); color:white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm ring-1 ring-white/30">
-                        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9.19 8.63L2 11.5L9.19 14.37L12 21L14.81 14.37L22 11.5L14.81 8.63L12 2Z"/></svg>
+            <div style="
+                padding: 16px 18px;
+                background: linear-gradient(145deg, #8B0000 0%, #6B0000 100%);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            ">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="
+                        width: 38px;
+                        height: 38px;
+                        background: rgba(255,255,255,0.18);
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        backdrop-filter: blur(4px);
+                    ">
+                        <svg style="width: 20px; height: 20px; color: white;" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L9.19 8.63L2 11.5L9.19 14.37L12 21L14.81 14.37L22 11.5L14.81 8.63L12 2Z" />
+                        </svg>
                     </div>
                     <div>
-                        <div class="text-xs font-bold">CICT AI</div>
-                        <div class="text-[10px] opacity-90 flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
-                            <span>Online</span>
+                        <div style="color: white; font-size: 15px; font-weight: 700; letter-spacing: -0.3px;">CICT
+                            Assistant</div>
+                        <div
+                            style="color: rgba(255,255,255,0.85); font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                            <span style="width: 7px; height: 7px; background: #4ADE80; border-radius: 50%;"></span>
+                            <span>Online now</span>
                         </div>
                     </div>
                 </div>
-                <button id="cict-chatbot-close" aria-label="Close chat" class="p-1.5 rounded-lg hover:bg-white/10 transition-colors duration-200">
-                    <svg class="w-4 h-4 stroke-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <button id="cict-chatbot-close" aria-label="Close chat" style="
+                        width: 32px;
+                        height: 32px;
+                        border: none;
+                        background: rgba(255,255,255,0.12);
+                        border-radius: 10px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: background 0.2s;
+                    " onmouseover="this.style.background='rgba(255,255,255,0.22)';"
+                    onmouseout="this.style.background='rgba(255,255,255,0.12)';">
+                    <svg style="width: 18px; height: 18px; color: white;" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
                 </button>
             </div>
 
-            <!-- Messages area (scrollable) -->
-            <div id="cict-chat-messages" class="flex-1 overflow-y-auto p-3 scroll-smooth" style="background: linear-gradient(to bottom, #FFFAF1 0%, #FFF8E7 100%); padding-bottom:96px;">
-                <!-- messages rendered here by JS -->
+            <!-- Messages area -->
+            <div id="cict-chat-messages" style="
+                flex: 1;
+                overflow-y: auto;
+                padding: 16px;
+                background: linear-gradient(180deg, #FAFAFA 0%, #F5F5F5 100%);
+            ">
+                <!-- Messages rendered by JS -->
             </div>
 
             <!-- Loading indicator -->
-            <div id="cict-chat-loading" style="display:none; padding:8px 16px; background:transparent;">
-                <div class="flex justify-start"><div class="bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm"><div class="flex gap-1"><span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span><span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:150ms"></span><span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:300ms"></span></div></div></div>
+            <div id="cict-chat-loading" style="display: none; padding: 12px 16px;">
+                <div
+                    style="display: flex; gap: 4px; padding: 12px 16px; background: white; border-radius: 16px; width: fit-content; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                    <span
+                        style="width: 8px; height: 8px; background: #CBD5E1; border-radius: 50%; animation: bounce 1.4s infinite;"></span>
+                    <span
+                        style="width: 8px; height: 8px; background: #CBD5E1; border-radius: 50%; animation: bounce 1.4s infinite; animation-delay: 0.2s;"></span>
+                    <span
+                        style="width: 8px; height: 8px; background: #CBD5E1; border-radius: 50%; animation: bounce 1.4s infinite; animation-delay: 0.4s;"></span>
+                </div>
             </div>
 
             <!-- Input area -->
-            <div class="p-2.5 border-t border-gray-200 bg-white">
-                <form id="cict-chat-form" class="flex gap-2 items-center">
-                    <input id="cict-chat-input" name="message" aria-label="Chat message" type="text" placeholder="Type message..." class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:border-maroon-500 focus:ring-1 focus:ring-maroon-200 focus:outline-none transition-all duration-200 text-sm" />
-                    <button id="cict-chat-send" type="submit" class="rounded-lg text-white flex items-center justify-center transition-all duration-200 hover:shadow-md active:scale-95 flex-shrink-0" style="background: linear-gradient(135deg,#8B0000 0%,#A00000 100%); width:38px; height:38px;">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>
+            <div style="
+                padding: 14px 16px;
+                background: #FFFFFF;
+                border-top: 1px solid #F0F0F0;
+            ">
+                <form id="cict-chat-form" style="display: flex; gap: 10px; align-items: center;">
+                    <input id="cict-chat-input" name="message" aria-label="Chat message" type="text"
+                        placeholder="Type a message..." style="
+                            flex: 1;
+                            padding: 12px 16px;
+                            border: 1px solid #E5E7EB;
+                            border-radius: 12px;
+                            font-size: 14px;
+                            outline: none;
+                            transition: border-color 0.2s, box-shadow 0.2s;
+                            background: #FAFAFA;
+                        "
+                        onfocus="this.style.borderColor='#8B0000'; this.style.boxShadow='0 0 0 3px rgba(139,0,0,0.08)'; this.style.background='#fff';"
+                        onblur="this.style.borderColor='#E5E7EB'; this.style.boxShadow='none'; this.style.background='#FAFAFA';" />
+                    <button id="cict-chat-send" type="submit" style="
+                            width: 44px;
+                            height: 44px;
+                            border: none;
+                            border-radius: 12px;
+                            background: linear-gradient(145deg, #8B0000 0%, #6B0000 100%);
+                            color: white;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: all 0.2s;
+                            box-shadow: 0 4px 12px rgba(139,0,0,0.25);
+                        "
+                        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(139,0,0,0.35)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(139,0,0,0.25)';">
+                        <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5">
+                            </path>
+                        </svg>
                     </button>
                 </form>
             </div>
@@ -245,29 +528,44 @@ unset($__defined_vars); ?>
         </div>
     </div>
 
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+    <style>
+        @keyframes bounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+    </style>
+
+    <!-- Alpine.js from unpkg (faster) -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <!-- Scroll Reveal Animation Script -->
     <script>
-        (function() {
+        (function () {
             // Respect reduced motion preference
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 return;
             }
-            
-            document.addEventListener('DOMContentLoaded', function() {
+
+            document.addEventListener('DOMContentLoaded', function () {
                 const revealElements = document.querySelectorAll('.reveal-on-scroll');
                 if (!revealElements.length) return;
-                
-                const observer = new IntersectionObserver(function(entries) {
-                    entries.forEach(function(entry) {
+
+                const observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
                         const el = entry.target;
                         const delay = parseInt(el.dataset.revealDelay || '0', 10);
-                        
+
                         if (entry.isIntersecting) {
                             // Element is entering viewport - animate in
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 el.classList.add('revealed');
                             }, delay);
                         } else {
@@ -280,17 +578,17 @@ unset($__defined_vars); ?>
                     rootMargin: '0px 0px -50px 0px',
                     threshold: 0.1
                 });
-                
-                revealElements.forEach(function(el) {
+
+                revealElements.forEach(function (el) {
                     observer.observe(el);
                 });
             });
         })();
     </script>
-    
+
     <!-- Chatbot (vanilla JS): renders messages, handles send & quick actions, always-on-top -->
     <script>
-        (function() {
+        (function () {
             // Routes & tokens from Blade
             const CHAT_POST = '<?php echo e(route('chatbot.chat')); ?>';
             const QUICK_ROUTES = {
@@ -301,8 +599,8 @@ unset($__defined_vars); ?>
             };
             const CSRF = '<?php echo e(csrf_token()); ?>';
 
-            function $(sel, root=document) { return root.querySelector(sel); }
-            function $all(sel, root=document) { return Array.from(root.querySelectorAll(sel)); }
+            function $(sel, root = document) { return root.querySelector(sel); }
+            function $all(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
             const root = document.getElementById('cict-chatbot');
             if (!root) return;
@@ -333,7 +631,7 @@ unset($__defined_vars); ?>
             }
 
             function escapeHtml(str) {
-                return String(str).replace(/[&<>"]|'/g, function(s){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[s]; });
+                return String(str).replace(/[&<>"]|'/g, function (s) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[s]; });
             }
 
             function render() {
@@ -349,11 +647,11 @@ unset($__defined_vars); ?>
                         <div class="text-xs text-gray-500">How can I help you today?</div>
                     </div>
                 </div>`;
-                
+
                 const messages = state.messages.map((m, idx) => {
                     const wrapper = m.type === 'user' ? 'flex justify-end' : 'flex justify-start';
-                    const bubble = m.type === 'user' 
-                        ? 'bg-blue-500 text-white shadow-sm hover:shadow-md' 
+                    const bubble = m.type === 'user'
+                        ? 'bg-blue-500 text-white shadow-sm hover:shadow-md'
                         : 'bg-white border border-gray-200 shadow-sm hover:shadow-md';
                     const timeClass = m.type === 'user' ? 'text-blue-100' : 'text-gray-500';
                     const roundedClass = m.type === 'user' ? 'rounded-xl rounded-br-sm' : 'rounded-xl rounded-bl-sm';
@@ -365,7 +663,7 @@ unset($__defined_vars); ?>
 
                     return `<div class="${wrapper} message-enter" style="animation-delay: ${idx * 0.05}s"><div class="${bubble} ${roundedClass} max-w-[85%] px-3 py-2 transition-shadow duration-200"><div class="text-sm leading-relaxed break-words overflow-wrap-anywhere whitespace-pre-wrap">${escapeHtml(m.text)}</div>${linksHtml}<div class="text-[10px] mt-1 ${timeClass} opacity-65">${escapeHtml(m.time)}</div></div></div>`;
                 }).join('');
-                
+
                 messagesEl.innerHTML = logo + (state.messages.length > 0 ? '<div class="space-y-2 mt-4">' + messages + '</div>' : '');
 
                 // Ensure the newest message is fully visible instead of being cut off while waiting for a reply.
@@ -396,7 +694,7 @@ unset($__defined_vars); ?>
                 win.style.setProperty('pointer-events', 'auto', 'important');
                 win.classList.add('chat-window-enter');
                 win.setAttribute('aria-hidden', 'false');
-                    if (window.APP_DEBUG) console.log('CICT chat: openChat - showing window');
+                if (window.APP_DEBUG) console.log('CICT chat: openChat - showing window');
                 // Force bottom-right anchoring to keep it fixed in the visible area
                 win.style.setProperty('right', '24px', 'important');
                 win.style.setProperty('bottom', '24px', 'important');
@@ -435,11 +733,11 @@ unset($__defined_vars); ?>
                         }
 
                         // Ensure visible horizontally too (handle left/right off-screen)
-                            if (rect.left < 0 || rect.right > window.innerWidth) {
-                                // move it fully into the viewport (24px margin from the right)
-                                win.style.setProperty('left', Math.max(12, window.innerWidth - rect.width - 24) + 'px', 'important');
-                                win.style.setProperty('right', 'auto', 'important');
-                            }
+                        if (rect.left < 0 || rect.right > window.innerWidth) {
+                            // move it fully into the viewport (24px margin from the right)
+                            win.style.setProperty('left', Math.max(12, window.innerWidth - rect.width - 24) + 'px', 'important');
+                            win.style.setProperty('right', 'auto', 'important');
+                        }
 
                         const newRect = win.getBoundingClientRect();
                         if (window.APP_DEBUG) console.log('CICT chat: new bounding rect=', newRect);
@@ -449,12 +747,12 @@ unset($__defined_vars); ?>
                     }
 
                     // Walk up ancestors and log any transforms which can affect fixed positioning
-                    let node = win.parentElement; let i=0; while(node && i<8) {
+                    let node = win.parentElement; let i = 0; while (node && i < 8) {
                         const pcs = window.getComputedStyle(node);
                         if (pcs.transform && pcs.transform !== 'none' && window.APP_DEBUG) console.log('CICT chat: ancestor transform on', node.tagName, 'transform=', pcs.transform);
                         node = node.parentElement; i++;
                     }
-                } catch(e) { console.error('CICT chat: openChat debug error', e); }
+                } catch (e) { console.error('CICT chat: openChat debug error', e); }
             }
 
             function closeChat() {
@@ -519,13 +817,13 @@ unset($__defined_vars); ?>
                 btn.style.setProperty('display', 'flex', 'important');
                 btn.style.setProperty('z-index', '2147483647', 'important');
                 btn.style.setProperty('pointer-events', 'auto', 'important');
-                btn.addEventListener('click', function(e) { if (window.APP_DEBUG) console.log('CICT chat: button clicked'); e.preventDefault(); openChat(); });
+                btn.addEventListener('click', function (e) { if (window.APP_DEBUG) console.log('CICT chat: button clicked'); e.preventDefault(); openChat(); });
             }
 
-            if (closeBtn) closeBtn.addEventListener('click', function(e) { if (window.APP_DEBUG) console.log('CICT chat: close clicked'); e.preventDefault(); closeChat(); });
+            if (closeBtn) closeBtn.addEventListener('click', function (e) { if (window.APP_DEBUG) console.log('CICT chat: close clicked'); e.preventDefault(); closeChat(); });
 
             if (form) {
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     e.preventDefault();
                     const v = input ? input.value : '';
                     if (!v || !v.trim()) return;
@@ -536,7 +834,7 @@ unset($__defined_vars); ?>
 
             // wire quick action buttons
             $all('[data-quick]', root).forEach(el => {
-                el.addEventListener('click', function(e) {
+                el.addEventListener('click', function (e) {
                     e.preventDefault();
                     const key = el.getAttribute('data-quick');
                     if (key && QUICK_ROUTES[key]) window.location.href = QUICK_ROUTES[key];
@@ -550,9 +848,28 @@ unset($__defined_vars); ?>
             if (window.APP_DEBUG) console.log('CICT chat widget (vanilla) initialized');
         })();
     </script>
-    
+
     <!-- Page Transition Script -->
     <script src="<?php echo e(asset('js/page-transitions.js')); ?>"></script>
+
+    <!-- Advanced Animation System -->
+    <script src="<?php echo e(asset('js/morphing-blobs.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/particles.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/gsap-animations.js')); ?>"></script>
+
+    <!-- Enhanced Professional Animation System -->
+    <script src="<?php echo e(asset('js/card-magnetic.js')); ?>" defer></script>
+    <script src="<?php echo e(asset('js/scroll-reveal-enhanced.js')); ?>" defer></script>
+    <script src="<?php echo e(asset('js/text-split-animate.js')); ?>" defer></script>
+    <script src="<?php echo e(asset('js/parallax-simple.js')); ?>" defer></script>
+
+    <!-- Performance-Optimized Animations -->
+    <script src="<?php echo e(asset('js/card-interactions.js')); ?>" defer></script>
+    <script src="<?php echo e(asset('js/scroll-reveals.js')); ?>" defer></script>
+    <script src="<?php echo e(asset('js/text-reveal.js')); ?>" defer></script>
+    <script src="<?php echo e(asset('js/parallax-lite.js')); ?>" defer></script>
+
+    <?php echo $__env->yieldPushContent('body-end'); ?>
 </body>
-</html>
-<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/components/app-layout.blade.php ENDPATH**/ ?>
+
+</html><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/components/app-layout.blade.php ENDPATH**/ ?>

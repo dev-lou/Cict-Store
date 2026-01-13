@@ -80,8 +80,8 @@ class DegradedModeIfDbUnavailable
                                 'line' => $viewError->getLine(),
                             ]);
                             // Return minimal HTML with products as fallback
-                            $html = '<!DOCTYPE html><html><head><title>Ctrl+P</title></head><body>';
-                            $html .= '<h1>Ctrl+P - Products</h1><p>Homepage in maintenance mode.</p>';
+                            $html = '<!DOCTYPE html><html><head><title>TheWerk</title></head><body>';
+                            $html .= '<h1>TheWerk - Products</h1><p>Homepage in maintenance mode.</p>';
                             $html .= '<ul>';
                             foreach ($featured as $product) {
                                 $html .= '<li><a href="/shop/' . ($product->slug ?? '') . '">' . htmlspecialchars($product->name ?? 'Unknown') . '</a> - ₱' . number_format($product->base_price ?? 0, 2) . '</li>';
@@ -160,7 +160,7 @@ class DegradedModeIfDbUnavailable
                                     'line' => $viewError->getLine(),
                                 ]);
                                 // Minimal product page fallback
-                                $html = '<!DOCTYPE html><html><head><title>' . htmlspecialchars($product->name) . ' - Ctrl+P</title></head><body>';
+                                $html = '<!DOCTYPE html><html><head><title>' . htmlspecialchars($product->name) . ' - TheWerk</title></head><body>';
                                 $html .= '<h1>' . htmlspecialchars($product->name) . '</h1>';
                                 $html .= '<p>Price: ₱' . number_format($product->base_price, 2) . '</p>';
                                 $html .= '<p>' . htmlspecialchars($product->description ?? '') . '</p>';
@@ -275,7 +275,7 @@ class DegradedModeIfDbUnavailable
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>' . htmlspecialchars($title) . ' - Ctrl+P</title>
+    <title>' . htmlspecialchars($title) . ' - TheWerk</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }

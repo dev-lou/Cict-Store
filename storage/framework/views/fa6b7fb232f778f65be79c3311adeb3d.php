@@ -1,4 +1,4 @@
-<?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
+﻿<?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4619374cef299e94fd7263111d0abc69 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('app-layout'); ?>
@@ -8,568 +8,544 @@
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-    <?php $__env->startSection('title', $product->name . ' - ' . config('app.name', 'IGP Hub')); ?>
+    <?php $__env->startSection('title', $product->name . ' - ' . config('app.name', 'TheWerk')); ?>
 
-    <!-- Decorative Red Header Banner (Behind Navbar) -->
-    <div style="position: absolute; top: 0; left: 0; right: 0; height: 280px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); z-index: 0; overflow: hidden;">
-        <!-- Decorative Pattern Overlay -->
-        <div style="position: absolute; inset: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"1\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
-        <!-- Gradient Fade at Bottom -->
-        <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to top, #FFFAF1, transparent);"></div>
-        <!-- Decorative Circles -->
-        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
-        <div style="position: absolute; top: 60px; right: 150px; width: 100px; height: 100px; background: rgba(255,255,255,0.03); border-radius: 50%;"></div>
-        <div style="position: absolute; top: 20px; left: 10%; width: 150px; height: 150px; background: rgba(255,255,255,0.04); border-radius: 50%;"></div>
-    </div>
-
-    <div style="background: #FFFAF1; min-height: 100vh; width: 100%; position: relative; z-index: 1;">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
-
-        body {
-            background: #FFFAF1 !important;
-            font-family: 'Inter', sans-serif;
+        /* ============ DESIGN TOKENS ============ */
+        :root {
+            --primary: #8B0000;
+            --primary-hover: #6B0000;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F9FAFB;
+            --border: #E5E7EB;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
+        /* ============ HEADER BANNER ============ */
+        .product-banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%);
+            z-index: 0;
+            overflow: hidden;
         }
 
-        /* Mobile-First Styles (< 640px) */
-        @media (max-width: 639px) {
-            /* Extend red banner to fully cover behind and below navbar */
-            div[style*="height: 280px"] {
-                height: 250px !important;
-            }
-            
-            /* Mobile breadcrumb - position lower */
-            .breadcrumb-nav {
-                margin-top: 120px !important;
-                padding: 8px 0 !important;
-            }
-            
-            .breadcrumb-nav a,
-            .breadcrumb-nav .breadcrumb-current {
-                font-size: 0.75rem !important;
-            }
-            
-            /* Mobile product container - image far down */
-            .product-container {
-                padding: 0.5rem !important;
-                margin-top: 0 !important;
-                padding-top: 1rem !important;
-            }
-            
-            /* Mobile grid: single column */
-            .product-grid {
-                grid-template-columns: 1fr !important;
-                gap: 0.75rem !important;
-            }
-            
-            /* Mobile image - normal size */
-            .product-image-wrapper {
-                border-radius: 0.75rem !important;
-                aspect-ratio: 4/3 !important;
-                max-height: 250px !important;
-            }
-            
-            /* Mobile product details - 2 column layout */
-            .product-details h1 {
-                font-size: 1rem !important;
-                line-height: 1.3 !important;
-                font-weight: 700 !important;
-                margin-bottom: 0.5rem !important;
-                float: left !important;
-                width: 60% !important;
-            }
-            
-            /* Stock info on the right */
-            .product-meta {
-                float: right !important;
-                width: 38% !important;
-                text-align: right !important;
-                margin-top: 0 !important;
-            }
-            
-            /* Hide IN STOCK badge */
-            .stock-badge {
-                display: none !important;
-            }
-            
-            /* Stock count mobile display */
-            .mobile-stock-count {
-                display: block !important;
-                font-size: 0.75rem !important;
-                color: #6B7280 !important;
-                font-weight: 600 !important;
-            }
-            
-            /* Show price on mobile */
-            .price-section .product-price {
-                display: block !important;
-            }
-            
-            /* Hide Total Stock line on mobile */
-            .price-section > div:not(.product-price) {
-                display: none !important;
-            }
-            
-            /* Hide desktop stock display */
-            @media (min-width: 640px) {
-                .mobile-stock-count {
-                    display: none !important;
-                }
-            }
-            
-            /* Clear float after name/stock */
-            .product-price {
-                clear: both !important;
-                font-size: 1.25rem !important;
-                margin-top: 0.5rem !important;
-                margin-bottom: 0.75rem !important;
-            }
-            
-            /* Mobile variant section - SMALLER buttons */
-            .variant-section {
-                margin-bottom: 0.75rem !important;
-            }
-            
-            .variant-label {
-                font-size: 0.75rem !important;
-                margin-bottom: 0.375rem !important;
-                font-weight: 600 !important;
-            }
-            
-            .variant-options {
-                gap: 0.25rem !important;
-            }
-            
-            .variant-option-label {
-                padding: 0.25rem 0.5rem !important;
-                font-size: 0.6875rem !important;
-                border-radius: 0.375rem !important;
-                min-height: auto !important;
-            }
-            
-            /* Hide quantity section on mobile */
-            .quantity-section {
-                display: none !important;
-            }
-            
-            /* Set default quantity to 1 */
-            #quantity_input {
-                display: none !important;
-            }
-            
-            /* Add to cart at top - not sticky */
-            #add-to-cart-form {
-                position: relative !important;
-                background: transparent !important;
-                padding: 0 !important;
-                margin-top: 1rem !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            #add-to-cart-form button[type="submit"] {
-                width: 100% !important;
-                padding: 0.875rem 1.25rem !important;
-                font-size: 0.9375rem !important;
-                font-weight: 700 !important;
-                border-radius: 0.5rem !important;
-            }
-            
-            /* Related products: 2 columns on mobile */
-            .related-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.5rem !important;
-            }
-            
-            .related-card {
-                border-radius: 0.5rem !important;
-            }
-            
-            .related-name {
-                font-size: 0.7rem !important;
-                line-height: 1.2 !important;
-                -webkit-line-clamp: 2 !important;
-            }
-            
-            .related-price {
-                font-size: 0.8rem !important;
-            }
-            
-            .related-image {
-                aspect-ratio: 1 !important;
-                height: auto !important;
+        .product-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('<?php echo e(asset("images/cict_hero_bg.png")); ?>') center/cover;
+            opacity: 0.1;
+        }
+
+        .product-hero-banner {
+            margin-top: -72px;
+            height: 250px;
+        }
+
+        @media (max-width: 768px) {
+            .product-hero-banner {
+                height: 250px;
             }
         }
 
-        /* Breadcrumb */
-        .breadcrumb-nav {
-            background: transparent;
-            border-bottom: none;
-            padding: 12px 0;
-            margin-top: 110px;
-            padding-top: 12px;
-        }
-
-        .breadcrumb-nav a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            transition: color 0.3s;
-        }
-
-        .breadcrumb-nav a:hover {
-            color: #FFFFFF;
-        }
-        
-        .breadcrumb-nav .breadcrumb-current {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .breadcrumb-nav .breadcrumb-separator {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Main Content */
-        .product-container {
-            background: #FFFAF1;
+        /* ============ MAIN CONTENT ============ */
+        .product-content {
+            background: var(--bg-secondary);
+            padding: 48px 24px 80px;
             min-height: 100vh;
-            padding: 48px 0;
+            padding-top: 100px;
+            margin-top: -80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .product-content {
+                padding: 24px 12px 60px;
+                margin-top: -40px;
+            }
+
+            .product-header {
+                padding: 20px;
+            }
+
+            .product-name {
+                font-size: 20px;
+                margin-bottom: 12px;
+            }
+
+            .product-price {
+                font-size: 26px;
+                margin-bottom: 16px;
+            }
+
+            .product-description {
+                font-size: 14px;
+            }
+
+            .variants-card, .cart-card, .benefits-card {
+                padding: 16px;
+            }
+
+            .quantity-row {
+                flex-wrap: wrap;
+            }
+
+            .add-to-cart-btn {
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+
+            .related-section {
+                margin-top: 40px;
+            }
+
+            .related-title {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+
+            .related-grid {
+                gap: 12px;
+            }
+
+            .related-info {
+                padding: 12px;
+            }
+
+            .related-name {
+                font-size: 12px;
+            }
+
+            .related-price {
+                font-size: 14px;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .variants-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .variant-label {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+
+            .quantity-control {
+                width: 100%;
+            }
+
+            .quantity-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .quantity-input {
+                height: 40px;
+                font-size: 15px;
+            }
+
+            .product-meta {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .product-badge {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+
+            .product-details {
+                gap: 16px;
+            }
+        }
+
+        .product-container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .product-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 64px;
+            gap: 48px;
             align-items: start;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 900px) {
             .product-grid {
                 grid-template-columns: 1fr;
-                gap: 40px;
+                gap: 24px;
             }
         }
 
-        /* Product Image */
-        .product-image-wrapper {
-            background: #FFFFFF;
-            border: 1px solid #F0F0F0;
-            border-radius: 12px;
+        /* ============ PRODUCT IMAGE ============ */
+        .product-image-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            aspect-ratio: 1;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            aspect-ratio: 1/1;
+            position: sticky;
+            top: 100px;
+        }
+
+        @media (max-width: 900px) {
+            .product-image-card {
+                position: static;
+                aspect-ratio: 1/1;
+                border-radius: 12px;
+            }
+        }
+
+        .product-image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .product-image-placeholder {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #F5F5F5 0%, #EEEEEE 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #AAAAAA;
-            font-size: 14px;
-            font-weight: 500;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
         }
 
-        /* Product Details */
-        .product-details h1 {
-            color: #1a1a1a;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 16px;
-            line-height: 1.2;
+        /* ============ PRODUCT DETAILS ============ */
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .product-header {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+        }
+
+        .product-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+            line-height: 1.3;
         }
 
         .product-meta {
             display: flex;
-            gap: 16px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        .stock-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 8px;
+        .product-badge {
+            display: inline-flex;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
             font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
-        .stock-badge.in-stock {
-            background: #D4EDDA;
-            color: #155724;
+        .product-badge.in-stock {
+            background: #D1FAE5;
+            color: #065F46;
         }
 
-        .stock-badge.low-stock {
-            background: #FFF3CD;
-            color: #856404;
+        .product-badge.low-stock {
+            background: #FEF3C7;
+            color: #92400E;
         }
 
-        .stock-badge.out-of-stock {
-            background: #F8D7DA;
-            color: #721C24;
+        .product-badge.out-of-stock {
+            background: #FEE2E2;
+            color: #991B1B;
         }
 
-        .price-section {
-            border-bottom: 1px solid #E8DCC8;
-            padding-bottom: 24px;
-            margin-bottom: 24px;
+        .product-stock-count {
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
         .product-price {
-            font-size: 2.5rem;
+            font-size: 36px;
             font-weight: 800;
-            color: #8B0000;
-            margin-bottom: 8px;
+            color: var(--primary);
+            margin-bottom: 20px;
         }
 
         .product-description {
-            color: #666666;
-            line-height: 1.8;
-            font-size: 16px;
-            margin-bottom: 32px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
         }
 
-        /* Variant Selection */
-        .variant-section {
-            margin-bottom: 32px;
+        /* ============ VARIANTS SECTION ============ */
+        .variants-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
         }
 
-        .variant-label {
-            color: #1a1a1a;
+        .variants-label {
+            font-size: 13px;
             font-weight: 700;
-            font-size: 14px;
+            color: var(--text-primary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 12px;
-            display: block;
         }
 
-        .variant-options {
+        .variants-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
         }
 
-        .variant-option {
+        .variant-radio {
             display: none;
         }
 
-        .variant-option-label {
+        .variant-label {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px;
-            background: #FFFFFF;
-            border: 2px solid #E8DCC8;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            min-height: 60px;
-            font-weight: 600;
-            color: #666666;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
             font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
         }
 
-        .variant-option:checked + .variant-option-label {
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            border-color: #8B0000;
-            box-shadow: 0 4px 12px rgba(139, 0, 0, 0.2);
+        .variant-radio:checked+.variant-label {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
         }
 
-        .variant-option-label:hover {
-            border-color: #8B0000;
+        .variant-label:hover {
+            border-color: var(--primary);
         }
 
-        /* Quantity Selector */
-        .quantity-section {
+        /* ============ QUANTITY & CART ============ */
+        .cart-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .quantity-row {
             display: flex;
-            gap: 16px;
             align-items: center;
-            margin-bottom: 32px;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .quantity-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .quantity-control {
             display: flex;
             align-items: center;
-            border: 1px solid #E8DCC8;
-            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
             overflow: hidden;
-            background: #FFFFFF;
         }
 
         .quantity-btn {
-            background: transparent;
+            width: 44px;
+            height: 44px;
             border: none;
-            padding: 12px 16px;
-            color: #8B0000;
-            font-weight: 700;
-            font-size: 18px;
+            background: var(--bg-secondary);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.2s;
         }
 
         .quantity-btn:hover {
-            background: #F9F9F9;
+            background: var(--border);
         }
 
         .quantity-input {
             width: 60px;
+            height: 44px;
             border: none;
             text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
             background: transparent;
-            font-weight: 700;
-            font-size: 16px;
-            color: #1a1a1a;
         }
 
-        .quantity-info {
-            font-size: 14px;
-            color: #666666;
-            font-weight: 500;
+        .quantity-max {
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
-        /* Add to Cart Button */
         .add-to-cart-btn {
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            padding: 16px 32px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.2);
-            display: block;
             width: 100%;
-            text-decoration: none;
-            text-align: center;
+            padding: 16px 24px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-md);
         }
 
         .add-to-cart-btn:hover {
+            background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(139, 0, 0, 0.3);
+            box-shadow: var(--shadow-lg);
         }
 
-        /* Benefits/Guarantee Section */
-        .benefits-box {
-            background: linear-gradient(135deg, #FFFAF1 0%, #FFFFFF 100%);
-            border: 1px solid #F0F0F0;
-            border-radius: 12px;
+        .out-of-stock-msg {
+            background: #FEE2E2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* ============ BENEFITS ============ */
+        .benefits-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             padding: 24px;
-            margin-top: 28px;
         }
 
         .benefits-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .benefit-item {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            text-align: center;
-            padding: 16px;
-            background: #FFFFFF;
-            border: 1px solid #E8DCC8;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .benefit-item:hover {
-            border-color: #8B0000;
-            box-shadow: 0 6px 16px rgba(139, 0, 0, 0.08);
-            transform: translateY(-2px);
+            gap: 12px;
         }
 
         .benefit-icon {
-            flex-shrink: 0;
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-            color: #FFFFFF;
-            font-weight: 700;
-            font-size: 20px;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.1), rgba(139, 0, 0, 0.05));
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.2);
+            font-size: 18px;
+            flex-shrink: 0;
         }
 
         .benefit-text {
-            color: #666666;
-            font-size: 12px;
-            line-height: 1.5;
-            font-weight: 500;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
         }
 
         .benefit-text strong {
-            color: #1a1a1a;
             display: block;
-            margin-bottom: 4px;
-            font-weight: 700;
-            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
-        /* Related Products */
+        /* ============ RELATED PRODUCTS ============ */
         .related-section {
-            border-top: 1px solid #E8DCC8;
-            padding-top: 48px;
-            margin-top: 48px;
+            margin-top: 64px;
         }
 
         .related-title {
-            color: #1a1a1a;
-            font-size: 2rem;
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 32px;
+            color: var(--text-primary);
+            margin-bottom: 24px;
         }
 
         .related-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .related-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .related-card {
-            background: #FFFFFF;
-            border: 1px solid #F0F0F0;
-            border-radius: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            transition: all 0.3s ease;
             text-decoration: none;
-            color: inherit;
+            transition: all 0.3s;
         }
 
         .related-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border-color: #8B0000;
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
         }
 
         .related-image {
-            background: linear-gradient(135deg, #F5F5F5 0%, #EEEEEE 100%);
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            aspect-ratio: 1/1;
+            background: var(--bg-secondary);
+        }
+
+        .related-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .related-info {
@@ -577,155 +553,431 @@
         }
 
         .related-name {
-            color: #1a1a1a;
-            font-weight: 700;
             font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 8px;
             line-height: 1.4;
         }
 
         .related-price {
-            color: #8B0000;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* ============ REVIEWS SECTION ============ */
+        .reviews-section {
+            margin-top: 48px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .reviews-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .reviews-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reviews-count {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+
+        .reviews-summary {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .average-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .average-rating-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .average-rating-stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star-icon {
+            width: 20px;
+            height: 20px;
+            color: #FBBF24;
+        }
+
+        .star-icon.empty {
+            color: #E5E7EB;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .review-card:hover {
+            border-color: #D1D5DB;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .review-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, #A00000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-weight: 700;
             font-size: 16px;
         }
+
+        .review-author-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .review-author-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+
+        .review-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .review-stars .star-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #059669;
+            background: #ECFDF5;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .review-comment {
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .no-reviews {
+            text-align: center;
+            padding: 48px 24px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+        }
+
+        .no-reviews-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            color: #D1D5DB;
+        }
+
+        .no-reviews-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .no-reviews-subtext {
+            font-size: 14px;
+            color: #9CA3AF;
+        }
+
+        /* ============ FLOATING ADD TO CART (Mobile Only) ============ */
+        .floating-cart-bar {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .floating-cart-bar {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #fff;
+                padding: 16px 16px;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+                z-index: 99999;
+                gap: 12px;
+                align-items: center;
+                border-top: 1px solid var(--border);
+            }
+
+            .floating-cart-bar .floating-price {
+                font-size: 22px;
+                font-weight: 800;
+                color: var(--primary);
+                white-space: nowrap;
+            }
+
+            .floating-cart-bar .floating-add-btn {
+                flex: 1;
+                padding: 16px 24px;
+                background: var(--primary);
+                color: #fff;
+                border: none;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .floating-cart-bar .floating-add-btn:active {
+                transform: scale(0.98);
+                background: var(--primary-hover);
+            }
+
+            /* Hide chatbot on mobile for product page */
+            #cict-chatbot,
+            .chatbot-widget,
+            [id*="chatbot"],
+            [class*="chatbot"] {
+                display: none !important;
+            }
+
+            /* Add bottom padding to page content so it doesn't hide behind floating bar */
+            .product-content {
+                padding-bottom: 120px !important;
+            }
+
+            /* Hide the original add to cart button on mobile */
+            .cart-card .add-to-cart-btn,
+            .cart-card a.add-to-cart-btn {
+                display: none !important;
+            }
+
+            /* Hide the product price in main content on mobile - it shows in floating bar */
+            .product-header .product-price {
+                display: none !important;
+            }
+        }
     </style>
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb-nav">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav style="display: flex; gap: 8px; align-items: center; font-size: 14px;">
-                <a href="<?php echo e(route('home')); ?>">Home</a>
-                <span class="breadcrumb-separator">/</span>
-                <a href="<?php echo e(route('shop.index')); ?>">Shop</a>
-                <span class="breadcrumb-separator">/</span>
-                <span class="breadcrumb-current"><?php echo e($product->name); ?></span>
-            </nav>
+    <!-- Decorative Red Header Banner (Behind Navbar) -->
+    <div class="product-hero-banner"
+        style="margin-top: -72px; height: 250px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); position: relative; overflow: hidden;">
+        <!-- Decorative Pattern Overlay -->
+        <div
+            style="position: absolute; inset: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
+        </div>
+        <!-- Decorative Circles -->
+        <div
+            style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.05); border-radius: 50%;">
+        </div>
+        <div
+            style="position: absolute; top: 20px; right: 80px; width: 40px; height: 40px; background: rgba(255,255,255,0.03); border-radius: 50%;">
+        </div>
+        <div
+            style="position: absolute; top: 5px; left: 10%; width: 60px; height: 60px; background: rgba(255,255,255,0.04); border-radius: 50%;">
         </div>
     </div>
 
-    <!-- Product Details -->
-    <div class="product-container">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Main Content -->
+    <div class="product-content">
+        <div class="product-container">
             <div class="product-grid">
                 <!-- Product Image -->
-                <div class="product-image-wrapper">
+                <div class="product-image-card">
                     <?php if(!empty($product->image_url)): ?>
-                        <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>" style="width: 100%; height: 100%; object-fit: cover;">
-                    <?php elseif($product->image_path): ?>
-                        <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>">
                     <?php else: ?>
-                        <div class="product-image-placeholder">No Image</div>
+                        <div class="product-image-placeholder">No Image Available</div>
                     <?php endif; ?>
                 </div>
 
-                <!-- Product Info -->
+                <!-- Product Details -->
                 <div class="product-details">
                     <?php
-                        // Check product current_stock, not just variants
-                        $currentStock = $product->current_stock;
+                        $stock = $product->current_stock;
+                        $isLowStock = $stock > 0 && $stock <= $product->low_stock_threshold;
+                        $isOutOfStock = $stock == 0;
                     ?>
-                    
-                    <h1><?php echo e($product->name); ?></h1>
 
-                    <!-- Meta Info -->
-                    <div class="product-meta" data-stock="<?php echo e($currentStock); ?>">
-                        <?php if($currentStock > $product->low_stock_threshold): ?>
-                            <span class="stock-badge in-stock">In Stock</span>
-                        <?php elseif($currentStock > 0): ?>
-                            <span class="stock-badge low-stock">Low Stock</span>
-                        <?php else: ?>
-                            <span class="stock-badge out-of-stock">Out of Stock</span>
-                        <?php endif; ?>
-                        <span class="mobile-stock-count" style="display: none;"><?php echo e($currentStock); ?> left</span>
-                    </div>
+                    <!-- Header Card -->
+                    <div class="product-header">
+                        <h1 class="product-name"><?php echo e($product->name); ?></h1>
 
-                    <!-- Price -->
-                    <div class="price-section">
-                        <div class="product-price" id="display-price">₱<?php echo e(number_format($product->base_price, 2)); ?></div>
-                        <div style="color: #888888; font-size: 14px; display: flex; align-items: center; gap: 12px; margin-top: 8px;">
-                            <span>Total Stock: <span style="font-weight: 700; color: #1a1a1a;"><?php echo e($currentStock); ?> units</span></span>
-                            <?php if($currentStock > 0 && $currentStock <= $product->low_stock_threshold): ?>
-                                <span style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3); animation: pulse 2s infinite;">
-                                    ⚠️ Only <?php echo e($currentStock); ?> left!
-                                </span>
+                        <div class="product-meta">
+                            <?php if($isOutOfStock): ?>
+                                <span class="product-badge out-of-stock">Out of Stock</span>
+                            <?php elseif($isLowStock): ?>
+                                <span class="product-badge low-stock">Only <?php echo e($stock); ?> left</span>
+                            <?php else: ?>
+                                <span class="product-badge in-stock">In Stock</span>
                             <?php endif; ?>
+                            <span class="product-stock-count"><?php echo e($stock); ?> units available</span>
                         </div>
+
+                        <div class="product-price" id="display-price">₱<?php echo e(number_format($product->base_price, 2)); ?>
+
+                        </div>
+
+                        <?php if($product->description): ?>
+                            <p class="product-description"><?php echo e($product->description); ?></p>
+                        <?php endif; ?>
                     </div>
 
-                    <!-- Description -->
-                    <p class="product-description"><?php echo e($product->description ?? 'Premium quality product with excellent craftsmanship.'); ?></p>
-
-                    <!-- Variants -->
+                    <!-- Variants Card -->
                     <?php if($product->variants->count() > 0): ?>
-                        <div class="variant-section">
-                            <label class="variant-label">Select <?php echo e($product->variants->count() > 1 ? ($product->name === 'Custom T-Shirt' ? 'Size' : 'Capacity') : 'Option'); ?></label>
-                            <div class="variant-options">
+                        <div class="variants-card">
+                            <div class="variants-label">Select Variant</div>
+                            <div class="variants-grid">
                                 <?php $__currentLoopData = $product->variants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $variant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <input type="radio" name="variant_id" id="variant_<?php echo e($variant->id); ?>" value="<?php echo e($variant->id); ?>" class="variant-option" <?php echo e($index === 0 ? 'checked' : ''); ?> data-price="<?php echo e($variant->getFinalPrice()); ?>" data-stock="<?php echo e($variant->stock_quantity); ?>">
-                                    <label for="variant_<?php echo e($variant->id); ?>" class="variant-option-label"><?php echo e($variant->name); ?></label>
+                                    <input type="radio" name="variant_id" id="variant_<?php echo e($variant->id); ?>"
+                                        value="<?php echo e($variant->id); ?>" class="variant-radio" <?php echo e($index === 0 ? 'checked' : ''); ?>
+
+                                        data-price="<?php echo e($variant->getFinalPrice()); ?>"
+                                        data-stock="<?php echo e($variant->stock_quantity); ?>">
+                                    <label for="variant_<?php echo e($variant->id); ?>" class="variant-label">
+                                        <?php echo e($variant->name); ?>
+
+                                    </label>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                         </div>
                     <?php endif; ?>
 
-                    <!-- Quantity & Add to Cart -->
-                    <form id="add-to-cart-form" method="POST" action="<?php echo e(route('cart.store')); ?>">
-                        <?php echo csrf_field(); ?>
-                        <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
-                        <?php if($product->variants->count() > 0): ?>
-                            <input type="hidden" name="variant_id" id="selected_variant" value="<?php echo e($product->variants->first()->id); ?>">
-                        <?php endif; ?>
-
-                        <div class="quantity-section">
-                            <div>
-                                <label style="display: block; font-weight: 700; font-size: 14px; color: #1a1a1a; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Quantity</label>
-                                <div class="quantity-control">
-                                    <button type="button" class="quantity-btn" onclick="decreaseQty()">−</button>
-                                    <input type="number" name="quantity" id="quantity_input" min="1" value="1" class="quantity-input" readonly>
-                                    <button type="button" class="quantity-btn" onclick="increaseQty()">+</button>
-                                </div>
-                            </div>
-                            <div class="quantity-info">
-                                Max: <span id="max_qty"><?php echo e($product->current_stock); ?></span> available
-                            </div>
-                        </div>
-
-                        <?php if($product->current_stock > 0): ?>
-                            <?php if(auth()->guard()->check()): ?>
-                                <button type="submit" class="add-to-cart-btn">Add to Cart</button>
-                            <?php else: ?>
-                                <a href="<?php echo e(route('login')); ?>" class="add-to-cart-btn">Sign In to Purchase</a>
+                    <!-- Cart Card -->
+                    <div class="cart-card">
+                        <form id="add-to-cart-form" method="POST" action="<?php echo e(route('cart.store')); ?>">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
+                            <?php if($product->variants->count() > 0): ?>
+                                <input type="hidden" name="variant_id" id="selected_variant"
+                                    value="<?php echo e($product->variants->first()->id); ?>">
                             <?php endif; ?>
-                        <?php else: ?>
-                            <div style="background: #F8D7DA; border: 1px solid #F5C6CB; color: #721C24; padding: 16px; border-radius: 10px; text-align: center; font-weight: 600;">
-                                Out of Stock
-                            </div>
-                        <?php endif; ?>
-                    </form>
 
-                    <!-- Benefits & Guarantees -->
-                    <div class="benefits-box">
+                            <?php if(!$isOutOfStock): ?>
+                                <div class="quantity-row">
+                                    <div>
+                                        <div class="quantity-label">Quantity</div>
+                                        <div class="quantity-control">
+                                            <button type="button" class="quantity-btn" onclick="decreaseQty()">−</button>
+                                            <input type="number" name="quantity" id="quantity_input" min="1" value="1"
+                                                class="quantity-input" readonly>
+                                            <button type="button" class="quantity-btn" onclick="increaseQty()">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="quantity-max">
+                                        Max: <strong id="max_qty"><?php echo e($stock); ?></strong> available
+                                    </div>
+                                </div>
+
+                                <?php if(auth()->guard()->check()): ?>
+                                    <button type="submit" class="add-to-cart-btn" id="add_to_cart_btn">
+                                        Add to Cart
+                                    </button>
+                                <?php else: ?>
+                                    <a href="<?php echo e(route('login')); ?>" class="add-to-cart-btn"
+                                        style="display: block; text-align: center; text-decoration: none;">
+                                        Sign In to Purchase
+                                    </a>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <div class="out-of-stock-msg">
+                                    This product is currently out of stock
+                                </div>
+                            <?php endif; ?>
+                        </form>
+                    </div>
+
+                    <!-- Benefits Card -->
+                    <div class="benefits-card">
                         <div class="benefits-grid">
                             <div class="benefit-item">
-                                <div class="benefit-icon">✓</div>
+                                <div class="benefit-icon">📦</div>
                                 <div class="benefit-text">
-                                    <strong>Quality Assured</strong>
-                                    100% satisfaction guaranteed
+                                    <strong>Campus Pickup</strong>
+                                    Collect at CICT office
                                 </div>
                             </div>
                             <div class="benefit-item">
-                                <div class="benefit-icon">💳</div>
+                                <div class="benefit-icon">💵</div>
                                 <div class="benefit-text">
-                                    <strong>Easy Payment</strong>
-                                    Multiple payment methods
+                                    <strong>Pay on Pickup</strong>
+                                    Cash payment accepted
                                 </div>
                             </div>
                             <div class="benefit-item">
-                                <div class="benefit-icon">🎯</div>
+                                <div class="benefit-icon">🎓</div>
                                 <div class="benefit-text">
                                     <strong>Student Support</strong>
-                                    Support the student council
+                                    Council initiatives
                                 </div>
                             </div>
                         </div>
@@ -733,16 +985,89 @@
                 </div>
             </div>
 
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <div class="reviews-header">
+                    <h2 class="reviews-title">
+                        Customer Reviews
+                        <span class="reviews-count"><?php echo e($product->reviews->count()); ?> <?php echo e(Str::plural('review', $product->reviews->count())); ?></span>
+                    </h2>
+                    <?php if($product->reviews->count() > 0): ?>
+                        <div class="reviews-summary">
+                            <div class="average-rating">
+                                <span class="average-rating-number"><?php echo e(number_format($product->averageRating(), 1)); ?></span>
+                                <div class="average-rating-stars">
+                                    <?php for($i = 1; $i <= 5; $i++): ?>
+                                        <svg class="star-icon <?php echo e($i <= round($product->averageRating()) ? '' : 'empty'); ?>" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                    <?php endfor; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <?php if($product->reviews->count() > 0): ?>
+                    <div class="reviews-list">
+                        <?php $__currentLoopData = $product->reviews()->with('user')->latest()->take(5)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $review): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <div class="review-author">
+                                        <div class="review-avatar">
+                                            <?php echo e(strtoupper(substr($review->user->name ?? 'U', 0, 1))); ?>
+
+                                        </div>
+                                        <div class="review-author-info">
+                                            <div class="review-author-name"><?php echo e($review->user->name ?? 'Anonymous'); ?></div>
+                                            <div class="review-date"><?php echo e($review->created_at->format('M d, Y')); ?></div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                        <div class="review-stars">
+                                            <?php for($i = 1; $i <= 5; $i++): ?>
+                                                <svg class="star-icon <?php echo e($i <= $review->rating ? '' : 'empty'); ?>" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                </svg>
+                                            <?php endfor; ?>
+                                        </div>
+                                        <?php if($review->verified_purchase): ?>
+                                            <span class="verified-badge">
+                                                <svg style="width: 14px; height: 14px;" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Verified Purchase
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <?php if($review->comment): ?>
+                                    <p class="review-comment"><?php echo e($review->comment); ?></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
+                <?php else: ?>
+                    <div class="no-reviews">
+                        <svg class="no-reviews-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.31l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.31L11.48 3.5z"/>
+                        </svg>
+                        <div class="no-reviews-text">No reviews yet</div>
+                        <div class="no-reviews-subtext">Be the first to share your experience with this product</div>
+                    </div>
+                <?php endif; ?>
+            </div>
+
             <!-- Related Products -->
             <?php if($relatedProducts->count() > 0): ?>
                 <div class="related-section">
-                    <h2 class="related-title">Related Products</h2>
+                    <h2 class="related-title">You May Also Like</h2>
                     <div class="related-grid">
                         <?php $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $related): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <a href="<?php echo e(route('shop.show', $related->slug)); ?>" class="related-card">
                                 <div class="related-image">
                                     <?php if($related->image_path): ?>
-                                        <img src="<?php echo e($related->image_url); ?>" alt="<?php echo e($related->name); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                        <img src="<?php echo e($related->image_url); ?>" alt="<?php echo e($related->name); ?>">
                                     <?php endif; ?>
                                 </div>
                                 <div class="related-info">
@@ -757,300 +1082,165 @@
         </div>
     </div>
 
-    <!-- SweetAlert2 for small centered 'Added to cart' feedback -->
+    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const qtyInput = document.getElementById('quantity_input');
+        const maxQtyEl = document.getElementById('max_qty');
+        const priceEl = document.getElementById('display-price');
+        const addToCartBtn = document.getElementById('add_to_cart_btn');
+        let isSubmitting = false;
+
         function decreaseQty() {
-            const input = document.getElementById('quantity_input');
-            if (input.value > 1) input.value--;
+            if (parseInt(qtyInput.value) > 1) qtyInput.value--;
         }
 
         function increaseQty() {
-            const input = document.getElementById('quantity_input');
-            const maxQty = parseInt(document.getElementById('max_qty').textContent);
-            if (parseInt(input.value) < maxQty) input.value++;
+            const maxQty = parseInt(maxQtyEl.textContent) || 0;
+            if (parseInt(qtyInput.value) < maxQty) qtyInput.value++;
         }
 
-        // Function to format price
         function formatPrice(price) {
-            return '₱' + parseFloat(price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            return '₱' + parseFloat(price).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
         }
 
-        // Update variant selection and stock when variant changes
+        // Variant selection
         document.querySelectorAll('input[name="variant_id"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                document.getElementById('selected_variant').value = this.value;
-                
-                // Get variant data
-                const variantStock = parseInt(this.getAttribute('data-stock'));
+            radio.addEventListener('change', function () {
+                const selectedVariant = document.getElementById('selected_variant');
+                if (selectedVariant) selectedVariant.value = this.value;
+
+                const variantStock = parseInt(this.getAttribute('data-stock')) || 0;
                 const variantPrice = parseFloat(this.getAttribute('data-price'));
-                
-                // Update price with smooth animation
-                const priceElement = document.getElementById('display-price');
-                priceElement.style.opacity = '0.5';
-                priceElement.style.transform = 'scale(0.95)';
-                priceElement.style.transition = 'all 0.3s ease-out';
-                
+
+                // Update price with animation
+                priceEl.style.opacity = '0.5';
                 setTimeout(() => {
-                    priceElement.textContent = formatPrice(variantPrice);
-                    priceElement.style.opacity = '1';
-                    priceElement.style.transform = 'scale(1)';
+                    priceEl.textContent = formatPrice(variantPrice);
+                    priceEl.style.opacity = '1';
                 }, 150);
-                
-                // Update max quantity based on selected variant's stock
-                document.getElementById('max_qty').textContent = variantStock;
-                document.getElementById('quantity_input').value = 1;
-                
-                // Update add to cart button visibility
-                const addBtn = document.querySelector('.add-to-cart-btn');
-                const outOfStockMsg = document.querySelector('[style*="F8D7DA"]');
-                if (variantStock > 0) {
-                    if (addBtn) addBtn.style.display = 'block';
-                    if (outOfStockMsg) outOfStockMsg.style.display = 'none';
-                } else {
-                    if (addBtn) addBtn.style.display = 'none';
-                    if (outOfStockMsg) outOfStockMsg.style.display = 'block';
+
+                // Update max quantity
+                maxQtyEl.textContent = variantStock;
+                if (parseInt(qtyInput.value) > variantStock) {
+                    qtyInput.value = Math.max(1, variantStock);
                 }
             });
         });
 
-        // Show a small centered success alert when user presses "Add to Cart".
-        document.addEventListener('DOMContentLoaded', function () {
-            const cartForm = document.getElementById('add-to-cart-form');
-            if (!cartForm) return;
+        // Form submission with loading and SweetAlert
+        document.getElementById('add-to-cart-form')?.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-            cartForm.addEventListener('submit', function (e) {
-                // Prevent navigating away immediately so user sees the feedback
-                e.preventDefault();
+            // Prevent double submission
+            if (isSubmitting) return;
+            isSubmitting = true;
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Added to cart',
-                    showConfirmButton: false,
-                    timer: 900,
-                    position: 'center',
-                    width: 260,
-                    padding: '0.8rem 1rem',
+            // Show loading state on button
+            const originalText = addToCartBtn.innerHTML;
+            addToCartBtn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><svg style="width:20px;height:20px;animation:spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>Adding...</span>';
+            addToCartBtn.disabled = true;
+            addToCartBtn.style.opacity = '0.8';
+
+            const formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('Request failed');
+                    return response.json();
+                })
+                .then(data => {
+                    // Modern centered success SweetAlert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to Cart!',
+                        html: '<p style="color:#6B7280;font-size:15px;"><?php echo e($product->name); ?> has been added to your cart.</p>',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Continue Shopping',
+                        confirmButtonColor: '#8B0000',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        customClass: {
+                            popup: 'swal-popup-modern',
+                            title: 'swal-title-modern'
+                        }
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                })
+                .catch(error => {
+                    // Reset button and submit normally as fallback
+                    addToCartBtn.innerHTML = originalText;
+                    addToCartBtn.disabled = false;
+                    addToCartBtn.style.opacity = '1';
+                    isSubmitting = false;
+                    this.submit();
                 });
-
-                // Submit after the timer so the alert is visible briefly
-                setTimeout(() => cartForm.submit(), 900);
-            });
         });
     </script>
 
-    <!-- Reviews Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="product-card p-8 mb-8">
-            <h2 class="text-3xl font-bold mb-8" style="color: #1a1a1a; font-family: 'Poppins', sans-serif;">⭐ Customer Reviews</h2>
-            
-            <?php if($reviews->count() > 0): ?>
-                <!-- Review Summary -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 pb-12" style="border-bottom: 2px solid #E8E8E8;">
-                    <!-- Average Rating -->
-                    <div class="text-center">
-                        <div class="text-6xl font-bold mb-2" style="color: #8B0000;"><?php echo e(number_format($averageRating, 1)); ?></div>
-                        <div class="flex justify-center gap-1 mb-2">
-                            <?php for($i = 1; $i <= 5; $i++): ?>
-                                <svg class="w-6 h-6" fill="<?php echo e($i <= round($averageRating) ? '#DAA520' : '#E8E8E8'); ?>" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                </svg>
-                            <?php endfor; ?>
-                        </div>
-                        <p class="text-sm text-gray-600 font-semibold">Based on <?php echo e($reviews->count()); ?> <?php echo e(Str::plural('review', $reviews->count())); ?></p>
-                    </div>
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-                    <!-- Rating Breakdown -->
-                    <div class="md:col-span-2">
-                        <?php $__currentLoopData = [5, 4, 3, 2, 1]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $star): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php
-                                $count = $ratingBreakdown[$star] ?? 0;
-                                $percentage = $reviews->count() > 0 ? ($count / $reviews->count()) * 100 : 0;
-                            ?>
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="flex items-center gap-1 w-16">
-                                    <span class="text-sm font-bold"><?php echo e($star); ?></span>
-                                    <svg class="w-4 h-4" fill="#DAA520" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                    </svg>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="h-3 rounded-full" style="background: #E8E8E8;">
-                                        <div class="h-3 rounded-full transition-all duration-500" style="width: <?php echo e($percentage); ?>%; background: linear-gradient(135deg, #DAA520, #FFD700);"></div>
-                                    </div>
-                                </div>
-                                <span class="text-sm font-bold text-gray-600 w-12 text-right"><?php echo e($count); ?></span>
-                            </div>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </div>
-                </div>
-            <?php endif; ?>
+        .swal-popup-modern {
+            border-radius: 16px !important;
+            padding: 24px !important;
+        }
 
-            <!-- Review Form (Only for verified purchases) -->
+        .swal-title-modern {
+            font-size: 22px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+        }
+    </style>
+
+    <?php $__env->startPush('body-end'); ?>
+        <!-- Floating Add to Cart Bar (Mobile Only) -->
+        <?php if(!$isOutOfStock): ?>
+        <div class="floating-cart-bar">
+            <div class="floating-price" id="floating-price">₱<?php echo e(number_format($product->base_price, 2)); ?></div>
             <?php if(auth()->guard()->check()): ?>
-                <?php if($canReview): ?>
-                    <div class="mb-12 p-6 rounded-xl" style="background: rgba(218, 165, 32, 0.05); border: 2px solid rgba(218, 165, 32, 0.2);">
-                        <h3 class="text-xl font-bold mb-4" style="color: #1a1a1a;">Write a Review</h3>
-                        <form method="POST" action="<?php echo e(route('reviews.store', $product)); ?>" x-data="{ rating: 0 }">
-                            <?php echo csrf_field(); ?>
-                            <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
-                            <input type="hidden" name="rating" x-model="rating">
-
-                            <!-- Star Rating Selector -->
-                            <div class="mb-4">
-                                <label class="block text-sm font-bold mb-2" style="color: #1a1a1a;">Your Rating</label>
-                                <div class="flex gap-2">
-                                    <?php for($i = 1; $i <= 5; $i++): ?>
-                                        <button 
-                                            type="button"
-                                            @click="rating = <?php echo e($i); ?>"
-                                            class="transition-transform hover:scale-110"
-                                        >
-                                            <svg 
-                                                class="w-10 h-10 cursor-pointer transition-colors" 
-                                                :fill="rating >= <?php echo e($i); ?> ? '#DAA520' : '#E8E8E8'"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                            </svg>
-                                        </button>
-                                    <?php endfor; ?>
-                                </div>
-                                <?php $__errorArgs = ['rating'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                                    <p class="text-red-600 text-sm mt-1"><?php echo e($message); ?></p>
-                                <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                            </div>
-
-                            <!-- Comment -->
-                            <div class="mb-4">
-                                <label class="block text-sm font-bold mb-2" style="color: #1a1a1a;">Your Review</label>
-                                <textarea 
-                                    name="comment" 
-                                    rows="4" 
-                                    class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:border-opacity-100 transition-colors"
-                                    style="border-color: #E8E8E8; background: #FFFFFF;"
-                                    placeholder="Share your experience with this product..."
-                                    required
-                                ></textarea>
-                                <?php $__errorArgs = ['comment'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                                    <p class="text-red-600 text-sm mt-1"><?php echo e($message); ?></p>
-                                <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                            </div>
-
-                            <button 
-                                type="submit" 
-                                class="px-6 py-3 rounded-lg font-bold text-white transition-all duration-300"
-                                style="background: linear-gradient(135deg, #8B0000, #A00000); box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);"
-                                onmouseover="this.style.background='linear-gradient(135deg, #A00000, #C00000)'; this.style.boxShadow='0 6px 16px rgba(139, 0, 0, 0.4)';"
-                                onmouseout="this.style.background='linear-gradient(135deg, #8B0000, #A00000)'; this.style.boxShadow='0 4px 12px rgba(139, 0, 0, 0.3)';"
-                            >
-                                Submit Review
-                            </button>
-                        </form>
-                    </div>
-                <?php endif; ?>
-            <?php endif; ?>
-
-            <!-- Reviews List -->
-            <?php if($reviews->count() > 0): ?>
-                <div class="space-y-6">
-                    <?php $__currentLoopData = $reviews; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $review): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="p-6 rounded-xl" style="background: #F9F9F9; border: 2px solid #E8E8E8;">
-                            <div class="flex items-start gap-4">
-                                <!-- User Avatar -->
-                                <div class="flex-shrink-0">
-                                    <?php if($review->user->profile_picture): ?>
-                                        <img src="<?php echo e(asset('storage/' . $review->user->profile_picture)); ?>" alt="<?php echo e($review->user->name); ?>" class="w-12 h-12 rounded-full object-cover border-2" style="border-color: #DAA520;">
-                                    <?php else: ?>
-                                        <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #DAA520, #FFD700);">
-                                            <?php echo e(substr($review->user->name, 0, 1)); ?>
-
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-
-                                <div class="flex-1">
-                                    <!-- Header -->
-                                    <div class="flex items-start justify-between mb-2">
-                                        <div>
-                                            <h4 class="font-bold text-base" style="color: #1a1a1a;"><?php echo e($review->user->name); ?></h4>
-                                            <div class="flex items-center gap-2 mt-1">
-                                                <div class="flex gap-0.5">
-                                                    <?php for($i = 1; $i <= 5; $i++): ?>
-                                                        <svg class="w-4 h-4" fill="<?php echo e($i <= $review->rating ? '#DAA520' : '#E8E8E8'); ?>" viewBox="0 0 20 20">
-                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                        </svg>
-                                                    <?php endfor; ?>
-                                                </div>
-                                                <?php if($review->verified_purchase): ?>
-                                                    <span class="text-xs font-semibold px-2 py-0.5 rounded" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">✓ Verified Purchase</span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                        <span class="text-sm text-gray-500"><?php echo e($review->created_at->diffForHumans()); ?></span>
-                                    </div>
-
-                                    <!-- Comment -->
-                                    <p class="text-gray-700 leading-relaxed"><?php echo e($review->comment); ?></p>
-
-                                    <!-- Actions (if user owns review) -->
-                                    <?php if(auth()->guard()->check()): ?>
-                                        <?php if($review->user_id === auth()->id()): ?>
-                                            <div class="flex gap-3 mt-3">
-                                                <button 
-                                                    type="button"
-                                                    onclick="if(confirm('Delete this review?')) document.getElementById('delete-review-<?php echo e($review->id); ?>').submit();"
-                                                    class="text-sm font-semibold text-red-600 hover:text-red-700 transition-colors"
-                                                >
-                                                    Delete
-                                                </button>
-                                                <form id="delete-review-<?php echo e($review->id); ?>" method="POST" action="<?php echo e(route('reviews.destroy', $review)); ?>" class="hidden">
-                                                    <?php echo csrf_field(); ?>
-                                                    <?php echo method_field('DELETE'); ?>
-                                                </form>
-                                            </div>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                </div>
-
-                <!-- Pagination -->
-                <?php if($reviews->hasPages()): ?>
-                    <div class="mt-8">
-                        <?php echo e($reviews->links()); ?>
-
-                    </div>
-                <?php endif; ?>
-            <?php else: ?>
-                <div class="text-center py-12">
-                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                <button type="button" class="floating-add-btn" onclick="document.getElementById('add-to-cart-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
-                    <h3 class="text-xl font-bold mb-2" style="color: #666;">No reviews yet</h3>
-                    <p class="text-gray-600">Be the first to review this product!</p>
-                </div>
+                    Add to Cart
+                </button>
+            <?php else: ?>
+                <a href="<?php echo e(route('login')); ?>" class="floating-add-btn">
+                    Sign In to Purchase
+                </a>
             <?php endif; ?>
         </div>
-    </div>
+        <?php endif; ?>
 
-    </div>
+        <script>
+            // Update floating price when variant changes
+            document.querySelectorAll('.variant-radio').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const price = this.dataset.price;
+                    const floatingPrice = document.getElementById('floating-price');
+                    if (floatingPrice && price) {
+                        floatingPrice.textContent = '₱' + parseFloat(price).toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    }
+                });
+            });
+        </script>
+    <?php $__env->stopPush(); ?>
+
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4619374cef299e94fd7263111d0abc69)): ?>
@@ -1060,5 +1250,4 @@ unset($__errorArgs, $__bag); ?>
 <?php if (isset($__componentOriginal4619374cef299e94fd7263111d0abc69)): ?>
 <?php $component = $__componentOriginal4619374cef299e94fd7263111d0abc69; ?>
 <?php unset($__componentOriginal4619374cef299e94fd7263111d0abc69); ?>
-<?php endif; ?>
-<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/shop/show.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/shop/show.blade.php ENDPATH**/ ?>

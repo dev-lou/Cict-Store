@@ -3,7 +3,7 @@
    Purpose: Developer-facing quickstart, setup instructions, and references.
 -->
 
-# Ctrl+P — CICT Student Council Merchandise & Services Platform
+# TheWerk — CICT Student Council Merchandise & Services Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Laravel 11](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat&logo=laravel)](https://laravel.com)
@@ -14,9 +14,9 @@
 An e-commerce and service management platform powering the CICT Student Council’s merchandise and printing services. Built with Laravel and modern JS tooling, it includes inventory, order processing, a responsive UI, an admin dashboard, and Gemini AI chatbot integration for support.
 ---
 
-## What is Ctrl+P?
+## What is TheWerk?
 
-Ctrl+P is a production-ready platform that enables the CICT Student Council to sell merchandise, manage inventory, process orders, and provide AI-assisted customer support. It ships with an admin UI for manager workflows and a responsive storefront optimized for accessibility.
+TheWerk is a production-ready platform that enables the CICT Student Council to sell merchandise, manage inventory, process orders, and provide AI-assisted customer support. It ships with an admin UI for manager workflows and a responsive storefront optimized for accessibility.
 
 ---
 
@@ -199,7 +199,7 @@ Please follow the GitHub `Contributing` and `Code of Conduct` guidelines in this
 
 If you need help or want to report a bug, open an issue in the repo or contact the repo owner.
 
-**Thank you for contributing to Ctrl+P!**
+**Thank you for contributing to TheWerk!**
 
 
 ---

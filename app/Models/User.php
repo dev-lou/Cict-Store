@@ -78,14 +78,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the announcements created by this user.
-     */
-    public function announcements(): HasMany
-    {
-        return $this->hasMany(Announcement::class, 'created_by');
-    }
-
-    /**
      * Get the inventory history records created by this user.
      */
     public function inventoryHistoryRecords(): HasMany

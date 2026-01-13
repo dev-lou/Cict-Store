@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Ctrl+P')</title>
+    <title>@yield('title', 'TheWerk')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -209,12 +209,12 @@
                     <div class="col-span-1" style="display:flex; align-items:flex-start; gap:22px;">
                         <div style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
                             <div style="width:80px; height:80px; border-radius:9999px; overflow:hidden; background:#fff;">
-                                <img src="{{ asset('images/ctrlp-logo.png') }}" alt="Ctrl+P logo" style="width:100%; height:100%; object-fit:cover; border-radius:9999px; display:block;">
+                                <img src="{{ asset('images/ctrlp-logo.png') }}" alt="TheWerk logo" style="width:100%; height:100%; object-fit:cover; border-radius:9999px; display:block;">
                             </div>
                         </div>
                         <div style="display:flex; flex-direction:column; gap:8px;">
                             <div style="display:flex; flex-direction:column; gap:4px;">
-                                <h3 class="font-bold text-xl" style="margin:0; color:white;">Ctrl+P</h3>
+                                <h3 class="font-bold text-xl" style="margin:0; color:white;">TheWerk</h3>
                                 <p class="text-sm" style="margin:2px 0 0 0; color: rgba(255,255,255,0.75);">ISUFST Dingle Campus · Shop & Services</p>
                             </div>
                             <p class="text-sm" style="margin:0; color: rgba(255,255,255,0.75); line-height:1.7; max-width: 22rem;">Campus-run store and services delivering print, merch, and digital support for students and orgs.</p>
@@ -245,7 +245,7 @@
                 </div>
 
                 <div style="border-top: 1px solid rgba(255,255,255,0.12); flex-wrap: wrap;" class="pt-4 text-sm flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2 sm:gap-4">
-                    <p style="margin:0; color: rgba(255,255,255,0.75);">&copy; 2025 Ctrl+P · ISUFST Dingle Campus</p>
+                    <p style="margin:0; color: rgba(255,255,255,0.75);">&copy; 2025 TheWerk · ISUFST Dingle Campus</p>
                     <p style="margin:0; color: rgba(255,255,255,0.65);" class="text-xs">All rights reserved.</p>
                 </div>
             </div>
@@ -538,6 +538,6 @@
     </div>
 
     <!-- Alpine.js for interactive components -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>

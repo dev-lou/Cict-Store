@@ -1,22 +1,26 @@
 /* ============ PAGE TRANSITION ANIMATIONS ============ */
-/* Smooth, fast, eye-friendly page transitions */
+/* Smooth, fast, eye-friendly page transitions with modern effects */
 
 /* Page fade transition - very subtle */
 @keyframes pageEnter {
     0% {
         opacity: 0.95;
+        transform: translateY(10px);
     }
     100% {
         opacity: 1;
+        transform: translateY(0);
     }
 }
 
 @keyframes pageExit {
     0% {
         opacity: 1;
+        transform: translateY(0);
     }
     100% {
         opacity: 0.95;
+        transform: translateY(-10px);
     }
 }
 
@@ -48,6 +52,36 @@
     }
     100% {
         width: 0%;
+    }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Scale bounce */
+@keyframes scaleBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Rotate gradient */
+@keyframes rotateGradient {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
 
@@ -194,7 +228,6 @@ a:active {
 /* GPU acceleration for better performance */
 main,
 .page-transition-overlay {
-    will-change: opacity, transform;
     transform: translateZ(0);
     backface-visibility: hidden;
 }

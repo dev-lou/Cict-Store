@@ -129,17 +129,5 @@ class DatabaseSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-
-        // Create announcement
-        DB::table('announcements')->insert([
-            'title' => 'Welcome to IGP Hub',
-            'content' => 'Welcome to our printing and services platform! Browse our products and place your first order.',
-            'is_active' => true,
-            'is_pinned' => true,
-            'created_by' => 1,
-            'published_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
     }
 }

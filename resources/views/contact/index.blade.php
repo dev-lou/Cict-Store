@@ -1,471 +1,449 @@
 <x-app-layout>
-    @section('title', 'Contact - CICT Student Council')
-    <style>
-        :root {
-            --primary-blue: #8B0000;
-            --primary-blue-light: #A00000;
-            --primary-text: #1F1F1F;
-            --secondary-text: #555555;
-            --light-bg: #F7F8FB;
-            --white: #FFFFFF;
-            --border-light: #E8DCC8;
-            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-modern: 0 8px 32px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 12px 48px rgba(139, 0, 0, 0.15);
-        }
+    @section('title', 'Contact - ' . config('app.name', 'TheWerk'))
 
-        /* ============ PAGE WRAPPER ============ */
-        .contact-page-wrapper {
-            background: var(--light-bg);
-            min-height: calc(100vh - 200px);
-            padding-top: 0;
-            padding-bottom: 80px;
+    <style>
+        /* ============ DESIGN TOKENS ============ */
+        :root {
+            --primary: #8B0000;
+            --primary-hover: #6B0000;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F9FAFB;
+            --border: #E5E7EB;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
         }
 
         /* ============ HERO SECTION ============ */
         .contact-hero {
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.88) 0%, rgba(160, 0, 0, 0.86) 100%), url('https://scontent.fceb2-1.fna.fbcdn.net/v/t39.30808-6/501576305_727677589775056_8912524276218180968_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeHh06uhhf6hRD_H2CS3SIv0PWjGq8SGvdU9aMarxIa91RTOrQs-N_xEnHvyDtraGVh0Acledt3XmnGCJPeILquM&_nc_ohc=dOxifiaXOuwQ7kNvwFmdrkx&_nc_oc=AdlF4jIulBd47oBNbLMFlWXpsa3bsQWD5tSu-KQVMECsiQjxvZxVmiJxVZtKEQbJ6VZ-HuqwivfpDM5lCk103lX3&_nc_zt=23&_nc_ht=scontent.fceb2-1.fna&_nc_gid=VCECYsbHMZtX3naN8a1mow&oh=00_Afntvs-VFKgrDC7KbzOfpRfEF-nMY_bZLRkGk9_Q7ympnA&oe=69543527') center/cover;
-            min-height: 86vh;
+            min-height: 45vh;
+            padding: 160px 24px 60px;
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
+            margin-top: -72px;
             position: relative;
-            margin-top: -70px;
-            padding-top: 200px;
-            padding-bottom: 150px;
-            border-radius: 0 0 32px 32px;
-            box-shadow: inset 0 -90px 160px rgba(0,0,0,0.18);
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .contact-hero {
+                min-height: 55vh;
+                padding-top: 140px;
+                padding-bottom: 40px;
+            }
+
+            .contact-hero-content {
+                margin-top: 60px;
+            }
+        }
+
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('{{ asset("images/cict_hero_bg.png") }}') center/cover;
+            opacity: 0.15;
         }
 
         .contact-hero-content {
-            color: white;
+            position: relative;
             z-index: 10;
-            padding: 40px 20px;
-        }
-
-        .contact-hero h1 {
-            font-size: 56px;
-            font-weight: 900;
-            margin-bottom: 16px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            letter-spacing: -2px;
-        }
-
-        .contact-hero p {
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.95);
             max-width: 600px;
-            margin: 0 auto;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
-        /* ============ CONTACT SECTION ============ */
-        .contact-section {
-            padding: 80px 20px;
-            background: var(--light-bg);
-        }
-
-        .section-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-heading {
-            font-size: 42px;
-            font-weight: 800;
-            color: var(--primary-text);
-            margin-bottom: 18px;
-            text-align: center;
-            letter-spacing: -0.5px;
-        }
-
-        .section-subheading {
-            font-size: 16px;
-            color: #556;
-            text-align: center;
-            margin: 0 auto 32px;
-            max-width: 720px;
-            line-height: 1.6;
-        }
-
-        .contact-shell {
-            background: linear-gradient(135deg, #FFFFFF 0%, #FAFAF8 100%);
-            border-radius: 18px;
-            border: 1px solid rgba(139, 0, 0, 0.08);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.06);
-            padding: 32px;
-        }
-
-        .contact-meta {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 28px;
-        }
-
-        .contact-meta span {
+        .contact-hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 999px;
-            background: rgba(139, 0, 0, 0.07);
-            color: #8B0000;
-            font-weight: 700;
-            font-size: 13px;
-            letter-spacing: 0.2px;
-            border: 1px solid rgba(139, 0, 0, 0.12);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
+        .contact-hero-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .contact-hero-subtitle {
+            font-size: clamp(14px, 2vw, 18px);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        /* ============ MAIN CONTENT ============ */
+        .contact-content {
+            background: var(--bg-secondary);
+            padding: 60px 24px 80px;
+        }
+
+        .contact-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* ============ INFO BADGES ============ */
+        .contact-badges {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .contact-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ============ CONTACT GRID ============ */
         .contact-grid {
             display: grid;
-            grid-template-columns: 0.9fr 1.1fr;
-            gap: 48px;
-            margin-top: 40px;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 32px;
             align-items: start;
         }
 
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
         }
 
-        .contact-block {
+        /* ============ CONTACT CARDS ============ */
+        .contact-cards {
             display: flex;
             flex-direction: column;
+            gap: 16px;
+        }
+
+        .contact-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .contact-card-header {
+            display: flex;
+            align-items: center;
             gap: 12px;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FAFAF8 100%);
-            padding: 32px;
-            border-radius: 16px;
-            border: 1px solid rgba(139, 0, 0, 0.08);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 12px;
         }
 
-        .contact-block::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #8B0000 0%, #FFD700 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .contact-block:hover {
-            box-shadow: var(--shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            transform: translateY(-4px);
-            border-color: rgba(139, 0, 0, 0.15);
-        }
-
-        .contact-block:hover::before {
-            opacity: 1;
-        }
-
-        .contact-label {
-            font-size: 11px;
-            font-weight: 950;
-            text-transform: uppercase;
-            color: #8B0000;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .contact-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--primary-text);
-            line-height: 1.8;
-            letter-spacing: -0.2px;
-        }
-
-        .contact-links {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .contact-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: #8B0000;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 15px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            letter-spacing: 0.3px;
-            padding: 4px 0;
-            position: relative;
-        }
-
-        .contact-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #8B0000, #FFD700);
-            transition: width 0.3s ease;
-        }
-
-        .contact-link:hover {
-            color: #A00000;
-            transform: translateX(6px);
-        }
-
-        .contact-link:hover::after {
-            width: 100%;
-        }
-
-        .map-container {
-            width: 100%;
-            height: 650px;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: var(--shadow-hover);
-            border: 1px solid rgba(139, 0, 0, 0.08);
-            display: block;
-            position: relative;
-            margin: 0;
-            padding: 0;
-            transition: all 0.4s ease;
-        }
-
-        .map-container:hover {
-            box-shadow: 0 16px 56px rgba(139, 0, 0, 0.18);
-        }
-
-        /* ============ SOCIAL CARDS ============ */
-        .social-card {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FAFAF8 100%);
-            padding: 20px 24px;
-            border-radius: 14px;
-            border: 1px solid rgba(139, 0, 0, 0.08);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .social-card:hover {
-            box-shadow: 0 12px 32px rgba(139, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            transform: translateY(-3px);
-            border-color: rgba(139, 0, 0, 0.15);
-        }
-
-        .social-card-icon {
-            font-size: 32px;
+        .contact-card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.1), rgba(139, 0, 0, 0.05));
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 48px;
+            font-size: 20px;
         }
 
-        .social-card-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            flex: 1;
-        }
-
-        .social-card-title {
-            font-size: 14px;
-            font-weight: 800;
-            color: #8B0000;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .social-card-description {
-            font-size: 13px;
-            color: #555;
-            font-weight: 500;
-            line-height: 1.4;
-        }
-
-        .social-card-arrow {
-            color: #8B0000;
+        .contact-card-title {
+            font-size: 12px;
             font-weight: 700;
-            transition: transform 0.3s ease;
-            font-size: 18px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .social-card:hover .social-card-arrow {
+        .contact-card-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* ============ SOCIAL LINKS ============ */
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
             transform: translateX(4px);
         }
 
-        /* ============ LOCATION CARD ============ */
-        .location-card {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 16px;
-            align-items: center;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FAFAF8 100%);
-            padding: 28px;
-            border-radius: 14px;
-            border: 1px solid rgba(139, 0, 0, 0.08);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        .social-link-icon {
+            font-size: 28px;
         }
 
-        .location-card:hover {
-            box-shadow: 0 12px 32px rgba(139, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            transform: translateY(-3px);
-            border-color: rgba(139, 0, 0, 0.15);
+        .social-link-content {
+            flex: 1;
         }
 
-        .location-icon {
-            font-size: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.08) 0%, rgba(255, 215, 0, 0.05) 100%);
-            border-radius: 12px;
-            border: 1px solid rgba(139, 0, 0, 0.1);
-        }
-
-        .location-content {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .location-title {
-            font-size: 12px;
-            font-weight: 900;
+        .social-link-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
             text-transform: uppercase;
-            color: #8B0000;
-            letter-spacing: 1.5px;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
         }
 
-        .location-address {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--primary-text);
-            line-height: 1.7;
-            letter-spacing: -0.2px;
+        .social-link-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
-        /* ============ RESPONSIVE ============ */
-        @media (max-width: 768px) {
-            .contact-hero h1 {
-                font-size: 36px;
+        .social-link-arrow {
+            font-size: 18px;
+            color: var(--primary);
+            transition: transform 0.2s ease;
+        }
+
+        .social-link:hover .social-link-arrow {
+            transform: translateX(4px);
+        }
+
+        /* ============ MAP ============ */
+        .map-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            height: 100%;
+            min-height: 400px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            border: none;
+            display: block;
+        }
+
+        /* ============ MOBILE ADJUSTMENTS ============ */
+        @media (max-width: 640px) {
+            .contact-hero {
+                min-height: 35vh;
+                padding: 120px 16px 40px;
             }
 
-            .contact-hero p {
-                font-size: 16px;
+            .contact-hero-title {
+                font-size: 26px;
             }
 
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
+            .contact-hero-subtitle {
+                font-size: 13px;
             }
 
-            .map-container {
-                height: 450px;
+            .contact-content {
+                padding: 32px 12px 60px;
             }
 
-            .section-heading {
-                font-size: 32px;
+            .contact-badges {
+                gap: 8px;
+                margin-bottom: 28px;
+            }
+
+            .contact-badge {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .contact-card {
+                padding: 16px;
+            }
+
+            .contact-card-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .contact-card-title {
+                font-size: 11px;
+            }
+
+            .contact-card-value {
+                font-size: 14px;
+            }
+
+            .social-link {
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .social-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+
+            .social-name {
+                font-size: 14px;
+            }
+
+            .social-handle {
+                font-size: 12px;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .form-card h2 {
+                font-size: 20px;
+            }
+
+            .form-label {
+                font-size: 12px;
+            }
+
+            .form-input, .form-textarea {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .submit-btn {
+                padding: 14px 24px;
+                font-size: 14px;
             }
         }
     </style>
 
-    <div class="contact-page-wrapper">
-        <!-- ============ HERO SECTION ============ -->
-        <section class="contact-hero">
-            <div class="contact-hero-content">
-                <h1>Get in Touch</h1>
-                <p>Have questions? We'd love to hear from you. Reach out to the CICT Student Council office.</p>
+    <!-- Hero Section -->
+    <section class="contact-hero">
+        <div class="contact-hero-content">
+            <div class="contact-hero-badge">
+                <span>📬</span>
+                <span>Get in Touch</span>
             </div>
-        </section>
+            <h1 class="contact-hero-title gsap-hero-title">Contact Us</h1>
+            <p class="contact-hero-subtitle gsap-hero-subtitle">
+                Questions about orders or services? We're here to help.
+            </p>
+        </div>
+    </section>
 
-        <!-- ============ CONTACT INFORMATION ============ -->
-        <section class="contact-section">
-            <div class="section-container">
-                <h2 class="section-heading">Contact CICT Student Council</h2>
-                <p class="section-subheading">Your official line to updates, merch inquiries, and student services support.</p>
+    <!-- Contact Content -->
+    <div class="contact-content">
+        <div class="contact-container">
+            <!-- Info Badges -->
+            <div class="contact-badges">
+                <span class="contact-badge">
+                    <span>⏱️</span>
+                    <span>Response in 1-2 days</span>
+                </span>
+                <span class="contact-badge">
+                    <span>📍</span>
+                    <span>ISUFST Dingle Campus</span>
+                </span>
+                <span class="contact-badge">
+                    <span>💬</span>
+                    <span>Messenger Available</span>
+                </span>
+            </div>
 
-                <div class="contact-meta">
-                    <span>⏱️ Response in 1-2 business days</span>
-                    <span>📍 ISUFST Dingle Campus</span>
-                    <span>💬 Facebook / Messenger</span>
-                </div>
-
-                <div class="contact-shell">
-                    <div class="contact-grid">
-                        <div class="contact-info">
-                            <div class="contact-block">
-                                <span class="contact-label">Office Hours</span>
-                                <span class="contact-value">Monday – Friday: 8:00 AM – 5:00 PM<br><small style="color: #666; font-size: 13px; font-weight: 500;">Closed on Saturday and Sunday</small></span>
-                            </div>
-
-                            <a href="https://www.facebook.com/profile.php?id=100068849010766" target="_blank" class="social-card">
-                                <div class="social-card-icon">📘</div>
-                                <div class="social-card-content">
-                                    <div class="social-card-title">Facebook</div>
-                                    <div class="social-card-description">Follow our official page</div>
-                                </div>
-                                <div class="social-card-arrow">→</div>
-                            </a>
-
-                            <a href="https://www.messenger.com/e2ee/t/780806171591045" target="_blank" class="social-card">
-                                <div class="social-card-icon">💬</div>
-                                <div class="social-card-content">
-                                    <div class="social-card-title">Messenger</div>
-                                    <div class="social-card-description">Contact us for business inquiries</div>
-                                </div>
-                                <div class="social-card-arrow">→</div>
-                            </a>
-
-                            <div class="location-card">
-                                <div class="location-icon">📍</div>
-                                <div class="location-content">
-                                    <div class="location-title">Our Location</div>
-                                    <div class="location-address">CICT Student Council Office<br>ISUFST Dingle Campus<br>Brgy. San Matias, Dingle<br>Iloilo, Philippines</div>
-                                </div>
-                            </div>
+            <!-- Contact Grid -->
+            <div class="contact-grid">
+                <!-- Left Column: Contact Info -->
+                <div class="contact-cards">
+                    <!-- Office Hours -->
+                    <div class="contact-card reveal-on-scroll">
+                        <div class="contact-card-header">
+                            <div class="contact-card-icon">🕐</div>
+                            <span class="contact-card-title">Office Hours</span>
                         </div>
+                        <div class="contact-card-value">
+                            Monday – Friday: 8:00 AM – 5:00 PM<br>
+                            <span style="color: var(--text-secondary); font-size: 13px;">Closed on weekends</span>
+                        </div>
+                    </div>
 
-                        <div class="map-container" role="region" aria-label="CICT Student Council Office location">
-                            <!-- Embedded Google Map (iframe) -->
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1019.5295668491787!2d122.6630695470763!3d11.001138999855694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33af1776ffd9b7f1%3A0x2c4663ccaaf49fa8!2sIloilo%20State%20University%20of%20Fisheries%20Science%20and%20Technology%E2%80%93%20Dingle%20Campus!5e1!3m2!1sen!2sph!4v1764327935192!5m2!1sen!2sph"
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"
-                                allowfullscreen
-                                style="border:0; width:100%; height:100%; display:block;"
-                                aria-hidden="false"
-                                title="CICT Student Council Office - Google Maps"
-                            ></iframe>
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/profile.php?id=100068849010766" target="_blank"
+                        class="social-link reveal-on-scroll">
+                        <span class="social-link-icon">📘</span>
+                        <div class="social-link-content">
+                            <div class="social-link-title">Facebook</div>
+                            <div class="social-link-desc">Follow our official page</div>
+                        </div>
+                        <span class="social-link-arrow">→</span>
+                    </a>
+
+                    <!-- Messenger -->
+                    <a href="https://www.messenger.com/e2ee/t/780806171591045" target="_blank"
+                        class="social-link reveal-on-scroll">
+                        <span class="social-link-icon">💬</span>
+                        <div class="social-link-content">
+                            <div class="social-link-title">Messenger</div>
+                            <div class="social-link-desc">Direct message for inquiries</div>
+                        </div>
+                        <span class="social-link-arrow">→</span>
+                    </a>
+
+                    <!-- Location -->
+                    <div class="contact-card reveal-on-scroll">
+                        <div class="contact-card-header">
+                            <div class="contact-card-icon">📍</div>
+                            <span class="contact-card-title">Location</span>
+                        </div>
+                        <div class="contact-card-value">
+                            CICT Student Council Office<br>
+                            ISUFST Dingle Campus<br>
+                            Brgy. San Matias, Dingle<br>
+                            Iloilo, Philippines
                         </div>
                     </div>
                 </div>
+
+                <!-- Right Column: Map -->
+                <div class="map-container reveal-on-scroll">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1019.5295668491787!2d122.6630695470763!3d11.001138999855694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33af1776ffd9b7f1%3A0x2c4663ccaaf49fa8!2sIloilo%20State%20University%20of%20Fisheries%20Science%20and%20Technology%E2%80%93%20Dingle%20Campus!5e1!3m2!1sen!2sph!4v1764327935192!5m2!1sen!2sph"
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen
+                        title="CICT Student Council Office - Google Maps">
+                    </iframe>
+                </div>
             </div>
-        </section>
+        </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Map is now embedded as iframe
-        });
-    </script>
 </x-app-layout>
