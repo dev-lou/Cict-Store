@@ -1,0 +1,15 @@
+# Vercel ignore file
+# Ignore embedded git repositories in vendor folder
+vendor/aws/aws-crt-php/.git
+vendor/aws/aws-sdk-php/.git
+vendor/barryvdh/laravel-dompdf/.git
+vendor/vlucas/phpdotenv/.git
+vendor/voku/portable-ascii/.git
+vendor/symfony/polyfill-php83/.git
+vendor/*/.git
+
+# Ignore development/test files
+/tests
+/phpunit.xml
+/.phpunit.*
+/database/factories

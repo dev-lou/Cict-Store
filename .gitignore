@@ -71,7 +71,7 @@ yarn-error.log*
 .env.backup
 
 # Composer / vendor
-# (vendor folder committed for Vercel deployment)
+/vendor/
 
 # Laravel storage & logs
 /storage/logs/

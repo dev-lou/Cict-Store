@@ -1,1 +1,0 @@
-@testdirective("hello world")
