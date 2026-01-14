@@ -55,13 +55,27 @@ unset($__defined_vars); ?>
             console.warn = function () { };
         }
     </script>
-    <?php $viteManifestPath = public_path('build/manifest.json'); ?>
-    <?php if(file_exists($viteManifestPath)): ?>
+    <?php 
+        $viteManifestPath = public_path('build/manifest.json');
+        $hasViteBuild = file_exists($viteManifestPath);
+    ?>
+    <?php if($hasViteBuild): ?>
         <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <?php else: ?>
-        <!-- Vite manifest not found; fallback to static assets -->
-        <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
-        <script src="<?php echo e(asset('js/app.js')); ?>" defer></script>
+        <!-- Vite manifest not found; check if fallback assets exist -->
+        <?php if(file_exists(public_path('css/app.css'))): ?>
+            <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
+        <?php else: ?>
+            <!-- Emergency inline fallback styles -->
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; }
+                .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+            </style>
+        <?php endif; ?>
+        <?php if(file_exists(public_path('js/app.js'))): ?>
+            <script src="<?php echo e(asset('js/app.js')); ?>" defer></script>
+        <?php endif; ?>
     <?php endif; ?>
 
     <!-- Page Transition Styles -->
