@@ -203,10 +203,7 @@ class UserManageController extends Controller
             'system_uptime' => '99.9%',
         ];
 
-        // Get site name from database, fallback to .env
-        $siteNameSetting = Setting::where('key', 'site_name')->first();
-        $siteName = $siteNameSetting ? $siteNameSetting->value : config('app.name', 'CICT Dingle');
-        
+        $siteName = config('app.name', 'CICT Dingle');
         $logo = Setting::where('key', 'site_logo')->first();
         $favicon = Setting::where('key', 'site_favicon')->first();
 
@@ -219,30 +216,41 @@ class UserManageController extends Controller
     public function updateSettings(Request $request)
     {
         $validated = $request->validate([
-            'site_name' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'favicon' => 'nullable|image|mimes:ico,png|max:1024',
         ]);
 
         try {
-            // Store site name in database instead of .env
-            Setting::updateOrCreate(
-                ['key' => 'site_name'],
-                ['value' => $validated['site_name']]
-            );
+            // Handle logo upload
+            if ($request->hasFile('logo')) {
+                $logoFile = $request->file('logo');
+                $logoPath = Storage::disk('supabase')->putFile('settings', $logoFile, 'public');
+                
+                $logoSetting = Setting::firstOrNew(['key' => 'site_logo']);
+                $logoSetting->value = $logoPath;
+                $logoSetting->save();
+            }
 
-            // Also update config in memory for current request
-            config(['app.name' => $validated['site_name']]);
+            // Handle favicon upload
+            if ($request->hasFile('favicon')) {
+                $faviconFile = $request->file('favicon');
+                $faviconPath = Storage::disk('supabase')->putFile('settings', $faviconFile, 'public');
+                
+                $faviconSetting = Setting::firstOrNew(['key' => 'site_favicon']);
+                $faviconSetting->value = $faviconPath;
+                $faviconSetting->save();
+            }
 
             // If AJAX request, return JSON
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Site name updated successfully!'
+                    'message' => 'Settings updated successfully!'
                 ]);
             }
 
             return redirect()->route('admin.settings')
-                           ->with('success', 'Site name updated successfully!')
-                           ->with('refresh', true);
+                           ->with('success', 'Settings updated successfully!');
         } catch (\Exception $e) {
             // If AJAX request, return JSON error
             if ($request->expectsJson()) {

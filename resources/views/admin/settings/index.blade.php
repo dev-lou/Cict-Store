@@ -47,31 +47,18 @@
                     </div>
                 </div>
 
-                <form class="space-y-6" id="settingsForm" method="POST" action="{{ route('admin.settings.update') }}">
+                <form class="space-y-6" id="settingsForm" method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
                     @csrf
 
-                    <!-- System Name -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <svg class="w-4 h-4" fill="none" stroke="#b0bcc4" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.5a2 2 0 00-1 .268V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4z"></path>
+                    <!-- Note about Site Name -->
+                    <div style="background: rgba(255, 193, 7, 0.1); border: 2px solid rgba(255, 193, 7, 0.3); border-radius: 12px; padding: 16px;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5" fill="none" stroke="#FFC107" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <label class="text-sm font-bold" style="color: #ffffff;">Site Name</label>
+                            <p class="text-sm font-bold" style="color: #FFC107;">Site Name Configuration</p>
                         </div>
-                        <input 
-                            type="text" 
-                            name="site_name"
-                            id="site_name"
-                            value="{{ $siteName }}"
-                            class="w-full rounded-lg px-4 py-3 text-base font-medium transition-all"
-                            style="border: 2px solid #b0bcc4; background-color: #0f0707; color: #ffffff; caret-color: #b0bcc4;"
-                            onfocus="this.style.borderColor='#ffffff'; this.style.boxShadow='0 0 0 3px rgba(218, 165, 32, 0.1)'"
-                            onblur="this.style.borderColor='#b0bcc4'; this.style.boxShadow=''"
-                        />
-                        <p class="text-xs mt-2" style="color: #999;">Change your platform's main name</p>
-                        @error('site_name')
-                            <p class="text-xs mt-2" style="color: #ff6b6b;">{{ $message }}</p>
-                        @enderror
+                        <p class="text-xs" style="color: #b0bcc4;">Site name is configured via environment variables (APP_NAME). Update it in your hosting platform's environment settings and redeploy.</p>
                     </div>
 
                     <!-- Divider -->
