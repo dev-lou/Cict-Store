@@ -21,6 +21,11 @@ class ProductController extends Controller
     {
         $query = Product::query()
             ->select(['id', 'name', 'slug', 'description', 'base_price', 'image_path', 'current_stock', 'low_stock_threshold', 'status', 'created_at'])
+            ->with(['variants' => function($q) {
+                $q->select('id', 'product_id', 'variant_name', 'price', 'stock')
+                  ->orderBy('price', 'asc')
+                  ->limit(1);
+            }])
             ->active();
 
         // Search functionality

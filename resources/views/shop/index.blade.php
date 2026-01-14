@@ -438,7 +438,13 @@
                             <div class="product-info">
                                 <h3 class="product-title">{{ $product->name }}</h3>
                                 <p class="product-description">{{ Str::limit($product->description, 60) }}</p>
-                                <div class="product-price">₱{{ number_format($product->base_price, 0) }}</div>
+                                <div class="product-price">
+                                    @if($product->variants && $product->variants->isNotEmpty())
+                                        ₱{{ number_format($product->variants->first()->price, 0) }}
+                                    @else
+                                        ₱{{ number_format($product->base_price, 0) }}
+                                    @endif
+                                </div>
                                 <span class="product-btn">View Details</span>
                             </div>
                         </a>
