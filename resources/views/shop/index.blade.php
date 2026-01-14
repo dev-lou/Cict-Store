@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('title', 'Shop - ' . config('app.name', 'CICT-DG'))
+    @section('title', 'Shop - ' . config('app.name', 'CICT Dingle'))
 
     <style>
         /* ============ DESIGN TOKENS ============ */
@@ -429,7 +429,7 @@
 
                             <div class="product-image">
                                 @if(!empty($product->image_url))
-                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async">
                                 @else
                                     <div class="product-image-placeholder">No Image</div>
                                 @endif

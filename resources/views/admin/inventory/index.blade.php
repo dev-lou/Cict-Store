@@ -229,31 +229,19 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-2">
-                                    @php
-                                        // Get total stock from variants if they exist, otherwise fall back to current_stock
-                                        // Use the already eager-loaded variants collection to avoid running an extra DB query per product
-                                        $variantStock = (int) $product->variants->sum('stock_quantity');
-                                        $totalStock = $variantStock > 0 ? $variantStock : (int) $product->current_stock;
-                                        
-                                        // Determine color based on stock level
-                                        $stockColor = '#ff6b6b'; // out of stock
-                                        if ($totalStock > 20) {
-                                            $stockColor = '#4caf50'; // plenty
-                                        } elseif ($totalStock > 0) {
-                                            $stockColor = '#ff9500'; // low stock
-                                        }
-                                        
-                                        $percentage = $totalStock > 0 ? min(($totalStock / 100) * 100, 100) : 0;
-                                    @endphp
-                                    <span class="font-bold" style="color: {{ $stockColor }}; font-size: 1.1rem;">{{ $totalStock }}</span>
-                                    <div class="w-20 rounded-full h-2" style="background-color: #0f3a5f; border: 1px solid #2a3f5f;">
-                                        <div 
-                                            class="h-2 rounded-full transition-all duration-300" 
-                                            style="background-color: {{ $stockColor }}; width: {{ $percentage }}%"
-                                        ></div>
-                                    </div>
-                                </div>
+                                @php
+                                    // Get total stock from variants if they exist, otherwise fall back to current_stock
+                                    $variantStock = (int) $product->variants->sum('stock_quantity');
+                                    $totalStock = $variantStock > 0 ? $variantStock : (int) $product->current_stock;
+                                    
+                                    // Determine color based on stock level
+                                    $isLowStock = $totalStock <= ($product->low_stock_threshold ?? 20);
+                                    $stockColor = $isLowStock ? '#ef4444' : '#22c55e'; // red if low, green if good
+                                @endphp
+                                <span class="font-bold" style="color: {{ $stockColor }}; font-size: 1.2rem;">{{ number_format($totalStock) }}</span>
+                                @if($isLowStock && $totalStock > 0)
+                                    <span style="color: #fbbf24; font-size: 0.75rem; margin-left: 4px;">⚠️</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 <x-badge status="success" style="background: {{ $product->status === 'active' ? '#10b981' : '#ef4444' }}; color: #ffffff; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;">

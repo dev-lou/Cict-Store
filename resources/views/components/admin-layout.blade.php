@@ -7,7 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title }} - {{ config('app.name', 'CICT-DG') }} Admin</title>
+    <title>{{ $title }} - {{ config('app.name', 'CICT Dingle') }} Admin</title>
+
+    <!-- Favicon -->
+    @php
+        $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
+    @endphp
+    @if($faviconSetting && $faviconSetting->value)
+        <link rel="icon" href="{{ Storage::disk('supabase')->url($faviconSetting->value) }}" type="image/x-icon">
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

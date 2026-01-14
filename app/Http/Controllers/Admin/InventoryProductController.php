@@ -38,26 +38,26 @@ class InventoryProductController extends Controller
         if ($request->filled('stock_level')) {
             $stockLevel = $request->input('stock_level');
             if ($stockLevel === 'low') {
-                $query->where(function($q) {
+                $query->where(function ($q) {
                     $q->whereRaw('current_stock <= low_stock_threshold')
-                      ->orWhereHas('variants', function($vq) {
-                          $vq->whereRaw('stock_quantity <= 20');
-                      });
+                        ->orWhereHas('variants', function ($vq) {
+                            $vq->whereRaw('stock_quantity <= 20');
+                        });
                 });
             } elseif ($stockLevel === 'out') {
-                $query->where(function($q) {
+                $query->where(function ($q) {
                     $q->where('current_stock', 0)
-                      ->orWhereDoesntHave('variants')
-                      ->orWhereHas('variants', function($vq) {
-                          $vq->havingRaw('SUM(stock_quantity) = 0');
-                      });
+                        ->orWhereDoesntHave('variants')
+                        ->orWhereHas('variants', function ($vq) {
+                            $vq->havingRaw('SUM(stock_quantity) = 0');
+                        });
                 });
             } elseif ($stockLevel === 'in_stock') {
-                $query->where(function($q) {
+                $query->where(function ($q) {
                     $q->where('current_stock', '>', 0)
-                      ->orWhereHas('variants', function($vq) {
-                          $vq->where('stock_quantity', '>', 0);
-                      });
+                        ->orWhereHas('variants', function ($vq) {
+                            $vq->where('stock_quantity', '>', 0);
+                        });
                 });
             }
         }
@@ -73,7 +73,7 @@ class InventoryProductController extends Controller
         // Apply sorting
         $sortBy = $request->input('sort_by', 'name');
         $sortOrder = $request->input('sort_order', 'asc');
-        
+
         if ($sortBy === 'price') {
             $query->orderBy('base_price', $sortOrder);
         } elseif ($sortBy === 'stock') {
@@ -157,127 +157,147 @@ class InventoryProductController extends Controller
                 'base_price' => 'required|numeric|min:0',
                 'status' => 'required|in:active,inactive',
                 'image' => 'nullable|image|mimes:jpeg,png,gif,webp|max:5120', // 5MB max
-                'variants' => 'required|array|min:1',
-                'variants.*.name' => 'required|string|max:255',
-                'variants.*.stock_quantity' => 'required|integer|min:0',
+                'current_stock' => 'nullable|integer|min:0', // For products without variants
+                'variants' => 'nullable|array',
+                'variants.*.name' => 'required_with:variants|string|max:255',
+                'variants.*.stock_quantity' => 'required_with:variants|integer|min:0',
                 'variants.*.price_modifier' => 'nullable|numeric|min:0',
             ]);
 
-        // Handle image upload to Supabase Storage (or fallback to local public disk for local dev)
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            try {
-                $file = $request->file('image');
-                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-                $storagePath = $filename;  // Store directly in bucket root since bucket is already 'products'
-
-                \Log::info('Attempting Supabase upload', [
-                    'filename' => $filename,
-                    'storage_path' => $storagePath,
-                    'file_size' => $file->getSize(),
-                    'mime_type' => $file->getMimeType(),
-                    'disk' => 'supabase',
-                    'endpoint' => env('AWS_ENDPOINT'),
-                    'bucket' => env('AWS_BUCKET'),
-                    'aws_key' => env('AWS_ACCESS_KEY_ID') ? substr(env('AWS_ACCESS_KEY_ID'), 0, 8) . '...' : 'NOT SET',
-                    'aws_url' => env('AWS_URL'),
-                ]);
-
-                // Choose a disk - prefer supabase if configured, otherwise use public local disk
-                $diskName = (config('filesystems.disks.supabase.key') && config('filesystems.disks.supabase.secret') && config('filesystems.disks.supabase.bucket')) ? 'supabase' : 'public';
-                $disk = Storage::disk($diskName);
-                $uploaded = $disk->put($storagePath, file_get_contents($file), 'public');
-                
-                // Verify the file was actually uploaded (wrap in try-catch since exists() can throw with throw:true)
-                $fileExists = false;
+            // Handle image upload to Supabase Storage (or fallback to local public disk for local dev)
+            $imagePath = null;
+            if ($request->hasFile('image')) {
                 try {
-                    $fileExists = $disk->exists($storagePath);
-                } catch (\Exception $existsError) {
-                    \Log::warning('Could not verify file exists on Supabase', ['error' => $existsError->getMessage()]);
-                }
-                
-                \Log::info('Upload result', [
-                    'put_returned' => $uploaded,
-                    'file_exists_check' => $fileExists,
-                ]);
+                    $file = $request->file('image');
+                    $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                    $storagePath = $filename;  // Store directly in bucket root since bucket is already 'products'
 
-                if ($uploaded) {
-                    // Build the public URL for the uploaded image
-                    // Format: https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>/<path>
-                    if ($diskName === 'supabase') {
-                        $imagePath = env('AWS_URL') . '/' . $storagePath; // public supabase URL
-                    } else {
-                        $imagePath = '/storage/' . ltrim($storagePath, '/');
+                    \Log::info('Attempting Supabase upload', [
+                        'filename' => $filename,
+                        'storage_path' => $storagePath,
+                        'file_size' => $file->getSize(),
+                        'mime_type' => $file->getMimeType(),
+                        'disk' => 'supabase',
+                        'endpoint' => env('AWS_ENDPOINT'),
+                        'bucket' => env('AWS_BUCKET'),
+                        'aws_key' => env('AWS_ACCESS_KEY_ID') ? substr(env('AWS_ACCESS_KEY_ID'), 0, 8) . '...' : 'NOT SET',
+                        'aws_url' => env('AWS_URL'),
+                    ]);
+
+                    // Choose a disk - prefer supabase if configured, otherwise use public local disk
+                    $diskName = (config('filesystems.disks.supabase.key') && config('filesystems.disks.supabase.secret') && config('filesystems.disks.supabase.bucket')) ? 'supabase' : 'public';
+                    $disk = Storage::disk($diskName);
+                    $uploaded = $disk->put($storagePath, file_get_contents($file), 'public');
+
+                    // Verify the file was actually uploaded (wrap in try-catch since exists() can throw with throw:true)
+                    $fileExists = false;
+                    try {
+                        $fileExists = $disk->exists($storagePath);
+                    } catch (\Exception $existsError) {
+                        \Log::warning('Could not verify file exists on Supabase', ['error' => $existsError->getMessage()]);
                     }
 
-                    \Log::info('Image uploaded to Supabase successfully', [
-                        'storage_path' => $storagePath,
-                        'public_url' => $imagePath,
-                    ]);
-                } else {
-                    \Log::warning('Supabase upload failed verification', [
+                    \Log::info('Upload result', [
                         'put_returned' => $uploaded,
-                        'file_exists' => $fileExists,
+                        'file_exists_check' => $fileExists,
                     ]);
-                    // Fallback to local storage
-                    $localPath = $file->store('products', 'public');
-                    $imagePath = '/storage/' . $localPath;
-                    \Log::info('Image saved to local storage as fallback', ['path' => $imagePath]);
-                    
-                    // Add warning for admin
-                    session()->flash('warning', 'Image saved locally (Supabase upload failed). Images may be lost on redeploy.');
-                }
-            } catch (\Exception $e) {
-                \Log::error('Supabase image upload failed', [
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
-                
-                // Try local storage as fallback
-                try {
-                    $localPath = $request->file('image')->store('products', 'public');
-                    $imagePath = '/storage/' . $localPath;
-                    \Log::info('Image saved to local storage as fallback after Supabase error', ['path' => $imagePath]);
-                    
-                    // Add warning for admin with error details
-                    session()->flash('warning', 'Supabase error: ' . $e->getMessage() . '. Image saved locally (may be lost on redeploy).');
-                } catch (\Exception $localError) {
-                    \Log::error('Local storage fallback also failed', ['error' => $localError->getMessage()]);
-                    $imagePath = null;
+
+                    if ($uploaded) {
+                        // Build the public URL for the uploaded image
+                        // Format: https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>/<path>
+                        if ($diskName === 'supabase') {
+                            $imagePath = env('AWS_URL') . '/' . $storagePath; // public supabase URL
+                        } else {
+                            $imagePath = '/storage/' . ltrim($storagePath, '/');
+                        }
+
+                        \Log::info('Image uploaded to Supabase successfully', [
+                            'storage_path' => $storagePath,
+                            'public_url' => $imagePath,
+                        ]);
+                    } else {
+                        \Log::warning('Supabase upload failed verification', [
+                            'put_returned' => $uploaded,
+                            'file_exists' => $fileExists,
+                        ]);
+                        // Fallback to local storage
+                        $localPath = $file->store('products', 'public');
+                        $imagePath = '/storage/' . $localPath;
+                        \Log::info('Image saved to local storage as fallback', ['path' => $imagePath]);
+
+                        // Add warning for admin
+                        session()->flash('warning', 'Image saved locally (Supabase upload failed). Images may be lost on redeploy.');
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Supabase image upload failed', [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+
+                    // Try local storage as fallback
+                    try {
+                        $localPath = $request->file('image')->store('products', 'public');
+                        $imagePath = '/storage/' . $localPath;
+                        \Log::info('Image saved to local storage as fallback after Supabase error', ['path' => $imagePath]);
+
+                        // Add warning for admin with error details
+                        session()->flash('warning', 'Supabase error: ' . $e->getMessage() . '. Image saved locally (may be lost on redeploy).');
+                    } catch (\Exception $localError) {
+                        \Log::error('Local storage fallback also failed', ['error' => $localError->getMessage()]);
+                        $imagePath = null;
+                    }
                 }
             }
-        }
 
-        // Calculate total stock from variants
-        $totalStock = collect($validated['variants'])->sum('stock_quantity');
+            // Handle variants - only create variants if user explicitly added them
+            $variantsData = $validated['variants'] ?? [];
 
-        // Add image path (public URL) and calculated stock to validated data
-        $validated['image_path'] = $imagePath;
-        $validated['current_stock'] = $totalStock;
-        $validated['low_stock_threshold'] = 20; // Default threshold
+            // Filter out empty variant entries (in case form sends empty arrays)
+            $variantsData = array_filter($variantsData, function ($v) {
+                return !empty($v['name']) && isset($v['stock_quantity']);
+            });
 
-        \Log::info('Creating product', $validated);
+            // Allow any number of variants (0, 1, 2+)
 
-        // Create the product
-        $product = Product::create($validated);
+            // Calculate total stock
+            if (!empty($variantsData)) {
+                // Has variants - calculate from variant stock
+                $totalStock = collect($variantsData)->sum('stock_quantity');
+            } else {
+                // No variants - use the current_stock input directly
+                $totalStock = $validated['current_stock'] ?? 0;
+            }
 
-        // Create variants
-        foreach ($validated['variants'] as $variantData) {
-            $product->variants()->create([
-                'name' => $variantData['name'],
-                'stock_quantity' => $variantData['stock_quantity'],
-                'price_modifier' => $variantData['price_modifier'] ?? 0,
-                'status' => $validated['status'],
-            ]);
-        }
+            // Add image path (public URL) and calculated stock to validated data
+            $validated['image_path'] = $imagePath;
+            $validated['current_stock'] = $totalStock;
+            $validated['low_stock_threshold'] = $request->input('low_stock_threshold', 20);
 
-        // Clear homepage caches so featured products show updates in near-real-time
-        Cache::forget('homepage.featured_products');
-        Cache::forget('home.featured_products');
+            \Log::info('Creating product', $validated);
 
-        return redirect()->route('admin.inventory.index')
-            ->with('success', 'Product created successfully with ' . count($validated['variants']) . ' variant(s)!');
-            
+            // Create the product
+            $product = Product::create($validated);
+
+            // Create variants only if user added them
+            if (!empty($variantsData)) {
+                foreach ($variantsData as $variantData) {
+                    $product->variants()->create([
+                        'name' => $variantData['name'],
+                        'stock_quantity' => $variantData['stock_quantity'],
+                        'price_modifier' => $variantData['price_modifier'] ?? 0,
+                        'status' => $validated['status'],
+                    ]);
+                }
+            }
+
+            // Clear homepage caches so featured products show updates in near-real-time
+            Cache::forget('homepage.featured_products');
+            Cache::forget('home.featured_products');
+
+            $variantMessage = !empty($variantsData) ? ' with ' . count($variantsData) . ' variant(s)' : '';
+            return redirect()->route('admin.inventory.index')
+                ->with('success', 'Product created successfully' . $variantMessage . '!');
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e; // Let validation errors bubble up normally
         } catch (\Exception $e) {
@@ -287,7 +307,7 @@ class InventoryProductController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            
+
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Failed to create product: ' . $e->getMessage());
@@ -303,11 +323,11 @@ class InventoryProductController extends Controller
     public function edit(Product $product): \Illuminate\View\View
     {
         $product->load('variants');
-        
+
         // Calculate total stock from variants
         $totalStock = $product->variants()->sum('stock_quantity');
         $activeVariantsCount = $product->variants()->where('status', 'active')->count();
-        
+
         return view('admin.inventory.edit', [
             'product' => $product,
             'totalStock' => $totalStock,
@@ -325,167 +345,191 @@ class InventoryProductController extends Controller
     public function update(Request $request, Product $product): \Illuminate\Http\RedirectResponse
     {
         \Log::info('Update method called for product', ['product_id' => $product->id, 'product_name' => $product->name]);
-        
+
         try {
             \Log::info('Request data', ['all_data' => $request->all()]);
-            
+
             $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'base_price' => 'required|numeric|min:0',
-            'low_stock_threshold' => 'nullable|integer|min:0',
-            'status' => 'required|in:active,inactive',
-            'current_stock' => 'nullable|integer|min:0',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max
-            'variants' => 'nullable|array',
-            'variants.*.id' => 'required_with:variants|exists:product_variants,id',
-            'variants.*.name' => 'nullable|string|max:255',
-            'variants.*.stock_quantity' => 'required_with:variants|integer|min:0',
-            'variants.*.price_modifier' => 'nullable|numeric|min:0',
-            'variants.*.size' => 'nullable|string|max:255',
-            'variants.*.color' => 'nullable|string|max:255',
-            'variants.*.weight' => 'nullable|string|max:255',
-            'variants.*.delete' => 'nullable|in:0,1',
-            'new_variants' => 'nullable|array',
-            'new_variants.*.name' => 'required_with:new_variants|string|max:255',
-            'new_variants.*.stock_quantity' => 'required_with:new_variants|integer|min:0',
-            'new_variants.*.price_modifier' => 'nullable|numeric|min:0',
-            'new_variants.*.size' => 'nullable|string|max:255',
-            'new_variants.*.color' => 'nullable|string|max:255',
-            'new_variants.*.weight' => 'nullable|string|max:255',
-        ]);
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'base_price' => 'required|numeric|min:0',
+                'low_stock_threshold' => 'nullable|integer|min:0',
+                'status' => 'required|in:active,inactive',
+                'current_stock' => 'nullable|integer|min:0',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max
+                'variants' => 'nullable|array',
+                'variants.*.id' => 'required_with:variants|exists:product_variants,id',
+                'variants.*.name' => 'nullable|string|max:255',
+                'variants.*.stock_quantity' => 'required_with:variants|integer|min:0',
+                'variants.*.price_modifier' => 'nullable|numeric|min:0',
+                'variants.*.size' => 'nullable|string|max:255',
+                'variants.*.color' => 'nullable|string|max:255',
+                'variants.*.weight' => 'nullable|string|max:255',
+                'variants.*.delete' => 'nullable|in:0,1',
+                'new_variants' => 'nullable|array',
+                'new_variants.*.name' => 'required_with:new_variants|string|max:255',
+                'new_variants.*.stock_quantity' => 'required_with:new_variants|integer|min:0',
+                'new_variants.*.price_modifier' => 'nullable|numeric|min:0',
+                'new_variants.*.size' => 'nullable|string|max:255',
+                'new_variants.*.color' => 'nullable|string|max:255',
+                'new_variants.*.weight' => 'nullable|string|max:255',
+            ]);
 
-        \Log::info('Validation passed', ['validated_data' => $validated]);
+            \Log::info('Validation passed', ['validated_data' => $validated]);
 
-        // Handle image upload to Supabase Storage
-        if ($request->hasFile('image')) {
-            try {
-                // Delete old image from Supabase if it exists
-                if ($product->image_path) {
-                    $this->deleteSupabaseImage($product->image_path);
-                }
-
-                // Upload new image to Supabase Storage (or fallback to local public disk)
-                $file = $request->file('image');
-                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-                $storagePath = $filename;  // Store directly in bucket root since bucket is already 'products'
-
-                \Log::info('Attempting Supabase upload for update', [
-                    'filename' => $filename,
-                    'storage_path' => $storagePath,
-                    'file_size' => $file->getSize(),
-                    'disk' => 'supabase',
-                ]);
-
-                $diskName = (config('filesystems.disks.supabase.key') && config('filesystems.disks.supabase.secret') && config('filesystems.disks.supabase.bucket')) ? 'supabase' : 'public';
-                $uploaded = Storage::disk($diskName)->put($storagePath, file_get_contents($file), 'public');
-
-                if ($uploaded) {
-                    // Build the public URL for the uploaded image
-                    if ($diskName === 'supabase') {
-                        $validated['image_path'] = env('AWS_URL') . '/' . $storagePath;
-                    } else {
-                        $validated['image_path'] = '/storage/' . ltrim($storagePath, '/');
+            // Handle image upload to Supabase Storage
+            if ($request->hasFile('image')) {
+                try {
+                    // Delete old image from Supabase if it exists
+                    if ($product->image_path) {
+                        $this->deleteSupabaseImage($product->image_path);
                     }
 
-                    \Log::info('Product image updated on Supabase', [
+                    // Upload new image to Supabase Storage (or fallback to local public disk)
+                    $file = $request->file('image');
+                    $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                    $storagePath = $filename;  // Store directly in bucket root since bucket is already 'products'
+
+                    \Log::info('Attempting Supabase upload for update', [
+                        'filename' => $filename,
                         'storage_path' => $storagePath,
-                        'public_url' => $validated['image_path'],
+                        'file_size' => $file->getSize(),
+                        'disk' => 'supabase',
                     ]);
-                } else {
-                    \Log::warning('Supabase upload returned false during update, trying local fallback');
-                    $localPath = $file->store('products', 'public');
-                    $validated['image_path'] = '/storage/' . $localPath;
-                }
-            } catch (\Exception $e) {
-                \Log::error('Supabase image upload failed during update', [
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
-                
-                // Try local storage as fallback
-                try {
-                    $localPath = $request->file('image')->store('products', 'public');
-                    $validated['image_path'] = '/storage/' . $localPath;
-                    \Log::info('Image saved to local storage as fallback during update', ['path' => $validated['image_path']]);
-                } catch (\Exception $localError) {
-                    \Log::error('Local storage fallback also failed during update', ['error' => $localError->getMessage()]);
+
+                    $diskName = (config('filesystems.disks.supabase.key') && config('filesystems.disks.supabase.secret') && config('filesystems.disks.supabase.bucket')) ? 'supabase' : 'public';
+                    $uploaded = Storage::disk($diskName)->put($storagePath, file_get_contents($file), 'public');
+
+                    if ($uploaded) {
+                        // Build the public URL for the uploaded image
+                        if ($diskName === 'supabase') {
+                            $validated['image_path'] = env('AWS_URL') . '/' . $storagePath;
+                        } else {
+                            $validated['image_path'] = '/storage/' . ltrim($storagePath, '/');
+                        }
+
+                        \Log::info('Product image updated on Supabase', [
+                            'storage_path' => $storagePath,
+                            'public_url' => $validated['image_path'],
+                        ]);
+                    } else {
+                        \Log::warning('Supabase upload returned false during update, trying local fallback');
+                        $localPath = $file->store('products', 'public');
+                        $validated['image_path'] = '/storage/' . $localPath;
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Supabase image upload failed during update', [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+
+                    // Try local storage as fallback
+                    try {
+                        $localPath = $request->file('image')->store('products', 'public');
+                        $validated['image_path'] = '/storage/' . $localPath;
+                        \Log::info('Image saved to local storage as fallback during update', ['path' => $validated['image_path']]);
+                    } catch (\Exception $localError) {
+                        \Log::error('Local storage fallback also failed during update', ['error' => $localError->getMessage()]);
+                    }
                 }
             }
-        }
 
-        // Extract variants from validated data (not part of product update)
-        $variants = $validated['variants'] ?? [];
-        $newVariants = $validated['new_variants'] ?? [];
-        unset($validated['variants'], $validated['new_variants']);
+            // Extract variants from validated data (not part of product update)
+            $variants = $validated['variants'] ?? [];
+            $newVariants = $validated['new_variants'] ?? [];
+            unset($validated['variants'], $validated['new_variants']);
 
-        // Handle legacy products without variants - update current_stock if provided
-        if ($product->variants()->count() === 0 && isset($validated['current_stock'])) {
-            // Keep the provided current_stock value
-        } else {
-            // For products with variants, calculate from variant stock
-            $totalStock = $product->variants()->sum('stock_quantity');
-            $validated['current_stock'] = $totalStock;
-        }
+            // Filter new variants to remove empty ones
+            $newVariants = array_filter($newVariants, function ($v) {
+                return !empty($v['name']) && isset($v['stock_quantity']);
+            });
 
-        // Update product base info
-        $product->update($validated);
-
-        // Update existing variants
-        if (!empty($variants)) {
+            // Count total variants after deletions and additions
+            $existingActiveCount = 0;
             foreach ($variants as $variantData) {
-                $variant = $product->variants()->where('id', $variantData['id'])->first();
-                
-                if (!$variant) {
-                    continue;
+                if (!isset($variantData['delete']) || $variantData['delete'] != 1) {
+                    $existingActiveCount++;
                 }
+            }
+            $totalVariantCount = $existingActiveCount + count($newVariants);
 
-                // Check if this variant should be deleted
-                if ($variantData['delete'] == '1') {
-                    $variant->delete();
-                    \Log::info('Variant deleted', ['variant_id' => $variant->id, 'variant_name' => $variant->name]);
-                } else {
-                    // Update variant data
-                    $variant->update([
-                        'name' => $variantData['name'] ?? $variant->name,
+            \Log::info('Variant count validation', [
+                'variants' => $variants,
+                'newVariants' => $newVariants,
+                'existingActiveCount' => $existingActiveCount,
+                'newVariantsCount' => count($newVariants),
+                'totalVariantCount' => $totalVariantCount
+            ]);
+
+            // Allow any number of variants (0, 1, 2+)
+
+            // Handle legacy products without variants - update current_stock if provided
+            if ($product->variants()->count() === 0 && isset($validated['current_stock'])) {
+                // Keep the provided current_stock value
+            } else {
+                // For products with variants, calculate from variant stock
+                $totalStock = $product->variants()->sum('stock_quantity');
+                $validated['current_stock'] = $totalStock;
+            }
+
+            // Update product base info
+            $product->update($validated);
+
+            // Update existing variants
+            if (!empty($variants)) {
+                foreach ($variants as $variantData) {
+                    $variant = $product->variants()->where('id', $variantData['id'])->first();
+
+                    if (!$variant) {
+                        continue;
+                    }
+
+                    // Check if this variant should be deleted
+                    if ($variantData['delete'] == '1') {
+                        $variant->delete();
+                        \Log::info('Variant deleted', ['variant_id' => $variant->id, 'variant_name' => $variant->name]);
+                    } else {
+                        // Update variant data
+                        $variant->update([
+                            'name' => $variantData['name'] ?? $variant->name,
+                            'stock_quantity' => $variantData['stock_quantity'],
+                            'price_modifier' => $variantData['price_modifier'] ?? $variant->price_modifier,
+                            'size' => $variantData['size'] ?? $variant->size,
+                            'color' => $variantData['color'] ?? $variant->color,
+                            'weight' => $variantData['weight'] ?? $variant->weight,
+                        ]);
+                        \Log::info('Variant updated', ['variant_id' => $variant->id, 'variant_name' => $variant->name]);
+                    }
+                }
+                // Recalculate total stock after updating/deleting variants
+                $totalStock = $product->variants()->sum('stock_quantity');
+                $product->update(['current_stock' => $totalStock]);
+            }
+
+            // Create new variants if adding to legacy product
+            if (!empty($newVariants)) {
+                foreach ($newVariants as $variantData) {
+                    $product->variants()->create([
+                        'name' => $variantData['name'],
                         'stock_quantity' => $variantData['stock_quantity'],
-                        'price_modifier' => $variantData['price_modifier'] ?? $variant->price_modifier,
-                        'size' => $variantData['size'] ?? $variant->size,
-                        'color' => $variantData['color'] ?? $variant->color,
-                        'weight' => $variantData['weight'] ?? $variant->weight,
+                        'price_modifier' => $variantData['price_modifier'] ?? 0,
+                        'size' => $variantData['size'] ?? null,
+                        'color' => $variantData['color'] ?? null,
+                        'weight' => $variantData['weight'] ?? null,
+                        'status' => $product->status,
                     ]);
-                    \Log::info('Variant updated', ['variant_id' => $variant->id, 'variant_name' => $variant->name]);
                 }
+                // Recalculate total stock after creating variants
+                $totalStock = $product->variants()->sum('stock_quantity');
+                $product->update(['current_stock' => $totalStock]);
             }
-            // Recalculate total stock after updating/deleting variants
-            $totalStock = $product->variants()->sum('stock_quantity');
-            $product->update(['current_stock' => $totalStock]);
-        }
 
-        // Create new variants if adding to legacy product
-        if (!empty($newVariants)) {
-            foreach ($newVariants as $variantData) {
-                $product->variants()->create([
-                    'name' => $variantData['name'],
-                    'stock_quantity' => $variantData['stock_quantity'],
-                    'price_modifier' => $variantData['price_modifier'] ?? 0,
-                    'size' => $variantData['size'] ?? null,
-                    'color' => $variantData['color'] ?? null,
-                    'weight' => $variantData['weight'] ?? null,
-                    'status' => $product->status,
-                ]);
-            }
-            // Recalculate total stock after creating variants
-            $totalStock = $product->variants()->sum('stock_quantity');
-            $product->update(['current_stock' => $totalStock]);
-        }
+            // Clear homepage caches so featured products show updates in near-real-time
+            Cache::forget('homepage.featured_products');
+            Cache::forget('home.featured_products');
 
-        // Clear homepage caches so featured products show updates in near-real-time
-        Cache::forget('homepage.featured_products');
-        Cache::forget('home.featured_products');
-
-        return redirect()->route('admin.inventory.index')
-            ->with('success', 'Product and variants updated successfully!');
+            return redirect()->route('admin.inventory.index')
+                ->with('success', 'Product and variants updated successfully!');
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
@@ -519,14 +563,14 @@ class InventoryProductController extends Controller
             }
 
             $productName = $product->name;
-            
+
             // Delete the product (variants will be cascade deleted via FK)
             $product->delete();
 
             // Always return JSON if Accept header or X-Requested-With header indicates AJAX
-            $isAjax = request()->header('Accept') === 'application/json' || 
-                      request()->header('X-Requested-With') === 'XMLHttpRequest';
-            
+            $isAjax = request()->header('Accept') === 'application/json' ||
+                request()->header('X-Requested-With') === 'XMLHttpRequest';
+
             // Clear homepage caches to ensure updated product list is reflected
             Cache::forget('homepage.featured_products');
             Cache::forget('home.featured_products');
@@ -549,9 +593,9 @@ class InventoryProductController extends Controller
             ]);
 
             // Always return JSON if Accept header or X-Requested-With header indicates AJAX
-            $isAjax = request()->header('Accept') === 'application/json' || 
-                      request()->header('X-Requested-With') === 'XMLHttpRequest';
-            
+            $isAjax = request()->header('Accept') === 'application/json' ||
+                request()->header('X-Requested-With') === 'XMLHttpRequest';
+
             if ($isAjax || request()->expectsJson()) {
                 return response()->json([
                     'success' => false,

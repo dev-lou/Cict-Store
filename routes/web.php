@@ -288,6 +288,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/', [UserManageController::class, 'settings'])->name('index');
         Route::post('/', [UserManageController::class, 'updateSettings'])->name('update');
         Route::post('/logo', [UserManageController::class, 'updateLogo'])->name('update-logo');
+        Route::post('/favicon', [UserManageController::class, 'updateFavicon'])->name('update-favicon');
     });
     
     Route::prefix('users')->name('users.')->group(function () {

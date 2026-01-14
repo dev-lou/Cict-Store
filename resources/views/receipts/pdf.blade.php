@@ -478,7 +478,7 @@
         <div class="header-section">
             <div class="header-left">
                 <div class="business-info">
-                    <h1>{{ strtoupper(config('app.name', 'CICT-DG')) }}</h1>
+                    <h1>{{ strtoupper(config('app.name', 'CICT Dingle')) }}</h1>
                     <p>Student Council Office</p>
                     <p>Official Sales Receipt</p>
                 </div>
@@ -612,7 +612,7 @@
              ============================================ -->
         <div class="page-footer">
             <p class="footer-text">Thank you for your purchase!</p>
-            <p class="footer-subtext">{{ config('app.name', 'CICT-DG') }} - Student Council Merchandise & Services</p>
+            <p class="footer-subtext">{{ config('app.name', 'CICT Dingle') }} - Student Council Merchandise & Services</p>
             <p class="footer-timestamp">Generated {{ now()->format('M d, Y H:i:s') }} • Receipt #IGP-{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</p>
         </div>
 

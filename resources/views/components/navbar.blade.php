@@ -26,6 +26,20 @@
             -webkit-backdrop-filter: blur(8px);
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(139, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.12);
+            max-width: calc(100% - 24px);
+            margin: 8px 12px;
+        }
+
+        /* Ensure navbar padding is mobile-friendly and items do not overflow */
+        @media (max-width: 768px) {
+            .navbar-glass {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            nav.navbar-glass {
+                gap: 8px;
+            }
         }
 
         .navbar-link {
@@ -176,9 +190,8 @@
             bottom: 0;
             width: 320px;
             max-width: 85vw;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(12px);
-            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2);
+            background: #ffffff;
+            box-shadow: -4px 0 32px rgba(0, 0, 0, 0.15);
             z-index: 100;
             overflow-y: auto;
         }
@@ -186,30 +199,34 @@
         .mobile-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 99;
         }
 
         .mobile-nav-link {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 16px 20px;
+            gap: 14px;
+            padding: 18px 24px;
             font-size: 16px;
             font-weight: 600;
-            color: #000;
+            color: #1f2937;
             transition: all 0.2s ease;
             border-left: 4px solid transparent;
+            font-family: 'Inter', sans-serif;
         }
 
         .mobile-nav-link.active {
-            background: linear-gradient(90deg, rgba(139, 0, 0, 0.1) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(139, 0, 0, 0.08) 0%, transparent 100%);
             border-left-color: #8B0000;
             color: #8B0000;
+            font-weight: 700;
         }
 
         .mobile-nav-link:hover {
-            background: rgba(139, 0, 0, 0.05);
+            background: rgba(139, 0, 0, 0.04);
+            padding-left: 28px;
         }
 
         .mobile-icon {
@@ -231,36 +248,47 @@
             /* Mobile-friendly notification dropdown */
             .notifications-dropdown {
                 position: fixed !important;
-                left: 0 !important;
-                right: 0 !important;
-                top: 64px !important;
-                /* below navbar */
-                width: 100vw !important;
-                margin: 0 !important;
-                border-radius: 0 !important;
-                max-width: 100vw !important;
+                left: 8px !important;
+                right: 8px !important;
+                top: auto !important;
+                bottom: auto !important;
+                margin-top: 8px !important;
+                width: auto !important;
+                max-width: calc(100vw - 16px) !important;
+                border-radius: 16px !important;
                 z-index: 2147483648 !important;
-                /* ensure notifications appear above chat widget */
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25) !important;
             }
 
             .notifications-dropdown .overflow-y-auto {
-                max-height: calc(100vh - 140px) !important;
+                max-height: calc(100vh - 200px) !important;
                 overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
             }
 
             /* Larger touchable areas inside notification items */
             .notifications-dropdown .px-4.py-3 {
                 padding-left: 16px !important;
                 padding-right: 16px !important;
-                padding-top: 12px !important;
-                padding-bottom: 12px !important;
+                padding-top: 14px !important;
+                padding-bottom: 14px !important;
+            }
+
+            /* Better spacing for notification text on mobile */
+            .notifications-dropdown .text-sm {
+                font-size: 14px !important;
+                line-height: 1.5 !important;
+            }
+
+            .notifications-dropdown .text-xs {
+                font-size: 12px !important;
+                line-height: 1.4 !important;
             }
         }
     </style>
 
-    <div
-        style="position: fixed; top: 16px; left: 16px; right: 16px; z-index: 50; animation: slideDownFromTop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;">
+    <div x-bind:class="{ 'nav-hidden': mobileMenuOpen }"
+        style="position: fixed; top: 16px; left: 16px; right: 16px; z-index: 9999; animation: slideDownFromTop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;">
         <style>
             @keyframes slideDownFromTop {
                 0% {
@@ -273,6 +301,31 @@
                     opacity: 1;
                 }
             }
+
+            @media (max-width: 768px) {
+                nav.navbar-glass {
+                    padding: 10px 14px !important;
+                    border-radius: 12px !important;
+                }
+
+                nav.navbar-glass a.text-2xl {
+                    font-size: 18px !important;
+                }
+
+                .navbar-wrapper-outer {
+                    top: 8px !important;
+                    left: 8px !important;
+                    right: 8px !important;
+                }
+
+                /* When mobile menu opens, hide the floating navbar to avoid overlap */
+                .nav-hidden {
+                    opacity: 0 !important;
+                    pointer-events: none !important;
+                    transform: translateY(-12px) !important;
+                    transition: opacity 0.2s ease, transform 0.2s ease;
+                }
+            }
         </style>
         <div style="max-width: 80rem; margin: 0 auto;">
             <nav class="navbar-glass flex justify-between items-center px-6 py-4"
@@ -281,7 +334,7 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <a href="/" class="text-2xl font-bold text-black"
-                        style="font-family: 'Inter', sans-serif; font-size: 24px;">{{ config('app.name', 'CICT-DG') }}</a>
+                        style="font-family: 'Inter', sans-serif; font-size: 24px;">{{ config('app.name', 'CICT Dingle') }}</a>
                 </div>
 
                 <!-- Navigation Links (Center - Hidden on Mobile) -->
@@ -329,36 +382,35 @@
 
                         <!-- Notification Bell (Visible on both mobile and desktop) -->
                         <div x-data="{
-                                    open: false,
-                                    unreadCount: {{ auth()->user()->unreadNotifications()->count() }},
-                                    notifications: [],
-                                    async fetchNotifications() {
-                                        try {
-                                            const response = await fetch('/notifications/unread');
-                                            const data = await response.json();
-                                            this.unreadCount = data.unread_count || 0;
-                                            this.notifications = data.notifications || [];
-                                        } catch (error) {
-                                            console.error('Failed to fetch notifications:', error);
-                                        }
-                                    },
-                                    async markAsRead(id) {
-                                        try {
-                                            await fetch(`/notifications/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
-                                            this.fetchNotifications();
-                                        } catch (error) {
-                                            console.error('Failed to mark notification as read:', error);
-                                        }
-                                    },
-                                    init() {
-                                        this.fetchNotifications();
-                                        setInterval(() => this.fetchNotifications(), 30000);
-                                    }
-                                }" class="relative z-50" style="overflow: visible !important;">
+                                            open: false,
+                                            unreadCount: {{ auth()->user()->unreadNotifications()->count() }},
+                                            notifications: [],
+                                            async fetchNotifications() {
+                                                try {
+                                                    const response = await fetch('/notifications/unread');
+                                                    const data = await response.json();
+                                                    this.unreadCount = data.unread_count || 0;
+                                                    this.notifications = data.notifications || [];
+                                                } catch (error) {
+                                                    console.error('Failed to fetch notifications:', error);
+                                                }
+                                            },
+                                            async markAsRead(id) {
+                                                try {
+                                                    await fetch(`/notifications/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+                                                    this.fetchNotifications();
+                                                } catch (error) {
+                                                    console.error('Failed to mark notification as read:', error);
+                                                }
+                                            },
+                                            init() {
+                                                this.fetchNotifications();
+                                                setInterval(() => this.fetchNotifications(), 60000);
+                                            }
+                                        }" class="relative z-50" style="overflow: visible !important;">
                             <button @click="open = !open" :aria-expanded="open" aria-controls="notifications-panel"
                                 class="relative p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target"
-                                style="overflow: visible !important;"
-                                title="Notifications">
+                                style="overflow: visible !important;" title="Notifications">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
@@ -415,13 +467,13 @@
                                             <div class="flex items-start gap-3">
                                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                                                     :style="notification.type === 'order' ? 'background: #3b82f6;' : 
-                                                                notification.type === 'stock' ? 'background: #f59e0b;' :
-                                                                notification.type === 'review' ? 'background: #10b981;' : 
-                                                                'background: #6366f1;'">
+                                                                        notification.type === 'stock' ? 'background: #f59e0b;' :
+                                                                        notification.type === 'review' ? 'background: #10b981;' : 
+                                                                        'background: #6366f1;'">
                                                     <span x-text="notification.type === 'order' ? '📦' : 
-                                                                     notification.type === 'stock' ? '⚠️' :
-                                                                     notification.type === 'review' ? '⭐' : 
-                                                                     '🔔'" class="text-xl"></span>
+                                                                             notification.type === 'stock' ? '⚠️' :
+                                                                             notification.type === 'review' ? '⭐' : 
+                                                                             '🔔'" class="text-xl"></span>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
                                                     <p class="text-sm font-semibold text-black" x-text="notification.title">

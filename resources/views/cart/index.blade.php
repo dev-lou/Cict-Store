@@ -1,4 +1,4 @@
-<x-app-layout :title="'Cart - CICT-DG'">
+<x-app-layout :title="'Cart - ' . config('app.name', 'CICT Dingle')">
     <style>
         :root {
             --ink: #0f172a;

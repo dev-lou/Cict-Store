@@ -12,10 +12,10 @@
                         ? \Storage::disk('supabase')->url($logoSetting->value) 
                         : asset('images/ctrlp-logo.png');
                 @endphp
-                <img src="{{ $logoUrl }}" alt="CICT-DG logo" class="w-full h-full object-cover">
+                <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} logo" class="w-full h-full object-cover">
             </div>
             <div>
-                <p class="font-bold text-white text-xl" style="letter-spacing: 0.3px;">{{ config('app.name', 'CICT-DG') }}</p>
+                <p class="font-bold text-white text-xl" style="letter-spacing: 0.3px;">{{ config('app.name', 'CICT Dingle') }}</p>
                 <p class="text-sm" style="color: rgba(255, 255, 255, 0.6);">Admin Panel</p>
             </div>
         </a>

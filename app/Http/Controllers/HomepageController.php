@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\Setting;
 use App\Services\SupabaseFallback;
 use App\DTO\FallbackProduct;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Throwable;
 
@@ -17,60 +19,71 @@ class HomepageController extends Controller
      */
     public function index(): View
     {
-        // Get featured products (first 6 active products). Wrap in try/catch so
-        // the homepage can still render when the DB is temporarily unreachable
-        // (e.g., IPv6 connectivity issues on the host). If a DB exception occurs,
-        // return an empty collection and log a warning.
-        // Try to fetch featured products, caching them for 10 minutes.
+        // Cache featured products for 10 minutes
         $featuredProducts = Cache::remember('homepage.featured_products', now()->addMinutes(10), function () {
-            return Product::where('status', 'active')
-                ->orderBy('created_at', 'desc')
-                ->take(6)
-                ->get();
-        });
-
-        if ($featuredProducts->isEmpty()) {
-            // If cache is empty and DB connection failed, try to gracefully recover
             try {
-                $featuredProducts = Product::where('status', 'active')
+                return Product::where('status', 'active')
+                    ->select(['id', 'name', 'slug', 'base_price', 'image_path', 'created_at'])
                     ->orderBy('created_at', 'desc')
-                    ->take(6)
+                    ->take(4)
                     ->get();
             } catch (Throwable $e) {
-                logger()->warning('Unable to fetch featured products from DB: ' . $e->getMessage());
-                // Try to use the Supabase REST fallback if configured
-                try {
-                    $fallback = new SupabaseFallback();
-                    $remote = $fallback->getFeaturedProducts(6);
-                    if ($remote && $remote->isNotEmpty()) {
-                        // Map to fallback DTOs
-                        $featuredProducts = $remote->map(fn($p) => new FallbackProduct($p));
-                        Cache::put('homepage.featured_products', $remote, now()->addMinutes(10));
-                    } else {
-                        // Try to use cached data even if empty; otherwise return empty collection
-                        $featuredProducts = Cache::get('homepage.featured_products', collect([]));
-                    }
-                } catch (Throwable $inner) {
-                    logger()->warning('Supabase REST fallback failed: ' . $inner->getMessage());
-                    $featuredProducts = Cache::get('homepage.featured_products', collect([]));
-                }
+                logger()->warning('Unable to fetch featured products: ' . $e->getMessage());
+                return collect([]);
             }
-        }
+        });
 
-        $serviceCategories = Service::active()
-            ->ordered()
-            ->get()
-            ->groupBy(fn ($service) => $service->category ?: 'General')
-            ->map(fn ($group) => [
-                'name' => $group->first()->category ?: 'General',
-                'count' => $group->count(),
-                'description' => $group->first()->category_description,
-            ])
-            ->values();
+        // Cache featured services for 10 minutes
+        $featuredServices = Cache::remember('homepage.featured_services', now()->addMinutes(10), function () {
+            try {
+                return Service::where('is_active', true)
+                    ->select(['id', 'title', 'slug', 'description', 'icon', 'price_bw', 'price_color', 'created_at'])
+                    ->orderByDesc('created_at')
+                    ->take(3)
+                    ->get();
+            } catch (Throwable $e) {
+                logger()->warning('Unable to fetch featured services: ' . $e->getMessage());
+                return collect([]);
+            }
+        });
+
+        // Cache site logo URL for 30 minutes
+        $logoUrl = Cache::remember('site.logo_url', now()->addMinutes(30), function () {
+            try {
+                $logoSetting = Setting::where('key', 'site_logo')->first();
+                if ($logoSetting && $logoSetting->value) {
+                    return Storage::disk('supabase')->url($logoSetting->value);
+                }
+            } catch (Throwable $e) {
+                logger()->warning('Unable to fetch site logo: ' . $e->getMessage());
+            }
+            return asset('images/ctrlp-logo.png');
+        });
+
+        // Service categories (keep existing logic, add caching)
+        $serviceCategories = Cache::remember('homepage.service_categories', now()->addMinutes(10), function () {
+            try {
+                return Service::where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->get()
+                    ->groupBy(fn($service) => $service->category ?: 'General')
+                    ->map(fn($group) => [
+                        'name' => $group->first()->category ?: 'General',
+                        'count' => $group->count(),
+                        'description' => $group->first()->category_description,
+                    ])
+                    ->values();
+            } catch (Throwable $e) {
+                logger()->warning('Unable to fetch service categories: ' . $e->getMessage());
+                return collect([]);
+            }
+        });
 
         return view('home.homepage', [
             'featuredProducts' => $featuredProducts,
+            'featuredServices' => $featuredServices,
             'serviceCategories' => $serviceCategories,
+            'logoUrl' => $logoUrl,
         ]);
     }
 }

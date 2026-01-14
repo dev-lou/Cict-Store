@@ -27,7 +27,10 @@
             return;
         }
 
-        gsap.registerPlugin(ScrollTrigger);
+        // Ensure ScrollTrigger is registered (safe to call multiple times)
+        if (typeof gsap.registerPlugin === 'function') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
 
         // Professional easing presets
         const easing = {
@@ -47,9 +50,6 @@
                 const cards = container.querySelectorAll('.product-card, .bento-card, .service-bento-card, .service-card, .officer-card, .contact-block, .social-card, .location-card');
 
                 if (cards.length === 0) return;
-
-                // Ensure cards are visible initially
-                gsap.set(cards, { opacity: 1 });
 
                 ScrollTrigger.batch(cards, {
                     onEnter: batch => {
@@ -110,9 +110,6 @@
             const heroTitles = document.querySelectorAll('.hero-title, .gsap-hero-title');
             const heroSubtitles = document.querySelectorAll('.hero-subtitle, .gsap-hero-subtitle');
             const heroButtons = document.querySelectorAll('.hero-button, .gsap-hero-button');
-
-            // Ensure elements are visible
-            gsap.set([heroKickers, heroTitles, heroSubtitles, heroButtons], { opacity: 1 });
 
             // Kicker fade-in
             if (heroKickers.length) {
@@ -197,9 +194,6 @@
 
             if (!sections.length) return;
 
-            // Ensure sections are visible
-            gsap.set(sections, { opacity: 1 });
-
             sections.forEach(section => {
                 gsap.from(section, {
                     opacity: 0,
@@ -257,7 +251,8 @@
                 const suffix = counter.dataset.suffix || '';
                 const prefix = counter.dataset.prefix || '';
 
-                gsap.set(counter, { innerText: 0 });
+                // Initialize counter to 0 using plain JS
+                counter.textContent = '0';
 
                 ScrollTrigger.create({
                     trigger: counter,

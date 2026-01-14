@@ -23,7 +23,10 @@
             return;
         }
 
-        gsap.registerPlugin(ScrollTrigger);
+        // Safely register plugin (safe to call multiple times)
+        if (typeof gsap.registerPlugin === 'function') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
 
         // Enhanced section reveals
         const sections = document.querySelectorAll('[data-reveal], .reveal-on-scroll, section');

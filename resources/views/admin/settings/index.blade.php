@@ -74,23 +74,6 @@
                         @enderror
                     </div>
 
-                    <!-- Platform Status -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <svg class="w-4 h-4" fill="none" stroke="#b0bcc4" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                            </svg>
-                            <label class="text-sm font-bold" style="color: #ffffff;">Platform Status</label>
-                        </div>
-                        <div style="display: flex; gap: 12px; align-items: center;">
-                            <div style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1)); border: 2px solid #4caf50;">
-                                <div style="width: 10px; height: 10px; border-radius: 50%; background-color: #4caf50; animation: pulse 2s infinite;"></div>
-                                <span style="color: #4caf50; font-weight: 600;">Active & Running</span>
-                            </div>
-                        </div>
-                        <p class="text-xs mt-2" style="color: #999;">The platform is fully operational and ready to use</p>
-                    </div>
-
                     <!-- Divider -->
                     <div style="border-top: 2px solid #444; padding-top: 24px;"></div>
 
@@ -245,92 +228,80 @@
         </div>
     </div>
 
-    <!-- System Information Section -->
+    <!-- Favicon Management Section -->
     <div class="rounded-2xl shadow-2xl overflow-hidden mb-8" style="background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%); border: 2px solid #b0bcc4; border-radius: 20px;">
-        <!-- Card Top Border -->
         <div style="height: 3px; background: linear-gradient(90deg, #0f6fdd 0%, #b0bcc4 50%, #0f6fdd 100%);"></div>
 
         <div class="p-8">
             <div class="flex items-center gap-3 mb-8">
                 <div style="background-color: #0f6fdd; padding: 10px 14px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                     <svg class="w-5 h-5" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold" style="color: #ffffff;">System Information</h2>
-                    <p class="text-xs mt-1" style="color: #b0bcc4;">Technical details and system specifications</p>
+                    <h2 class="text-2xl font-bold" style="color: #ffffff;">Favicon</h2>
+                    <p class="text-xs mt-1" style="color: #b0bcc4;">Upload a favicon that appears in browser tabs</p>
                 </div>
             </div>
 
-            <!-- Info Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Laravel Version -->
-                <div style="padding: 16px; border-radius: 12px; background: linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(139, 0, 0, 0.05)); border: 2px solid #444; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#b0bcc4'; this.style.background='linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(139, 0, 0, 0.1))'" onmouseout="this.style.borderColor='#444'; this.style.background='linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(139, 0, 0, 0.05))'">
-                    <p class="text-xs font-bold mb-2" style="color: #b0bcc4;">Laravel Version</p>
-                    <p class="text-lg font-bold" style="color: #ffffff;">11.46.1</p>
-                    <p class="text-xs mt-2" style="color: #999;">Latest stable release</p>
-                </div>
-
-                <!-- PHP Version -->
-                <div style="padding: 16px; border-radius: 12px; background: linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(139, 0, 0, 0.05)); border: 2px solid #444; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#b0bcc4'; this.style.background='linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(139, 0, 0, 0.1))'" onmouseout="this.style.borderColor='#444'; this.style.background='linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(139, 0, 0, 0.05))'">
-                    <p class="text-xs font-bold mb-2" style="color: #b0bcc4;">PHP Version</p>
-                    <p class="text-lg font-bold" style="color: #ffffff;">{{ phpversion() }}</p>
-                    <p class="text-xs mt-2" style="color: #999;">Current runtime</p>
-                </div>
-
-                <!-- Database -->
-                <div style="padding: 16px; border-radius: 12px; background: linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(139, 0, 0, 0.05)); border: 2px solid #444; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#b0bcc4'; this.style.background='linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(139, 0, 0, 0.1))'" onmouseout="this.style.borderColor='#444'; this.style.background='linear-gradient(135deg, rgba(218, 165, 32, 0.05), rgba(139, 0, 0, 0.05))'">
-                    <p class="text-xs font-bold mb-2" style="color: #b0bcc4;">Database</p>
-                    <p class="text-lg font-bold" style="color: #ffffff;">SQLite</p>
-                    <p class="text-xs mt-2" style="color: #999;">Data storage</p>
-                </div>
-
-                <!-- Environment -->
-                <div style="padding: 16px; border-radius: 12px; background: linear-gradient(135deg, rgba(76, 175, 80, 0.05), rgba(76, 175, 80, 0.05)); border: 2px solid #4caf50; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#54d960'; this.style.background='linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(76, 175, 80, 0.15))'" onmouseout="this.style.borderColor='#4caf50'; this.style.background='linear-gradient(135deg, rgba(76, 175, 80, 0.05), rgba(76, 175, 80, 0.05))'">
-                    <p class="text-xs font-bold mb-2" style="color: #4caf50;">Environment</p>
-                    <p class="text-lg font-bold" style="color: #54d960;">Production</p>
-                    <p class="text-xs mt-2" style="color: #999;">Running mode</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- User Management Card -->
-    <div class="rounded-2xl shadow-2xl overflow-hidden" style="background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%); border: 2px solid #b0bcc4; border-radius: 20px;">
-        <!-- Card Top Border -->
-        <div style="height: 3px; background: linear-gradient(90deg, #b0bcc4 0%, #0f6fdd 50%, #b0bcc4 100%);"></div>
-
-        <div class="p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <!-- Left Content -->
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <svg class="w-8 h-8" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 12H9m6 0a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <h2 class="text-2xl font-bold" style="color: #ffffff;">User Management</h2>
+            <form action="{{ route('admin.settings.update-favicon') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Favicon Preview -->
+                    <div>
+                        <label style="display: block; color: #b0bcc4; font-weight: 600; margin-bottom: 12px; font-size: 0.875rem;">Current Favicon</label>
+                        <div style="width: 120px; height: 120px; border-radius: 12px; border: 2px solid #444; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #0f0707;">
+                            @if($favicon && $favicon->value)
+                                <img src="{{ Storage::disk('supabase')->url($favicon->value) }}" alt="Site Favicon" id="faviconPreview" style="width: 64px; height: 64px; object-fit: contain;">
+                            @else
+                                <div id="faviconPreview" style="width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 2rem;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 48px; height: 48px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                    <p class="mb-4" style="color: #b0bcc4; line-height: 1.6;">Manage administrator accounts, assign roles and permissions, configure user access levels, and monitor user activity across the system.</p>
-                    <p class="text-sm" style="color: #999;">Access the complete user management dashboard with advanced filtering and search capabilities.</p>
-                </div>
 
-                <!-- Right Button -->
-                <div style="display: flex; justify-content: flex-start; md:justify-content: flex-end; align-items: center;">
-                    <a 
-                        href="{{ route('admin.users.index') }}" 
-                        class="px-8 py-4 rounded-xl font-bold text-base transition-all duration-300 flex items-center gap-3"
-                        style="background: linear-gradient(135deg, #ff9500 0%, #ff8500 100%); color: white; border: 3px solid #ff8500; box-shadow: 0 6px 20px rgba(255, 149, 0, 0.3);"
-                        onmouseover="this.style.boxShadow='0 12px 32px rgba(255, 149, 0, 0.4)'; this.style.transform='translateY(-3px)'; this.style.background='linear-gradient(135deg, #ffb000 0%, #ff9500 100%)'"
-                        onmouseout="this.style.boxShadow='0 6px 20px rgba(255, 149, 0, 0.3)'; this.style.transform='translateY(0)'; this.style.background='linear-gradient(135deg, #ff9500 0%, #ff8500 100%)'"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                        Manage Users
-                    </a>
+                    <!-- Upload Form -->
+                    <div class="lg:col-span-2">
+                        <label style="display: block; color: #b0bcc4; font-weight: 600; margin-bottom: 12px; font-size: 0.875rem;">Upload New Favicon</label>
+                        <input 
+                            type="file" 
+                            name="favicon" 
+                            accept="image/x-icon,image/png,image/svg+xml" 
+                            required
+                            onchange="previewFaviconUpload(this)"
+                            style="display: block; width: 100%; padding: 12px; background: #0f0707; border: 2px solid #444; border-radius: 10px; color: #ffffff; margin-bottom: 16px;"
+                        >
+                        
+                        <div style="background: rgba(15, 111, 221, 0.1); border: 2px solid #0f6fdd; border-radius: 10px; padding: 16px; margin-bottom: 24px;">
+                            <p style="color: #b0bcc4; font-size: 0.875rem; margin: 0; line-height: 1.6;">
+                                <strong style="color: #0f6fdd;">📌 Favicon Guidelines:</strong><br>
+                                • Square icon recommended (32x32px or 64x64px)<br>
+                                • Accepted formats: ICO, PNG, SVG<br>
+                                • Maximum file size: 500KB<br>
+                                • Favicon appears in browser tabs and bookmarks
+                            </p>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="px-6 py-3 rounded-lg font-bold transition-all duration-300 flex items-center gap-2"
+                            style="background: linear-gradient(135deg, #0f6fdd 0%, #1a7fff 100%); color: white; border: 2px solid #1a7fff; box-shadow: 0 4px 12px rgba(15, 111, 221, 0.3);"
+                            onmouseover="this.style.boxShadow='0 8px 20px rgba(15, 111, 221, 0.4)'; this.style.transform='translateY(-2px)'"
+                            onmouseout="this.style.boxShadow='0 4px 12px rgba(15, 111, 221, 0.3)'; this.style.transform='translateY(0)'"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                            Upload Favicon
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -433,6 +404,22 @@
                         preview.src = e.target.result;
                     } else {
                         preview.innerHTML = `<img src="${e.target.result}" alt="Logo Preview" id="logoPreview" style="width: 100%; height: 100%; object-fit: cover;">`;
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Favicon preview function
+        function previewFaviconUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('faviconPreview');
+                    if (preview.tagName === 'IMG') {
+                        preview.src = e.target.result;
+                    } else {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Favicon Preview" id="faviconPreview" style="width: 64px; height: 64px; object-fit: contain;">`;
                     }
                 }
                 reader.readAsDataURL(input.files[0]);

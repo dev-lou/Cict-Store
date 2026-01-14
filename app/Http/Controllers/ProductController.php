@@ -19,13 +19,15 @@ class ProductController extends Controller
      */
     public function index(Request $request): \Illuminate\View\View
     {
-        $query = Product::query()->active();
+        $query = Product::query()
+            ->select(['id', 'name', 'slug', 'description', 'base_price', 'image_path', 'current_stock', 'low_stock_threshold', 'status', 'created_at'])
+            ->active();
 
         // Search functionality
         if ($request->has('search') && $request->search) {
             $search = htmlspecialchars($request->search, ENT_QUOTES, 'UTF-8');
             $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                ->orWhere('description', 'like', "%{$search}%");
         }
 
         // Sorting
@@ -98,16 +100,16 @@ class ProductController extends Controller
                 // Wrap remote into fallback DTO for view compatibility
                 $product = new FallbackProduct($remote);
                 $variants = $fallback->getVariantsForProduct($product->id) ?: collect([]);
-                $product->variants = collect($variants)->map(fn($v) => (object)$v);
+                $product->variants = collect($variants)->map(fn($v) => (object) $v);
             }
         }
 
         // Get reviews with pagination
         try {
             $reviews = $product->reviews()
-            ->with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+                ->with('user')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
         } catch (\Throwable $e) {
             logger()->warning('ProductController@show: reviews unavailable: ' . $e->getMessage());
             $reviews = collect([]);
@@ -119,10 +121,10 @@ class ProductController extends Controller
         // Get related products (active only)
         try {
             $relatedProducts = Product::query()
-            ->active()
-            ->where('id', '!=', $product->id)
-            ->limit(4)
-            ->get();
+                ->active()
+                ->where('id', '!=', $product->id)
+                ->limit(4)
+                ->get();
         } catch (\Throwable $e) {
             logger()->warning('ProductController@show: related products fallback: ' . $e->getMessage());
             $relatedProducts = Cache::get('home.featured_products', collect([]));
@@ -131,10 +133,10 @@ class ProductController extends Controller
         // Check if current user can review (authenticated and has completed order)
         $canReview = false;
         $userReview = null;
-        
+
         if (auth()->check()) {
             $userReview = $product->reviews()->where('user_id', auth()->id())->first();
-            
+
             if (!$userReview) {
                 $canReview = \App\Models\Order::where('user_id', auth()->id())
                     ->where('status', 'completed')
