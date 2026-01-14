@@ -426,7 +426,7 @@
                 <div class="avatar-row">
                     <div class="avatar-shell">
                         @if($user->profile_picture)
-                            <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture">
+                            <img src="{{ Storage::disk('supabase')->url($user->profile_picture) }}" alt="Profile Picture">
                         @else
                             <div class="avatar-placeholder">👤</div>
                         @endif

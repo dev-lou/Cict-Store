@@ -22,8 +22,8 @@ class ProfileController extends Controller
             $user = auth()->user();
 
             // Delete old picture if it exists
-            if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
-                Storage::disk('public')->delete($user->profile_picture);
+            if ($user->profile_picture && Storage::disk('supabase')->exists($user->profile_picture)) {
+                Storage::disk('supabase')->delete($user->profile_picture);
             }
 
             // Store new picture with sanitized filename to prevent path traversal
@@ -37,8 +37,8 @@ class ProfileController extends Controller
             // Generate unique filename
             $filename = auth()->id() . '_' . time() . '_' . $sanitizedName;
             
-            // Store in profile-pictures directory only
-            $path = $file->storeAs('profile-pictures', $filename, 'public');
+            // Store in profile-pictures directory on Supabase
+            $path = $file->storeAs('profile-pictures', $filename, 'supabase');
 
             // Validate stored path doesn't escape directory
             if (!str_starts_with($path, 'profile-pictures/')) {
@@ -51,7 +51,7 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Profile picture updated successfully',
-                'picture_url' => asset('storage/' . $path),
+                'picture_url' => Storage::disk('supabase')->url($path),
             ]);
         } catch (\Exception $e) {
             return response()->json([

@@ -1,4 +1,13 @@
-<x-app-layout :title="config('app.name', 'CICT Dingle') . ' — Merchandise & Services'">
+<?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4619374cef299e94fd7263111d0abc69 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => config('app.name', 'CICT Dingle') . ' — Merchandise & Services']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(config('app.name', 'CICT Dingle') . ' — Merchandise & Services')]); ?>
     <style>
         /* ============ DESIGN TOKENS ============ */
         :root {
@@ -51,7 +60,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: url('{{ asset("images/cict_hero_bg.png") }}') center/cover;
+            background: url('<?php echo e(asset("images/cict_hero_bg.png")); ?>') center/cover;
             opacity: 0.15;
         }
 
@@ -593,11 +602,11 @@
                 Every purchase supports student initiatives.
             </p>
             <div class="hero-buttons">
-                <a href="{{ route('shop.index') }}" class="btn-primary">
+                <a href="<?php echo e(route('shop.index')); ?>" class="btn-primary">
                     <span>Shop Now</span>
                     <span>→</span>
                 </a>
-                <a href="{{ route('services.index') }}" class="btn-secondary">
+                <a href="<?php echo e(route('services.index')); ?>" class="btn-secondary">
                     View Services
                 </a>
             </div>
@@ -614,8 +623,8 @@
 
             <div class="products-grid">
 
-                @forelse($featuredProducts as $product)
-                    @php
+                <?php $__empty_1 = true; $__currentLoopData = $featuredProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <?php
                         // Get the first active variant to show its price
                         $firstVariant = DB::table('product_variants')
                             ->where('product_id', $product->id)
@@ -627,38 +636,38 @@
                         $displayPrice = $firstVariant 
                             ? $product->base_price + $firstVariant->price_modifier 
                             : $product->base_price;
-                    @endphp
-                    <a href="{{ route('shop.show', $product->slug) }}" class="product-card reveal-on-scroll">
+                    ?>
+                    <a href="<?php echo e(route('shop.show', $product->slug)); ?>" class="product-card reveal-on-scroll">
                         <div class="product-image">
-                            @if(!empty($product->image_url))
-                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async">
-                            @else
+                            <?php if(!empty($product->image_url)): ?>
+                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>" loading="lazy" decoding="async">
+                            <?php else: ?>
                                 <div
                                     style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
                                     No Image
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="product-info">
-                            <h3 class="product-title">{{ $product->name }}</h3>
-                            <div class="product-price">₱{{ number_format($displayPrice, 0) }}</div>
+                            <h3 class="product-title"><?php echo e($product->name); ?></h3>
+                            <div class="product-price">₱<?php echo e(number_format($displayPrice, 0)); ?></div>
                         </div>
                     </a>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">
                         No products available yet.
                     </p>
-                @endforelse
+                <?php endif; ?>
             </div>
 
-            @if($featuredProducts->count() > 0)
+            <?php if($featuredProducts->count() > 0): ?>
                 <div class="view-all-wrapper">
-                    <a href="{{ route('shop.index') }}" class="btn-outline">
+                    <a href="<?php echo e(route('shop.index')); ?>" class="btn-outline">
                         View All Products
                         <span>→</span>
                     </a>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </section>
 
@@ -673,32 +682,33 @@
 
             <div class="services-grid">
 
-                @forelse($featuredServices as $service)
-                    <a href="{{ route('services.show', $service->slug) }}" class="service-card reveal-on-scroll">
-                        <div class="service-icon">{{ $service->icon ?? '🖨️' }}</div>
-                        <h3 class="service-title">{{ $service->title }}</h3>
-                        <p class="service-desc">{{ Str::limit($service->description, 100) }}</p>
-                        @if($service->price_bw || $service->price_color)
+                <?php $__empty_1 = true; $__currentLoopData = $featuredServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <a href="<?php echo e(route('services.show', $service->slug)); ?>" class="service-card reveal-on-scroll">
+                        <div class="service-icon"><?php echo e($service->icon ?? '🖨️'); ?></div>
+                        <h3 class="service-title"><?php echo e($service->title); ?></h3>
+                        <p class="service-desc"><?php echo e(Str::limit($service->description, 100)); ?></p>
+                        <?php if($service->price_bw || $service->price_color): ?>
                             <div class="service-price">
-                                From ₱{{ number_format($service->price_bw ?? $service->price_color, 2) }}
+                                From ₱<?php echo e(number_format($service->price_bw ?? $service->price_color, 2)); ?>
+
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </a>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">
                         No services available yet.
                     </p>
-                @endforelse
+                <?php endif; ?>
             </div>
 
-            @if($featuredServices->count() > 0)
+            <?php if($featuredServices->count() > 0): ?>
                 <div class="view-all-wrapper">
-                    <a href="{{ route('services.index') }}" class="btn-outline">
+                    <a href="<?php echo e(route('services.index')); ?>" class="btn-outline">
                         View All Services
                         <span>→</span>
                     </a>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </section>
 
@@ -708,12 +718,12 @@
             <div class="about-grid">
                 <div class="about-image reveal-on-scroll">
                     <div style="width: 100%; max-width: 280px; aspect-ratio: 1; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; overflow: hidden; padding: 0;">
-                        <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} Logo" loading="lazy" decoding="async"
+                        <img src="<?php echo e($logoUrl); ?>" alt="<?php echo e(config('app.name', 'CICT Dingle')); ?> Logo" loading="lazy" decoding="async"
                             style="width: 100%; height: 100%; object-fit: cover; display: block; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.12));">
                     </div>
                 </div>
                 <div class="about-content reveal-on-scroll">
-                    <h2>About {{ config('app.name', 'CICT Dingle') }}</h2>
+                    <h2>About <?php echo e(config('app.name', 'CICT Dingle')); ?></h2>
                     <p>
                         Your one-stop campus shop at ISUFST Dingle Campus. We're the official merchandise and services hub 
                         run by the CICT Student Council, offering quality campus merch, professional printing, and digital solutions 
@@ -723,7 +733,7 @@
                         Every purchase supports student programs and campus initiatives. From custom apparel to print services, 
                         we deliver excellence for the academic community.
                     </p>
-                    <a href="{{ route('contact.index') }}" class="btn-outline">
+                    <a href="<?php echo e(route('contact.index')); ?>" class="btn-outline">
                         Get in Touch
                         <span>→</span>
                     </a>
@@ -740,7 +750,7 @@
                 Browse our collection of campus merchandise or request a service today.
             </p>
             <div class="hero-buttons">
-                <a href="{{ route('shop.index') }}" class="btn-primary">
+                <a href="<?php echo e(route('shop.index')); ?>" class="btn-primary">
                     <span>Start Shopping</span>
                     <span>→</span>
                 </a>
@@ -748,4 +758,13 @@
         </div>
     </section>
 
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4619374cef299e94fd7263111d0abc69)): ?>
+<?php $attributes = $__attributesOriginal4619374cef299e94fd7263111d0abc69; ?>
+<?php unset($__attributesOriginal4619374cef299e94fd7263111d0abc69); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4619374cef299e94fd7263111d0abc69)): ?>
+<?php $component = $__componentOriginal4619374cef299e94fd7263111d0abc69; ?>
+<?php unset($__componentOriginal4619374cef299e94fd7263111d0abc69); ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/home/homepage.blade.php ENDPATH**/ ?>
