@@ -604,7 +604,7 @@
                                     @if($startingPrice)
                                         <div>
                                             <div class="service-price-label">Starting from</div>
-                                            <div class="service-price">₱{{ number_format($startingPrice, 2) }}</div>
+                                            <div class="service-price">₱{{ number_format($startingPrice, 2) }} <span style="font-size: 0.85em; font-weight: 400; color: var(--text-secondary);">{{ $priceLabel }}</span></div>
                                         </div>
                                     @endif
                                     <span class="service-link">
