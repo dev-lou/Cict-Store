@@ -337,27 +337,32 @@ Route::get('/register', function () {
 })->name('register')->middleware('guest');
 
 Route::post('/register', function () {
-    $data = request()->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => [
-            'required',
-            'min:8',
-            'confirmed',
-        ],
-    ]);
+    try {
+        $data = request()->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => [
+                'required',
+                'min:8',
+                'confirmed',
+            ],
+        ]);
 
-    // store roles as an array so Eloquent casts will persist JSON for us
-    $user = \App\Models\User::create([
-        'name' => $data['name'],
-        'email' => $data['email'],
-        'password' => \Illuminate\Support\Facades\Hash::make($data['password']),
-        'roles' => ['customer'], // New registrations are customers
-    ]);
+        // store roles as an array so Eloquent casts will persist JSON for us
+        $user = \App\Models\User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => \Illuminate\Support\Facades\Hash::make($data['password']),
+            'roles' => ['customer'], // New registrations are customers
+        ]);
 
-    Auth::login($user);
+        Auth::login($user);
 
-    return redirect('/');
+        return redirect('/')->with('success', 'Registration successful!');
+    } catch (\Exception $e) {
+        \Log::error('Registration error: ' . $e->getMessage());
+        return back()->withInput()->withErrors(['error' => 'Registration failed. Please try again.']);
+    }
 })->name('register.post')->middleware(['guest', 'throttle:5,1']);
 
 Route::post('/logout', function () {
