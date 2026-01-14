@@ -1,13 +1,13 @@
 <?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4619374cef299e94fd7263111d0abc69 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => 'CICT-DG — Merchandise & Services']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => config('app.name', 'CICT Dingle') . ' — Merchandise & Services']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('app-layout'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('CICT-DG — Merchandise & Services')]); ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(config('app.name', 'CICT Dingle') . ' — Merchandise & Services')]); ?>
     <style>
         /* ============ DESIGN TOKENS ============ */
         :root {
@@ -319,44 +319,10 @@
 
         @media (max-width: 768px) {
             .services-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
                 gap: 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .services-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-
-            .service-card {
-                padding: 20px;
-            }
-
-            .service-icon {
-                width: 44px;
-                height: 44px;
-                font-size: 22px;
-                margin-bottom: 14px;
-            }
-
-            .service-title {
-                font-size: 15px;
-                margin-bottom: 8px;
-            }
-
-            .service-desc {
-                font-size: 12px;
-                margin-bottom: 12px;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
-
-            .service-price {
-                font-size: 14px;
+                max-width: 500px;
+                margin: 0 auto;
             }
         }
 
@@ -365,14 +331,41 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 32px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
-            display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #A00000);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
 
         .service-card:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 12px 24px -8px rgba(139, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.06);
+            border-color: rgba(139, 0, 0, 0.2);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:active {
+            transform: translateY(-2px);
         }
 
         .service-icon {
@@ -385,6 +378,11 @@
             justify-content: center;
             font-size: 28px;
             margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.05);
         }
 
         .service-title {
@@ -392,6 +390,7 @@
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 12px;
+            line-height: 1.3;
         }
 
         .service-desc {
@@ -399,12 +398,59 @@
             color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 16px;
+            flex-grow: 1;
         }
 
         .service-price {
             font-size: 16px;
             font-weight: 700;
             color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .service-price::after {
+            content: '→';
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-price::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .service-card {
+                padding: 24px;
+                border-radius: 16px;
+            }
+
+            .service-icon {
+                width: 52px;
+                height: 52px;
+                font-size: 26px;
+                margin-bottom: 16px;
+            }
+
+            .service-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .service-desc {
+                font-size: 14px;
+                line-height: 1.5;
+                margin-bottom: 14px;
+            }
+
+            .service-price {
+                font-size: 15px;
+            }
         }
 
         /* ============ ABOUT SECTION ============ */
@@ -419,6 +465,14 @@
             .about-grid {
                 grid-template-columns: 1fr;
                 gap: 40px;
+            }
+
+            .section-container {
+                padding: 0 16px;
+            }
+
+            .about-image > div {
+                max-width: 230px !important;
             }
         }
 
@@ -513,6 +567,9 @@
             background: linear-gradient(135deg, var(--primary) 0%, #5C0000 100%);
             padding: 80px 24px;
             text-align: center;
+            max-width: 1100px;
+            margin: 0 auto;
+            border-radius: 24px;
         }
 
         .cta-title {
@@ -565,18 +622,12 @@
             </div>
 
             <div class="products-grid">
-                <?php
-                    $featuredProducts = \App\Models\Product::where('status', 'active')
-                        ->orderByDesc('created_at')
-                        ->take(4)
-                        ->get();
-                ?>
 
                 <?php $__empty_1 = true; $__currentLoopData = $featuredProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <a href="<?php echo e(route('shop.show', $product->slug)); ?>" class="product-card reveal-on-scroll">
                         <div class="product-image">
                             <?php if(!empty($product->image_url)): ?>
-                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>">
+                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>" loading="lazy" decoding="async">
                             <?php else: ?>
                                 <div
                                     style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
@@ -617,12 +668,6 @@
             </div>
 
             <div class="services-grid">
-                <?php
-                    $featuredServices = \App\Models\Service::where('is_active', true)
-                        ->orderByDesc('created_at')
-                        ->take(3)
-                        ->get();
-                ?>
 
                 <?php $__empty_1 = true; $__currentLoopData = $featuredServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <a href="<?php echo e(route('services.show', $service->slug)); ?>" class="service-card reveal-on-scroll">
@@ -659,26 +704,21 @@
         <div class="section-container">
             <div class="about-grid">
                 <div class="about-image reveal-on-scroll">
-                    <?php
-                        $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
-                        $logoUrl = $logoSetting && $logoSetting->value 
-                            ? \Storage::disk('supabase')->url($logoSetting->value) 
-                            : asset('images/ctrlp-logo.png');
-                    ?>
-                    <div style="width: 100%; max-width: 400px; aspect-ratio: 1; margin: 0 auto; border-radius: 50%; overflow: hidden; background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%); box-shadow: 0 20px 60px rgba(139, 0, 0, 0.4); border: 4px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center;">
-                        <img src="<?php echo e($logoUrl); ?>" alt="CICT-DG Logo" style="width: 80%; height: 80%; object-fit: cover; border-radius: 50%;">
+                    <div style="width: 100%; max-width: 280px; aspect-ratio: 1; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; overflow: hidden; padding: 0;">
+                        <img src="<?php echo e($logoUrl); ?>" alt="<?php echo e(config('app.name', 'CICT Dingle')); ?> Logo" loading="lazy" decoding="async"
+                            style="width: 100%; height: 100%; object-fit: cover; display: block; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.12));">
                     </div>
                 </div>
                 <div class="about-content reveal-on-scroll">
-                    <h2>About CICT-DG</h2>
+                    <h2>About <?php echo e(config('app.name', 'CICT Dingle')); ?></h2>
                     <p>
-                        CICT-DG is the official merchandise and services platform of the CICT Student Council
-                        at ISUFST Dingle Campus. We provide quality products and professional services
-                        to support student needs and fund campus initiatives.
+                        Your one-stop campus shop at ISUFST Dingle Campus. We're the official merchandise and services hub 
+                        run by the CICT Student Council, offering quality campus merch, professional printing, and digital solutions 
+                        that make student life easier.
                     </p>
                     <p>
-                        From printed materials to custom merchandise, we're here to serve the academic community
-                        with reliability and excellence.
+                        Every purchase supports student programs and campus initiatives. From custom apparel to print services, 
+                        we deliver excellence for the academic community.
                     </p>
                     <a href="<?php echo e(route('contact.index')); ?>" class="btn-outline">
                         Get in Touch

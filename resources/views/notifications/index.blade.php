@@ -1,4 +1,4 @@
-<x-app-layout :title="'Notifications - CICT-DG'">
+<x-app-layout :title="'Notifications - ' . config('app.name', 'CICT Dingle')">
     <style>
         :root {
             --ink: #0f172a;

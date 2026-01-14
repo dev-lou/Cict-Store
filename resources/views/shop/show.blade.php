@@ -1,7 +1,25 @@
 ﻿<x-app-layout>
-    @section('title', $product->name . ' - ' . config('app.name', 'CICT-DG'))
+    @section('title', $product->name . ' - ' . config('app.name', 'CICT Dingle'))
 
     <style>
+        /* ============ MOBILE FIX: Prevent Horizontal Scroll ============ */
+        html,
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        * {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         /* ============ DESIGN TOKENS ============ */
         :root {
             --primary: #8B0000;
@@ -41,52 +59,144 @@
         }
 
         .product-hero-banner {
-            margin-top: -72px;
-            height: 250px;
+            margin-top: 0;
+            height: 200px;
         }
 
         @media (max-width: 768px) {
             .product-hero-banner {
-                height: 250px;
+                height: 120px;
             }
         }
 
         /* ============ MAIN CONTENT ============ */
         .product-content {
             background: var(--bg-secondary);
-            padding: 48px 24px 80px;
+            padding: 48px 0 80px;
             min-height: 100vh;
-            padding-top: 100px;
-            margin-top: -80px;
+            margin-top: 0;
             position: relative;
             z-index: 1;
         }
 
+        /* Desktop/Mobile visibility helpers */
+        .mobile-header-row {
+            display: none;
+            /* Hidden on desktop */
+        }
+
+        .desktop-only {
+            display: block;
+            /* Visible on desktop */
+        }
+
         @media (max-width: 768px) {
             .product-content {
-                padding: 24px 12px 60px;
-                margin-top: -40px;
+                padding: 16px 0 60px;
+                margin-top: 0;
+            }
+
+            .product-container {
+                padding: 0 12px;
+                width: 100%;
+            }
+
+            .product-grid {
+                gap: 16px;
+            }
+
+            /* Center product image on mobile */
+            .product-image-card {
+                max-width: 100%;
+                width: 100%;
+                margin: 0 auto;
+                aspect-ratio: 1/1;
+                max-height: none;
+                border-radius: 12px;
             }
 
             .product-header {
-                padding: 20px;
+                padding: 16px;
+            }
+
+            /* Mobile header row: product name + quantity inline */
+            .mobile-header-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .mobile-header-row .product-name {
+                font-size: 16px;
+                margin-bottom: 0;
+                flex: 1;
+                line-height: 1.3;
+            }
+
+            .mobile-header-row .quantity-control {
+                flex-shrink: 0;
+                width: auto;
+            }
+
+            .mobile-header-row .quantity-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+                border-radius: 8px;
+            }
+
+            .mobile-header-row .quantity-input {
+                width: 48px;
+                height: 44px;
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            .mobile-header-row .quantity-control {
+                border-radius: 10px;
+                border: 2px solid var(--border);
+                overflow: hidden;
+            }
+
+            /* Hide stock badges and availability text on mobile */
+            .product-meta {
+                display: none !important;
+            }
+
+            /* Hide entire cart-card on mobile (quantity in header, add-to-cart in floating bar) */
+            .cart-card {
+                display: none !important;
+            }
+
+            /* Show mobile header row, hide desktop-only on mobile */
+            .mobile-header-row {
+                display: flex !important;
+            }
+
+            .desktop-only {
+                display: none !important;
             }
 
             .product-name {
-                font-size: 20px;
+                font-size: 18px;
                 margin-bottom: 12px;
             }
 
             .product-price {
-                font-size: 26px;
+                font-size: 24px;
                 margin-bottom: 16px;
             }
 
             .product-description {
                 font-size: 14px;
+                margin-bottom: 0;
             }
 
-            .variants-card, .cart-card, .benefits-card {
+            .variants-card,
+            .cart-card,
+            .benefits-card {
                 padding: 16px;
             }
 
@@ -154,11 +264,6 @@
                 font-size: 15px;
             }
 
-            .product-meta {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-
             .product-badge {
                 padding: 5px 10px;
                 font-size: 11px;
@@ -172,6 +277,14 @@
         .product-container {
             max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
+            padding: 0 16px;
+        }
+
+        @media (max-width: 768px) {
+            .product-container {
+                padding: 0 12px;
+            }
         }
 
         .product-grid {
@@ -179,12 +292,14 @@
             grid-template-columns: 1fr 1fr;
             gap: 48px;
             align-items: start;
+            width: 100%;
         }
 
         @media (max-width: 900px) {
             .product-grid {
                 grid-template-columns: 1fr;
                 gap: 24px;
+                width: 100%;
             }
         }
 
@@ -204,6 +319,7 @@
                 position: static;
                 aspect-ratio: 1/1;
                 border-radius: 12px;
+                max-height: 300px;
             }
         }
 
@@ -402,6 +518,15 @@
             font-weight: 600;
             color: var(--text-primary);
             background: transparent;
+            -moz-appearance: textfield;
+            /* Firefox */
+        }
+
+        /* Hide spinner arrows on number inputs */
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .quantity-max {
@@ -505,11 +630,14 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
+            width: 100%;
         }
 
         @media (max-width: 900px) {
             .related-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                width: 100%;
             }
         }
 
@@ -819,9 +947,9 @@
         }
     </style>
 
-    <!-- Decorative Red Header Banner (Behind Navbar) -->
+    <!-- Decorative Red Header Banner -->
     <div class="product-hero-banner"
-        style="margin-top: -72px; height: 250px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); position: relative; overflow: hidden;">
+        style="background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); position: relative; overflow: hidden; width: 100%; max-width: 100vw;">
         <!-- Decorative Pattern Overlay -->
         <div
             style="position: absolute; inset: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
@@ -839,7 +967,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="product-content">
+    <div class="product-content" style="width: 100%; max-width: 100vw; overflow-x: hidden;">
         <div class="product-container">
             <div class="product-grid">
                 <!-- Product Image -->
@@ -861,7 +989,21 @@
 
                     <!-- Header Card -->
                     <div class="product-header">
-                        <h1 class="product-name">{{ $product->name }}</h1>
+                        <!-- Mobile: Product Name + Quantity Row (hidden on desktop) -->
+                        <div class="mobile-header-row">
+                            <h1 class="product-name">{{ $product->name }}</h1>
+                            @if(!$isOutOfStock)
+                                <div class="quantity-control">
+                                    <button type="button" class="quantity-btn" onclick="decreaseQty()">−</button>
+                                    <input type="number" id="mobile_quantity_input" min="1" value="1" class="quantity-input"
+                                        readonly>
+                                    <button type="button" class="quantity-btn" onclick="increaseQty()">+</button>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Desktop: Product Name (hidden on mobile via CSS) -->
+                        <h1 class="product-name desktop-only">{{ $product->name }}</h1>
 
                         <div class="product-meta">
                             @if($isOutOfStock)
@@ -874,7 +1016,12 @@
                             <span class="product-stock-count">{{ $stock }} units available</span>
                         </div>
 
-                        <div class="product-price" id="display-price">₱{{ number_format($product->base_price, 2) }}
+                        <div class="product-price" id="display-price">
+                            @if($product->variants->count() > 0)
+                                ₱{{ number_format($product->variants->first()->getFinalPrice(), 2) }}
+                            @else
+                                ₱{{ number_format($product->base_price, 2) }}
+                            @endif
                         </div>
 
                         @if($product->description)
@@ -978,7 +1125,8 @@
                 <div class="reviews-header">
                     <h2 class="reviews-title">
                         Customer Reviews
-                        <span class="reviews-count">{{ $product->reviews->count() }} {{ Str::plural('review', $product->reviews->count()) }}</span>
+                        <span class="reviews-count">{{ $product->reviews->count() }}
+                            {{ Str::plural('review', $product->reviews->count()) }}</span>
                     </h2>
                     @if($product->reviews->count() > 0)
                         <div class="reviews-summary">
@@ -986,8 +1134,10 @@
                                 <span class="average-rating-number">{{ number_format($product->averageRating(), 1) }}</span>
                                 <div class="average-rating-stars">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <svg class="star-icon {{ $i <= round($product->averageRating()) ? '' : 'empty' }}" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        <svg class="star-icon {{ $i <= round($product->averageRating()) ? '' : 'empty' }}"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
                                     @endfor
                                 </div>
@@ -1013,15 +1163,19 @@
                                     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                                         <div class="review-stars">
                                             @for($i = 1; $i <= 5; $i++)
-                                                <svg class="star-icon {{ $i <= $review->rating ? '' : 'empty' }}" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                <svg class="star-icon {{ $i <= $review->rating ? '' : 'empty' }}"
+                                                    viewBox="0 0 20 20" fill="currentColor">
+                                                    <path
+                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                 </svg>
                                             @endfor
                                         </div>
                                         @if($review->verified_purchase)
                                             <span class="verified-badge">
                                                 <svg style="width: 14px; height: 14px;" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                                 Verified Purchase
                                             </span>
@@ -1036,8 +1190,10 @@
                     </div>
                 @else
                     <div class="no-reviews">
-                        <svg class="no-reviews-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.31l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.31L11.48 3.5z"/>
+                        <svg class="no-reviews-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.31l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.31L11.48 3.5z" />
                         </svg>
                         <div class="no-reviews-text">No reviews yet</div>
                         <div class="no-reviews-subtext">Be the first to share your experience with this product</div>
@@ -1073,18 +1229,31 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const qtyInput = document.getElementById('quantity_input');
+        const mobileQtyInput = document.getElementById('mobile_quantity_input');
         const maxQtyEl = document.getElementById('max_qty');
         const priceEl = document.getElementById('display-price');
         const addToCartBtn = document.getElementById('add_to_cart_btn');
         let isSubmitting = false;
 
+        // Sync both quantity inputs
+        function syncQuantityInputs(value) {
+            if (qtyInput) qtyInput.value = value;
+            if (mobileQtyInput) mobileQtyInput.value = value;
+        }
+
         function decreaseQty() {
-            if (parseInt(qtyInput.value) > 1) qtyInput.value--;
+            const currentVal = parseInt(qtyInput?.value || mobileQtyInput?.value || 1);
+            if (currentVal > 1) {
+                syncQuantityInputs(currentVal - 1);
+            }
         }
 
         function increaseQty() {
-            const maxQty = parseInt(maxQtyEl.textContent) || 0;
-            if (parseInt(qtyInput.value) < maxQty) qtyInput.value++;
+            const maxQty = parseInt(maxQtyEl?.textContent) || 0;
+            const currentVal = parseInt(qtyInput?.value || mobileQtyInput?.value || 1);
+            if (currentVal < maxQty) {
+                syncQuantityInputs(currentVal + 1);
+            }
         }
 
         function formatPrice(price) {
@@ -1197,31 +1366,39 @@
     @push('body-end')
         <!-- Floating Add to Cart Bar (Mobile Only) -->
         @if(!$isOutOfStock)
-        <div class="floating-cart-bar">
-            <div class="floating-price" id="floating-price">₱{{ number_format($product->base_price, 2) }}</div>
-            @auth
-                <button type="button" class="floating-add-btn" onclick="document.getElementById('add-to-cart-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    Add to Cart
-                </button>
-            @else
-                <a href="{{ route('login') }}" class="floating-add-btn">
-                    Sign In to Purchase
-                </a>
-            @endauth
-        </div>
+            <div class="floating-cart-bar">
+                <div class="floating-price" id="floating-price">
+                    @if($product->variants->count() > 0)
+                        ₱{{ number_format($product->variants->first()->getFinalPrice(), 2) }}
+                    @else
+                        ₱{{ number_format($product->base_price, 2) }}
+                    @endif
+                </div>
+                @auth
+                    <button type="button" class="floating-add-btn"
+                        onclick="document.getElementById('add-to-cart-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Add to Cart
+                    </button>
+                @else
+                    <a href="{{ route('login') }}" class="floating-add-btn">
+                        Sign In to Purchase
+                    </a>
+                @endauth
+            </div>
         @endif
 
         <script>
             // Update floating price when variant changes
             document.querySelectorAll('.variant-radio').forEach(radio => {
-                radio.addEventListener('change', function() {
+                radio.addEventListener('change', function () {
                     const price = this.dataset.price;
                     const floatingPrice = document.getElementById('floating-price');
                     if (floatingPrice && price) {
-                        floatingPrice.textContent = '₱' + parseFloat(price).toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        floatingPrice.textContent = '₱' + parseFloat(price).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     }
                 });
             });

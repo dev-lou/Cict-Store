@@ -1,5 +1,14 @@
-<x-app-layout>
-    @section('title', 'Services - ' . config('app.name', 'CICT Dingle'))
+<?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4619374cef299e94fd7263111d0abc69 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->startSection('title', 'Services - ' . config('app.name', 'CICT Dingle')); ?>
 
     <style>
         /* ============ DESIGN TOKENS ============ */
@@ -50,7 +59,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: url('{{ asset("images/cict_hero_bg.png") }}') center/cover;
+            background: url('<?php echo e(asset("images/cict_hero_bg.png")); ?>') center/cover;
             opacity: 0.15;
         }
 
@@ -577,52 +586,52 @@
     <!-- Services Content -->
     <div class="services-content">
         <div class="services-container">
-            @forelse($groupedServices as $category => $categoryServices)
+            <?php $__empty_1 = true; $__currentLoopData = $groupedServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category => $categoryServices): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <div class="category-section">
                     <div class="category-header">
-                        <h2 class="category-title">{{ $category }}</h2>
-                        @php $catDesc = $categoryDescriptions[$category] ?? null; @endphp
-                        <p class="category-subtitle">{{ $catDesc ?: 'Browse our available services' }}</p>
+                        <h2 class="category-title"><?php echo e($category); ?></h2>
+                        <?php $catDesc = $categoryDescriptions[$category] ?? null; ?>
+                        <p class="category-subtitle"><?php echo e($catDesc ?: 'Browse our available services'); ?></p>
                     </div>
 
                     <div class="services-grid">
-                        @foreach($categoryServices as $service)
-                            @php
+                        <?php $__currentLoopData = $categoryServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php
                                 $startingPrice = $service->price_bw ?? $service->price_color;
                                 $priceLabel = $service->price_label ?: 'per unit';
-                            @endphp
-                            <a href="{{ route('services.show', $service->slug) }}" class="service-card reveal-on-scroll">
+                            ?>
+                            <a href="<?php echo e(route('services.show', $service->slug)); ?>" class="service-card reveal-on-scroll">
                                 <div class="service-header">
-                                    <div class="service-icon">{{ $service->icon ?? '🖨️' }}</div>
+                                    <div class="service-icon"><?php echo e($service->icon ?? '🖨️'); ?></div>
                                     <div class="service-title-group">
-                                        <h3 class="service-title">{{ $service->title }}</h3>
-                                        <span class="service-category-badge">{{ $service->category ?? 'Service' }}</span>
+                                        <h3 class="service-title"><?php echo e($service->title); ?></h3>
+                                        <span class="service-category-badge"><?php echo e($service->category ?? 'Service'); ?></span>
                                     </div>
                                 </div>
-                                <p class="service-description">{{ Str::limit($service->description, 120) }}</p>
+                                <p class="service-description"><?php echo e(Str::limit($service->description, 120)); ?></p>
                                 <div class="service-footer">
-                                    @if($startingPrice)
+                                    <?php if($startingPrice): ?>
                                         <div>
                                             <div class="service-price-label">Starting from</div>
-                                            <div class="service-price">₱{{ number_format($startingPrice, 2) }}</div>
+                                            <div class="service-price">₱<?php echo e(number_format($startingPrice, 2)); ?></div>
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                     <span class="service-link">
                                         Details <span>→</span>
                                     </span>
                                 </div>
                             </a>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="empty-state">
                     <p class="empty-state-text">No services available at the moment.</p>
                 </div>
-            @endforelse
+            <?php endif; ?>
 
             <!-- Officers Section -->
-            @if(isset($officers) && $officers->count() > 0)
+            <?php if(isset($officers) && $officers->count() > 0): ?>
                 <div class="officers-section reveal-on-scroll">
                     <div class="section-header" style="margin-bottom: 32px;">
                         <h2 class="section-title">Our Officers</h2>
@@ -630,23 +639,24 @@
                     </div>
 
                     <div class="officers-grid">
-                        @foreach($officers as $officer)
-                            <a href="{{ $officer->messenger_url }}" target="_blank" class="officer-card">
+                        <?php $__currentLoopData = $officers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $officer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <a href="<?php echo e($officer->messenger_url); ?>" target="_blank" class="officer-card">
                                 <div class="officer-avatar">
-                                    {{ $officer->initials }}
+                                    <?php echo e($officer->initials); ?>
+
                                 </div>
                                 <div class="officer-info">
-                                    <h4 class="officer-name">{{ $officer->name }}</h4>
-                                    <p class="officer-title">{{ $officer->title }}</p>
+                                    <h4 class="officer-name"><?php echo e($officer->name); ?></h4>
+                                    <p class="officer-title"><?php echo e($officer->title); ?></p>
                                 </div>
                                 <div class="officer-action">
                                     <span>Message →</span>
                                 </div>
                             </a>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
 
             <!-- Instructions Section -->
             <div class="instructions-section reveal-on-scroll">
@@ -693,4 +703,13 @@
         </div>
     </div>
 
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4619374cef299e94fd7263111d0abc69)): ?>
+<?php $attributes = $__attributesOriginal4619374cef299e94fd7263111d0abc69; ?>
+<?php unset($__attributesOriginal4619374cef299e94fd7263111d0abc69); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4619374cef299e94fd7263111d0abc69)): ?>
+<?php $component = $__componentOriginal4619374cef299e94fd7263111d0abc69; ?>
+<?php unset($__componentOriginal4619374cef299e94fd7263111d0abc69); ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/services/index.blade.php ENDPATH**/ ?>

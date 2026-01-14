@@ -203,10 +203,11 @@ class UserManageController extends Controller
             'system_uptime' => '99.9%',
         ];
 
-        $siteName = config('app.name', 'IGP Hub');
+        $siteName = config('app.name', 'CICT Dingle');
         $logo = Setting::where('key', 'site_logo')->first();
+        $favicon = Setting::where('key', 'site_favicon')->first();
 
-        return view('admin.settings.index', compact('stats', 'siteName', 'logo'));
+        return view('admin.settings.index', compact('stats', 'siteName', 'logo', 'favicon'));
     }
 
     /**
@@ -339,6 +340,47 @@ class UserManageController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Failed to update logo: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update site favicon.
+     */
+    public function updateFavicon(Request $request)
+    {
+        $request->validate([
+            'favicon' => 'required|mimes:ico,png,svg+xml|max:500',
+        ]);
+
+        try {
+            $setting = Setting::firstOrCreate(['key' => 'site_favicon']);
+
+            // Delete old favicon if exists
+            if ($setting->value && Storage::disk('supabase')->exists($setting->value)) {
+                Storage::disk('supabase')->delete($setting->value);
+            }
+
+            // Store new favicon in Supabase
+            $path = $request->file('favicon')->store('favicons', 'supabase');
+            $setting->value = $path;
+            $setting->save();
+
+            // Log action
+            AuditLog::create([
+                'user_id' => auth()->id(),
+                'action' => 'update',
+                'model' => 'Setting',
+                'model_id' => $setting->id,
+                'new_values' => ['favicon' => $path],
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+
+            return redirect()->route('admin.settings.index')
+                ->with('success', 'Favicon updated successfully! The new favicon is now displayed in browser tabs.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Failed to update favicon: ' . $e->getMessage());
         }
     }
 }

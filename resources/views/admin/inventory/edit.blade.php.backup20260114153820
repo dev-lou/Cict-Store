@@ -304,12 +304,12 @@
             align-items: center;
             animation: fadeIn 0.3s ease;
             padding: 20px;
-            overflow-y: auto;
         }
         .modal-overlay.active {
             display: flex;
             align-items: center;
             justify-content: center;
+            place-items: center;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -323,10 +323,9 @@
             padding: 28px;
             max-width: 700px;
             width: 100%;
-            max-height: 85vh;
+            max-height: calc(100vh - 64px);
             margin: auto;
-            display: flex;
-            flex-direction: column;
+            overflow-y: auto;
             animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 100px rgba(59, 130, 246, 0.1);
         }
@@ -338,10 +337,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 28px;
             padding-bottom: 16px;
             border-bottom: 1px solid rgba(59, 130, 246, 0.3);
-            flex-shrink: 0;
         }
         .modal-header h2 {
             color: #f1f5f9;
@@ -521,92 +519,99 @@
 
                 <!-- Stock/Variants Section -->
                 @if ($product->variants->count() > 0)
-                    <!-- Variants Exist -->
+                    <!-- Product Has Variants - Clean Modern Design -->
                     <div class="section-container">
                         <div class="section-header">
                             <span style="display: flex; align-items: center; gap: 10px;">
                                 <span style="font-size: 1.3rem;">📦</span>
-                                <span>Manage Variants</span>
+                                <span>Product Variants</span>
                             </span>
                             <span style="color: #94a3b8; font-size: 0.85rem; font-weight: 500;">Must keep 2+ or remove all</span>
                         </div>
 
-                        <!-- Variants Summary Card -->
-                        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 20px; margin-bottom: 24px; backdrop-filter: blur(10px);">
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                                <div style="text-align: center;">
-                                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 6px 0;">Total Stock</p>
-                                    <span style="color: #3b82f6; font-weight: 700; font-size: 2rem;">{{ $product->variants->sum('stock_quantity') }}</span>
-                                    <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 6px;">units</span>
-                                </div>
-                                <div style="text-align: center;">
-                                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 6px 0;">Low Stock Variants</p>
-                                    <span style="color: #ff9500; font-weight: 700; font-size: 2rem;">{{ $product->variants->where('stock_quantity', '<=', 20)->count() }}</span>
-                                </div>
-                                <div style="text-align: center;">
-                                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 6px 0;">Avg. Price Modifier</p>
-                                    <span style="color: #22c55e; font-weight: 700; font-size: 2rem;">₱{{ number_format($product->variants->avg('price_modifier') ?? 0, 2) }}</span>
-                                </div>
+                        <!-- Summary Stats -->
+                        <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 20px; margin-bottom: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                            <div style="text-align: center;">
+                                <p style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">Total Stock</p>
+                                <p style="color: #3b82f6; font-weight: 700; font-size: 1.8rem; margin: 0;">{{ $product->variants->sum('stock_quantity') }}</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">Low Stock</p>
+                                <p style="color: #f59e0b; font-weight: 700; font-size: 1.8rem; margin: 0;">{{ $product->variants->where('stock_quantity', '<=', 20)->count() }}</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">Avg Price Change</p>
+                                <p style="color: #22c55e; font-weight: 700; font-size: 1.8rem; margin: 0;">₱{{ number_format($product->variants->avg('price_modifier') ?? 0, 2) }}</p>
                             </div>
                         </div>
 
-                        <!-- Variants Table View -->
-                        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; overflow: hidden; margin-bottom: 24px;">
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-bottom: 1px solid rgba(59, 130, 246, 0.3);">
-                                        <th style="padding: 14px 16px; text-align: left; color: #ffffff; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.3px;">Variant Name</th>
-                                        <th style="padding: 14px 16px; text-align: center; color: #ffffff; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.3px;">Stock</th>
-                                        <th style="padding: 14px 16px; text-align: center; color: #ffffff; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.3px;">Price Modifier</th>
-                                        <th style="padding: 14px 16px; text-align: center; color: #ffffff; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.3px;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($product->variants as $index => $variant)
-                                        <tr class="variant-row" data-variant-id="{{ $variant->id }}" style="border-bottom: 1px solid rgba(71, 85, 105, 0.2); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.08)';" onmouseout="this.style.backgroundColor='transparent';">
-                                            <td style="padding: 14px 16px;">
-                                                <input type="text" class="variantName form-input variant-input" name="variants[{{ $index }}][name]" value="{{ $variant->name }}" placeholder="Variant name" style="padding: 10px 12px; font-size: 0.95rem;" />
-                                            </td>
-                                            <td style="padding: 14px 16px; text-align: center;">
-                                                <input type="number" class="variantStock form-input variant-input" name="variants[{{ $index }}][stock_quantity]" value="{{ $variant->stock_quantity }}" min="0" placeholder="0" style="padding: 10px 12px; font-size: 0.95rem; text-align: center; width: 100px; margin: 0 auto;" />
-                                                @if($variant->stock_quantity <= 20)
-                                                    <span style="display: block; color: #ff9500; font-size: 0.75rem; margin-top: 4px; font-weight: 600;">⚠️ Low Stock</span>
-                                                @endif
-                                            </td>
-                                            <td style="padding: 14px 16px; text-align: center;">
-                                                <input type="number" class="variantPriceModifier form-input variant-input" name="variants[{{ $index }}][price_modifier]" value="{{ $variant->price_modifier }}" step="0.01" placeholder="0.00" style="padding: 10px 12px; font-size: 0.95rem; text-align: center; width: 120px; margin: 0 auto;" />
-                                            </td>
-                                            <td style="padding: 14px 16px; text-align: center;">
-                                                <button type="button" class="deleteVariantBtn btn-danger" data-variant-id="{{ $variant->id }}" onclick="deleteVariant(this, event);" style="padding: 8px 14px; font-size: 0.9rem; white-space: nowrap;">
-                                                    🗑️
-                                                </button>
-                                            </td>
-                                            <input type="hidden" class="variantDeletedFlag" name="variants[{{ $index }}][delete]" value="0" />
-                                            <input type="hidden" class="variantIdField" name="variants[{{ $index }}][id]" value="{{ $variant->id }}" />
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <!-- Existing Variants as Cards -->
+                        <div id="existingVariantsList" style="display: grid; gap: 16px; margin-bottom: 20px;">
+                            @foreach ($product->variants as $index => $variant)
+                                <div class="existing-variant-card" data-variant-id="{{ $variant->id }}" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 20px; position: relative;">
+                                    <div style="position: absolute; top: 12px; right: 12px;">
+                                        <button type="button" class="delete-existing-variant" onclick="markVariantForDeletion({{ $variant->id }}, {{ $index }})" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.2)';">
+                                            🗑️ Delete
+                                        </button>
+                                    </div>
+
+                                    <div style="margin-bottom: 16px;">
+                                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Variant Name *</label>
+                                        <input type="text" name="variants[{{ $index }}][name]" value="{{ $variant->name }}" class="form-input" required style="font-size: 0.95rem;" />
+                                    </div>
+
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                        <div>
+                                            <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Stock Quantity *</label>
+                                            <input type="number" name="variants[{{ $index }}][stock_quantity]" value="{{ $variant->stock_quantity }}" class="form-input" min="0" required style="font-size: 0.95rem;" />
+                                            @if($variant->stock_quantity <= 20)
+                                                <span style="color: #f59e0b; font-size: 0.75rem; display: block; margin-top: 4px; font-weight: 600;">⚠️ Low Stock</span>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Price Change (₱)</label>
+                                            <input type="number" name="variants[{{ $index }}][price_modifier]" value="{{ $variant->price_modifier }}" class="form-input" step="0.01" style="font-size: 0.95rem;" />
+                                            <span style="color: #94a3b8; font-size: 0.75rem; display: block; margin-top: 4px;">+/- from base price</span>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                                        <div>
+                                            <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Size</label>
+                                            <input type="text" name="variants[{{ $index }}][size]" value="{{ $variant->size }}" class="form-input" placeholder="S, M, L..." style="font-size: 0.9rem;" />
+                                        </div>
+                                        <div>
+                                            <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Color</label>
+                                            <input type="text" name="variants[{{ $index }}][color]" value="{{ $variant->color }}" class="form-input" placeholder="Red, Blue..." style="font-size: 0.9rem;" />
+                                        </div>
+                                        <div>
+                                            <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Weight</label>
+                                            <input type="text" name="variants[{{ $index }}][weight]" value="{{ $variant->weight }}" class="form-input" placeholder="100g..." style="font-size: 0.9rem;" />
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}" />
+                                    <input type="hidden" name="variants[{{ $index }}][delete]" value="0" class="delete-flag-{{ $variant->id }}" />
+                                </div>
+                            @endforeach
                         </div>
 
-                        <!-- Add New Variants Section (Inline) -->
-                        <div style="margin-top: 24px;">
-                            <div id="newVariantsList" style="display: grid; gap: 16px; margin-bottom: 20px;"></div>
-                            
-                            <!-- Add Variant Button -->
-                            <button type="button" id="addNewVariantBtn" class="btn-primary" style="width: 100%; padding: 14px; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                <span style="font-size: 1.2rem;">+</span>
-                                <span>Add New Variant</span>
-                            </button>
+                        <!-- Add New Variants -->
+                        <div id="newVariantsList" style="display: grid; gap: 16px; margin-bottom: 20px;"></div>
 
-                            <!-- Validation Warning -->
-                            <div id="variantWarningEdit" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 12px 16px; margin-top: 16px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <span style="font-size: 1.2rem;">⚠️</span>
-                                    <p style="color: #fca5a5; font-size: 0.85rem; margin: 0; font-weight: 600;">
-                                        After deletion, you'll have only 1 variant. Add at least one more, or delete all variants.
-                                    </p>
-                                </div>
+                        <!-- Add Variant Button -->
+                        <button type="button" id="addNewVariantBtn" class="btn-primary" style="width: 100%; padding: 14px; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">+</span>
+                            <span>Add New Variant</span>
+                        </button>
+
+                        <!-- Validation Warning -->
+                        <div id="variantWarningEdit" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 12px 16px; margin-top: 16px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.2rem;">⚠️</span>
+                                <p style="color: #fca5a5; font-size: 0.85rem; margin: 0; font-weight: 600;">
+                                    After deletion, you'll have only 1 variant. Add at least one more, or delete all variants.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -722,216 +727,292 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        console.log('Edit page JavaScript loaded - Version 2.0');
-        
-        // Variant Management for Edit Page
+        // Variant Management for Edit Page - CLEAN SYSTEM
         let newVariantIndex = 0;
 
-        // Create new variant card
-        window.createNewVariantCard = function(index, data = {}) {
-            const card = document.createElement('div');
-            card.className = 'new-variant-card';
-            card.dataset.newVariantIndex = index;
-            card.style.cssText = 'background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(21, 128, 61, 0.05) 100%); border: 2px solid rgba(34, 197, 94, 0.3); border-radius: 10px; padding: 20px; position: relative;';
-            
-            card.innerHTML = `
-                <div style="position: absolute; top: -10px; left: 20px; background: rgba(34, 197, 94, 0.9); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;">NEW</div>
-                <div style="position: absolute; top: 12px; right: 12px;">
-                    <button type="button" onclick="window.removeNewVariant(${index})" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.2)';">
-                        🗑️ Remove
-                    </button>
-                </div>
+        // OLD MODAL CODE - DISABLED
+        /*
+        let variantCount = 1;
+        let variantCountExisting = 0;
+        let modalVariantCount = 0;
 
-                <div style="margin-bottom: 16px; margin-top: 10px;">
-                    <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Variant Name *</label>
-                    <input type="text" name="new_variants[${index}][name]" value="${data.name || ''}" class="form-input" placeholder="e.g., Red - Large, Blue - Medium" required style="font-size: 0.95rem;" />
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div>
-                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Stock Quantity *</label>
-                        <input type="number" name="new_variants[${index}][stock_quantity]" value="${data.stock_quantity || ''}" class="form-input" min="0" placeholder="0" required style="font-size: 0.95rem;" />
-                    </div>
-                    <div>
-                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Price Change (₱)</label>
-                        <input type="number" name="new_variants[${index}][price_modifier]" value="${data.price_modifier || ''}" class="form-input" step="0.01" placeholder="0.00" style="font-size: 0.95rem;" />
-                    </div>
-                </div>
-            `;
-            
-            return card;
+        function closeVariantModal() {
+            document.getElementById('variantModal').classList.remove('active');
+            document.getElementById('modalVariantsContainer').innerHTML = '';
+            modalVariantCount = 0;
         }
 
-        // Add new variant
-        const addNewVariantBtn = document.getElementById('addNewVariantBtn');
-        if (addNewVariantBtn) {
-            addNewVariantBtn.addEventListener('click', function() {
-                const container = document.getElementById('newVariantsList');
-                const card = window.createNewVariantCard(newVariantIndex++);
-                container.appendChild(card);
-                
-                // Scroll to new variant
-                setTimeout(() => {
-                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 100);
-            });
+        function addVariantToModal() {
+            document.getElementById('modalVariantsContainer').appendChild(createVariantInput(modalVariantCount++, true));
+            updateRemoveButtons();
         }
 
-        // Remove new variant
-        window.removeNewVariant = function(index) {
-            const card = document.querySelector(`[data-new-variant-index="${index}"]`);
-            if (card) {
-                card.style.opacity = '0';
-                card.style.transform = 'translateX(-20px)';
-                setTimeout(() => {
-                    card.remove();
-                    window.reindexNewVariants();
-                }, 300);
+        function saveModalVariants() {
+            const modalContainer = document.getElementById('modalVariantsContainer');
+            const variantDivs = Array.from(modalContainer.querySelectorAll('div[style*="background"]'));
+            
+            if (variantDivs.length === 0) {
+                Swal.fire({
+                    title: 'No Variants',
+                    text: 'Please add at least one variant before saving.',
+                    icon: 'warning',
+                    iconColor: '#f59e0b',
+                    background: 'rgba(15, 23, 42, 0.98)',
+                    color: '#e2e8f0',
+                    confirmButtonColor: '#3b82f6',
+                    backdrop: 'rgba(0, 0, 0, 0.7)'
+                });
+                return;
             }
-        }
 
-        // Reindex new variants
-        window.reindexNewVariants = function() {
-            const cards = document.querySelectorAll('.new-variant-card');
-            cards.forEach((card, newIndex) => {
-                card.dataset.newVariantIndex = newIndex;
-                card.querySelectorAll('input').forEach(input => {
-                    const name = input.getAttribute('name');
-                    if (name) {
-                        input.setAttribute('name', name.replace(/\[\d+\]/, `[${newIndex}]`));
+            let hasData = false;
+            const variantGrid = document.querySelector('.variant-grid');
+            
+            // Process each variant form in modal
+            variantDivs.forEach((variantForm, idx) => {
+                const inputs = variantForm.querySelectorAll('input[type="text"], input[type="number"]');
+                let variantHasData = false;
+                const variantData = {};
+                
+                inputs.forEach(input => {
+                    const value = input.value.trim();
+                    if (value !== '') {
+                        variantHasData = true;
+                    }
+                    const nameAttr = input.getAttribute('name');
+                    if (nameAttr) {
+                        const fieldName = nameAttr.match(/\[(\w+)\]$/)?.[1];
+                        if (fieldName) {
+                            variantData[fieldName] = value;
+                        }
                     }
                 });
-                const removeBtn = card.querySelector('button[onclick^="window.removeNewVariant"]');
-                if (removeBtn) {
-                    removeBtn.setAttribute('onclick', `window.removeNewVariant(${newIndex})`);
+                
+                if (variantHasData) {
+                    hasData = true;
+                    
+                    // Create a visual variant card to add to the grid
+                    const newVariantCard = document.createElement('div');
+                    newVariantCard.className = 'variant-card';
+                    newVariantCard.style.cssText = 'position: relative;';
+                    
+                    const currentIndex = variantGrid.querySelectorAll('.variant-card').length;
+                    
+                    newVariantCard.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                            <div style="flex: 1;">
+                                <label class="form-label" style="font-size: 0.95rem; margin-bottom: 10px;">Variant Name *</label>
+                                <input type="text" class="variantName form-input variant-input" name="new_variants[${currentIndex}][name]" value="${variantData.name || ''}" placeholder="e.g., Red Large" />
+                            </div>
+                            <button type="button" class="deleteVariantBtn btn-danger" onclick="this.closest('.variant-card').remove();" style="padding: 10px 14px; font-size: 0.95rem; margin-left: 12px; margin-top: 32px; white-space: nowrap;">
+                                🗑️ Delete
+                            </button>
+                        </div>
+
+                        <div class="input-group" style="margin-bottom: 20px;">
+                            <div>
+                                <label class="form-label" style="font-size: 0.95rem; margin-bottom: 10px;">Stock *</label>
+                                <input type="number" class="variantStock form-input variant-input" name="new_variants[${currentIndex}][stock_quantity]" value="${variantData.stock_quantity || ''}" min="0" placeholder="0" />
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 0.95rem; margin-bottom: 10px;">Price Modifier (₱)</label>
+                                <input type="number" class="variantPriceModifier form-input variant-input" name="new_variants[${currentIndex}][price_modifier]" value="${variantData.price_modifier || ''}" step="0.01" placeholder="0.00" />
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-bottom: 20px;">
+                            <div>
+                                <label class="form-label" style="font-size: 0.95rem; margin-bottom: 10px;">Size</label>
+                                <input type="text" class="variantSize form-input variant-input" name="new_variants[${currentIndex}][size]" value="${variantData.size || ''}" placeholder="M, L, XL, 2XL..." />
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 0.95rem; margin-bottom: 10px;">Color</label>
+                                <input type="text" class="variantColor form-input variant-input" name="new_variants[${currentIndex}][color]" value="${variantData.color || ''}" placeholder="Red, Blue, Black..." />
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <label class="form-label" style="font-size: 0.95rem; margin-bottom: 10px;">Weight</label>
+                            <input type="text" class="variantWeight form-input variant-input" name="new_variants[${currentIndex}][weight]" value="${variantData.weight || ''}" placeholder="500g, 1kg, 2.5kg..." />
+                        </div>
+                    `;
+                    
+                    variantGrid.appendChild(newVariantCard);
                 }
             });
-            newVariantIndex = cards.length;
-        }
 
-        // Mark existing variant for deletion (toggle)
-        window.deleteVariant = function(button, event) {
-            event.preventDefault();
-            const row = button.closest('tr');
-            const deleteField = row.querySelector('input[name*="[delete]"]');
-            
-            if (deleteField.value === '1') {
-                // Restore
-                deleteField.value = '0';
-                row.style.opacity = '1';
-                row.style.background = 'transparent';
-                button.textContent = '🗑️';
-                button.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-            } else {
-                // Mark for deletion
-                deleteField.value = '1';
-                row.style.opacity = '0.5';
-                row.style.background = 'rgba(239, 68, 68, 0.1)';
-                button.textContent = '↶';
-                button.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
-            }
-        }
-
-        // For products without variants (legacy) - Create legacy variant card
-        window.createLegacyVariantCard = function() {
-            const card = document.createElement('div');
-            card.style.cssText = 'background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(202, 138, 4, 0.05) 100%); border: 2px solid rgba(234, 179, 8, 0.3); border-radius: 10px; padding: 20px; position: relative;';
-            
-            card.innerHTML = `
-                <div style="position: absolute; top: -10px; left: 20px; background: rgba(234, 179, 8, 0.9); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;">LEGACY</div>
-                <p style="color: #cbd5e1; margin-bottom: 16px; font-size: 0.95rem;">This product was created before variants. Add variants below:</p>
-                
-                <div style="margin-bottom: 16px;">
-                    <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Variant Name *</label>
-                    <input type="text" name="legacy_variant_name" class="form-input" placeholder="e.g., Default" required style="font-size: 0.95rem;" />
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div>
-                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Stock Quantity *</label>
-                        <input type="number" name="legacy_variant_stock" class="form-input" min="0" value="{{ $product->stock_quantity ?? 0 }}" required style="font-size: 0.95rem;" />
-                    </div>
-                    <div>
-                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Price Change (₱)</label>
-                        <input type="number" name="legacy_variant_price" class="form-input" step="0.01" value="0.00" style="font-size: 0.95rem;" />
-                    </div>
-                </div>
-            `;
-            
-            return card;
-        }
-
-        // Initialize legacy variant card if no variants exist
-        const hasVariants = {{ $product->variants->count() > 0 ? 'true' : 'false' }};
-        if (!hasVariants) {
-            const existingVariantsSection = document.querySelector('.variant-grid')?.closest('.bg-gray-800');
-            if (existingVariantsSection) {
-                existingVariantsSection.style.display = 'none';
-            }
-            
-            // Show helpful message for legacy products
-            const newVariantsSection = document.getElementById('newVariantsList')?.closest('.bg-gray-800');
-            if (newVariantsSection) {
-                const notice = document.createElement('div');
-                notice.style.cssText = 'background: rgba(234, 179, 8, 0.1); border: 2px solid rgba(234, 179, 8, 0.3); border-radius: 10px; padding: 16px; margin-bottom: 16px; color: #fef08a; font-size: 0.9rem;';
-                notice.innerHTML = '<strong>ℹ️ Note:</strong> This product was created before variants. Click "Add New Variant" to add variant options.';
-                newVariantsSection.insertBefore(notice, newVariantsSection.firstChild.nextSibling);
-            }
-        }
-
-        // Form submission validation
-        const productForm = document.querySelector('#productForm');
-        console.log('Form found:', productForm);
-        
-        if (productForm) {
-            productForm.addEventListener('submit', function(e) {
-                console.log('Form submit triggered!');
-                
-                // Debug: Check what data will be submitted
-                const formData = new FormData(productForm);
-                console.log('Form data entries:');
-                for (let [key, value] of formData.entries()) {
-                    if (key.includes('variant')) {
-                        console.log(key, '=', value);
-                    }
-                }
-                
-                const existingVariants = document.querySelectorAll('.variant-row');
-                const newVariants = document.querySelectorAll('.new-variant-card');
-                const deletedVariants = Array.from(document.querySelectorAll('input[name*="[delete]"]'))
-                    .filter(input => input.value === '1').length;
-                
-                const remainingExisting = existingVariants.length - deletedVariants;
-                const totalVariants = remainingExisting + newVariants.length;
-                
-                console.log('Validation Check:', {
-                    existingVariants: existingVariants.length,
-                    newVariants: newVariants.length,
-                    deletedVariants: deletedVariants,
-                    remainingExisting: remainingExisting,
-                    totalVariants: totalVariants
+            if (!hasData) {
+                Swal.fire({
+                    title: 'Empty Variants',
+                    text: 'Please fill in at least one variant field.',
+                    icon: 'warning',
+                    iconColor: '#f59e0b',
+                    background: 'rgba(15, 23, 42, 0.98)',
+                    color: '#e2e8f0',
+                    confirmButtonColor: '#3b82f6',
+                    backdrop: 'rgba(0, 0, 0, 0.7)'
                 });
-                
-                // No validation - allow any number of variants
-                console.log('Submitting form...');
-            });
-        } else {
-            console.error('Form #productForm not found!');
-        }
+                return;
+            }
 
-        // Show warning message if it exists
-        @if(session('warning'))
+            closeVariantModal();
+            
             Swal.fire({
-                title: 'Warning',
-                text: '{{ session('warning') }}',
+                title: 'Success!',
+                text: 'Variants added to Manage Variants section.',
+                icon: 'success',
+                iconColor: '#22c55e',
+                background: 'rgba(15, 23, 42, 0.98)',
+                color: '#e2e8f0',
+                confirmButtonColor: '#3b82f6',
+                backdrop: 'rgba(0, 0, 0, 0.7)',
+                timer: 2000
+            });
+        }
+
+        // Close modal when clicking overlay
+        document.getElementById('variantModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVariantModal();
+            }
+        });
+
+        function deleteVariant(btn, event) {
+            event.preventDefault();
+            const variantRow = btn.closest('.variant-row') || btn.closest('.variant-card');
+            
+            Swal.fire({
+                title: 'Delete Variant?',
+                text: 'Are you sure you want to delete this variant? This action cannot be undone.',
                 icon: 'warning',
                 iconColor: '#f59e0b',
                 background: 'rgba(15, 23, 42, 0.98)',
                 color: '#e2e8f0',
-                confirmButtonColor: '#3b82f6',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: 'rgba(148, 163, 184, 0.2)',
+                confirmButtonText: 'Yes, Delete',
                 backdrop: 'rgba(0, 0, 0, 0.7)'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    const deleteFlag = variantRow.querySelector('.variantDeletedFlag');
+                    if (deleteFlag) deleteFlag.value = '1';
+                    variantRow.classList.add('deleted');
+                    btn.textContent = '✓ Marked';
+                    btn.style.backgroundColor = '#3b82f6';
+                    btn.disabled = true;
+                    
+                    // Floating save bar removed on edit page — keep safe check to avoid errors
+                    (function(){ const fb = document.getElementById('floatingSaveBar'); if (fb) fb.classList.add('visible'); })();
+                }
             });
-        @endif
+        }
+
+        // Show floating save bar on form changes
+        let formChanged = false;
+        const formInputs = document.querySelectorAll('#productForm input, #productForm textarea, #productForm select');
+        formInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                formChanged = true;
+                (function(){ const fb = document.getElementById('floatingSaveBar'); if (fb) fb.classList.add('visible'); })();
+            });
+        });
+
+        // Show/hide floating save bar on scroll
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            if (formChanged) {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                (function(){ const fb = document.getElementById('floatingSaveBar'); if (!fb) return; if (scrollTop > 300) fb.classList.add('visible'); else fb.classList.remove('visible'); })();
+            }
+        }, false);
+
+        function createVariantInput(index, isModal = false) {
+            const div = document.createElement('div');
+            div.style.cssText = 'background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 16px; transition: all 0.25s ease;';
+            const nameInputIndex = isModal ? `new_variants[${index}][name]` : `new_variants[${index}][name]`;
+            div.innerHTML = `
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; letter-spacing: 0.3px;">Variant Name</label>
+                    <input type="text" name="new_variants[${index}][name]" placeholder="e.g., Red Large, Blue Medium" style="width: 100%; padding: 10px 14px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); color: #e2e8f0; border-radius: 4px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.15)'; this.style.background='rgba(15, 23, 42, 0.95)';" onblur="this.style.borderColor='rgba(59, 130, 246, 0.3)'; this.style.boxShadow='none'; this.style.background='rgba(15, 23, 42, 0.8)';" />
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; letter-spacing: 0.3px;">Stock</label>
+                        <input type="number" name="new_variants[${index}][stock_quantity]" min="0" placeholder="0" style="width: 100%; padding: 10px 14px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); color: #e2e8f0; border-radius: 4px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.15)'; this.style.background='rgba(15, 23, 42, 0.95)';" onblur="this.style.borderColor='rgba(59, 130, 246, 0.3)'; this.style.boxShadow='none'; this.style.background='rgba(15, 23, 42, 0.8)';" />
+                    </div>
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; letter-spacing: 0.3px;">Price Modifier (₱)</label>
+                        <input type="number" name="new_variants[${index}][price_modifier]" step="0.01" placeholder="0.00" style="width: 100%; padding: 10px 14px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); color: #e2e8f0; border-radius: 4px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.15)'; this.style.background='rgba(15, 23, 42, 0.95)';" onblur="this.style.borderColor='rgba(59, 130, 246, 0.3)'; this.style.boxShadow='none'; this.style.background='rgba(15, 23, 42, 0.8)';" />
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; letter-spacing: 0.3px;">Size</label>
+                        <input type="text" name="new_variants[${index}][size]" placeholder="M, L, XL, 2XL..." style="width: 100%; padding: 10px 14px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); color: #e2e8f0; border-radius: 4px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.15)'; this.style.background='rgba(15, 23, 42, 0.95)';" onblur="this.style.borderColor='rgba(59, 130, 246, 0.3)'; this.style.boxShadow='none'; this.style.background='rgba(15, 23, 42, 0.8)';" />
+                    </div>
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; letter-spacing: 0.3px;">Color</label>
+                        <input type="text" name="new_variants[${index}][color]" placeholder="Red, Blue, Black..." style="width: 100%; padding: 10px 14px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); color: #e2e8f0; border-radius: 4px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.15)'; this.style.background='rgba(15, 23, 42, 0.95)';" onblur="this.style.borderColor='rgba(59, 130, 246, 0.3)'; this.style.boxShadow='none'; this.style.background='rgba(15, 23, 42, 0.8)';" />
+                    </div>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; letter-spacing: 0.3px;">Weight</label>
+                    <input type="text" name="new_variants[${index}][weight]" placeholder="500g, 1kg, 2.5kg..." style="width: 100%; padding: 10px 14px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); color: #e2e8f0; border-radius: 4px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.15)'; this.style.background='rgba(15, 23, 42, 0.95)';" onblur="this.style.borderColor='rgba(59, 130, 246, 0.3)'; this.style.boxShadow='none'; this.style.background='rgba(15, 23, 42, 0.8)';" />
+                </div>
+                <button type="button" class="removeVariantBtn" style="width: 100%; padding: 8px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; display: none; margin-top: 10px; transition: all 0.2s ease; font-size: 0.85rem;" onmouseover="this.style.background='linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'; this.style.transform='translateY(0)';" onclick="this.parentElement.remove(); updateRemoveButtons();">
+                    ✕ Remove Variant
+                </button>
+            `;
+            return div;
+        }
+
+        function updateRemoveButtons() {
+            document.querySelectorAll('.removeVariantBtn').forEach(btn => {
+                btn.style.display = document.querySelectorAll('.removeVariantBtn').length > 1 ? 'block' : 'none';
+            });
+        }
+
+        // For products without variants
+        const toggleVariantsBtn = document.getElementById('toggleVariantsBtn');
+        if (toggleVariantsBtn) {
+            toggleVariantsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = document.getElementById('variantsFormSection');
+                section.style.display = section.style.display === 'none' ? 'block' : 'none';
+                if (section.style.display === 'block' && document.getElementById('variantsContainer').children.length === 0) {
+                    document.getElementById('variantsContainer').appendChild(createVariantInput(0));
+                    variantCount = 1;
+                    updateRemoveButtons();
+                }
+            });
+
+            document.getElementById('closeVariantsBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('variantsContainer').innerHTML = '';
+                document.getElementById('variantsFormSection').style.display = 'none';
+            });
+
+            document.getElementById('addVariantBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('variantsContainer').appendChild(createVariantInput(variantCount++));
+                updateRemoveButtons();
+            });
+        }
+
+        // For products with variants
+        const toggleNewVariantBtn = document.getElementById('toggleNewVariantBtn');
+        if (toggleNewVariantBtn) {
+            toggleNewVariantBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('variantModal').classList.add('active');
+                if (document.getElementById('modalVariantsContainer').children.length === 0) {
+                    document.getElementById('modalVariantsContainer').appendChild(createVariantInput(0, true));
+                    modalVariantCount = 1;
+                    updateRemoveButtons();
+                }
+            });
+        }
 
         // Image upload (robust + debug)
         const imageInput = document.getElementById('imageInput');
@@ -1124,22 +1205,296 @@
             } catch (e) { /* silent */ }
         });
 
-        // Save button
+        // Variant Management for Edit Page - NEW CLEAN SYSTEM
+        let newVariantIndex = 0;
+
+        // Mark existing variant for deletion
+        window.markVariantForDeletion = function(variantId, index) {
+            const card = document.querySelector(`[data-variant-id="${variantId}"]`);
+            if (!card) return;
+
+            Swal.fire({
+                title: 'Delete Variant?',
+                text: 'This will remove the variant when you save changes.',
+                icon: 'warning',
+                iconColor: '#f59e0b',
+                background: 'rgba(15, 23, 42, 0.98)',
+                color: '#e2e8f0',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Yes, Delete',
+                backdrop: 'rgba(0, 0, 0, 0.7)'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    // Mark for deletion
+                    const deleteFlag = card.querySelector(`.delete-flag-${variantId}`);
+                    if (deleteFlag) deleteFlag.value = '1';
+                    
+                    // Hide card with animation
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(-20px)';
+                    card.style.pointerEvents = 'none';
+                    
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                        window.checkVariantCount();
+                    }, 300);
+                }
+            });
+        }
+
+        // Create new variant card
+        window.createNewVariantCard = function(index, data = {}) {
+            const card = document.createElement('div');
+            card.className = 'new-variant-card';
+            card.dataset.newVariantIndex = index;
+            card.style.cssText = 'background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(21, 128, 61, 0.05) 100%); border: 2px solid rgba(34, 197, 94, 0.3); border-radius: 10px; padding: 20px; position: relative;';
+            
+            card.innerHTML = `
+                <div style="position: absolute; top: -10px; left: 20px; background: rgba(34, 197, 94, 0.9); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;">NEW</div>
+                <div style="position: absolute; top: 12px; right: 12px;">
+                    <button type="button" onclick="window.removeNewVariant(${index})" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.2)';">
+                        🗑️ Remove
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 16px; margin-top: 10px;">
+                    <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Variant Name *</label>
+                    <input type="text" name="new_variants[${index}][name]" value="${data.name || ''}" class="form-input" placeholder="e.g., Red - Large, Blue - Medium" required style="font-size: 0.95rem;" />
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Stock Quantity *</label>
+                        <input type="number" name="new_variants[${index}][stock_quantity]" value="${data.stock_quantity || ''}" class="form-input" min="0" placeholder="0" required style="font-size: 0.95rem;" />
+                    </div>
+                    <div>
+                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Price Change (₱)</label>
+                        <input type="number" name="new_variants[${index}][price_modifier]" value="${data.price_modifier || ''}" class="form-input" step="0.01" placeholder="0.00" style="font-size: 0.95rem;" />
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Size</label>
+                        <input type="text" name="new_variants[${index}][size]" value="${data.size || ''}" class="form-input" placeholder="S, M, L..." style="font-size: 0.9rem;" />
+                    </div>
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Color</label>
+                        <input type="text" name="new_variants[${index}][color]" value="${data.color || ''}" class="form-input" placeholder="Red, Blue..." style="font-size: 0.9rem;" />
+                    </div>
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Weight</label>
+                        <input type="text" name="new_variants[${index}][weight]" value="${data.weight || ''}" class="form-input" placeholder="100g..." style="font-size: 0.9rem;" />
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Add new variant
+        const addNewVariantBtn = document.getElementById('addNewVariantBtn');
+        if (addNewVariantBtn) {
+            addNewVariantBtn.addEventListener('click', function() {
+                const container = document.getElementById('newVariantsList');
+                const card = window.createNewVariantCard(newVariantIndex++);
+                container.appendChild(card);
+                window.checkVariantCount();
+                
+                // Scroll to new variant
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            });
+        }
+
+        // Remove new variant
+        window.removeNewVariant = function(index) {
+            const card = document.querySelector(`[data-new-variant-index="${index}"]`);
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    card.remove();
+                    window.reindexNewVariants();
+                    window.checkVariantCount();
+                }, 300);
+            }
+        }
+
+        // Reindex new variants
+        window.reindexNewVariants = function() {
+            const cards = document.querySelectorAll('.new-variant-card');
+            cards.forEach((card, newIndex) => {
+                card.dataset.newVariantIndex = newIndex;
+                card.querySelectorAll('input').forEach(input => {
+                    const name = input.getAttribute('name');
+                    if (name) {
+                        input.setAttribute('name', name.replace(/\[\d+\]/, `[${newIndex}]`));
+                    }
+                });
+                card.querySelector('button[onclick^="removeNewVariant"]').setAttribute('onclick', `window.removeNewVariant(${newIndex})`);
+            });
+            newVariantIndex = cards.length;
+        }
+
+        // Check variant count and show warning
+        window.checkVariantCount = function() {
+            const existingCount = document.querySelectorAll('.existing-variant-card').length - document.querySelectorAll('[data-variant-id] input[name*="[delete]"][value="1"]').length;
+            const newCount = document.querySelectorAll('.new-variant-card').length;
+            const totalCount = existingCount + newCount;
+            const warning = document.getElementById('variantWarningEdit');
+            
+            if (warning) {
+                warning.style.display = totalCount === 1 ? 'block' : 'none';
+            }
+        }
+
+        // For products without variants (legacy) - Create legacy variant card
+        window.createLegacyVariantCard = function(index, data = {}) {
+            const card = document.createElement('div');
+            card.className = 'legacy-variant-card';
+            card.dataset.legacyVariantIndex = index;
+            card.style.cssText = 'background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(71, 85, 105, 0.5); border-radius: 8px; padding: 20px; position: relative; transition: all 0.3s;';
+            
+            card.innerHTML = `
+                <div style="position: absolute; top: 12px; right: 12px;">
+                    <button type="button" onclick="window.removeLegacyVariant(${index})" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.2)';">
+                        🗑️ Remove
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Variant Name *</label>
+                    <input type="text" name="new_variants[${index}][name]" value="${data.name || ''}" class="form-input" placeholder="e.g., Red - Large, Blue - Medium" required style="font-size: 0.95rem;" />
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Stock Quantity *</label>
+                        <input type="number" name="new_variants[${index}][stock_quantity]" value="${data.stock_quantity || ''}" class="form-input" min="0" placeholder="0" required style="font-size: 0.95rem;" />
+                    </div>
+                    <div>
+                        <label style="display: block; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem;">Price Change (₱)</label>
+                        <input type="number" name="new_variants[${index}][price_modifier]" value="${data.price_modifier || ''}" class="form-input" step="0.01" placeholder="0.00" style="font-size: 0.95rem;" />
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Size</label>
+                        <input type="text" name="new_variants[${index}][size]" value="${data.size || ''}" class="form-input" placeholder="S, M, L..." style="font-size: 0.9rem;" />
+                    </div>
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Color</label>
+                        <input type="text" name="new_variants[${index}][color]" value="${data.color || ''}" class="form-input" placeholder="Red, Blue..." style="font-size: 0.9rem;" />
+                    </div>
+                    <div>
+                        <label style="display: block; color: #cbd5e1; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem;">Weight</label>
+                        <input type="text" name="new_variants[${index}][weight]" value="${data.weight || ''}" class="form-input" placeholder="100g..." style="font-size: 0.9rem;" />
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        window.removeLegacyVariant = function(index) {
+            const card = document.querySelector(`[data-legacy-variant-index="${index}"]`);
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    card.remove();
+                    window.reindexLegacyVariants();
+                }, 300);
+            }
+        }
+
+        window.reindexLegacyVariants = function() {
+            const cards = document.querySelectorAll('.legacy-variant-card');
+            cards.forEach((card, newIndex) => {
+                card.dataset.legacyVariantIndex = newIndex;
+                card.querySelectorAll('input').forEach(input => {
+                    const name = input.getAttribute('name');
+                    if (name) {
+                        input.setAttribute('name', name.replace(/\[\d+\]/, `[${newIndex}]`));
+                    }
+                });
+                const removeBtn = card.querySelector('button[onclick^="window.removeLegacyVariant"]');
+                if (removeBtn) {
+                    removeBtn.setAttribute('onclick', `window.removeLegacyVariant(${newIndex})`);
+                }
+            });
+        }
+
+        // For products without variants (legacy)
+        const toggleVariantsBtn = document.getElementById('toggleVariantsBtn');
+        if (toggleVariantsBtn) {
+            let legacyVariantCount = 0;
+            
+            toggleVariantsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = document.getElementById('variantsFormSection');
+                section.style.display = section.style.display === 'none' ? 'block' : 'none';
+                
+                if (section.style.display === 'block' && document.getElementById('variantsContainer').children.length === 0) {
+                    // Add 2 variants by default (minimum requirement)
+                    for (let i = 0; i < 2; i++) {
+                        const variant = window.createLegacyVariantCard(i);
+                        document.getElementById('variantsContainer').appendChild(variant);
+                    }
+                    legacyVariantCount = 2;
+                }
+            });
+
+            const closeVariantsBtn = document.getElementById('closeVariantsBtn');
+            if (closeVariantsBtn) {
+                closeVariantsBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('variantsContainer').innerHTML = '';
+                    document.getElementById('variantsFormSection').style.display = 'none';
+                    legacyVariantCount = 0;
+                });
+            }
+
+            const addVariantBtn = document.getElementById('addVariantBtn');
+            if (addVariantBtn) {
+                addVariantBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const currentCount = document.querySelectorAll('.legacy-variant-card').length;
+                    const variant = window.createLegacyVariantCard(currentCount);
+                    document.getElementById('variantsContainer').appendChild(variant);
+                });
+            }
+        }
+
+        // Save button with validation
         document.getElementById('saveBtn').addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Remove empty legacy variant cards before validation
-            const legacyCards = document.querySelectorAll('.legacy-variant-card');
-            legacyCards.forEach(card => {
-                const nameInput = card.querySelector('input[name*="[name]"]');
-                const stockInput = card.querySelector('input[name*="[stock_quantity]"]');
-                const isEmpty = (!nameInput || !nameInput.value.trim()) && (!stockInput || !stockInput.value.trim());
-                if (isEmpty) {
-                    card.remove();
-                }
-            });
+            // Count total variants after deletions and additions
+            const existingCount = document.querySelectorAll('.existing-variant-card').length - document.querySelectorAll('[data-variant-id] input[name*="[delete]"][value="1"]').length;
+            const newCount = document.querySelectorAll('.new-variant-card').length;
+            const legacyNewCount = document.querySelectorAll('#variantsContainer .new-variant-card').length;
+            const totalCount = existingCount + newCount + legacyNewCount;
             
-            // No validation - allow any number of variants
+            // Validate: Must have 0 or 2+ variants
+            if (totalCount === 1) {
+                Swal.fire({
+                    title: 'Invalid Variants',
+                    html: 'Products must have either <strong>0 variants</strong> (simple product) or <strong>at least 2 variants</strong>.<br><br>Having only 1 variant doesn\'t make sense for customers.',
+                    icon: 'error',
+                    iconColor: '#ef4444',
+                    background: 'rgba(15, 23, 42, 0.98)',
+                    color: '#e2e8f0',
+                    confirmButtonColor: '#3b82f6',
+                    backdrop: 'rgba(0, 0, 0, 0.7)'
+                });
+                return;
+            }
             
             Swal.fire({
                 title: 'Save Changes?',
@@ -1172,8 +1527,6 @@
                     
                     // Submit form
                     setTimeout(() => {
-                        // suppressed debug logging
-                        appendImageDebug('before submit files=' + (document.getElementById('imageInput').files && document.getElementById('imageInput').files.length));
                         document.getElementById('productForm').submit();
                     }, 500);
                 }
@@ -1199,32 +1552,6 @@
                             window.location.href = '{{ route("admin.inventory.index") }}';
                         }, 2500);
                     }
-                });
-            @endif
-            
-            @if (session('warning'))
-                Swal.fire({
-                    title: 'Invalid Variants',
-                    html: '{{ session("warning") }}',
-                    icon: 'warning',
-                    iconColor: '#f59e0b',
-                    background: 'rgba(15, 23, 42, 0.98)',
-                    color: '#e2e8f0',
-                    confirmButtonColor: '#3b82f6',
-                    backdrop: 'rgba(0, 0, 0, 0.7)'
-                });
-            @endif
-            
-            @if (session('error'))
-                Swal.fire({
-                    title: 'Error!',
-                    text: '{{ session("error") }}',
-                    icon: 'error',
-                    iconColor: '#ef4444',
-                    background: 'rgba(15, 23, 42, 0.98)',
-                    color: '#e2e8f0',
-                    confirmButtonColor: '#3b82f6',
-                    backdrop: 'rgba(0, 0, 0, 0.7)'
                 });
             @endif
         });

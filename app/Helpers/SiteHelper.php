@@ -9,6 +9,6 @@ class SiteHelper
      */
     public static function getSiteName()
     {
-        return config('app.name', 'IGP Hub');
+        return config('app.name', 'CICT Dingle');
     }
 }

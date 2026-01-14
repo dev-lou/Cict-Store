@@ -1,4 +1,4 @@
-@props(['title' => 'CICT-DG'])
+@props(['title' => config('app.name', 'CICT Dingle')])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -9,6 +9,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title }}</title>
+
+    <!-- Favicon -->
+    @php
+        $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
+    @endphp
+    @if($faviconSetting && $faviconSetting->value)
+        <link rel="icon" href="{{ Storage::disk('supabase')->url($faviconSetting->value) }}" type="image/x-icon">
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,10 +75,21 @@
     <!-- GSAP Animation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script>
+        // Initialize GSAP plugins immediately after loading
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
+    </script>
 
     <!-- Animations handled by CSS transitions -->
 
     <style>
+        /* Global mobile fixes */
+        html, body { overflow-x: hidden; }
+        *, *::before, *::after { box-sizing: border-box; }
+
         /* Prevent underline on buttons and cards */
         .product-card,
         .service-card,
@@ -199,6 +218,29 @@
                 border-radius: 12px !important;
                 height: calc(100vh - 120px) !important;
             }
+
+            /* Footer mobile adjustments */
+            .footer-main-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .footer-logo-section {
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center;
+                min-width: 100% !important;
+                width: 100% !important;
+            }
+
+            .footer-logo-section h3,
+            .footer-logo-section p {
+                text-align: center !important;
+            }
+
+            .footer-support-section {
+                max-width: 100% !important;
+            }
         }
 
         [x-cloak] {
@@ -243,8 +285,8 @@
             <!-- Footer -->
             <footer class="bg-gray-900 text-gray-200 py-16 border-t border-gray-800 mt-16">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-10">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-12 items-start">
-                        <div class="col-span-1 flex items-start gap-6">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px;" class="footer-main-wrapper">
+                        <div style="display: flex; align-items: flex-start; gap: 22px; flex: 1; min-width: 280px;" class="footer-logo-section">
                             <div class="flex-shrink-0"
                                 style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center;">
                                 <div
@@ -255,28 +297,25 @@
                                             ? \Storage::disk('supabase')->url($logoSetting->value) 
                                             : asset('images/ctrlp-logo.png');
                                     @endphp
-                                    <img src="{{ $logoUrl }}" alt="CICT-DG logo"
+                                    <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} logo"
                                         class="w-full h-full object-cover" style="display:block; border-radius:9999px;">
                                 </div>
                             </div>
-                            <div class="space-y-2">
-                                <div class="space-y-1">
-                                    <h3 class="font-bold text-xl text-white m-0">CICT-DG</h3>
-                                    <p class="text-sm m-0" style="color: rgba(255,255,255,0.75);">ISUFST Dingle Campus ·
-                                        Shop & Services</p>
-                                </div>
-                                <p class="text-sm m-0"
-                                    style="color: rgba(255,255,255,0.7); line-height:1.7; max-width: 22rem;">Campus-run
+                            <div>
+                                <h3 class="font-bold text-xl text-white" style="margin: 0;">{{ config('app.name', 'CICT Dingle') }}</h3>
+                                <p class="text-sm" style="margin: 2px 0 0 0; color: rgba(255,255,255,0.75);">ISUFST Dingle Campus · Shop & Services</p>
+                                <p class="text-sm"
+                                    style="margin: 12px 0 0 0; color: rgba(255,255,255,0.7); line-height:1.7; max-width: 22rem;">Campus-run
                                     store and services delivering print, merch, and digital support for students and orgs.
                                 </p>
                             </div>
                         </div>
 
-                        <div class="col-span-1 flex flex-col gap-6 mt-0 md:mt-0">
+                        <div style="flex-shrink: 0; width: 100%; max-width: 420px;" class="footer-support-section">
                             <div class="p-4 rounded-xl flex items-start gap-3"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); align-self:flex-end; max-width:420px; width:100%;">
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);">
                                 <span class="inline-flex h-9 w-9 items-center justify-center rounded-full"
-                                    style="background: linear-gradient(135deg,#8B0000,#A00000); color:white; box-shadow: 0 8px 20px rgba(0,0,0,0.18);">
+                                    style="background: linear-gradient(135deg,#8B0000,#A00000); color:white; box-shadow: 0 8px 20px rgba(0,0,0,0.18); flex-shrink: 0;">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.6" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -284,8 +323,8 @@
                                     </svg>
                                 </span>
                                 <div>
-                                    <p class="text-sm font-semibold text-white m-0">Support</p>
-                                    <p class="text-sm mt-2" style="color: rgba(255,255,255,0.78);">Need help? Ask the
+                                    <p class="text-sm font-semibold text-white" style="margin: 0;">Support</p>
+                                    <p class="text-sm" style="margin: 8px 0 0 0; color: rgba(255,255,255,0.78);">Need help? Ask the
                                         chatbot on the bottom-right — it is always on.</p>
                                 </div>
                             </div>
@@ -306,7 +345,7 @@
 
                     <div class="pt-4 text-sm flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2 sm:gap-4"
                         style="border-top: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); flex-wrap: wrap;">
-                        <p class="m-0">&copy; 2025 CICT-DG · ISUFST Dingle Campus</p>
+                        <p class="m-0">&copy; {{ date('Y') }} {{ config('app.name', 'CICT Dingle') }} · ISUFST Dingle Campus</p>
                         <p class="m-0 text-xs" style="color: rgba(255,255,255,0.65);">All rights reserved.</p>
                     </div>
                 </div>
@@ -874,7 +913,7 @@
             win.style.setProperty('position', 'fixed', 'important');
             win.style.setProperty('z-index', '2147483647', 'important');
 
-            if (window.APP_DEBUG) console.log('CICT chat widget (vanilla) initialized');
+            console.log('CICT chat widget (vanilla) initialized', window.location.host + ':' + window.location.port);
         })();
     </script>
 

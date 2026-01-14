@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('title', 'Contact - ' . config('app.name', 'CICT-DG'))
+    @section('title', 'Contact - ' . config('app.name', 'CICT Dingle'))
 
     <style>
         /* ============ DESIGN TOKENS ============ */
@@ -334,7 +334,8 @@
                 font-size: 12px;
             }
 
-            .form-input, .form-textarea {
+            .form-input,
+            .form-textarea {
                 padding: 12px;
                 font-size: 14px;
             }

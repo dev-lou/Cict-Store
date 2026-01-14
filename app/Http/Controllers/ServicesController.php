@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\ServiceOfficer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Throwable;
 
 class ServicesController extends Controller
 {
@@ -13,12 +15,37 @@ class ServicesController extends Controller
      */
     public function index(Request $request)
     {
-        $services = Service::with(['options' => function ($query) {
-            $query->active()->ordered();
-        }])->active()->ordered()->get();
+        // Cache services with options for 10 minutes
+        $services = Cache::remember('services.index.all', now()->addMinutes(10), function () {
+            try {
+                return Service::with([
+                    'options' => function ($query) {
+                        $query->active()->ordered();
+                    }
+                ])
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->get();
+            } catch (Throwable $e) {
+                logger()->warning('Unable to fetch services: ' . $e->getMessage());
+                return collect([]);
+            }
+        });
 
         $options = $services->flatMap->options;
-        $officers = ServiceOfficer::active()->ordered()->get();
+
+        // Cache officers for 10 minutes
+        $officers = Cache::remember('services.officers', now()->addMinutes(10), function () {
+            try {
+                return ServiceOfficer::where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->get();
+            } catch (Throwable $e) {
+                logger()->warning('Unable to fetch officers: ' . $e->getMessage());
+                return collect([]);
+            }
+        });
+
         $groupedServices = $services->groupBy(function ($service) {
             return $service->category ?: 'General';
         });
@@ -43,9 +70,11 @@ class ServicesController extends Controller
     {
         abort_unless($service->is_active, 404);
 
-        $service->load(['options' => function ($query) {
-            $query->active()->ordered();
-        }]);
+        $service->load([
+            'options' => function ($query) {
+                $query->active()->ordered();
+            }
+        ]);
 
         return view('services.show', [
             'service' => $service,
