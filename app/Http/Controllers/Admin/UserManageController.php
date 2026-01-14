@@ -203,7 +203,10 @@ class UserManageController extends Controller
             'system_uptime' => '99.9%',
         ];
 
-        $siteName = config('app.name', 'CICT Dingle');
+        // Get site name from database, fallback to .env
+        $siteNameSetting = Setting::where('key', 'site_name')->first();
+        $siteName = $siteNameSetting ? $siteNameSetting->value : config('app.name', 'CICT Dingle');
+        
         $logo = Setting::where('key', 'site_logo')->first();
         $favicon = Setting::where('key', 'site_favicon')->first();
 
@@ -220,14 +223,11 @@ class UserManageController extends Controller
         ]);
 
         try {
-            // Update .env file
-            $envPath = base_path('.env');
-            $envContent = file_get_contents($envPath);
-            $envContent = preg_replace('/APP_NAME=.*/i', 'APP_NAME="' . $validated['site_name'] . '"', $envContent);
-            file_put_contents($envPath, $envContent);
-            
-            // Force write to disk
-            fsync(fopen($envPath, 'r'));
+            // Store site name in database instead of .env
+            Setting::updateOrCreate(
+                ['key' => 'site_name'],
+                ['value' => $validated['site_name']]
+            );
 
             // Also update config in memory for current request
             config(['app.name' => $validated['site_name']]);

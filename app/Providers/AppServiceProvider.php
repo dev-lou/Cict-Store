@@ -63,6 +63,16 @@ class AppServiceProvider extends ServiceProvider
         // Define authorization gates
         $this->defineAuthorizationGates();
 
+        // Override app.name config with database setting if available
+        try {
+            $siteName = \App\Models\Setting::where('key', 'site_name')->first();
+            if ($siteName) {
+                config(['app.name' => $siteName->value]);
+            }
+        } catch (\Throwable $e) {
+            // Database might not be ready during migration, ignore
+        }
+
         // Share order counts with all views via View Composer
         // Skip for error views and console commands to prevent infinite loops
         // and avoid database queries during CLI tasks such as `php artisan`.
