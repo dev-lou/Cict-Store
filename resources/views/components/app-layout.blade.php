@@ -27,13 +27,27 @@
             console.warn = function () { };
         }
     </script>
-    @php $viteManifestPath = public_path('build/manifest.json'); @endphp
-    @if (file_exists($viteManifestPath))
+    @php 
+        $viteManifestPath = public_path('build/manifest.json');
+        $hasViteBuild = file_exists($viteManifestPath);
+    @endphp
+    @if ($hasViteBuild)
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
-        <!-- Vite manifest not found; fallback to static assets -->
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-        <script src="{{ asset('js/app.js') }}" defer></script>
+        <!-- Vite manifest not found; check if fallback assets exist -->
+        @if (file_exists(public_path('css/app.css')))
+            <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        @else
+            <!-- Emergency inline fallback styles -->
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; }
+                .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+            </style>
+        @endif
+        @if (file_exists(public_path('js/app.js')))
+            <script src="{{ asset('js/app.js') }}" defer></script>
+        @endif
     @endif
 
     <!-- Page Transition Styles -->
