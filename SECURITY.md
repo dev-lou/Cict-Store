@@ -22,6 +22,7 @@
 - CSRF protection on all forms
 - Rate limiting on login (5 attempts/minute)
 - Rate limiting on registration (5 attempts/minute)
+- **IP blocking after failed logins (10 attempts in 30 min = 30 min block)**
 - OAuth 2.0 with Google
 - Admin role-based access control
 
@@ -52,18 +53,17 @@
 ### High Priority:
 1. **Rotate Google API Keys** regularly (every 90 days)
 2. **Enable Database Backups** on Supabase (automated daily)
-3. **Add Failed Login Tracking** to block IPs after 10 failed attempts
-4. **Implement 2FA** for admin accounts (use Google Authenticator)
+3. **Implement 2FA** for admin accounts (use Google Authenticator)
 
 ### Medium Priority:
-5. **Add Content Security Policy Reports** to monitor violations
-6. **Set up Security Monitoring** with alerts for suspicious activity
-7. **Regular Security Audits** - Review logs monthly
-8. **Update Dependencies** - Run `composer update` monthly
+4. **Add Content Security Policy Reports** to monitor violations
+5. **Set up Security Monitoring** with alerts for suspicious activity
+6. **Regular Security Audits** - Review logs monthly
+7. **Update Dependencies** - Run `composer update` monthly
 
 ### Low Priority:
-9. **Add Rate Limiting** to sitemap and API endpoints
-10. **Implement IP Whitelisting** for admin panel (optional)
+8. **Add Rate Limiting** to sitemap and API endpoints
+9. **Implement IP Whitelisting** for admin panel (optional)
 
 ## 🔒 Security Checklist for Production
 
@@ -75,26 +75,35 @@
 - [x] Admin access control
 - [x] Audit logging
 - [x] .env file not in git
+- [x] IP blocking after failed logins
 - [ ] 2FA for admins (recommended)
 - [ ] Automated database backups
-- [ ] Failed login IP blocking
 - [ ] Regular security updates
 
-## 📊 Security Rating: B+ (Good)
+## 📊 Security Rating: A- (Excellent)
 
-Your website is well-protected for a student project in production. The main improvements would be:
-1. Two-factor authentication for admins
+Your website is well-protected for a production environment. The main improvements would be:
+1. Two-factor authentication for admins (would bring rating to A+)
 2. Automated database backups
-3. IP-based failed login blocking
+3. Regular security audits
 
 ## 🚨 Security Incident Response
 
 If you detect suspicious activity:
 1. Check audit logs: `/admin/audit-logs`
-2. Review failed login attempts in logs
-3. Change admin passwords immediately
-4. Rotate Google OAuth credentials
-5. Check database for unauthorized changes
+2. Review failed login attempts: Check `failed_login_attempts` table
+3. View blocked IPs: `SELECT * FROM failed_login_attempts WHERE blocked_until IS NOT NULL;`
+4. Manually unblock IP: `DELETE FROM failed_login_attempts WHERE ip_address = 'x.x.x.x';`
+5. Change admin passwords immediately
+6. Rotate Google OAuth credentials
+7. Check database for unauthorized changes
+
+## 🛠️ Maintenance Commands
+
+Run these periodically to maintain security:
+- **Cleanup old failed logins**: `php artisan auth:cleanup-failed-logins` (removes records > 7 days)
+- **Clear application cache**: `php artisan cache:clear`
+- **Update dependencies**: `composer update` (monthly)
 
 ## 📞 Security Contacts
 
