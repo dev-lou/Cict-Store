@@ -9,10 +9,12 @@
                 @php
                     $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
                     $logoUrl = $logoSetting && $logoSetting->value 
-                        ? \Storage::disk('supabase')->url($logoSetting->value) 
-                        : asset('images/ctrlp-logo.png');
+                        ? asset('storage/' . $logoSetting->value)
+                        : null;
                 @endphp
-                <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} logo" class="w-full h-full object-cover">
+                @if($logoUrl)
+                    <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} logo" class="w-full h-full object-cover">
+                @endif
             </div>
             <div>
                 <p class="font-bold text-white text-xl" style="letter-spacing: 0.3px;">{{ config('app.name', 'CICT Dingle') }}</p>
@@ -239,7 +241,7 @@
         <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 flex-1 min-w-0">
                 @if(auth()->user()->profile_picture)
-                    <img src="{{ Storage::disk('supabase')->url(auth()->user()->profile_picture) }}" alt="Profile" class="w-10 h-10 rounded-full flex-shrink-0 object-cover" style="border: 2px solid #00d9ff; box-shadow: 0 0 12px rgba(0, 217, 255, 0.3);">
+                    <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile" class="w-10 h-10 rounded-full flex-shrink-0 object-cover" style="border: 2px solid #00d9ff; box-shadow: 0 0 12px rgba(0, 217, 255, 0.3);">
                 @else
                     <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, #0f6fdd 0%, #1a7fff 100%); color: #ffffff; border: 2px solid #00d9ff; box-shadow: 0 0 12px rgba(0, 217, 255, 0.3);">
                         {{ auth()->user()->name[0] ?? 'A' }}
