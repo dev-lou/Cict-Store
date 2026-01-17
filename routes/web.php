@@ -317,7 +317,7 @@ Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'
 // Traditional Login
 Route::get('/login', function () {
     return view('auth.login');
-})->name('login')->middleware('guest');
+})->name('login')->middleware(['guest', 'App\Http\Middleware\BlockFailedLogins']);
 
 Route::post('/login', function () {
     $credentials = request()->validate([
@@ -328,6 +328,9 @@ Route::post('/login', function () {
     if (Auth::attempt($credentials, request()->boolean('remember'))) {
         request()->session()->regenerate();
         
+        // Clear failed attempts on successful login
+        \App\Models\FailedLoginAttempt::clearAttempts(request()->ip());
+        
         // Redirect admin users to admin dashboard, others to home
         if (auth()->user()->isAdmin()) {
             return redirect()->intended('/admin/dashboard');
@@ -337,10 +340,17 @@ Route::post('/login', function () {
         return redirect('/');
     }
 
+    // Record failed login attempt
+    \App\Models\FailedLoginAttempt::recordAttempt(
+        request()->ip(),
+        request()->input('email'),
+        request()->userAgent()
+    );
+
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.',
     ]);
-})->name('login.post')->middleware(['guest', 'throttle:5,1']);
+})->name('login.post')->middleware(['guest', 'throttle:5,1', 'App\Http\Middleware\BlockFailedLogins']);
 
 Route::get('/register', function () {
     return view('auth.register');
