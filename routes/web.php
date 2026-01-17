@@ -25,6 +25,7 @@ use App\Http\Controllers\CustomerDashboardController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\Admin\ServiceManagementController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -45,6 +46,9 @@ use Illuminate\Support\Facades\DB;
 
 // Home Page
 Route::get('/', [HomepageController::class, 'index'])->name('home');
+
+// Sitemap for SEO
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Health check endpoints
 //  - /_health: developer-only (local env) — private debug info
