@@ -11,7 +11,7 @@ class SitemapController extends Controller
     public function index()
     {
         try {
-            $products = Product::where('is_active', true)->get();
+            $products = Product::where('status', 'active')->get();
 
             $sitemap = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
             $sitemap .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
@@ -33,7 +33,7 @@ class SitemapController extends Controller
             // Product pages
             foreach ($products as $product) {
                 $sitemap .= $this->generateUrlEntry(
-                    url('/shop/' . $product->id),
+                    url('/shop/' . $product->slug),
                     '0.8',
                     'weekly',
                     $product->updated_at
