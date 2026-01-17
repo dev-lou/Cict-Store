@@ -20,7 +20,8 @@ return new class extends Migration
             $table->decimal('price_bw', 10, 2)->nullable();
             $table->decimal('price_color', 10, 2)->nullable();
             $table->string('price_label')->nullable();
-            $table->enum('category', ['printing', 'paper_size'])->default('printing');
+            $table->string('category')->nullable();
+            $table->text('category_description')->nullable();
             $table->integer('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
