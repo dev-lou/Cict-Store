@@ -22,8 +22,8 @@
 
         /* ============ HERO SECTION ============ */
         .contact-hero {
-            min-height: 45vh;
-            padding: 160px 24px 60px;
+            min-height: 55vh;
+            padding: 180px 24px 80px;
             background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
             display: flex;
             align-items: center;
@@ -36,13 +36,13 @@
 
         @media (max-width: 768px) {
             .contact-hero {
-                min-height: 55vh;
-                padding-top: 140px;
-                padding-bottom: 40px;
+                min-height: 50vh;
+                padding-top: 160px;
+                padding-bottom: 60px;
             }
 
             .contact-hero-content {
-                margin-top: 60px;
+                margin-top: 40px;
             }
         }
 

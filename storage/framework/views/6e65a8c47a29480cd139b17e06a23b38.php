@@ -38,31 +38,45 @@ unset($__defined_vars); ?>
 
     <title><?php echo e($title); ?></title>
 
-    <!-- Favicon -->
+    <!-- DNS Preconnect for faster external resource loading -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+
+    <!-- Favicon (cached query) -->
     <?php
-        $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
+        $faviconUrl = Cache::remember('site.favicon_url', now()->addHours(1), function () {
+            $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
+            return ($faviconSetting && $faviconSetting->value) 
+                ? \Storage::disk('supabase')->url($faviconSetting->value) 
+                : null;
+        });
     ?>
-    <?php if($faviconSetting && $faviconSetting->value): ?>
-        <link rel="icon" href="<?php echo e(Storage::disk('supabase')->url($faviconSetting->value)); ?>" type="image/x-icon">
+    <?php if($faviconUrl): ?>
+        <link rel="icon" href="<?php echo e($faviconUrl); ?>" type="image/x-icon">
     <?php endif; ?>
 
-    <!-- Fonts -->
+    <!-- Preconnect and Fonts (display=swap for faster text rendering) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Styles -->
     <!-- Global debug flag and console silencer for production -->
     <script>
         window.APP_DEBUG = <?php echo json_encode(config('app.debug'), 15, 512) ?>;
         if (!window.APP_DEBUG) {
-            // Replace console methods with no-ops in production to avoid noisy logs
-            console.log = function () { };
-            console.debug = function () { };
-            console.info = function () { };
-            console.warn = function () { };
+            console.log = console.debug = console.info = console.warn = function () { };
         }
     </script>
+
+    <!-- Critical CSS inline for faster first paint -->
+    <style>
+        /* Critical above-the-fold styles */
+        *,*::before,*::after{box-sizing:border-box}
+        html,body{margin:0;padding:0;overflow-x:hidden;font-family:'Inter',system-ui,-apple-system,sans-serif}
+        .hero,.shop-hero,.services-hero,.contact-hero{min-height:50vh;background:linear-gradient(135deg,#8B0000 0%,#5C0000 100%)}
+    </style>
+
     <?php 
         $viteManifestPath = public_path('build/manifest.json');
         $hasViteBuild = file_exists($viteManifestPath);
@@ -70,45 +84,39 @@ unset($__defined_vars); ?>
     <?php if($hasViteBuild): ?>
         <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <?php else: ?>
-        <!-- Vite manifest not found; check if fallback assets exist -->
         <?php if(file_exists(public_path('css/app.css'))): ?>
             <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
-        <?php else: ?>
-            <!-- Emergency inline fallback styles -->
-            <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; }
-                body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; }
-                .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
-            </style>
         <?php endif; ?>
         <?php if(file_exists(public_path('js/app.js'))): ?>
             <script src="<?php echo e(asset('js/app.js')); ?>" defer></script>
         <?php endif; ?>
     <?php endif; ?>
 
-    <!-- Page Transition Styles -->
-    <link rel="stylesheet" href="<?php echo e(asset('css/page-transitions.css')); ?>">
+    <!-- Non-critical Animation CSS (load async) -->
+    <link rel="stylesheet" href="<?php echo e(asset('css/page-transitions.css')); ?>" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="<?php echo e(asset('css/micro-interactions.css')); ?>" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="<?php echo e(asset('css/text-animations.css')); ?>" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="<?php echo e(asset('css/button-interactions.css')); ?>" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="<?php echo e(asset('css/animation-utilities.css')); ?>" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="<?php echo e(asset('css/page-transitions.css')); ?>">
+        <link rel="stylesheet" href="<?php echo e(asset('css/micro-interactions.css')); ?>">
+        <link rel="stylesheet" href="<?php echo e(asset('css/text-animations.css')); ?>">
+        <link rel="stylesheet" href="<?php echo e(asset('css/button-interactions.css')); ?>">
+        <link rel="stylesheet" href="<?php echo e(asset('css/animation-utilities.css')); ?>">
+    </noscript>
 
-    <!-- Performance-Optimized Animation Styles -->
-    <link rel="stylesheet" href="<?php echo e(asset('css/micro-interactions.css')); ?>">
-    <link rel="stylesheet" href="<?php echo e(asset('css/text-animations.css')); ?>">
-    <link rel="stylesheet" href="<?php echo e(asset('css/button-interactions.css')); ?>">
-
-    <!-- Animation Utilities -->
-    <link rel="stylesheet" href="<?php echo e(asset('css/animation-utilities.css')); ?>">
-
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo e(asset('images/ctrlp-logo.png')); ?>">
-    <link rel="shortcut icon" href="<?php echo e(asset('images/ctrlp-logo.png')); ?>">
-
-    <!-- GSAP Animation Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- GSAP Animation Library (defer to not block rendering) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     
     <script>
-        // Initialize GSAP plugins immediately after loading
-        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-            gsap.registerPlugin(ScrollTrigger);
-        }
+        // Initialize GSAP plugins after load
+        window.addEventListener('DOMContentLoaded', function() {
+            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                gsap.registerPlugin(ScrollTrigger);
+            }
+        });
     </script>
 
     <!-- Animations handled by CSS transitions -->

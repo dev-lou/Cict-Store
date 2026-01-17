@@ -14,7 +14,7 @@
         $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
     @endphp
     @if($faviconSetting && $faviconSetting->value)
-        <link rel="icon" href="{{ asset('storage/' . $faviconSetting->value) }}" type="image/x-icon">
+        <link rel="icon" href="{{ Storage::disk('supabase')->url($faviconSetting->value) }}" type="image/x-icon">
     @endif
 
     <!-- Fonts -->

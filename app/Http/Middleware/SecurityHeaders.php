@@ -17,30 +17,31 @@ class SecurityHeaders
 
         // Prevent clickjacking attacks
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
-        
+
         // Prevent MIME type sniffing
         $response->headers->set('X-Content-Type-Options', 'nosniff');
-        
+
         // Enable XSS filter in browsers
         $response->headers->set('X-XSS-Protection', '1; mode=block');
-        
+
         // Enforce HTTPS
         $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-        
+
         // Content Security Policy (basic, adjust as needed)
-        $response->headers->set('Content-Security-Policy', 
+        $response->headers->set(
+            'Content-Security-Policy',
             "default-src 'self'; " .
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://www.googletagmanager.com https://generativelanguage.googleapis.com; " .
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " .
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.googletagmanager.com https://generativelanguage.googleapis.com https://maps.googleapis.com; " .
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; " .
             "font-src 'self' https://fonts.gstatic.com; " .
-            "img-src 'self' data: https: blob: https://*.supabase.co; " .
-            "frame-src https://www.google.com; " .
-            "connect-src 'self' https://generativelanguage.googleapis.com https://*.supabase.co;"
+            "img-src 'self' data: https: blob: https://*.supabase.co https://*.googleapis.com https://*.gstatic.com; " .
+            "frame-src 'self' https://www.google.com https://maps.google.com https://*.google.com; " .
+            "connect-src 'self' https://generativelanguage.googleapis.com https://*.supabase.co https://maps.googleapis.com;"
         );
-        
+
         // Referrer Policy
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-        
+
         // Permissions Policy (formerly Feature Policy)
         $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
 

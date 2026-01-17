@@ -40,12 +40,39 @@ unset($__defined_vars); ?>
         document.body.style.overflow = 'hidden';
         try { const c = document.getElementById('cict-chatbot'); if (c) c.style.display = 'none'; } catch(e) {}
     }
-}">
+}" x-cloak>
 
     <style>
         /* Hide Alpine elements until Alpine has initialized to avoid flash of unstyled content */
         [x-cloak] {
             display: none !important;
+        }
+
+        /* Remove tap highlight circle on mobile */
+        .touch-target,
+        .navbar-glass button,
+        .navbar-glass a,
+        .mobile-drawer button,
+        .mobile-drawer a {
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-touch-callout: none !important;
+            outline: none !important;
+            user-select: none;
+        }
+
+        /* Remove focus rings and active state circles */
+        .navbar-glass button:focus,
+        .navbar-glass button:active,
+        .navbar-glass button:focus-visible,
+        .navbar-glass a:focus,
+        .navbar-glass a:active,
+        .mobile-drawer button:focus,
+        .mobile-drawer button:active,
+        .touch-target:focus,
+        .touch-target:active {
+            outline: none !important;
+            box-shadow: none !important;
+            -webkit-tap-highlight-color: transparent !important;
         }
 
         .navbar-glass {
@@ -389,7 +416,7 @@ unset($__defined_vars); ?>
                     <!-- Cart Button (Visible on both mobile and desktop) -->
                     <?php if(auth()->guard()->check()): ?>
                         <a href="<?php echo e(route('cart.index')); ?>"
-                            class="relative p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target overflow-visible"
+                            class="relative p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target overflow-visible no-animate"
                             title="Shopping Cart">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -410,34 +437,34 @@ unset($__defined_vars); ?>
 
                         <!-- Notification Bell (Visible on both mobile and desktop) -->
                         <div x-data="{
-                                            open: false,
-                                            unreadCount: <?php echo e(auth()->user()->unreadNotifications()->count()); ?>,
-                                            notifications: [],
-                                            async fetchNotifications() {
-                                                try {
-                                                    const response = await fetch('/notifications/unread');
-                                                    const data = await response.json();
-                                                    this.unreadCount = data.unread_count || 0;
-                                                    this.notifications = data.notifications || [];
-                                                } catch (error) {
-                                                    console.error('Failed to fetch notifications:', error);
-                                                }
-                                            },
-                                            async markAsRead(id) {
-                                                try {
-                                                    await fetch(`/notifications/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>' } });
-                                                    this.fetchNotifications();
-                                                } catch (error) {
-                                                    console.error('Failed to mark notification as read:', error);
-                                                }
-                                            },
-                                            init() {
-                                                this.fetchNotifications();
-                                                setInterval(() => this.fetchNotifications(), 60000);
-                                            }
-                                        }" class="relative z-50" style="overflow: visible !important;">
+                                                                open: false,
+                                                                unreadCount: <?php echo e(auth()->user()->unreadNotifications()->count()); ?>,
+                                                                notifications: [],
+                                                                async fetchNotifications() {
+                                                                    try {
+                                                                        const response = await fetch('/notifications/unread');
+                                                                        const data = await response.json();
+                                                                        this.unreadCount = data.unread_count || 0;
+                                                                        this.notifications = data.notifications || [];
+                                                                    } catch (error) {
+                                                                        console.error('Failed to fetch notifications:', error);
+                                                                    }
+                                                                },
+                                                                async markAsRead(id) {
+                                                                    try {
+                                                                        await fetch(`/notifications/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>' } });
+                                                                        this.fetchNotifications();
+                                                                    } catch (error) {
+                                                                        console.error('Failed to mark notification as read:', error);
+                                                                    }
+                                                                },
+                                                                init() {
+                                                                    this.fetchNotifications();
+                                                                    setInterval(() => this.fetchNotifications(), 60000);
+                                                                }
+                                                            }" class="relative z-50" style="overflow: visible !important;">
                             <button @click="open = !open" :aria-expanded="open" aria-controls="notifications-panel"
-                                class="relative p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target"
+                                class="relative p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target no-animate"
                                 style="overflow: visible !important;" title="Notifications">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -469,7 +496,7 @@ unset($__defined_vars); ?>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <button @click="open = false"
-                                            class="p-2 rounded-md text-black hover:bg-black/5 touch-target"
+                                            class="p-2 rounded-md text-black hover:bg-black/5 touch-target no-animate"
                                             title="Close notifications" aria-label="Close notifications">✕</button>
                                     </div>
                                 </div>
@@ -495,13 +522,14 @@ unset($__defined_vars); ?>
                                             <div class="flex items-start gap-3">
                                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                                                     :style="notification.type === 'order' ? 'background: #3b82f6;' : 
-                                                                        notification.type === 'stock' ? 'background: #f59e0b;' :
-                                                                        notification.type === 'review' ? 'background: #10b981;' : 
-                                                                        'background: #6366f1;'">
+                                                                                            notification.type === 'stock' ? 'background: #f59e0b;' :
+                                                                                            notification.type === 'review' ? 'background: #10b981;' : 
+                                                                                            'background: #6366f1;'">
                                                     <span x-text="notification.type === 'order' ? '📦' : 
-                                                                             notification.type === 'stock' ? '⚠️' :
-                                                                             notification.type === 'review' ? '⭐' : 
-                                                                             '🔔'" class="text-xl"></span>
+                                                                                                 notification.type === 'stock' ? '⚠️' :
+                                                                                                 notification.type === 'review' ? '⭐' : 
+                                                                                                 '🔔'"
+                                                        class="text-xl"></span>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
                                                     <p class="text-sm font-semibold text-black" x-text="notification.title">
@@ -532,7 +560,7 @@ unset($__defined_vars); ?>
                                 class="flex items-center gap-2 p-1.5 pr-2.5 rounded-full transition-all duration-200 hover:bg-black/5 text-black border border-transparent hover:border-black/5 hover:shadow-sm"
                                 title="Account Menu">
                                 <?php if(auth()->user()->profile_picture): ?>
-                                    <img src="<?php echo e(asset('storage/' . auth()->user()->profile_picture)); ?>"
+                                    <img src="<?php echo e(Storage::disk('supabase')->url(auth()->user()->profile_picture)); ?>"
                                         alt="<?php echo e(auth()->user()->name); ?>"
                                         class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-md ring-1 ring-black/5">
                                 <?php else: ?>
@@ -565,7 +593,7 @@ unset($__defined_vars); ?>
                                 <div class="dropdown-header px-4 py-4 flex items-center gap-3"
                                     style="border-bottom: 1px solid rgba(0, 0, 0, 0.08); background: linear-gradient(135deg, rgba(218, 165, 32, 0.12) 0%, rgba(218, 165, 32, 0.06) 100%);">
                                     <?php if(auth()->user()->profile_picture): ?>
-                                        <img src="<?php echo e(asset('storage/' . auth()->user()->profile_picture)); ?>"
+                                        <img src="<?php echo e(Storage::disk('supabase')->url(auth()->user()->profile_picture)); ?>"
                                             alt="<?php echo e(auth()->user()->name); ?>"
                                             class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm">
                                     <?php else: ?>
@@ -624,7 +652,9 @@ unset($__defined_vars); ?>
                                 onmouseout="this.style.background='rgba(139, 0, 0, 0.05)'; this.style.borderColor='rgba(139, 0, 0, 0.2)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                                 <span class="relative z-10 flex items-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
+                                        </path>
                                     </svg>
                                     Log In
                                 </span>
@@ -636,7 +666,9 @@ unset($__defined_vars); ?>
                                 onmouseout="this.style.background='linear-gradient(135deg, #8B0000 0%, #A00000 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(139, 0, 0, 0.25)';">
                                 <span class="relative z-10 flex items-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                                        </path>
                                     </svg>
                                     Sign Up
                                 </span>
@@ -646,7 +678,7 @@ unset($__defined_vars); ?>
 
                     <!-- Mobile Menu Button -->
                     <button @click="openMobileMenu()"
-                        class="md:hidden p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target"
+                        class="md:hidden p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target no-animate"
                         aria-label="Open menu">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -675,7 +707,8 @@ unset($__defined_vars); ?>
         <div class="flex items-center justify-between p-4 border-b border-gray-200"
             style="background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(218, 165, 32, 0.05) 100%);">
             <h2 class="text-xl font-bold text-black" style="font-family: 'Inter', sans-serif;">Menu</h2>
-            <button @click="closeMobileMenu()" class="p-2 rounded-lg hover:bg-black/10 transition-colors touch-target"
+            <button @click="closeMobileMenu()"
+                class="p-2 rounded-lg hover:bg-black/10 transition-colors touch-target no-animate"
                 aria-label="Close menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -690,7 +723,7 @@ unset($__defined_vars); ?>
                 style="background: linear-gradient(135deg, rgba(139, 0, 0, 0.05) 0%, transparent 100%);">
                 <div class="flex items-center gap-3">
                     <?php if(auth()->user()->profile_picture): ?>
-                        <img src="<?php echo e(asset('storage/' . auth()->user()->profile_picture)); ?>" alt="Profile"
+                        <img src="<?php echo e(Storage::disk('supabase')->url(auth()->user()->profile_picture)); ?>" alt="Profile"
                             class="w-12 h-12 rounded-lg object-cover border-2 border-gray-300">
                     <?php else: ?>
                         <div class="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold"
