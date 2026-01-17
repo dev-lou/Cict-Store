@@ -10,19 +10,26 @@
     <meta name="description" content="Official online store of CICT Student Council at ISUFST Dingle Campus, Iloilo, Philippines. Order merchandise and avail student services for the College of Information and Communications Technology.">
     <meta name="keywords" content="CICT Student Council, ISUFST Dingle, Iloilo Philippines, student merchandise, CICT services, Dingle campus, Iloilo State University, CICT merch">
     
+    @php
+        $ogImageSetting = \App\Models\Setting::where('key', 'site_logo')->first();
+        $ogImageUrl = ($ogImageSetting && $ogImageSetting->value) 
+            ? Storage::disk('supabase')->url($ogImageSetting->value)
+            : null;
+    @endphp
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', 'CICT Dingle - Student Council Store')">
     <meta property="og:description" content="Official store of CICT Student Council at ISUFST Dingle Campus. Order merchandise and avail student services.">
-    <meta property="og:image" content="{{ asset('images/ctrlp-logo.png') }}">
+    <meta property="og:image" content="{{ $ogImageUrl }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('title', 'CICT Dingle - Student Council Store')">
     <meta property="twitter:description" content="Official store of CICT Student Council at ISUFST Dingle Campus. Order merchandise and avail student services.">
-    <meta property="twitter:image" content="{{ asset('images/ctrlp-logo.png') }}">
+    <meta property="twitter:image" content="{{ $ogImageUrl }}">
 
     <title>@yield('title', config('app.name', 'CICT Dingle'))</title>
 
@@ -32,9 +39,6 @@
     @endphp
     @if($faviconSetting && $faviconSetting->value)
         <link rel="icon" href="{{ Storage::disk('supabase')->url($faviconSetting->value) }}" type="image/x-icon">
-    @else
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/ctrlp-logo.png') }}">
-        <link rel="shortcut icon" href="{{ asset('images/ctrlp-logo.png') }}">
     @endif
 
     <!-- Fonts - Preload for faster loading -->
@@ -245,14 +249,19 @@
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-10">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-12" style="align-items:flex-start;">
                         <div class="col-span-1" style="display:flex; align-items:flex-start; gap:22px;">
+                            @php
+                                $footerLogoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
+                            @endphp
+                            @if($footerLogoSetting && $footerLogoSetting->value)
                             <div
                                 style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
                                 <div
                                     style="width:80px; height:80px; border-radius:9999px; overflow:hidden; background:#fff;">
-                                    <img src="{{ asset('images/ctrlp-logo.png') }}" alt="{{ config('app.name', 'CICT Dingle') }} logo"
+                                    <img src="{{ Storage::disk('supabase')->url($footerLogoSetting->value) }}" alt="{{ config('app.name', 'CICT Dingle') }} logo"
                                         style="width:100%; height:100%; object-fit:cover; border-radius:9999px; display:block;">
                                 </div>
                             </div>
+                            @endif
                             <div style="display:flex; flex-direction:column; min-width: 0;">
                                 <h3 class="font-bold text-xl" style="margin:0; color:white; line-height: 1.2;">{{ config('app.name', 'CICT Dingle') }}</h3>
                                 <p class="text-sm" style="margin:2px 0 0 0; color: rgba(255,255,255,0.75);">ISUFST Dingle Campus · Shop & Services</p>
