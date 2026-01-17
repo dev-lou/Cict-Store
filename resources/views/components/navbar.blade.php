@@ -12,7 +12,7 @@
         document.body.style.overflow = 'hidden';
         try { const c = document.getElementById('cict-chatbot'); if (c) c.style.display = 'none'; } catch(e) {}
     }
-}" x-cloak>
+}">
 
     <style>
         /* Hide Alpine elements until Alpine has initialized to avoid flash of unstyled content */
