@@ -1,16 +1,26 @@
 <x-admin-layout>
     @section('page-title', 'Audit Log Details')
 
-    <!-- Header with Back Button -->
-    <div class="mb-8 flex items-center justify-between">
-        <div>
-            <div class="flex items-center gap-4">
-                <a href="{{ route('admin.audit-logs.index') }}" class="text-xl font-bold" style="color: #b0bcc4;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#b0bcc4'">← Audit Logs</a>
-                <h2 class="text-2xl font-bold" style="color: #ffffff;">{{ ucfirst($log->action) }} - {{ $log->model }} #{{ $log->model_id }}</h2>
-            </div>
-            <p class="mt-2" style="color: #b0bcc4;">{{ $log->created_at->format('F d, Y h:i:s A') }}</p>
-        </div>
-    </div>
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'System'],
+        ['label' => 'Audit Logs', 'url' => route('admin.audit-logs.index')],
+        ['label' => ucfirst($log->action) . ' - ' . $log->model]
+    ]" />
+
+    <!-- Page Header -->
+    <x-admin.page-header 
+        :title="ucfirst($log->action) . ' - ' . $log->model . ' #' . $log->model_id" 
+        :subtitle="$log->created_at->format('F d, Y h:i:s A')">
+        <x-slot:actions>
+            <x-admin.button href="{{ route('admin.audit-logs.index') }}" variant="secondary">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Audit Logs
+            </x-admin.button>
+        </x-slot:actions>
+    </x-admin.page-header>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Column - Log Details -->

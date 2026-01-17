@@ -1,6 +1,12 @@
 <x-admin-layout>
     @section('page-title', 'Services Manager')
 
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'Catalog'],
+        ['label' => 'Services']
+    ]" />
+
     @php
         $categories = $services
             ->map(function ($svc) {

@@ -3,25 +3,35 @@
 
     <!-- Flash Messages -->
     @if(session('success'))
-        <div
-            style="background: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="color: #ffffff; font-weight: 600;">{{ session('success') }}</span>
-        </div>
+        <x-admin.alert type="success" :message="session('success')" :dismissible="true" />
     @endif
 
     @if(session('warning'))
-        <div
-            style="background: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="color: #ffffff; font-weight: 600;">{{ session('warning') }}</span>
-        </div>
+        <x-admin.alert type="warning" :message="session('warning')" :dismissible="true" />
     @endif
 
     @if(session('error'))
-        <div
-            style="background: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="color: #ffffff; font-weight: 600;">{{ session('error') }}</span>
-        </div>
+        <x-admin.alert type="error" :message="session('error')" :dismissible="true" />
     @endif
+
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'Catalog'],
+        ['label' => 'Inventory', 'url' => route('admin.inventory.index')],
+        ['label' => 'Add Product']
+    ]" />
+
+    <!-- Page Header -->
+    <x-admin.page-header title="Create New Product" subtitle="Add a new product to your inventory">
+        <x-slot:actions>
+            <x-admin.button href="{{ route('admin.inventory.index') }}" variant="secondary">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Inventory
+            </x-admin.button>
+        </x-slot:actions>
+    </x-admin.page-header>
 
     <style>
         body {
@@ -406,39 +416,6 @@
             }
         }
     </style>
-
-    <!-- Breadcrumb Navigation -->
-    <nav
-        style="margin-bottom: 24px; padding: 14px 20px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; display: flex; align-items: center; gap: 8px;">
-        <a href="{{ route('admin.dashboard') }}"
-            style="color: #94a3b8; font-weight: 500; font-size: 0.9rem; transition: color 0.2s;"
-            onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='#94a3b8'">Dashboard</a>
-        <span style="color: #475569; font-weight: 600;">›</span>
-        <a href="{{ route('admin.inventory.index') }}"
-            style="color: #94a3b8; font-weight: 500; font-size: 0.9rem; transition: color 0.2s;"
-            onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='#94a3b8'">Inventory</a>
-        <span style="color: #475569; font-weight: 600;">›</span>
-        <span style="color: #f1f5f9; font-weight: 600; font-size: 0.9rem;">Create Product</span>
-    </nav>
-
-    <!-- Page Header -->
-    <div class="page-header">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-            <div>
-                <h1
-                    style="color: #f1f5f9; font-size: 2.2rem; margin: 0 0 8px 0; font-weight: 600; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px;">
-                    <span
-                        style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: #3b82f6; border-radius: 8px; font-size: 1.3rem;">+</span>
-                    Create Product
-                </h1>
-                <p style="color: #94a3b8; margin: 0 0 0 56px; font-size: 0.95rem; font-weight: 400;">Add a new product
-                    to your inventory system</p>
-            </div>
-            <a href="{{ route('admin.inventory.index') }}" class="btn-cancel" style="white-space: nowrap; margin: 0;">
-                ← Back to Inventory
-            </a>
-        </div>
-    </div>
 
     <!-- Main Container -->
     <div style="display: grid; grid-template-columns: 1fr 360px; gap: 28px; margin-bottom: 40px;"

@@ -23,10 +23,17 @@ class ViewServiceProvider extends ServiceProvider
     {
         // Share site logo with all views
         View::composer('*', function ($view) {
-            $logoSetting = Setting::where('key', 'site_logo')->first();
-            $logoUrl = $logoSetting && $logoSetting->value 
-                ? asset('storage/' . $logoSetting->value) 
-                : asset('images/ctrlp-logo.png');
+            try {
+                $logoSetting = Setting::where('key', 'site_logo')->first();
+                if ($logoSetting && $logoSetting->value) {
+                    // Always use Supabase for logo regardless of FILESYSTEM_DISK setting
+                    $logoUrl = \Storage::disk('supabase')->url($logoSetting->value);
+                } else {
+                    $logoUrl = asset('images/ctrlp-logo.png');
+                }
+            } catch (\Exception $e) {
+                $logoUrl = asset('images/ctrlp-logo.png');
+            }
             
             $view->with('siteLogo', $logoUrl);
         });

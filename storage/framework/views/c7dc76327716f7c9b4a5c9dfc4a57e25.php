@@ -10,6 +10,34 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->startSection('page-title', 'Services Manager'); ?>
 
+    <!-- Breadcrumb -->
+    <?php if (isset($component)) { $__componentOriginaldbbc880c47f621cda59b70d6eb356b2f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.breadcrumb','data' => ['items' => [
+        ['label' => 'Catalog'],
+        ['label' => 'Services']
+    ]]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.breadcrumb'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['items' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+        ['label' => 'Catalog'],
+        ['label' => 'Services']
+    ])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f)): ?>
+<?php $attributes = $__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f; ?>
+<?php unset($__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaldbbc880c47f621cda59b70d6eb356b2f)): ?>
+<?php $component = $__componentOriginaldbbc880c47f621cda59b70d6eb356b2f; ?>
+<?php unset($__componentOriginaldbbc880c47f621cda59b70d6eb356b2f); ?>
+<?php endif; ?>
+
     <?php
         $categories = $services
             ->map(function ($svc) {

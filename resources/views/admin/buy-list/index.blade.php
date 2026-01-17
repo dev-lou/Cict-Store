@@ -1,21 +1,30 @@
 <x-admin-layout>
     @section('page-title', 'Buy List Management')
 
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'Sales & Orders'],
+        ['label' => 'Buy List']
+    ]" />
+
+    <!-- Page Header -->
+    <x-admin.page-header title="Buy List Management" subtitle="Click any cell to edit - Excel-like interface with auto-save" />
+
     <style>
         :root {
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --bg-hover: #334155;
-            --border: #334155;
-            --border-hover: #475569;
+            --bg-main: rgba(15, 20, 25, 0.95);
+            --bg-card: rgba(26, 31, 46, 0.9);
+            --bg-hover: rgba(59, 130, 246, 0.1);
+            --border: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(255, 255, 255, 0.2);
             --primary: #3b82f6;
             --primary-hover: #2563eb;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
         }
 
         #buyListTable {
@@ -29,38 +38,38 @@
         }
 
         #buyListTable thead th {
-            background: var(--bg-card);
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
             font-weight: 600;
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 14px 12px;
-            border: 1px solid var(--border);
-            border-right: 1px solid var(--border);
+            padding: 16px 12px;
+            border: none;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             position: sticky;
             top: 0;
             z-index: 10;
         }
 
         #buyListTable tbody tr {
-            background: var(--bg-card);
+            background: rgba(15, 20, 25, 0.6);
             transition: all 0.2s ease;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         #buyListTable tbody tr:hover {
-            background: var(--bg-hover);
+            background: rgba(59, 130, 246, 0.1);
             transform: translateX(2px);
         }
 
         #buyListTable tbody tr.selected {
-            background: rgba(59, 130, 246, 0.1) !important;
+            background: rgba(59, 130, 246, 0.15) !important;
             border-left: 3px solid var(--primary);
         }
 
         #buyListTable tbody tr.row-new {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.15);
             border-left: 3px solid var(--success);
             animation: slideIn 0.3s ease;
         }
@@ -71,10 +80,10 @@
         }
 
         #buyListTable tbody td {
-            border: 1px solid var(--border);
-            border-top: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             padding: 0;
-            color: var(--text-primary);
+            color: white;
             vertical-align: middle;
             position: relative;
         }
@@ -246,10 +255,11 @@
         }
 
         .table-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
 
         .table-wrapper {
@@ -352,9 +362,9 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 24px;
-            padding: 24px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
         }
 
@@ -363,19 +373,21 @@
             align-items: center;
             gap: 10px;
             padding: 12px 24px;
-            background: var(--primary);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .add-row-btn:hover {
-            background: var(--primary-hover);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
         }
 
         .add-row-btn:active {
@@ -398,18 +410,18 @@
     <!-- Header Section -->
     <div class="header-controls">
         <div>
-            <h2 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">
-                Buy List Management
+            <h2 style="font-size: 20px; font-weight: 700; color: white; margin: 0 0 4px 0;">
+                📋 Excel-Style Management
             </h2>
-            <p style="font-size: 14px; color: var(--text-secondary); margin: 0;">
-                Click any cell to edit - Changes save automatically
+            <p style="font-size: 13px; color: rgba(255, 255, 255, 0.7); margin: 0;">
+                Click any cell to edit inline • Changes save automatically • Press Enter to confirm
             </p>
         </div>
         <button onclick="addNewRow()" class="add-row-btn">
             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
             </svg>
-            Add New Item
+            Add New Row
         </button>
     </div>
 
@@ -787,9 +799,21 @@
                 }
             }
 
-            const priority = row.querySelector('[data-field="priority"] span').textContent.toLowerCase();
-            const isBought = row.querySelector('[data-field="is_bought"]').textContent.includes('Yes') ? 1 : 0;
-            const notes = row.querySelector('[data-field="notes"]').textContent.trim();
+            const priority = row.querySelector('[data-field="priority"] span').textContent.trim().toLowerCase();
+            const isBoughtCell = row.querySelector('[data-field="is_bought"] span');
+            const isBought = isBoughtCell ? (isBoughtCell.textContent.includes('Yes') ? 1 : 0) : 0;
+            const notesCell = row.querySelector('[data-field="notes"]');
+            const notes = notesCell ? notesCell.textContent.trim() : '';
+
+            console.log('Saving row with data:', {
+                item_name: itemName,
+                quantity: quantity,
+                estimated_price_min: priceMin,
+                estimated_price_max: priceMax,
+                priority: priority,
+                is_bought: isBought,
+                notes: notes !== '—' ? notes : null
+            });
 
             fetch('{{ route("admin.buy-list.store") }}', {
                 method: 'POST',
@@ -807,7 +831,14 @@
                     notes: notes !== '—' ? notes : null
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Server error');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     row.setAttribute('data-id', data.item.id);
@@ -834,13 +865,15 @@
                         iconColor: '#ffffff',
                         customClass: { popup: 'swal2-toast-readable' }
                     });
+                } else {
+                    throw new Error(data.message || 'Save failed');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 Swal.fire({
                     title: 'Save Failed',
-                    text: 'Failed to save item. Please try again.',
+                    text: error.message || 'Failed to save item. Please try again.',
                     icon: 'error',
                     confirmButtonColor: '#ef4444',
                     confirmButtonText: 'OK',

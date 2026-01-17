@@ -1,18 +1,27 @@
 <x-admin-layout>
     @section('page-title', 'Edit User')
 
-    <div class="min-h-screen py-8" style="background: linear-gradient(135deg, #0f0707 0%, #0f1419 50%, #1a1f2e 100%);">
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'System'],
+        ['label' => 'Users', 'url' => route('admin.users.index')],
+        ['label' => 'Edit User']
+    ]" />
+
+    <!-- Page Header -->
+    <x-admin.page-header title="Edit User" subtitle="Update user information and access settings">
+        <x-slot:actions>
+            <x-admin.button href="{{ route('admin.users.index') }}" variant="secondary">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Users
+            </x-admin.button>
+        </x-slot:actions>
+    </x-admin.page-header>
+
+    <div class="min-h-screen">
         <div class="max-w-2xl mx-auto">
-            <!-- Header with Icon -->
-            <div class="mb-8 text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="background: linear-gradient(135deg, #0f6fdd 0%, #1a7fff 100%); box-shadow: 0 8px 32px rgba(139, 0, 0, 0.3);">
-                    <svg class="w-8 h-8" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                </div>
-                <h2 class="text-4xl font-bold mb-2" style="color: #ffffff; letter-spacing: 0.5px;">Edit User</h2>
-                <p class="text-base" style="color: #b0bcc4;">Update user information and access settings</p>
-            </div>
 
             <!-- Form Card -->
             <div class="rounded-2xl shadow-2xl overflow-hidden" style="background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%); border: 2px solid #b0bcc4; backdrop-filter: blur(10px);">

@@ -1,122 +1,137 @@
 <x-admin-layout>
     @section('page-title', 'Inventory Management')
 
-    <!-- Flash Messages -->
+    <!-- Success Message -->
     @if(session('success'))
-        <div style="background: var(--success, #10b981); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="color: #ffffff; font-weight: 600;">{{ session('success') }}</span>
-        </div>
+        <x-admin.alert type="success" :message="session('success')" :dismissible="true" />
     @endif
     
     @if(session('warning'))
-        <div style="background: var(--warning, #f59e0b); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="color: #ffffff; font-weight: 600;">{{ session('warning') }}</span>
-        </div>
+        <x-admin.alert type="warning" :message="session('warning')" :dismissible="true" />
     @endif
     
     @if(session('error'))
-        <div style="background: var(--danger, #ef4444); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="color: #ffffff; font-weight: 600;">{{ session('error') }}</span>
-        </div>
+        <x-admin.alert type="error" :message="session('error')" :dismissible="true" />
     @endif
 
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'Catalog'],
+        ['label' => 'Inventory']
+    ]" />
+
     <!-- Header Section -->
-    <div class="mb-8 flex items-center justify-between">
-        <div>
-            <h2 class="text-3xl font-bold mb-2" style="color: #f1f5f9; letter-spacing: 0.5px;">Products Inventory</h2>
-            <p class="text-sm" style="color: #94a3b8;">Manage your inventory and product information</p>
-        </div>
-        <div class="flex gap-3">
-            <x-button href="{{ route('admin.inventory.create') }}" variant="primary" size="lg" style="background: #3b82f6; border: 1px solid #3b82f6; border-radius: 12px; padding: 12px 24px; font-weight: 600; transition: all 0.3s ease; display: flex; align-items: center; gap: 6px;" onmouseover="this.style.background='#2563eb';" onmouseout="this.style.background='#3b82f6';">
-                <span style="font-size: 20px; font-weight: 700;">+</span>
-                <span>Add Product</span>
-            </x-button>
-        </div>
-    </div>
+    <x-admin.page-header title="Products Inventory" subtitle="Manage your inventory and product information">
+        <x-slot:actions>
+            <x-admin.button href="{{ route('admin.inventory.create') }}" variant="primary" size="lg">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Add Product
+            </x-admin.button>
+        </x-slot:actions>
+    </x-admin.page-header>
 
     <!-- Statistics Dashboard -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 32px;">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Products -->
-        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; position: relative; overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 8px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Products</p>
-            <div style="display: flex; align-items: baseline; gap: 8px;">
-                <span style="color: #f1f5f9; font-weight: 700; font-size: 2.5rem;">{{ $stats['total_products'] }}</span>
-                <span style="color: #94a3b8; font-size: 0.9rem; font-weight: 600;">items</span>
-            </div>
-            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
-                <span style="color: #10b981; font-size: 0.85rem; font-weight: 600;">{{ $stats['active_products'] }} Active</span>
-                <span style="color: #94a3b8; margin: 0 8px;">•</span>
-                <span style="color: #ef4444; font-size: 0.85rem; font-weight: 600;">{{ $stats['inactive_products'] }} Inactive</span>
-            </div>
-        </div>
+        <x-admin.stats-card 
+            title="Total Products" 
+            value="{{ $stats['total_products'] }}"
+            subtitle="{{ $stats['active_products'] }} Active • {{ $stats['inactive_products'] }} Inactive"
+            card-bg="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)"
+            border-color="#60a5fa">
+            <x-slot:icon>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+            </x-slot:icon>
+        </x-admin.stats-card>
 
         <!-- Low Stock Alerts -->
-        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; position: relative; overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 8px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Low Stock Alerts</p>
-            <div style="display: flex; align-items: baseline; gap: 8px;">
-                <span style="color: #f59e0b; font-weight: 700; font-size: 2.5rem;">{{ $stats['low_stock_count'] }}</span>
-                <span style="color: #94a3b8; font-size: 0.9rem; font-weight: 600;">warnings</span>
-            </div>
-            @if($stats['low_stock_count'] > 0)
-                <p style="color: #94a3b8; font-size: 0.85rem; margin: 12px 0 0 0;">Restock items below threshold</p>
-            @else
-                <p style="color: #10b981; font-size: 0.85rem; margin: 12px 0 0 0;">All items well stocked</p>
-            @endif
-        </div>
+        <x-admin.stats-card 
+            title="Low Stock Alerts" 
+            value="{{ $stats['low_stock_count'] }}"
+            subtitle="{{ $stats['low_stock_count'] > 0 ? 'Restock items below threshold' : 'All items well stocked' }}"
+            card-bg="linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"
+            border-color="#fbbf24">
+            <x-slot:icon>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-admin.stats-card>
 
         <!-- Total Inventory Value -->
-        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; position: relative; overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 8px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Inventory Value</p>
-            <div style="display: flex; align-items: baseline; gap: 4px;">
-                <span style="color: #10b981; font-weight: 700; font-size: 2rem;">₱{{ number_format($stats['total_inventory_value'], 2) }}</span>
-            </div>
-            <p style="color: #94a3b8; font-size: 0.85rem; margin: 12px 0 0 0;">Total stock value at base price</p>
-        </div>
+        <x-admin.stats-card 
+            title="Inventory Value" 
+            value="₱{{ number_format($stats['total_inventory_value'], 2) }}"
+            subtitle="Total stock value at base price"
+            card-bg="linear-gradient(135deg, #10b981 0%, #059669 100%)"
+            border-color="#34d399">
+            <x-slot:icon>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-admin.stats-card>
 
         <!-- Total Stock Units -->
-        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; position: relative; overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 8px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Stock</p>
-            <div style="display: flex; align-items: baseline; gap: 8px;">
-                <span style="color: #f1f5f9; font-weight: 700; font-size: 2.5rem;">{{ number_format($stats['total_stock']) }}</span>
-                <span style="color: #94a3b8; font-size: 0.9rem; font-weight: 600;">units</span>
-            </div>
-            <p style="color: #94a3b8; font-size: 0.85rem; margin: 12px 0 0 0;">Across all products & variants</p>
-        </div>
+        <x-admin.stats-card 
+            title="Total Stock" 
+            value="{{ number_format($stats['total_stock']) }}"
+            subtitle="Across all products & variants"
+            card-bg="linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)"
+            border-color="#818cf8">
+            <x-slot:icon>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-admin.stats-card>
     </div>
 
     <!-- Search & Filter -->
-    <div class="rounded-xl shadow-lg p-6 mb-6" style="background: #1e293b; border: 1px solid #334155; border-radius: 16px;">
+    <div class="rounded-xl shadow-lg p-6 mb-6" 
+         style="background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%); 
+                border: 1px solid rgba(255, 255, 255, 0.1);">
         <form method="GET" class="space-y-4">
             <!-- First Row: Search & Status -->
             <div class="flex gap-4 flex-wrap items-end">
                 <div class="flex-1 min-w-64">
-                    <label class="block text-sm font-semibold mb-2" style="color: #94a3b8;">Search Product</label>
+                    <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Search Product</label>
                     <input 
                         type="text" 
                         name="search" 
                         value="{{ request('search', '') }}"
                         placeholder="Search by product name..." 
-                        class="w-full px-5 py-3 rounded-lg text-white focus:outline-none transition-all duration-300"
-                        style="border: 2px solid #2a3f5f; background-color: #0f1419; border-radius: 10px; color: #ffffff;" 
-                        onfocus="this.style.borderColor='#0f6fdd'; this.style.boxShadow='0 0 12px rgba(15, 111, 221, 0.3)';" 
-                        onblur="this.style.borderColor='#2a3f5f'; this.style.boxShadow='';" 
+                        class="w-full px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all"
+                        style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6);" 
+                        onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'" 
+                        onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'"
                     >
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-2" style="color: #94a3b8;">Status</label>
-                    <select name="status" class="px-5 py-3 rounded-lg text-white focus:outline-none transition-all duration-300" style="border: 1px solid #334155; background-color: #0f172a; border-radius: 10px; color: #f1f5f9; min-width: 150px;" onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='#334155';">
-                        <option value="all" style="background-color: #0f172a; color: #f1f5f9;" {{ request('status', 'all') === 'all' ? 'selected' : '' }}>All Status</option>
-                        <option value="active" style="background-color: #0f172a; color: #f1f5f9;" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" style="background-color: #0f172a; color: #f1f5f9;" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Status</label>
+                    <select name="status" class="px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all" 
+                            style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6); min-width: 150px;" 
+                            onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'" 
+                            onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'">
+                        <option value="all" {{ request('status', 'all') === 'all' ? 'selected' : '' }}>All Status</option>
+                        <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-2" style="color: #94a3b8;">Stock Level</label>
-                    <select name="stock_level" class="px-5 py-3 rounded-lg text-white focus:outline-none transition-all duration-300" style="border: 1px solid #334155; background-color: #0f172a; border-radius: 10px; color: #f1f5f9; min-width: 150px;" onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='#334155';">
-                        <option value="" style="background-color: #0f172a; color: #f1f5f9;" {{ !request('stock_level') ? 'selected' : '' }}>All Levels</option>
-                        <option value="low" style="background-color: #0f172a; color: #f1f5f9;" {{ request('stock_level') === 'low' ? 'selected' : '' }}>Low Stock</option>
-                        <option value="out" style="background-color: #0f172a; color: #f1f5f9;" {{ request('stock_level') === 'out' ? 'selected' : '' }}>Out of Stock</option>
-                        <option value="in_stock" style="background-color: #0f172a; color: #f1f5f9;" {{ request('stock_level') === 'in_stock' ? 'selected' : '' }}>In Stock</option>
+                    <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Stock Level</label>
+                    <select name="stock_level" class="px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all" 
+                            style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6); min-width: 150px;" 
+                            onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'" 
+                            onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'">
+                        <option value="" {{ !request('stock_level') ? 'selected' : '' }}>All Levels</option>
+                        <option value="low" {{ request('stock_level') === 'low' ? 'selected' : '' }}>Low Stock</option>
+                        <option value="out" {{ request('stock_level') === 'out' ? 'selected' : '' }}>Out of Stock</option>
+                        <option value="in_stock" {{ request('stock_level') === 'in_stock' ? 'selected' : '' }}>In Stock</option>
                     </select>
                 </div>
             </div>
@@ -124,36 +139,39 @@
             <!-- Second Row: Price Range & Sort -->
             <div class="flex gap-4 flex-wrap items-end">
                 <div>
-                    <label class="block text-sm font-semibold mb-2" style="color: #b0bcc4;">Min Price (₱)</label>
+                    <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Min Price (₱)</label>
                     <input 
                         type="number" 
                         name="min_price" 
                         value="{{ request('min_price', '') }}"
                         placeholder="0.00" 
                         step="0.01"
-                        class="px-5 py-3 rounded-lg text-white focus:outline-none transition-all duration-300"
-                        style="border: 2px solid #2a3f5f; background-color: #0f1419; border-radius: 10px; color: #ffffff; width: 140px;" 
-                        onfocus="this.style.borderColor='#0f6fdd'; this.style.boxShadow='0 0 12px rgba(15, 111, 221, 0.3)';" 
-                        onblur="this.style.borderColor='#2a3f5f'; this.style.boxShadow='';" 
+                        class="px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all"
+                        style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6); width: 140px;" 
+                        onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'" 
+                        onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'"
                     >
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-2" style="color: #b0bcc4;">Max Price (₱)</label>
+                    <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Max Price (₱)</label>
                     <input 
                         type="number" 
                         name="max_price" 
                         value="{{ request('max_price', '') }}"
                         placeholder="9999.99" 
                         step="0.01"
-                        class="px-5 py-3 rounded-lg text-white focus:outline-none transition-all duration-300"
-                        style="border: 2px solid #2a3f5f; background-color: #0f1419; border-radius: 10px; color: #ffffff; width: 140px;" 
-                        onfocus="this.style.borderColor='#0f6fdd'; this.style.boxShadow='0 0 12px rgba(15, 111, 221, 0.3)';" 
-                        onblur="this.style.borderColor='#2a3f5f'; this.style.boxShadow='';" 
+                        class="px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all"
+                        style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6); width: 140px;" 
+                        onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'" 
+                        onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'"
                     >
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-2" style="color: #b0bcc4;">Sort By</label>
-                    <select name="sort_by" class="px-5 py-3 rounded-lg text-white focus:outline-none transition-all duration-300" style="border: 2px solid #2a3f5f; background-color: #0f1419; border-radius: 10px; color: #ffffff; min-width: 150px;" onfocus="this.style.borderColor='#0f6fdd'; this.style.boxShadow='0 0 12px rgba(15, 111, 221, 0.3)';" onblur="this.style.borderColor='#2a3f5f'; this.style.boxShadow='';">
+                    <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Sort By</label>
+                    <select name="sort_by" class="px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all" 
+                            style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6); min-width: 150px;" 
+                            onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'" 
+                            onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'">
                         <option value="name" {{ request('sort_by', 'name') === 'name' ? 'selected' : '' }}>Name</option>
                         <option value="price" {{ request('sort_by') === 'price' ? 'selected' : '' }}>Price</option>
                         <option value="stock" {{ request('sort_by') === 'stock' ? 'selected' : '' }}>Stock</option>
@@ -161,63 +179,73 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-2" style="color: #b0bcc4;">Order</label>
-                    <select name="sort_order" class="px-5 py-3 rounded-lg text-white focus:outline-none transition-all duration-300" style="border: 2px solid #2a3f5f; background-color: #0f1419; border-radius: 10px; color: #ffffff; min-width: 120px;" onfocus="this.style.borderColor='#0f6fdd'; this.style.boxShadow='0 0 12px rgba(15, 111, 221, 0.3)';" onblur="this.style.borderColor='#2a3f5f'; this.style.boxShadow='';">
+                    <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Order</label>
+                    <select name="sort_order" class="px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all" 
+                            style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6); min-width: 120px;" 
+                            onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'" 
+                            onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'">
                         <option value="asc" {{ request('sort_order', 'asc') === 'asc' ? 'selected' : '' }}>↑ Ascending</option>
                         <option value="desc" {{ request('sort_order') === 'desc' ? 'selected' : '' }}>↓ Descending</option>
                     </select>
                 </div>
-                <x-button type="submit" variant="primary" style="background: #3b82f6; border: 1px solid #3b82f6; border-radius: 10px; padding: 12px 24px; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background='#2563eb';" onmouseout="this.style.background='#3b82f6';">
+                
+                <x-admin.button type="submit" variant="primary">
                     Search
-                </x-button>
+                </x-admin.button>
+                
                 @if(request('search') || request('status') !== 'all' || request('stock_level') || request('min_price') || request('max_price') || (request('sort_by') && request('sort_by') !== 'name'))
-                    <a href="{{ route('admin.inventory.index') }}" class="px-5 py-3 rounded-lg text-white font-semibold transition-all duration-300 flex items-center justify-center" style="background: #64748b; border: 1px solid #64748b; border-radius: 10px; text-align: center;" onmouseover="this.style.background='#475569';" onmouseout="this.style.background='#64748b';">
+                    <x-admin.button href="{{ route('admin.inventory.index') }}" variant="secondary">
                         Clear Filters
-                    </a>
+                    </x-admin.button>
                 @endif
             </div>
         </form>
     </div>
 
     <!-- Products Table -->
-    <div class="rounded-xl shadow-lg overflow-hidden" style="background-color: #1e293b; border: 1px solid #334155; border-radius: 16px;">
+    <div class="rounded-xl shadow-lg overflow-hidden" 
+         style="background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%); 
+                border: 1px solid rgba(255, 255, 255, 0.1);">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="transition-colors" style="border-bottom: 1px solid #334155; background: #1e293b;">
-                        <th class="px-6 py-4 text-left text-sm font-bold uppercase" style="color: #f1f5f9; letter-spacing: 0.5px; width: 50px;"></th>
-                        <th class="px-6 py-4 text-left text-sm font-bold uppercase" style="color: #f1f5f9; letter-spacing: 0.5px;">Product</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold uppercase" style="color: #f1f5f9; letter-spacing: 0.5px;">Price</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold uppercase" style="color: #f1f5f9; letter-spacing: 0.5px;">Variants</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold uppercase" style="color: #f1f5f9; letter-spacing: 0.5px;">Total Stock</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold uppercase" style="color: #f1f5f9; letter-spacing: 0.5px;">Status</th>
-                        <th class="px-6 py-4 text-right text-sm font-bold uppercase" style="color: #f1f5f9; letter-spacing: 0.5px;">Actions</th>
+                    <tr style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white" style="width: 50px;"></th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Product</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Price</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Variants</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Total Stock</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Status</th>
+                        <th class="px-6 py-4 text-right text-sm font-bold text-white">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($products as $product)
-                        <tr class="transition-all duration-300" style="border-bottom: 1px solid #334155;" onmouseover="this.style.backgroundColor='#334155';" onmouseout="this.style.backgroundColor='transparent';">
+                        <tr class="transition-all duration-200" 
+                            style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);" 
+                            onmouseover="this.style.background='rgba(59, 130, 246, 0.1)'" 
+                            onmouseout="this.style.background='transparent'">
                             <!-- Product Image Thumbnail -->
                             <td class="px-6 py-4">
-                                <div style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden; border: 1px solid #334155; background: #0f172a;">
+                                <div style="width: 50px; height: 50px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6);">
                                     @if ($product->image_path)
                                         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;" />
                                     @else
-                                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #64748b;">•</div>
+                                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: rgba(255, 255, 255, 0.3);">📦</div>
                                     @endif
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <p class="font-semibold" style="color: #f1f5f9; font-size: 1.05rem;">{{ $product->name }}</p>
+                                <p class="font-semibold text-white">{{ $product->name }}</p>
                             </td>
-                            <td class="px-6 py-4 font-bold" style="color: #3b82f6; font-size: 1.1rem;">₱{{ number_format($product->base_price, 2) }}</td>
+                            <td class="px-6 py-4 font-bold text-white">₱{{ number_format($product->base_price, 2) }}</td>
                             <td class="px-6 py-4">
                                 @if ($product->variants->count() > 0)
                                     <div style="display: flex; flex-wrap: wrap; gap: 6px; max-width: 350px;">
                                         @foreach ($product->variants as $variant)
-                                            <div style="background: #0f172a; border: 1px solid {{ $variant->stock_quantity <= 20 ? '#f59e0b' : '#3b82f6' }}; border-radius: 8px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
+                                            <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid {{ $variant->stock_quantity <= 20 ? '#f59e0b' : '#3b82f6' }}; border-radius: 8px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
                                                 <span style="color: #3b82f6; font-weight: 600; font-size: 0.85rem;">{{ $variant->name }}</span>
-                                                <span style="background: rgba(59, 130, 246, 0.1); color: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">{{ $variant->stock_quantity }}</span>
+                                                <span style="background: rgba(255, 255, 255, 0.1); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">{{ $variant->stock_quantity }}</span>
                                                 @if($variant->price_modifier > 0)
                                                     <span style="color: #10b981; font-size: 0.75rem; font-weight: 600;">+₱{{ number_format($variant->price_modifier, 2) }}</span>
                                                 @endif
@@ -225,7 +253,7 @@
                                         @endforeach
                                     </div>
                                 @else
-                                    <span style="color: #94a3b8; font-style: italic; font-size: 0.9rem;">No variants</span>
+                                    <span style="color: rgba(255, 255, 255, 0.6); font-style: italic;">No variants</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">
@@ -240,39 +268,54 @@
                                 @endphp
                                 <span class="font-bold" style="color: {{ $stockColor }}; font-size: 1.2rem;">{{ number_format($totalStock) }}</span>
                                 @if($isLowStock && $totalStock > 0)
-                                    <span style="color: #fbbf24; font-size: 0.75rem; margin-left: 4px;">⚠️</span>
+                                    <span style="font-size: 1.2rem; margin-left: 4px;">⚠️</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                <x-badge status="success" style="background: {{ $product->status === 'active' ? '#10b981' : '#ef4444' }}; color: #ffffff; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.9rem;">
+                                @php
+                                    $statusStyles = $product->status === 'active' 
+                                        ? 'background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;'
+                                        : 'background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color: white;';
+                                @endphp
+                                <span class="px-3 py-1.5 rounded-lg text-xs font-bold inline-block" style="{{ $statusStyles }}">
                                     {{ $product->status === 'active' ? 'Active' : 'Inactive' }}
-                                </x-badge>
+                                </span>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-3">
-                                    <!-- Edit Button -->
-                                    <a href="{{ route('admin.inventory.edit', $product) }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300" style="background: #3b82f6; color: white; border: 1px solid #3b82f6; border-radius: 10px;" onmouseover="this.style.background='#2563eb';" onmouseout="this.style.background='#3b82f6';">
+                                <div class="flex justify-end gap-2">
+                                    <x-admin.button 
+                                        href="{{ route('admin.inventory.edit', $product) }}" 
+                                        size="sm" 
+                                        variant="primary">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                         Edit
-                                    </a>
+                                    </x-admin.button>
 
-                                    <!-- Delete Button -->
-                                    <button type="button" onclick="deleteProduct('{{ $product->slug }}')" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300" style="background: #ef4444; color: white; border: 1px solid #ef4444; border-radius: 10px;" onmouseover="this.style.background='#dc2626';" onmouseout="this.style.background='#ef4444';">
+                                    <x-admin.button 
+                                        type="button" 
+                                        onclick="deleteProduct('{{ $product->slug }}')" 
+                                        size="sm" 
+                                        variant="danger">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                         </svg>
                                         Delete
-                                    </button>
+                                    </x-admin.button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center">
-                                <span style="color: #b0bcc4;">No products created yet.</span>
-                                <a href="{{ route('admin.inventory.create') }}" style="color: #0f6fdd; font-weight: bold;" onmouseover="this.style.color='#1a7fff'" onmouseout="this.style.color='#0f6fdd'">Create one →</a>
+                            <td colspan="7" class="px-6 py-12 text-center">
+                                <svg class="w-16 h-16 mx-auto mb-4 opacity-30" style="color: rgba(255, 255, 255, 0.3);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                <p class="text-lg font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">No products found</p>
+                                <x-admin.button href="{{ route('admin.inventory.create') }}" variant="primary" size="sm">
+                                    Create Product
+                                </x-admin.button>
                             </td>
                         </tr>
                     @endforelse

@@ -29,16 +29,6 @@ class BuyListController extends Controller
     }
 
     /**
-     * Display the create buy list item form.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create(): \Illuminate\View\View
-    {
-        return view('admin.buy-list.create');
-    }
-
-    /**
      * Store a new buy list item via AJAX.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -48,9 +38,11 @@ class BuyListController extends Controller
     {
         $validated = $request->validate([
             'item_name' => 'required|string|max:255',
+            'quantity' => 'nullable|integer|min:1',
             'estimated_price_min' => 'nullable|numeric|min:0',
             'estimated_price_max' => 'nullable|numeric|min:0',
             'priority' => 'required|in:low,medium,high',
+            'is_bought' => 'nullable|boolean',
             'custom_fields' => 'nullable|array',
             'notes' => 'nullable|string',
         ]);
@@ -62,17 +54,6 @@ class BuyListController extends Controller
             'message' => 'Item added successfully!',
             'item' => $item
         ]);
-    }
-
-    /**
-     * Display the edit buy list item form.
-     *
-     * @param  int  $buyListItem
-     * @return \Illuminate\View\View
-     */
-    public function edit($buyListItem): \Illuminate\View\View
-    {
-        return view('admin.buy-list.edit');
     }
 
     /**
@@ -88,6 +69,7 @@ class BuyListController extends Controller
 
         $validated = $request->validate([
             'item_name' => 'sometimes|string|max:255',
+            'quantity' => 'nullable|integer|min:1',
             'estimated_price_min' => 'nullable|numeric|min:0',
             'estimated_price_max' => 'nullable|numeric|min:0',
             'priority' => 'sometimes|in:low,medium,high',

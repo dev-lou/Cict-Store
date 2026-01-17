@@ -33,7 +33,7 @@ class AuditLogController extends Controller
             });
         }
 
-        $logs = $query->paginate(50);
+        $logs = $query->paginate(15);
         $models = AuditLog::distinct('model')->pluck('model');
 
         return view('admin.audit-logs.index', [

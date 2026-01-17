@@ -629,16 +629,16 @@
                 const observer = new IntersectionObserver(function (entries) {
                     entries.forEach(function (entry) {
                         const el = entry.target;
-                        const delay = parseInt(el.dataset.revealDelay || '0', 10);
-
-                        if (entry.isIntersecting) {
-                            // Element is entering viewport - animate in
+                        
+                        // Only animate if not already revealed
+                        if (entry.isIntersecting && !el.classList.contains('revealed')) {
+                            const delay = parseInt(el.dataset.revealDelay || '0', 10);
+                            
                             setTimeout(function () {
                                 el.classList.add('revealed');
+                                // Stop observing this element once revealed
+                                observer.unobserve(el);
                             }, delay);
-                        } else {
-                            // Element left viewport - reset for next scroll
-                            el.classList.remove('revealed');
                         }
                     });
                 }, {

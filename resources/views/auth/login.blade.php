@@ -1,336 +1,611 @@
-<x-app-layout :title="'Login - CICT Merch'">
+<x-auth-layout :title="'Login - CICT Merch'">
     <style>
-        :root {
-            --color-primary: #8b0000;
-            --color-accent: #daa520;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        html, body {
-            background: transparent !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .auth-section {
-            position: relative;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background: #8b0000;
-            background-image: url('/gold.gif');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            padding-top: 100px;
-            padding-bottom: 40px;
-        }
-
-        /* Dark Overlay */
-        .auth-section::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            z-index: 2;
-        }
-
-        /* Animated Gradient Elements */
-        .auth-bg-elements {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 3;
-            display: none;
+            overflow-x: hidden;
         }
 
         .auth-container {
-            position: relative;
-            z-index: 10;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
             width: 100%;
-            max-width: 540px;
-            padding: 24px;
         }
 
-        .auth-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 24px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4), 
-                        0 0 80px rgba(139, 0, 0, 0.1),
-                        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        /* Left Side - Branding */
+        .auth-brand-side {
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .auth-card:hover {
-            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5), 
-                        0 0 100px rgba(139, 0, 0, 0.15),
-                        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
-            transform: translateY(-6px);
+        .auth-brand-side::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
         }
 
-        .auth-header {
-            padding: 40px 32px 24px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.03) 0%, rgba(218, 165, 32, 0.02) 100%);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        .auth-brand-side::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .brand-content {
             position: relative;
+            z-index: 2;
         }
 
-        .auth-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #8B0000 0%, #C00000 50%, #8B0000 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
-            font-family: 'Inter', sans-serif;
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 60px;
         }
 
-        .auth-subtitle {
-            font-size: 15px;
-            color: #666;
-            font-weight: 500;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        .auth-body {
-            padding: 32px;
-        }
-
-        .auth-input-group {
-            margin-bottom: 24px;
-            width: 100%;
-        }
-
-        .auth-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 700;
-            color: #8B0000;
-            margin-bottom: 10px;
-            letter-spacing: 0.3px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .auth-input {
-            width: 100%;
-            padding: 15px 18px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid rgba(139, 0, 0, 0.12);
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: white;
             border-radius: 12px;
+            object-fit: cover;
+            padding: 8px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-headline {
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .brand-description {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .brand-features {
+            display: grid;
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: white;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-text {
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        .brand-footer {
+            position: relative;
+            z-index: 2;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        /* Right Side - Form */
+        .auth-form-side {
+            background: white;
+            padding: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-bottom: 32px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .back-link:hover {
+            color: #8B0000;
+            border-color: #8B0000;
+            background: rgba(139, 0, 0, 0.04);
+            transform: translateX(-4px);
+        }
+
+        .back-link svg {
+            flex-shrink: 0;
+        }
+
+        .form-header {
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            font-size: 36px;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .form-subtitle {
             font-size: 16px;
-            font-family: 'Inter', sans-serif;
-            color: #1a1a1a;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-sizing: border-box;
-            min-height: 52px;
+            color: #64748b;
+            font-weight: 500;
         }
 
-        .auth-input::placeholder {
-            color: #aaa;
+        /* Google Button */
+        .google-btn-wrapper {
+            margin-bottom: 32px;
         }
 
-        .auth-input:focus {
+        .google-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            background: white;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .google-btn:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .google-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 32px 0;
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .divider span {
+            padding: 0 20px;
+        }
+
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 10px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: white;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .form-input:focus {
             outline: none;
             border-color: #8B0000;
-            background: rgba(255, 255, 255, 1);
             box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.08);
         }
 
-        .auth-button {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #8B0000 0%, #B00000 50%, #8B0000 100%);
-            background-size: 200% 100%;
-            color: #FFFFFF;
+        .form-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        /* Hide browser's default password reveal button */
+        .form-input::-ms-reveal,
+        .form-input::-ms-clear {
+            display: none;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper .form-input {
+            padding-right: 50px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
             border: none;
-            border-radius: 12px;
+            cursor: pointer;
+            padding: 8px;
+            color: #64748b;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            color: #8B0000;
+        }
+
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #8B0000 0%, #B00000 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
             font-size: 16px;
             font-weight: 700;
-            letter-spacing: 0.3px;
-            font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 10px 25px rgba(139, 0, 0, 0.35),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(139, 0, 0, 0.3);
             margin-top: 8px;
-            min-height: 52px;
         }
 
-        .auth-button:hover {
-            background-position: 100% 0;
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(139, 0, 0, 0.45),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 0, 0, 0.4);
         }
 
-        .auth-button:active {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(139, 0, 0, 0.35);
+        .submit-btn:active {
+            transform: translateY(0);
         }
 
-        .auth-footer {
-            padding: 20px 32px;
+        /* Footer */
+        .form-footer {
+            margin-top: 32px;
             text-align: center;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.02) 0%, rgba(218, 165, 32, 0.02) 100%);
+            font-size: 15px;
+            color: #64748b;
         }
 
-        .auth-footer-text {
-            font-size: 14px;
-            color: #666;
-            margin: 0;
-        }
-
-        .auth-link {
+        .form-footer a {
             color: #8B0000;
             font-weight: 700;
             text-decoration: none;
-            border-bottom: 2px solid #FFD700;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: inline-block;
+            transition: color 0.2s;
         }
 
-        .auth-link:hover {
-            color: #A00000;
-            transform: translateX(2px);
+        .form-footer a:hover {
+            color: #B00000;
         }
 
-        .auth-error {
-            background: rgba(255, 107, 107, 0.12);
-            border: 1px solid #ff6b6b;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-brand-side {
+                display: none;
+            }
+
+            .auth-form-side {
+                padding: 40px 24px;
+            }
+
+            .form-title {
+                font-size: 32px;
+            }
         }
 
-        .auth-error-item {
-            color: #DC2626;
-            font-size: 13px;
-            font-weight: 600;
-            margin: 4px 0;
+        @media (max-width: 640px) {
+            .auth-form-side {
+                padding: 24px 20px;
+            }
+
+            .form-title {
+                font-size: 28px;
+            }
+
+            .brand-headline {
+                font-size: 36px;
+            }
+
+            .form-input {
+                font-size: 16px; /* Prevent iOS zoom */
+            }
+
+            .back-link {
+                margin-bottom: 24px;
+            }
+
+            .form-header {
+                margin-bottom: 32px;
+            }
+
+            .google-btn-wrapper {
+                margin-bottom: 24px;
+            }
+
+            .divider {
+                margin: 24px 0;
+            }
         }
 
-        .auth-error-item:first-child {
-            margin-top: 0;
+        /* Animation */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .brand-content {
+            animation: slideInLeft 0.6s ease;
+        }
+
+        .form-wrapper {
+            animation: slideInRight 0.6s ease;
         }
     </style>
 
-    <div class="auth-section">
-        <!-- Background Image -->
-        <!-- Dark Overlay -->
-        <!-- Animated Gradient Elements -->
-        <div class="auth-bg-elements">
-            <div class="auth-gradient-1"></div>
-            <div class="auth-gradient-2"></div>
-            <div class="auth-gradient-3"></div>
+    <div class="auth-container">
+        <!-- Left Side - Branding -->
+        <div class="auth-brand-side">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    @php
+                        $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
+                        $logoUrl = $logoSetting && $logoSetting->value 
+                            ? \Storage::disk('supabase')->url($logoSetting->value) 
+                            : asset('images/ctrlp-logo.png');
+                    @endphp
+                    <img src="{{ $logoUrl }}" alt="Logo" class="logo-icon">
+                    <span class="logo-text">{{ config('app.name') }}</span>
+                </div>
+
+                <h1 class="brand-headline">
+                    Your Campus<br>
+                    Merch Hub
+                </h1>
+
+                <p class="brand-description">
+                    Official merchandise store for CICT students. Get exclusive college gear, accessories, and more.
+                </p>
+
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <span class="feature-text">Official CICT merchandise</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <span class="feature-text">Fast & secure checkout</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <span class="feature-text">Exclusive student deals</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brand-footer">
+                © 2026 CICT Dingle. All rights reserved.
+            </div>
         </div>
 
-        <!-- Main Container -->
-        <div class="auth-container">
-            <div class="auth-card">
-                <!-- Header -->
-                <div class="auth-header">
-                    <h2 class="auth-title">🔐 Sign In</h2>
-                    <p class="auth-subtitle">Access your account to manage orders and checkout</p>
+        <!-- Right Side - Form -->
+        <div class="auth-form-side">
+            <div class="form-wrapper">
+                <a href="{{ route('home') }}" class="back-link">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 14L4 8l6-6"/>
+                    </svg>
+                    Back to Home
+                </a>
+
+                <div class="form-header">
+                    <h2 class="form-title">Welcome Back</h2>
+                    <p class="form-subtitle">Sign in to your account to continue</p>
                 </div>
 
-                <!-- Form Body -->
-                <div class="auth-body">
-                    <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
-                        @csrf
-                        <input type="hidden" name="remember" value="true">
+                <!-- Google OAuth -->
+                <div class="google-btn-wrapper">
+                    <a href="{{ route('oauth.redirect', ['provider' => 'google']) }}" class="google-btn">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continue with Google
+                    </a>
+                </div>
 
-                        @if ($errors->any())
-                            <div class="auth-error">
-                                @foreach ($errors->all() as $error)
-                                    <div class="auth-error-item">✗ {{ $error }}</div>
-                                @endforeach
-                            </div>
-                        @endif
+                <!-- Divider -->
+                <div class="divider">
+                    <span>or continue with email</span>
+                </div>
 
-                        <div class="auth-input-group">
-                            <label for="email" class="auth-label">📧 Email Address</label>
+                <!-- Login Form -->
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            placeholder="you@example.com"
+                            value="{{ old('email') }}"
+                            required 
+                            autofocus
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="password-wrapper">
                             <input 
-                                id="email" 
-                                name="email" 
-                                type="email" 
-                                required 
-                                class="auth-input" 
-                                placeholder="you@example.com" 
-                                value="{{ old('email') }}"
-                                autocomplete="email"
-                                inputmode="email">
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
                         </div>
+                    </div>
 
-                        <div class="auth-input-group">
-                            <label for="password" class="auth-label">🔒 Password</label>
-                            <div style="position: relative;">
-                                <input 
-                                    id="password" 
-                                    name="password" 
-                                    type="password" 
-                                    required 
-                                    class="auth-input" 
-                                    placeholder="••••••••"
-                                    autocomplete="current-password"
-                                    style="padding-right: 48px;">
-                                <button 
-                                    type="button" 
-                                    onclick="togglePassword('password', this)"
-                                    style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 8px; color: #666; transition: color 0.2s;"
-                                    onmouseover="this.style.color='#8B0000'"
-                                    onmouseout="this.style.color='#666'"
-                                    aria-label="Toggle password visibility">
-                                    <svg class="eye-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path class="eye-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path class="eye-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                        <path class="eye-closed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" style="display: none;"></path>
-                                        <path class="eye-closed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.5 10.5a2 2 0 012.45 2.45M15 12a3 3 0 01-3 3" style="display: none;"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+                    <button type="submit" class="submit-btn">
+                        Sign In
+                    </button>
+                </form>
 
-                        <script>
-                        function togglePassword(inputId, button) {
-                            const input = document.getElementById(inputId);
-                            const eyeOpen = button.querySelectorAll('.eye-open');
-                            const eyeClosed = button.querySelectorAll('.eye-closed');
-                            
-                            if (input.type === 'password') {
-                                input.type = 'text';
-                                eyeOpen.forEach(el => el.style.display = 'none');
-                                eyeClosed.forEach(el => el.style.display = 'block');
-                            } else {
-                                input.type = 'password';
-                                eyeOpen.forEach(el => el.style.display = 'block');
-                                eyeClosed.forEach(el => el.style.display = 'none');
-                            }
-                        }
-                        </script>
-
-                        <button type="submit" class="auth-button">🚀 Sign In</button>
-                    </form>
-                </div>
-
-                <!-- Footer -->
-                <div class="auth-footer">
-                    <p class="auth-footer-text">
-                        Don't have an account? 
-                        <a href="{{ route('register') }}" class="auth-link">Create one</a>
-                    </p>
+                <div class="form-footer">
+                    Don't have an account? <a href="{{ route('register') }}">Create one</a>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const button = field.nextElementSibling;
+            const svg = button.querySelector('svg');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+            } else {
+                field.type = 'password';
+                svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+            }
+        }
+    </script>
+</x-auth-layout>
