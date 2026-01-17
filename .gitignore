@@ -75,6 +75,7 @@ yarn-error.log*
 
 # Laravel storage & logs
 /storage/logs/
+/storage/framework/
 /storage/*.key
 public/storage
 

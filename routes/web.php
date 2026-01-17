@@ -26,7 +26,6 @@ use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\Admin\ServiceManagementController;
 use App\Http\Controllers\SitemapController;
-use App\Http\Controllers\StorageProxyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -50,9 +49,6 @@ Route::get('/', [HomepageController::class, 'index'])->name('home');
 
 // Sitemap for SEO
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
-
-// Storage proxy - serves Supabase images through Laravel to avoid CORS issues
-Route::get('/storage/{path}', [StorageProxyController::class, 'show'])->where('path', '.*');
 
 // Health check endpoints
 //  - /_health: developer-only (local env) — private debug info

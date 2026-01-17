@@ -44,7 +44,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 100px;
+            height: 120px;
             background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%);
             z-index: 0;
             overflow: hidden;
@@ -60,12 +60,12 @@
 
         .product-hero-banner {
             margin-top: 0;
-            height: 200px;
+            height: 120px;
         }
 
         @media (max-width: 768px) {
             .product-hero-banner {
-                height: 120px;
+                height: 100px;
             }
         }
 
@@ -1125,8 +1125,10 @@
                 <div class="reviews-header">
                     <h2 class="reviews-title">
                         Customer Reviews
-                        <span class="reviews-count">{{ $product->reviews->count() }}
-                            {{ Str::plural('review', $product->reviews->count()) }}</span>
+                        @if($product->reviews->count() > 0)
+                            <span class="reviews-count">{{ $product->reviews->count() }}
+                                {{ Str::plural('review', $product->reviews->count()) }}</span>
+                        @endif
                     </h2>
                     @if($product->reviews->count() > 0)
                         <div class="reviews-summary">

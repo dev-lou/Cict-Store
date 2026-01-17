@@ -3,7 +3,7 @@
  * GPU-accelerated canvas-based particle effects
  */
 
-(function() {
+(function () {
     'use strict';
 
     class ParticleSystem {
@@ -182,28 +182,32 @@
             const count = parseInt(container.dataset.particleCount) || 50;
             const color = container.dataset.particleColor || '#FFFFFF';
             const opacity = parseFloat(container.dataset.particleOpacity) || 0.3;
-            
-            new ParticleSystem(container, { 
-                particleCount: count, 
-                color, 
+
+            new ParticleSystem(container, {
+                particleCount: count,
+                color,
                 opacity,
                 interactive: container.dataset.particleInteractive !== 'false',
                 connections: container.dataset.particleConnections !== 'false'
             });
         });
 
-        // Add particles to hero sections
-        document.querySelectorAll('.hero-section, .contact-hero').forEach(hero => {
+        // Add particles to hero sections (reduced on mobile for performance)
+        const isMobile = window.innerWidth < 768;
+        const particleCount = isMobile ? 25 : 60;
+        const connectionDistance = isMobile ? 80 : 120;
+
+        document.querySelectorAll('.hero-section, .hero, .contact-hero, .shop-hero, .services-hero').forEach(hero => {
             new ParticleSystem(hero, {
-                particleCount: 60,
+                particleCount: particleCount,
                 color: '#FFFFFF',
                 opacity: 0.4,
                 speed: 0.3,
                 minSize: 1,
                 maxSize: 3,
-                interactive: true,
+                interactive: !isMobile, // Disable mouse interaction on mobile
                 connections: true,
-                connectionDistance: 120
+                connectionDistance: connectionDistance
             });
         });
     });
