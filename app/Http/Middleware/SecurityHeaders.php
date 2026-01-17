@@ -33,9 +33,9 @@ class SecurityHeaders
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://www.googletagmanager.com https://generativelanguage.googleapis.com; " .
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " .
             "font-src 'self' https://fonts.gstatic.com; " .
-            "img-src 'self' data: https: blob:; " .
+            "img-src 'self' data: https: blob: https://*.supabase.co; " .
             "frame-src https://www.google.com; " .
-            "connect-src 'self' https://generativelanguage.googleapis.com;"
+            "connect-src 'self' https://generativelanguage.googleapis.com https://*.supabase.co;"
         );
         
         // Referrer Policy
