@@ -1,21 +1,72 @@
-<x-admin-layout>
-    @section('page-title', 'Create User')
+<?php if (isset($component)) { $__componentOriginale0f1cdd055772eb1d4a99981c240763e = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale0f1cdd055772eb1d4a99981c240763e = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-layout','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->startSection('page-title', 'Create User'); ?>
 
-    <x-admin.breadcrumb :items="[
+    <?php if (isset($component)) { $__componentOriginaldbbc880c47f621cda59b70d6eb356b2f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.breadcrumb','data' => ['items' => [
         ['label' => 'System'],
         ['label' => 'Users', 'url' => route('admin.users.index')],
         ['label' => 'Create User']
-    ]" />
+    ]]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.breadcrumb'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['items' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+        ['label' => 'System'],
+        ['label' => 'Users', 'url' => route('admin.users.index')],
+        ['label' => 'Create User']
+    ])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f)): ?>
+<?php $attributes = $__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f; ?>
+<?php unset($__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaldbbc880c47f621cda59b70d6eb356b2f)): ?>
+<?php $component = $__componentOriginaldbbc880c47f621cda59b70d6eb356b2f; ?>
+<?php unset($__componentOriginaldbbc880c47f621cda59b70d6eb356b2f); ?>
+<?php endif; ?>
 
-    <x-admin.page-header title="Create New User" subtitle="Add a new team member or customer account" />
+    <?php if (isset($component)) { $__componentOriginalcb19cb35a534439097b02b8af91726ee = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcb19cb35a534439097b02b8af91726ee = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.page-header','data' => ['title' => 'Create New User','subtitle' => 'Add a new team member or customer account']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.page-header'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Create New User','subtitle' => 'Add a new team member or customer account']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcb19cb35a534439097b02b8af91726ee)): ?>
+<?php $attributes = $__attributesOriginalcb19cb35a534439097b02b8af91726ee; ?>
+<?php unset($__attributesOriginalcb19cb35a534439097b02b8af91726ee); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcb19cb35a534439097b02b8af91726ee)): ?>
+<?php $component = $__componentOriginalcb19cb35a534439097b02b8af91726ee; ?>
+<?php unset($__componentOriginalcb19cb35a534439097b02b8af91726ee); ?>
+<?php endif; ?>
 
     <div class="px-8">
         <div class="rounded-2xl shadow-2xl overflow-hidden" style="background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%); border: 2px solid #b0bcc4;">
             <div style="height: 3px; background: linear-gradient(90deg, #0f6fdd 0%, #b0bcc4 50%, #0f6fdd 100%);"></div>
 
             <div class="p-6">
-                <form action="{{ route('admin.users.store') }}" method="POST">
-                    @csrf
+                <form action="<?php echo e(route('admin.users.store')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Name -->
@@ -30,7 +81,7 @@
                                 type="text" 
                                 id="name" 
                                 name="name" 
-                                value="{{ old('name') }}"
+                                value="<?php echo e(old('name')); ?>"
                                 placeholder="John Doe"
                                 class="w-full px-4 py-2.5 rounded-lg text-base transition-all"
                                 style="border: 2px solid #444; background-color: #0f0707; color: #ffffff;"
@@ -38,9 +89,16 @@
                                 onblur="this.style.borderColor='#444'; this.style.boxShadow=''"
                                 required
                             />
-                            @error('name')
-                                <p class="mt-1.5 text-sm" style="color: #ff6b6b;">{{ $message }}</p>
-                            @enderror
+                            <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <p class="mt-1.5 text-sm" style="color: #ff6b6b;"><?php echo e($message); ?></p>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <!-- Email -->
@@ -55,7 +113,7 @@
                                 type="email" 
                                 id="email" 
                                 name="email" 
-                                value="{{ old('email') }}"
+                                value="<?php echo e(old('email')); ?>"
                                 placeholder="user@example.com"
                                 class="w-full px-4 py-2.5 rounded-lg text-base transition-all"
                                 style="border: 2px solid #444; background-color: #0f0707; color: #ffffff;"
@@ -63,9 +121,16 @@
                                 onblur="this.style.borderColor='#444'; this.style.boxShadow=''"
                                 required
                             />
-                            @error('email')
-                                <p class="mt-1.5 text-sm" style="color: #ff6b6b;">{{ $message }}</p>
-                            @enderror
+                            <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <p class="mt-1.5 text-sm" style="color: #ff6b6b;"><?php echo e($message); ?></p>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <!-- Password -->
@@ -87,9 +152,16 @@
                                 onblur="this.style.borderColor='#444'; this.style.boxShadow=''"
                                 required
                             />
-                            @error('password')
-                                <p class="mt-1.5 text-sm" style="color: #ff6b6b;">{{ $message }}</p>
-                            @enderror
+                            <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <p class="mt-1.5 text-sm" style="color: #ff6b6b;"><?php echo e($message); ?></p>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <!-- Confirm Password -->
@@ -123,35 +195,44 @@
                             User Role <span style="color: #f44336;">*</span>
                         </label>
                         <div class="grid grid-cols-3 gap-3">
-                            @foreach(['admin' => 'Administrator', 'staff' => 'Staff Member', 'customer' => 'Customer'] as $roleValue => $roleLabel)
+                            <?php $__currentLoopData = ['admin' => 'Administrator', 'staff' => 'Staff Member', 'customer' => 'Customer']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $roleValue => $roleLabel): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <label class="relative cursor-pointer group">
                                     <input 
                                         type="radio" 
                                         name="roles" 
-                                        value="{{ $roleValue }}"
+                                        value="<?php echo e($roleValue); ?>"
                                         class="peer absolute opacity-0"
                                         style="pointer-events: none;"
-                                        {{ old('roles') === $roleValue ? 'checked' : '' }}
+                                        <?php echo e(old('roles') === $roleValue ? 'checked' : ''); ?>
+
                                         required
                                     />
                                     <div class="p-3 rounded-lg text-center font-semibold text-sm transition-all flex items-center justify-center gap-2" style="border: 2px solid #444; background-color: #0f0707; color: #b0bcc4;">
                                         <span class="radio-circle" style="width: 18px; height: 18px; border-radius: 50%; border: 2px solid #666; display: flex; align-items: center; justify-content: center;">
                                             <span class="radio-dot" style="width: 10px; height: 10px; border-radius: 50%; background: #0f6fdd; opacity: 0; transition: opacity 0.2s;"></span>
                                         </span>
-                                        {{ $roleLabel }}
+                                        <?php echo e($roleLabel); ?>
+
                                     </div>
                                 </label>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
-                        @error('roles')
-                            <p class="mt-2 text-sm" style="color: #ff6b6b;">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['roles'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-2 text-sm" style="color: #ff6b6b;"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <!-- Form Actions -->
                     <div class="flex gap-4 mt-6 pt-6 mb-8 justify-center" style="border-top: 2px solid #444;">
                         <a 
-                            href="{{ route('admin.users.index') }}" 
+                            href="<?php echo e(route('admin.users.index')); ?>" 
                             class="px-8 py-3 rounded-xl font-bold text-center transition-all"
                             style="background-color: #2a2f3a; color: #b0bcc4; border: 2px solid #444;"
                             onmouseover="this.style.backgroundColor='#353a47'; this.style.borderColor='#555'"
@@ -201,4 +282,14 @@
             border-color: #555 !important;
         }
     </style>
-</x-admin-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale0f1cdd055772eb1d4a99981c240763e)): ?>
+<?php $attributes = $__attributesOriginale0f1cdd055772eb1d4a99981c240763e; ?>
+<?php unset($__attributesOriginale0f1cdd055772eb1d4a99981c240763e); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale0f1cdd055772eb1d4a99981c240763e)): ?>
+<?php $component = $__componentOriginale0f1cdd055772eb1d4a99981c240763e; ?>
+<?php unset($__componentOriginale0f1cdd055772eb1d4a99981c240763e); ?>
+<?php endif; ?>
+<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/admin/users/create.blade.php ENDPATH**/ ?>

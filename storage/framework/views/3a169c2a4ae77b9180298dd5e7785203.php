@@ -1,24 +1,92 @@
-<x-admin-layout>
-    @section('page-title', 'Audit Log Details')
+<?php if (isset($component)) { $__componentOriginale0f1cdd055772eb1d4a99981c240763e = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale0f1cdd055772eb1d4a99981c240763e = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-layout','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->startSection('page-title', 'Audit Log Details'); ?>
 
     <!-- Breadcrumb -->
-    <x-admin.breadcrumb :items="[
+    <?php if (isset($component)) { $__componentOriginaldbbc880c47f621cda59b70d6eb356b2f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.breadcrumb','data' => ['items' => [
         ['label' => 'System'],
         ['label' => 'Audit Logs', 'url' => route('admin.audit-logs.index')],
         ['label' => 'Log #' . $log->id]
-    ]" />
+    ]]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.breadcrumb'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['items' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+        ['label' => 'System'],
+        ['label' => 'Audit Logs', 'url' => route('admin.audit-logs.index')],
+        ['label' => 'Log #' . $log->id]
+    ])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f)): ?>
+<?php $attributes = $__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f; ?>
+<?php unset($__attributesOriginaldbbc880c47f621cda59b70d6eb356b2f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginaldbbc880c47f621cda59b70d6eb356b2f)): ?>
+<?php $component = $__componentOriginaldbbc880c47f621cda59b70d6eb356b2f; ?>
+<?php unset($__componentOriginaldbbc880c47f621cda59b70d6eb356b2f); ?>
+<?php endif; ?>
 
     <!-- Page Header -->
-    <x-admin.page-header title="Audit Log Details" subtitle="View detailed information about this system event">
-        <x-slot:actions>
-            <x-admin.button href="{{ route('admin.audit-logs.index') }}" variant="secondary">
+    <?php if (isset($component)) { $__componentOriginalcb19cb35a534439097b02b8af91726ee = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcb19cb35a534439097b02b8af91726ee = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.page-header','data' => ['title' => 'Audit Log Details','subtitle' => 'View detailed information about this system event']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.page-header'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => 'Audit Log Details','subtitle' => 'View detailed information about this system event']); ?>
+         <?php $__env->slot('actions', null, []); ?> 
+            <?php if (isset($component)) { $__componentOriginal60a020e5340f3f52bbc4501dc9f93102 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal60a020e5340f3f52bbc4501dc9f93102 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.button','data' => ['href' => ''.e(route('admin.audit-logs.index')).'','variant' => 'secondary']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin.button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['href' => ''.e(route('admin.audit-logs.index')).'','variant' => 'secondary']); ?>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
                 Back to Logs
-            </x-admin.button>
-        </x-slot:actions>
-    </x-admin.page-header>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal60a020e5340f3f52bbc4501dc9f93102)): ?>
+<?php $attributes = $__attributesOriginal60a020e5340f3f52bbc4501dc9f93102; ?>
+<?php unset($__attributesOriginal60a020e5340f3f52bbc4501dc9f93102); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal60a020e5340f3f52bbc4501dc9f93102)): ?>
+<?php $component = $__componentOriginal60a020e5340f3f52bbc4501dc9f93102; ?>
+<?php unset($__componentOriginal60a020e5340f3f52bbc4501dc9f93102); ?>
+<?php endif; ?>
+         <?php $__env->endSlot(); ?>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcb19cb35a534439097b02b8af91726ee)): ?>
+<?php $attributes = $__attributesOriginalcb19cb35a534439097b02b8af91726ee; ?>
+<?php unset($__attributesOriginalcb19cb35a534439097b02b8af91726ee); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcb19cb35a534439097b02b8af91726ee)): ?>
+<?php $component = $__componentOriginalcb19cb35a534439097b02b8af91726ee; ?>
+<?php unset($__componentOriginalcb19cb35a534439097b02b8af91726ee); ?>
+<?php endif; ?>
 
     <div class="max-w-5xl mx-auto space-y-6">
         <!-- Overview Card -->
@@ -37,7 +105,7 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium" style="color: #999;">Log ID</p>
-                            <p class="text-lg font-bold mt-1" style="color: #ffffff;">#{{ $log->id }}</p>
+                            <p class="text-lg font-bold mt-1" style="color: #ffffff;">#<?php echo e($log->id); ?></p>
                         </div>
                     </div>
 
@@ -51,8 +119,9 @@
                         <div>
                             <p class="text-sm font-medium" style="color: #999;">Action</p>
                             <span class="inline-block px-3 py-1 rounded-full text-sm font-bold mt-1" 
-                                  style="background-color: {{ $log->action === 'create' ? '#4caf50' : ($log->action === 'update' ? '#ff9500' : '#f44336') }}; color: #ffffff;">
-                                {{ strtoupper($log->action) }}
+                                  style="background-color: <?php echo e($log->action === 'create' ? '#4caf50' : ($log->action === 'update' ? '#ff9500' : '#f44336')); ?>; color: #ffffff;">
+                                <?php echo e(strtoupper($log->action)); ?>
+
                             </span>
                         </div>
                     </div>
@@ -66,7 +135,7 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium" style="color: #999;">Model Type</p>
-                            <p class="text-lg font-bold mt-1" style="color: #ffffff;">{{ $log->model }}</p>
+                            <p class="text-lg font-bold mt-1" style="color: #ffffff;"><?php echo e($log->model); ?></p>
                         </div>
                     </div>
 
@@ -79,7 +148,7 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium" style="color: #999;">Model ID</p>
-                            <p class="text-lg font-bold mt-1" style="color: #ffffff;">{{ $log->model_id }}</p>
+                            <p class="text-lg font-bold mt-1" style="color: #ffffff;"><?php echo e($log->model_id); ?></p>
                         </div>
                     </div>
 
@@ -93,15 +162,16 @@
                         <div>
                             <p class="text-sm font-medium" style="color: #999;">Performed By</p>
                             <p class="text-lg font-bold mt-1" style="color: #ffffff;">
-                                @if($log->user)
-                                    {{ $log->user->name }}
-                                @else
+                                <?php if($log->user): ?>
+                                    <?php echo e($log->user->name); ?>
+
+                                <?php else: ?>
                                     System
-                                @endif
+                                <?php endif; ?>
                             </p>
-                            @if($log->user)
-                                <p class="text-sm mt-1" style="color: #999;">{{ $log->user->email }}</p>
-                            @endif
+                            <?php if($log->user): ?>
+                                <p class="text-sm mt-1" style="color: #999;"><?php echo e($log->user->email); ?></p>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -114,13 +184,13 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium" style="color: #999;">Timestamp</p>
-                            <p class="text-lg font-bold mt-1" style="color: #ffffff;">{{ $log->created_at->format('M d, Y') }}</p>
-                            <p class="text-sm mt-1" style="color: #999;">{{ $log->created_at->format('h:i A') }}</p>
+                            <p class="text-lg font-bold mt-1" style="color: #ffffff;"><?php echo e($log->created_at->format('M d, Y')); ?></p>
+                            <p class="text-sm mt-1" style="color: #999;"><?php echo e($log->created_at->format('h:i A')); ?></p>
                         </div>
                     </div>
 
                     <!-- IP Address -->
-                    @if($log->ip_address)
+                    <?php if($log->ip_address): ?>
                     <div class="flex items-start gap-4">
                         <div class="p-3 rounded-lg" style="background-color: #0f6fdd;">
                             <svg class="w-6 h-6" style="color: #ffffff;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,13 +199,13 @@
                         </div>
                         <div class="flex-1">
                             <p class="text-sm font-medium" style="color: #999;">IP Address</p>
-                            <p class="text-lg font-bold mt-1" style="color: #ffffff;">{{ $log->ip_address }}</p>
+                            <p class="text-lg font-bold mt-1" style="color: #ffffff;"><?php echo e($log->ip_address); ?></p>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?>
 
                     <!-- User Agent -->
-                    @if($log->user_agent)
+                    <?php if($log->user_agent): ?>
                     <div class="flex items-start gap-4 md:col-span-2">
                         <div class="p-3 rounded-lg" style="background-color: #0f6fdd;">
                             <svg class="w-6 h-6" style="color: #ffffff;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,16 +214,16 @@
                         </div>
                         <div class="flex-1">
                             <p class="text-sm font-medium" style="color: #999;">Browser / Device</p>
-                            <p class="text-sm mt-1 leading-relaxed" style="color: #b0bcc4;">{{ $log->user_agent }}</p>
+                            <p class="text-sm mt-1 leading-relaxed" style="color: #b0bcc4;"><?php echo e($log->user_agent); ?></p>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
 
         <!-- Changes Details -->
-        @if($log->action === 'update' && (!empty($log->old_values) || !empty($log->new_values)))
+        <?php if($log->action === 'update' && (!empty($log->old_values) || !empty($log->new_values))): ?>
         <div class="rounded-2xl shadow-2xl overflow-hidden" style="background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%); border: 2px solid #b0bcc4;">
             <!-- Card Top Border -->
             <div style="height: 3px; background: linear-gradient(90deg, #0f6fdd 0%, #b0bcc4 50%, #0f6fdd 100%);"></div>
@@ -171,14 +241,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
+                            <?php
                                 $oldValues = is_string($log->old_values) ? json_decode($log->old_values, true) : $log->old_values;
                                 $newValues = is_string($log->new_values) ? json_decode($log->new_values, true) : $log->new_values;
                                 $allFields = array_unique(array_merge(array_keys($oldValues ?? []), array_keys($newValues ?? [])));
-                            @endphp
+                            ?>
 
-                            @forelse($allFields as $field)
-                                @php
+                            <?php $__empty_1 = true; $__currentLoopData = $allFields; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <?php
                                     $oldValue = $oldValues[$field] ?? 'N/A';
                                     $newValue = $newValues[$field] ?? 'N/A';
                                     
@@ -192,46 +262,58 @@
                                     
                                     // Skip password fields
                                     if (in_array(strtolower($field), ['password', 'password_hash'])) continue;
-                                @endphp
+                                ?>
                                 <tr style="border-bottom: 1px solid #333;">
-                                    <td class="p-4 font-bold" style="color: #b0bcc4;">{{ ucfirst(str_replace('_', ' ', $field)) }}</td>
+                                    <td class="p-4 font-bold" style="color: #b0bcc4;"><?php echo e(ucfirst(str_replace('_', ' ', $field))); ?></td>
                                     <td class="p-4">
                                         <code class="px-3 py-1 rounded text-sm" style="background-color: #0f0707; color: #ff6b6b; border: 1px solid #444;">
-                                            {{ Str::limit($oldValue, 50) }}
+                                            <?php echo e(Str::limit($oldValue, 50)); ?>
+
                                         </code>
                                     </td>
                                     <td class="p-4">
                                         <code class="px-3 py-1 rounded text-sm" style="background-color: #0f0707; color: #4caf50; border: 1px solid #444;">
-                                            {{ Str::limit($newValue, 50) }}
+                                            <?php echo e(Str::limit($newValue, 50)); ?>
+
                                         </code>
                                     </td>
                                 </tr>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <tr>
                                     <td colspan="3" class="p-4 text-center" style="color: #999;">No change details available</td>
                                 </tr>
-                            @endforelse
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Creation/Deletion Data -->
-        @if(in_array($log->action, ['create', 'delete']) && !empty($log->new_values))
+        <?php if(in_array($log->action, ['create', 'delete']) && !empty($log->new_values)): ?>
         <div class="rounded-2xl shadow-2xl overflow-hidden" style="background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%); border: 2px solid #b0bcc4;">
             <!-- Card Top Border -->
             <div style="height: 3px; background: linear-gradient(90deg, #0f6fdd 0%, #b0bcc4 50%, #0f6fdd 100%);"></div>
 
             <div class="p-8">
-                <h3 class="text-xl font-bold mb-6" style="color: #b0bcc4;">{{ $log->action === 'create' ? 'Created Data' : 'Deleted Data' }}</h3>
+                <h3 class="text-xl font-bold mb-6" style="color: #b0bcc4;"><?php echo e($log->action === 'create' ? 'Created Data' : 'Deleted Data'); ?></h3>
 
                 <div class="p-6 rounded-lg" style="background-color: #0f0707; border: 2px solid #444;">
-                    <pre class="text-sm overflow-x-auto" style="color: #b0bcc4;">{{ json_encode(is_string($log->new_values) ? json_decode($log->new_values) : $log->new_values, JSON_PRETTY_PRINT) }}</pre>
+                    <pre class="text-sm overflow-x-auto" style="color: #b0bcc4;"><?php echo e(json_encode(is_string($log->new_values) ? json_decode($log->new_values) : $log->new_values, JSON_PRETTY_PRINT)); ?></pre>
                 </div>
             </div>
         </div>
-        @endif
+        <?php endif; ?>
     </div>
-</x-admin-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale0f1cdd055772eb1d4a99981c240763e)): ?>
+<?php $attributes = $__attributesOriginale0f1cdd055772eb1d4a99981c240763e; ?>
+<?php unset($__attributesOriginale0f1cdd055772eb1d4a99981c240763e); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale0f1cdd055772eb1d4a99981c240763e)): ?>
+<?php $component = $__componentOriginale0f1cdd055772eb1d4a99981c240763e; ?>
+<?php unset($__componentOriginale0f1cdd055772eb1d4a99981c240763e); ?>
+<?php endif; ?>
+<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/admin/audit-logs/show.blade.php ENDPATH**/ ?>

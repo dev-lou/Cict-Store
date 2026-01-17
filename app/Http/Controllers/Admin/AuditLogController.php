@@ -14,7 +14,7 @@ class AuditLogController extends Controller
     public function index(Request $request)
     {
         $query = AuditLog::with('user:id,name')
-            ->select('id', 'user_id', 'action', 'model', 'model_id', 'changes', 'created_at')
+            ->select('id', 'user_id', 'action', 'model', 'model_id', 'old_values', 'new_values', 'created_at')
             ->orderBy('created_at', 'desc');
 
         // Filter by action if provided
@@ -53,7 +53,7 @@ class AuditLogController extends Controller
     public function show(AuditLog $auditLog)
     {
         return view('admin.audit-logs.show', [
-            'log' => $auditLog->load('user'),
+            'log' => $auditLog->load('user:id,name,email'),
         ]);
     }
 }
