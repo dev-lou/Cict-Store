@@ -1,31 +1,28 @@
 <x-admin-layout>
     @section('page-title', 'Admin Settings')
 
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'System'],
+        ['label' => 'Settings']
+    ]" />
+
+    <!-- Success Message -->
+    @if(session('success'))
+        <x-admin.alert type="success" :message="session('success')" :dismissible="true" />
+    @endif
+
     <!-- Page Header -->
-    <div class="mb-12">
-        <div class="flex items-center gap-4 mb-4">
-            <div class="inline-flex items-center justify-center w-14 h-14 rounded-full" style="background: linear-gradient(135deg, #0f6fdd 0%, #1a7fff 100%); box-shadow: 0 8px 32px rgba(139, 0, 0, 0.3);">
-                <svg class="w-7 h-7" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
+    <x-admin.page-header title="Admin Settings" subtitle="Manage application settings, system configuration, and preferences">
+        <x-slot:actions>
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                <svg class="w-6 h-6" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
             </div>
-            <div>
-                <h1 class="text-4xl font-bold" style="color: #ffffff; letter-spacing: 0.5px;">Admin Settings</h1>
-                <p class="text-sm mt-1" style="color: #b0bcc4;">Manage application settings, system configuration, and preferences</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Success Message -->
-    @if(session('success'))
-        <div class="mb-6 p-4 rounded-lg" style="background-color: #4caf50; color: white; border: 2px solid #45a049; display: flex; align-items: center; gap: 12px;">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            {{ session('success') }}
-        </div>
-    @endif
+        </x-slot:actions>
+    </x-admin.page-header>
 
     <!-- Settings Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -47,50 +44,20 @@
                     </div>
                 </div>
 
-                <form class="space-y-6" id="settingsForm" method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
-                    @csrf
-
-                    <!-- Note about Site Name -->
-                    <div style="background: rgba(255, 193, 7, 0.1); border: 2px solid rgba(255, 193, 7, 0.3); border-radius: 12px; padding: 16px;">
-                        <div class="flex items-center gap-2 mb-2">
-                            <svg class="w-5 h-5" fill="none" stroke="#FFC107" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <p class="text-sm font-bold" style="color: #FFC107;">Site Name Configuration</p>
-                        </div>
-                        <p class="text-xs" style="color: #b0bcc4;">Site name is configured via environment variables (APP_NAME). Update it in your hosting platform's environment settings and redeploy.</p>
+                <!-- Site Name Display -->
+                <div style="background: rgba(15, 111, 221, 0.1); border: 2px solid rgba(15, 111, 221, 0.3); border-radius: 12px; padding: 16px;">
+                    <div class="flex items-center gap-2 mb-2">
+                        <svg class="w-5 h-5" fill="none" stroke="#0f6fdd" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-sm font-bold" style="color: #0f6fdd;">Site Name Configuration</p>
                     </div>
-
-                    <!-- Divider -->
-                    <div style="border-top: 2px solid #444; padding-top: 24px;"></div>
-
-                    <!-- Save Button -->
-                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                        <button 
-                            type="button" 
-                            class="px-6 py-3 rounded-lg font-bold transition-all duration-300"
-                            style="background-color: #333; color: #b0bcc4; border: 2px solid #555;"
-                            onmouseover="this.style.backgroundColor='#444'; this.style.borderColor='#b0bcc4'"
-                            onmouseout="this.style.backgroundColor='#333'; this.style.borderColor='#555'"
-                            onclick="resetForm()"
-                        >
-                            Reset
-                        </button>
-                        <button 
-                            type="submit" 
-                            class="px-6 py-3 rounded-lg font-bold transition-all duration-300 flex items-center gap-2"
-                            id="saveBtn"
-                            style="background: linear-gradient(135deg, #4caf50 0%, #45a049 100%); color: white; border: 2px solid #45a049; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);"
-                            onmouseover="this.style.boxShadow='0 8px 20px rgba(76, 175, 80, 0.4)'; this.style.transform='translateY(-2px)'"
-                            onmouseout="this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.3)'; this.style.transform='translateY(0)'"
-                        >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            Save Changes
-                        </button>
+                    <p class="text-xs mb-3" style="color: #b0bcc4;">Site name is configured via environment variables (APP_NAME). Update it in your hosting platform's environment settings and redeploy.</p>
+                    <div class="mt-3 pt-3" style="border-top: 1px solid rgba(15, 111, 221, 0.2);">
+                        <p class="text-xs mb-1" style="color: #b0bcc4;">Current Site Name:</p>
+                        <p class="text-xl font-bold" style="color: #ffffff;">{{ config('app.name', 'CICT Dingle') }}</p>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -160,8 +127,8 @@
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Logo Preview -->
-                    <div>
-                        <label style="display: block; color: #b0bcc4; font-weight: 600; margin-bottom: 12px; font-size: 0.875rem;">Current Logo</label>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <label style="display: block; color: #b0bcc4; font-weight: 600; margin-bottom: 16px; font-size: 0.875rem; text-align: center;">Current Logo</label>
                         <div style="width: 200px; height: 200px; border-radius: 50%; border: 2px solid #444; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #0f0707;">
                             @if($logo && $logo->value)
                                 <img src="{{ Storage::disk('supabase')->url($logo->value) }}" alt="Site Logo" id="logoPreview" style="width: 100%; height: 100%; object-fit: cover;">
@@ -237,8 +204,8 @@
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Favicon Preview -->
-                    <div>
-                        <label style="display: block; color: #b0bcc4; font-weight: 600; margin-bottom: 12px; font-size: 0.875rem;">Current Favicon</label>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <label style="display: block; color: #b0bcc4; font-weight: 600; margin-bottom: 16px; font-size: 0.875rem; text-align: center;">Current Favicon</label>
                         <div style="width: 120px; height: 120px; border-radius: 12px; border: 2px solid #444; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #0f0707;">
                             @if($favicon && $favicon->value)
                                 <img src="{{ Storage::disk('supabase')->url($favicon->value) }}" alt="Site Favicon" id="faviconPreview" style="width: 64px; height: 64px; object-fit: contain;">

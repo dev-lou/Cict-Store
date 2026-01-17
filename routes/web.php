@@ -9,6 +9,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InventoryProductController;
 use App\Http\Controllers\Admin\InventoryStockController;
@@ -246,9 +247,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // ========================================================================
     Route::prefix('buy-list')->name('buy-list.')->group(function () {
         Route::get('/', [BuyListController::class, 'index'])->name('index');
-        Route::get('/create', [BuyListController::class, 'create'])->name('create');
         Route::post('/', [BuyListController::class, 'store'])->name('store');
-        Route::get('/{buyListItem}/edit', [BuyListController::class, 'edit'])->name('edit');
         Route::patch('/{buyListItem}', [BuyListController::class, 'update'])->name('update');
         Route::delete('/{buyListItem}', [BuyListController::class, 'destroy'])->name('destroy');
         Route::patch('/{buyListItem}/mark-purchased', [BuyListController::class, 'markPurchased'])->name('mark-purchased');
@@ -306,6 +305,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // ============================================================================
 // AUTHENTICATION ROUTES
 // ============================================================================
+
+// OAuth Routes (Google & Facebook)
+Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('oauth.redirect');
+Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('oauth.callback');
+
+// Traditional Login
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login')->middleware('guest');

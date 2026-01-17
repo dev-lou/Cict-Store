@@ -92,7 +92,7 @@ unset($__defined_vars); ?>
                 </svg>
                 <span class="flex-1 text-left">Orders</span>
                 <?php if($pendingOrderCount > 0): ?>
-                    <span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background: #8B0000; color: white;"><?php echo e($pendingOrderCount); ?></span>
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold leading-none" style="background: #dc2626; color: white;"><?php echo e($pendingOrderCount); ?></span>
                 <?php endif; ?>
                 <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': ordersOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -104,13 +104,13 @@ unset($__defined_vars); ?>
                 <a href="<?php echo e(route('admin.orders.pending')); ?>" class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200" style="<?php if(request()->routeIs('admin.orders.pending')): ?>background: rgba(139, 0, 0, 0.15); color: #ffffff;<?php else: ?> color: rgba(255, 255, 255, 0.6);<?php endif; ?>" onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';" onmouseout="<?php if(!request()->routeIs('admin.orders.pending')): ?>this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.6)';<?php endif; ?>">
                     <span>Pending</span>
                     <?php if($pendingOrderCount > 0): ?>
-                        <span class="px-1.5 py-0.5 rounded text-xs font-semibold" style="background: #8B0000; color: white;"><?php echo e($pendingOrderCount); ?></span>
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold leading-none" style="background: #dc2626; color: white;"><?php echo e($pendingOrderCount); ?></span>
                     <?php endif; ?>
                 </a>
                 <a href="<?php echo e(route('admin.orders.processing')); ?>" class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200" style="<?php if(request()->routeIs('admin.orders.processing')): ?>background: rgba(139, 0, 0, 0.15); color: #ffffff;<?php else: ?> color: rgba(255, 255, 255, 0.6);<?php endif; ?>" onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';" onmouseout="<?php if(!request()->routeIs('admin.orders.processing')): ?>this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.6)';<?php endif; ?>">
                     <span>Processing</span>
                     <?php if($processingOrderCount > 0): ?>
-                        <span class="px-1.5 py-0.5 rounded text-xs font-semibold" style="background: rgba(255, 255, 255, 0.15); color: #ffffff;"><?php echo e($processingOrderCount); ?></span>
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold leading-none" style="background: #dc2626; color: white;"><?php echo e($processingOrderCount); ?></span>
                     <?php endif; ?>
                 </a>
                 <a href="<?php echo e(route('admin.orders.completed')); ?>" class="block px-3 py-2 rounded-lg text-sm transition-all duration-200" style="<?php if(request()->routeIs('admin.orders.completed')): ?>background: rgba(139, 0, 0, 0.15); color: #ffffff;<?php else: ?> color: rgba(255, 255, 255, 0.6);<?php endif; ?>" onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';" onmouseout="<?php if(!request()->routeIs('admin.orders.completed')): ?>this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.6)';<?php endif; ?>">Completed</a>

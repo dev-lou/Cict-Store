@@ -1,18 +1,27 @@
 <x-admin-layout>
     @section('page-title', 'Create User')
 
-    <div class="min-h-screen py-8" style="background: linear-gradient(135deg, #0f0707 0%, #0f1419 50%, #1a1f2e 100%);">
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'System'],
+        ['label' => 'Users', 'url' => route('admin.users.index')],
+        ['label' => 'Create User']
+    ]" />
+
+    <!-- Page Header -->
+    <x-admin.page-header title="Create New User" subtitle="Set up a new account with essential information">
+        <x-slot:actions>
+            <x-admin.button href="{{ route('admin.users.index') }}" variant="secondary">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Users
+            </x-admin.button>
+        </x-slot:actions>
+    </x-admin.page-header>
+
+    <div class="min-h-screen">
         <div class="max-w-2xl mx-auto">
-            <!-- Header with Icon -->
-            <div class="mb-8 text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style="background: linear-gradient(135deg, #0f6fdd 0%, #1a7fff 100%); box-shadow: 0 8px 32px rgba(139, 0, 0, 0.3);">
-                    <svg class="w-8 h-8" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                </div>
-                <h2 class="text-4xl font-bold mb-2" style="color: #ffffff; letter-spacing: 0.5px;">Create New User</h2>
-                <p class="text-base" style="color: #b0bcc4;">Set up a new account with essential information</p>
-            </div>
 
             <!-- Form Card -->
             <div class="rounded-2xl shadow-2xl overflow-hidden" style="background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%); border: 2px solid #b0bcc4; backdrop-filter: blur(10px);">

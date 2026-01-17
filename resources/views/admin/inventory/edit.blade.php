@@ -3,25 +3,44 @@
 
     <!-- Flash Messages -->
     @if(session('success'))
-        <div style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); border: 2px solid #66bb6a; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 24px;">✅</span>
-            <span style="color: #ffffff; font-weight: 600;">{{ session('success') }}</span>
-        </div>
+        <x-admin.alert type="success" :message="session('success')" :dismissible="true" />
     @endif
     
     @if(session('warning'))
-        <div style="background: linear-gradient(135deg, #ff9500 0%, #cc7700 100%); border: 2px solid #ffd700; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 24px;">⚠️</span>
-            <span style="color: #ffffff; font-weight: 600;">{{ session('warning') }}</span>
-        </div>
+        <x-admin.alert type="warning" :message="session('warning')" :dismissible="true" />
     @endif
     
     @if(session('error'))
-        <div style="background: linear-gradient(135deg, #f44336 0%, #c62828 100%); border: 2px solid #ef5350; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 24px;">❌</span>
-            <span style="color: #ffffff; font-weight: 600;">{{ session('error') }}</span>
-        </div>
+        <x-admin.alert type="error" :message="session('error')" :dismissible="true" />
     @endif
+
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'Catalog'],
+        ['label' => 'Inventory', 'url' => route('admin.inventory.index')],
+        ['label' => 'Edit Product']
+    ]" />
+
+    <!-- Page Header -->
+    <x-admin.page-header title="Edit Product" subtitle="Update product information and inventory details">
+        <x-slot:actions>
+            @if($product->slug)
+                <x-admin.button href="{{ route('shop.show', $product->slug) }}" variant="success" target="_blank">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Preview
+                </x-admin.button>
+            @endif
+            <x-admin.button href="{{ route('admin.inventory.index') }}" variant="secondary">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Inventory
+            </x-admin.button>
+        </x-slot:actions>
+    </x-admin.page-header>
 
     <style>
         body {
@@ -416,38 +435,6 @@
             }
         }
     </style>
-
-    <!-- Breadcrumb Navigation -->
-    <nav style="margin-bottom: 24px; padding: 14px 20px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.6) 100%); backdrop-filter: blur(10px); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; display: flex; align-items: center; gap: 8px;">
-        <a href="{{ route('admin.dashboard') }}" style="color: #94a3b8; font-weight: 500; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='#94a3b8'">Dashboard</a>
-        <span style="color: #475569; font-weight: 600;">›</span>
-        <a href="{{ route('admin.inventory.index') }}" style="color: #94a3b8; font-weight: 500; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='#94a3b8'">Inventory</a>
-        <span style="color: #475569; font-weight: 600;">›</span>
-        <span style="color: #f1f5f9; font-weight: 600; font-size: 0.9rem;">Edit Product</span>
-    </nav>
-
-    <!-- Page Header -->
-    <div class="page-header">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-            <div>
-                <h1 style="color: #f1f5f9; font-size: 2.2rem; margin: 0 0 8px 0; font-weight: 600; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px;">
-                    <span style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 8px; font-size: 1.3rem;">✏️</span>
-                    Edit Product
-                </h1>
-                <p style="color: #94a3b8; margin: 0 0 0 56px; font-size: 0.95rem; font-weight: 400;">Update product details, variants, and inventory information</p>
-            </div>
-            <div style="display: flex; gap: 12px;">
-                @if($product->slug)
-                    <a href="{{ route('shop.show', $product->slug) }}" target="_blank" style="background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: all 0.2s ease; white-space: nowrap;" onmouseover="this.style.background='rgba(34, 197, 94, 0.25)'; this.style.borderColor='rgba(34, 197, 94, 0.5)'" onmouseout="this.style.background='rgba(34, 197, 94, 0.15)'; this.style.borderColor='rgba(34, 197, 94, 0.3)'">
-                        <span style="font-size: 1rem;">👁️</span> Preview
-                    </a>
-                @endif
-                <a href="{{ route('admin.inventory.index') }}" class="btn-cancel" style="white-space: nowrap; margin: 0;">
-                    ← Back to Inventory
-                </a>
-            </div>
-        </div>
-    </div>
 
     <!-- Main Container -->
     <div style="display: grid; grid-template-columns: 1fr 360px; gap: 28px; margin-bottom: 40px;" class="main-container">

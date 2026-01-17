@@ -1,128 +1,139 @@
 <x-admin-layout>
     @section('page-title', 'All Orders')
 
-    <style>
-        .filter-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background-color: #3b82f6;
-            color: #ffffff;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-left: 8px;
-        }
-    </style>
+    <!-- Breadcrumb -->
+    <x-admin.breadcrumb :items="[
+        ['label' => 'Orders', 'url' => route('admin.orders.index')],
+        ['label' => 'All Orders']
+    ]" />
 
-    <!-- Header Section -->
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold" style="color: #f1f5f9;">
-            All Orders
-            <span class="filter-badge">{{ $orders->total() }}</span>
-        </h2>
-        <p class="mt-1" style="color: #94a3b8;">View and manage all customer orders</p>
-    </div>
+    <!-- Page Header -->
+    <x-admin.page-header title="All Orders" subtitle="View and manage all customer orders">
+        <x-slot:actions>
+            <span class="inline-flex items-center px-4 py-2 rounded-xl font-bold text-white" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                {{ $orders->total() }} Total
+            </span>
+        </x-slot:actions>
+    </x-admin.page-header>
 
     <!-- Filter Bar -->
-    <div class="rounded-lg shadow-lg p-6 mb-6" style="background-color: #1e293b; border: 1px solid #334155;">
-        <form method="GET" class="flex gap-4 flex-wrap items-end">
-            <!-- Search Bar -->
-            <div class="flex-1 min-w-64">
-                <label class="block text-sm font-semibold mb-2" style="color: #94a3b8;">Search Order or Customer</label>
-                <input 
-                    type="text" 
-                    name="search" 
-                    value="{{ request('search', '') }}"
-                    placeholder="Search by order number or customer name..." 
-                    class="w-full px-4 py-2 rounded-lg text-white focus:outline-none"
-                    style="border: 1px solid #334155; background-color: #0f172a;" 
-                    onfocus="this.style.borderColor='#3b82f6'" 
-                    onblur="this.style.borderColor='#334155'"
-                >
-            </div>
+    <x-admin.filter-bar action="{{ route('admin.orders.index') }}">
+        <!-- Search Bar -->
+        <div class="flex-1 min-w-64">
+            <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Search Order or Customer</label>
+            <input 
+                type="text" 
+                name="search" 
+                value="{{ request('search', '') }}"
+                placeholder="Search by order number or customer name..." 
+                class="w-full px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all"
+                style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6);" 
+                onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'" 
+                onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'"
+            >
+        </div>
 
-            <!-- Date Filter Dropdown -->
-            <div>
-                <label class="block text-sm font-semibold mb-2" style="color: #94a3b8;">Filter by Date</label>
-                <select 
-                    name="date_filter" 
-                    class="px-4 py-2 rounded-lg text-white focus:outline-none"
-                    style="border: 1px solid #334155; background-color: #0f172a; min-width: 180px;"
-                    onfocus="this.style.borderColor='#3b82f6'"
-                    onblur="this.style.borderColor='#334155'"
-                >
-                    <option value="" style="background-color: #0f172a; color: white;">All Time</option>
-                    <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }} style="background-color: #0f172a; color: white;">Today</option>
-                    <option value="3days" {{ request('date_filter') == '3days' ? 'selected' : '' }} style="background-color: #0f172a; color: white;">Last 3 Days</option>
-                    <option value="week" {{ request('date_filter') == 'week' ? 'selected' : '' }} style="background-color: #0f172a; color: white;">Last Week</option>
-                    <option value="month" {{ request('date_filter') == 'month' ? 'selected' : '' }} style="background-color: #0f172a; color: white;">Last Month</option>
-                </select>
-            </div>
+        <!-- Date Filter -->
+        <div>
+            <label class="block text-sm font-semibold mb-2" style="color: rgba(255, 255, 255, 0.6);">Filter by Date</label>
+            <select 
+                name="date_filter" 
+                class="px-4 py-2.5 rounded-xl text-white focus:outline-none transition-all"
+                style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 20, 25, 0.6); min-width: 180px;"
+                onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(15, 20, 25, 0.8)'"
+                onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.background='rgba(15, 20, 25, 0.6)'"
+            >
+                <option value="">All Time</option>
+                <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
+                <option value="3days" {{ request('date_filter') == '3days' ? 'selected' : '' }}>Last 3 Days</option>
+                <option value="week" {{ request('date_filter') == 'week' ? 'selected' : '' }}>Last Week</option>
+                <option value="month" {{ request('date_filter') == 'month' ? 'selected' : '' }}>Last Month</option>
+            </select>
+        </div>
 
-            <!-- Filter Button -->
-            <button type="submit" class="px-6 py-2 rounded-lg font-bold transition-colors" style="background-color: #3b82f6; color: #ffffff; border: none;" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#3b82f6'">
-                Apply Filter
-            </button>
+        <!-- Buttons -->
+        <x-admin.button type="submit" variant="primary">
+            Apply Filter
+        </x-admin.button>
 
-            <!-- Clear Filters -->
-            <a href="{{ route('admin.orders.index') }}" class="px-6 py-2 rounded-lg font-bold transition-colors text-center" style="background-color: transparent; color: #94a3b8; border: 1px solid #334155;" onmouseover="this.style.backgroundColor='#334155';" onmouseout="this.style.backgroundColor='transparent';">
-                Clear
-            </a>
-        </form>
-    </div>
+        <x-admin.button href="{{ route('admin.orders.index') }}" variant="secondary">
+            Clear
+        </x-admin.button>
+    </x-admin.filter-bar>
 
     <!-- Orders Table -->
-    <div class="rounded-lg shadow-lg overflow-hidden" style="background-color: #1e293b; border: 1px solid #334155;">
+    <div class="rounded-xl shadow-lg overflow-hidden" 
+         style="background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%); 
+                border: 1px solid rgba(255, 255, 255, 0.1);">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="transition-colors" style="border-bottom: 1px solid #334155; background-color: #3b82f6;">
-                        <th class="px-6 py-4 text-left text-sm font-bold" style="color: #ffffff;">Order Number</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold" style="color: #ffffff;">Customer</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold" style="color: #ffffff;">Total</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold" style="color: #ffffff;">Status</th>
-                        <th class="px-6 py-4 text-left text-sm font-bold" style="color: #ffffff;">Date Created</th>
-                        <th class="px-6 py-4 text-right text-sm font-bold" style="color: #ffffff;">Actions</th>
+                    <tr style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Order Number</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Customer</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Total</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Status</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-white">Date Created</th>
+                        <th class="px-6 py-4 text-right text-sm font-bold text-white">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($orders as $order)
-                        <tr class="transition-colors" style="border-bottom: 1px solid #334155;" onmouseover="this.style.backgroundColor='#334155'" onmouseout="this.style.backgroundColor='transparent'">
-                            <td class="px-6 py-4 font-bold" style="color: #94a3b8;">#{{ $order->order_number }}</td>
-                            <td class="px-6 py-4" style="color: #f1f5f9;">{{ $order->user->name ?? 'Unknown' }}</td>
-                            <td class="px-6 py-4 font-bold" style="color: #f1f5f9;">₱{{ number_format($order->total, 2) }}</td>
+                        <tr class="transition-all duration-200" 
+                            style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);" 
+                            onmouseover="this.style.background='rgba(59, 130, 246, 0.1)'" 
+                            onmouseout="this.style.background='transparent'">
+                            <td class="px-6 py-4 font-bold" style="color: #3b82f6;">#{{ $order->order_number }}</td>
+                            <td class="px-6 py-4 text-white">{{ $order->user->name ?? 'Unknown' }}</td>
+                            <td class="px-6 py-4 font-bold text-white">₱{{ number_format($order->total, 2) }}</td>
                             <td class="px-6 py-4">
                                 @php
-                                    $statusColor = match($order->status) {
-                                        'completed' => '#10b981',
-                                        'cancelled' => '#ef4444',
-                                        'processing' => '#f59e0b',
-                                        default => '#64748b'
+                                    $statusStyles = match($order->status) {
+                                        'completed' => 'background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;',
+                                        'cancelled' => 'background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white;',
+                                        'processing' => 'background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;',
+                                        default => 'background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color: white;'
                                     };
-                                    $statusTextColor = 'white';
                                 @endphp
-                                <span class="px-3 py-1 rounded-full text-xs font-bold" style="background-color: {{ $statusColor }}; color: {{ $statusTextColor }};">{{ ucfirst($order->status) }}</span>
+                                <span class="px-3 py-1.5 rounded-lg text-xs font-bold inline-block" style="{{ $statusStyles }}">
+                                    {{ ucfirst($order->status) }}
+                                </span>
                             </td>
-                            <td class="px-6 py-4" style="color: #94a3b8;">{{ $order->created_at->format('M d, Y h:i A') }}</td>
+                            <td class="px-6 py-4" style="color: rgba(255, 255, 255, 0.6);">
+                                {{ $order->created_at->format('M d, Y h:i A') }}
+                            </td>
                             <td class="px-6 py-4 text-right">
-                                <div style="display: flex; gap: 6px; justify-content: flex-end;">
-                                    <!-- View Button -->
-                                    <a href="{{ route('admin.orders.show', $order) }}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-semibold transition-all" style="background-color: #3b82f6; color: #ffffff; border: none;" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#3b82f6'">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                <div class="flex gap-2 justify-end">
+                                    <x-admin.button 
+                                        href="{{ route('admin.orders.show', $order) }}" 
+                                        size="sm" 
+                                        variant="primary">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
                                         View
-                                    </a>
-                                    <!-- Delete Button -->
-                                    <button type="button" onclick="deleteOrder({{ $order->id }})" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-semibold transition-all" style="background-color: #ef4444; color: white; border: none; cursor: pointer;" onmouseover="this.style.backgroundColor='#dc2626'" onmouseout="this.style.backgroundColor='#ef4444'">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </x-admin.button>
+                                    <x-admin.button 
+                                        type="button" 
+                                        onclick="deleteOrder({{ $order->id }})" 
+                                        size="sm" 
+                                        variant="danger">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
                                         Delete
-                                    </button>
+                                    </x-admin.button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-8 text-center" style="color: #94a3b8;">
-                                No orders found
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <svg class="w-16 h-16 mx-auto mb-4 opacity-30" style="color: rgba(255, 255, 255, 0.3);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                                </svg>
+                                <p class="text-lg font-semibold" style="color: rgba(255, 255, 255, 0.6);">No orders found</p>
                             </td>
                         </tr>
                     @endforelse

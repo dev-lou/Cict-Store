@@ -477,10 +477,13 @@
         }
 
         .about-image {
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            aspect-ratio: 4/3;
-            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border-radius: 0;
+            overflow: visible;
+            background: transparent;
         }
 
         .about-image img {
@@ -717,9 +720,9 @@
         <div class="section-container">
             <div class="about-grid">
                 <div class="about-image reveal-on-scroll">
-                    <div style="width: 100%; max-width: 280px; aspect-ratio: 1; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; overflow: hidden; padding: 0;">
+                    <div style="width: 100%; max-width: 340px; aspect-ratio: 1; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; overflow: hidden; background: #f1f5f9; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);">
                         <img src="<?php echo e($logoUrl); ?>" alt="<?php echo e(config('app.name', 'CICT Dingle')); ?> Logo" loading="lazy" decoding="async"
-                            style="width: 100%; height: 100%; object-fit: cover; display: block; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.12));">
+                            style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
                     </div>
                 </div>
                 <div class="about-content reveal-on-scroll">
