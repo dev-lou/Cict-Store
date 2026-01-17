@@ -7,21 +7,21 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="CICT Dingle - Official merchandise and printing services for students of College of Information and Communications Technology at Iloilo State University of Fisheries Science and Technology (ISUFST) Dingle Campus.">
-    <meta name="keywords" content="CICT Dingle, ISUFST, Iloilo State University, Dingle Campus, student merchandise, printing services, school supplies, CICT merch">
+    <meta name="description" content="Official online store of CICT Student Council at ISUFST Dingle Campus, Iloilo, Philippines. Order merchandise and avail student services for the College of Information and Communications Technology.">
+    <meta name="keywords" content="CICT Student Council, ISUFST Dingle, Iloilo Philippines, student merchandise, CICT services, Dingle campus, Iloilo State University, CICT merch">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('title', 'CICT Dingle - Student Merchandise & Services')">
-    <meta property="og:description" content="Order official CICT merchandise and avail printing services. Serving ISUFST Dingle Campus students.">
+    <meta property="og:title" content="@yield('title', 'CICT Dingle - Student Council Store')">
+    <meta property="og:description" content="Official store of CICT Student Council at ISUFST Dingle Campus. Order merchandise and avail student services.">
     <meta property="og:image" content="{{ asset('images/ctrlp-logo.png') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('title', 'CICT Dingle - Student Merchandise & Services')">
-    <meta property="twitter:description" content="Order official CICT merchandise and avail printing services. Serving ISUFST Dingle Campus students.">
+    <meta property="twitter:title" content="@yield('title', 'CICT Dingle - Student Council Store')">
+    <meta property="twitter:description" content="Official store of CICT Student Council at ISUFST Dingle Campus. Order merchandise and avail student services.">
     <meta property="twitter:image" content="{{ asset('images/ctrlp-logo.png') }}">
 
     <title>@yield('title', config('app.name', 'CICT Dingle'))</title>
