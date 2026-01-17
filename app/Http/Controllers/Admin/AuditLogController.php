@@ -13,7 +13,8 @@ class AuditLogController extends Controller
      */
     public function index(Request $request)
     {
-        $query = AuditLog::with('user')
+        $query = AuditLog::with('user:id,name')
+            ->select('id', 'user_id', 'action', 'model', 'model_id', 'changes', 'created_at')
             ->orderBy('created_at', 'desc');
 
         // Filter by action if provided
@@ -34,7 +35,11 @@ class AuditLogController extends Controller
         }
 
         $logs = $query->paginate(15);
-        $models = AuditLog::distinct('model')->pluck('model');
+        
+        // Cache distinct models for 10 minutes
+        $models = \Cache::remember('audit_log_models', 600, function() {
+            return AuditLog::distinct('model')->pluck('model');
+        });
 
         return view('admin.audit-logs.index', [
             'logs' => $logs,

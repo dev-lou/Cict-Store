@@ -75,16 +75,12 @@
         }
 
         .logo-icon {
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             background: white;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: 900;
-            color: #8B0000;
+            object-fit: cover;
+            padding: 8px;
         }
 
         .logo-text {
@@ -495,8 +491,14 @@
         <div class="auth-brand-side">
             <div class="brand-content">
                 <div class="brand-logo">
-                    <div class="logo-icon">C</div>
-                    <span class="logo-text">CICT Dingle</span>
+                    <?php
+                        $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
+                        $logoUrl = $logoSetting && $logoSetting->value 
+                            ? \Storage::disk('supabase')->url($logoSetting->value) 
+                            : asset('images/ctrlp-logo.png');
+                    ?>
+                    <img src="<?php echo e($logoUrl); ?>" alt="Logo" class="logo-icon">
+                    <span class="logo-text"><?php echo e(config('app.name')); ?></span>
                 </div>
 
                 <h1 class="brand-headline">
