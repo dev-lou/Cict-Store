@@ -18,7 +18,8 @@ class OrderManageController extends Controller
      */
     public function index(Request $request): \Illuminate\View\View
     {
-        $query = Order::with('user', 'items');
+        $query = Order::with('user:id,name,email', 'items:id,order_id,product_id,quantity,total_price')
+            ->select('id', 'order_number', 'user_id', 'status', 'total', 'created_at');
 
         // Apply search filter
         if ($request->filled('search')) {
@@ -45,7 +46,7 @@ class OrderManageController extends Controller
             };
         }
 
-        $orders = $query->orderBy('created_at', 'asc')->paginate(15);
+        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return view('admin.orders.index', [
             'orders' => $orders,
@@ -61,7 +62,8 @@ class OrderManageController extends Controller
      */
     public function showPending(Request $request): \Illuminate\View\View
     {
-        $query = Order::with('user', 'items')
+        $query = Order::with('user:id,name,email', 'items:id,order_id,product_id,quantity,total_price')
+            ->select('id', 'order_number', 'user_id', 'status', 'total', 'created_at')
             ->where('status', 'pending');
 
         // Apply search filter
@@ -89,7 +91,7 @@ class OrderManageController extends Controller
             };
         }
 
-        $orders = $query->orderBy('created_at', 'asc')->paginate(15);
+        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return view('admin.orders.filtered', [
             'orders' => $orders,
@@ -107,7 +109,8 @@ class OrderManageController extends Controller
      */
     public function showProcessing(Request $request): \Illuminate\View\View
     {
-        $query = Order::with('user', 'items')
+        $query = Order::with('user:id,name,email', 'items:id,order_id,product_id,quantity,total_price')
+            ->select('id', 'order_number', 'user_id', 'status', 'total', 'created_at')
             ->where('status', 'processing');
 
         // Apply search filter
@@ -135,7 +138,7 @@ class OrderManageController extends Controller
             };
         }
 
-        $orders = $query->orderBy('created_at', 'asc')->paginate(15);
+        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return view('admin.orders.filtered', [
             'orders' => $orders,
@@ -153,7 +156,8 @@ class OrderManageController extends Controller
      */
     public function showCompleted(Request $request): \Illuminate\View\View
     {
-        $query = Order::with('user', 'items')
+        $query = Order::with('user:id,name,email', 'items:id,order_id,product_id,quantity,total_price')
+            ->select('id', 'order_number', 'user_id', 'status', 'total', 'created_at')
             ->where('status', 'completed');
 
         // Apply search filter
@@ -181,7 +185,7 @@ class OrderManageController extends Controller
             };
         }
 
-        $orders = $query->orderBy('created_at', 'asc')->paginate(15);
+        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return view('admin.orders.filtered', [
             'orders' => $orders,
@@ -199,7 +203,7 @@ class OrderManageController extends Controller
      */
     public function show(Order $order): \Illuminate\View\View
     {
-        $order->load('user', 'items');
+        $order->load('user:id,name,email', 'items.product:id,name,base_price');
         return view('admin.orders.show', ['order' => $order]);
     }
 
