@@ -92,34 +92,13 @@ unset($__defined_vars); ?>
         <?php endif; ?>
     <?php endif; ?>
 
-    <!-- Non-critical Animation CSS (load async) -->
-    <link rel="stylesheet" href="<?php echo e(asset('css/page-transitions.css')); ?>" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="<?php echo e(asset('css/micro-interactions.css')); ?>" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="<?php echo e(asset('css/text-animations.css')); ?>" media="print" onload="this.media='all'">
+    <!-- Only load essential animation CSS (combined) -->
     <link rel="stylesheet" href="<?php echo e(asset('css/button-interactions.css')); ?>" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="<?php echo e(asset('css/animation-utilities.css')); ?>" media="print" onload="this.media='all'">
     <noscript>
-        <link rel="stylesheet" href="<?php echo e(asset('css/page-transitions.css')); ?>">
-        <link rel="stylesheet" href="<?php echo e(asset('css/micro-interactions.css')); ?>">
-        <link rel="stylesheet" href="<?php echo e(asset('css/text-animations.css')); ?>">
         <link rel="stylesheet" href="<?php echo e(asset('css/button-interactions.css')); ?>">
-        <link rel="stylesheet" href="<?php echo e(asset('css/animation-utilities.css')); ?>">
     </noscript>
 
-    <!-- GSAP Animation Library (defer to not block rendering) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-    
-    <script>
-        // Initialize GSAP plugins after load
-        window.addEventListener('DOMContentLoaded', function() {
-            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-                gsap.registerPlugin(ScrollTrigger);
-            }
-        });
-    </script>
-
-    <!-- Animations handled by CSS transitions -->
+    <!-- CSS-only animations (no external JS libraries) -->
 
     <style>
         /* Global mobile fixes */
@@ -973,25 +952,8 @@ unset($__defined_vars); ?>
         })();
     </script>
 
-    <!-- Page Transition Script -->
-    <script src="<?php echo e(asset('js/page-transitions.js')); ?>"></script>
-
-    <!-- Advanced Animation System -->
-    <script src="<?php echo e(asset('js/morphing-blobs.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/particles.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/gsap-animations.js')); ?>"></script>
-
-    <!-- Enhanced Professional Animation System -->
-    <script src="<?php echo e(asset('js/card-magnetic.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('js/scroll-reveal-enhanced.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('js/text-split-animate.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('js/parallax-simple.js')); ?>" defer></script>
-
-    <!-- Performance-Optimized Animations -->
-    <script src="<?php echo e(asset('js/card-interactions.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('js/scroll-reveals.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('js/text-reveal.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('js/parallax-lite.js')); ?>" defer></script>
+    <!-- Minimal Animation (particles only for visual appeal) -->
+    <script src="<?php echo e(asset('js/particles.js')); ?>" defer></script>
 
     <?php echo $__env->yieldPushContent('body-end'); ?>
 </body>

@@ -192,22 +192,21 @@
             });
         });
 
-        // Add particles to hero sections (reduced on mobile for performance)
+        // Add particles to hero sections (PERFORMANCE OPTIMIZED)
         const isMobile = window.innerWidth < 768;
-        const particleCount = isMobile ? 25 : 60;
-        const connectionDistance = isMobile ? 80 : 120;
+        const particleCount = isMobile ? 15 : 30; // Reduced from 25/60
 
         document.querySelectorAll('.hero-section, .hero, .contact-hero, .shop-hero, .services-hero').forEach(hero => {
             new ParticleSystem(hero, {
                 particleCount: particleCount,
                 color: '#FFFFFF',
-                opacity: 0.4,
-                speed: 0.3,
-                minSize: 1,
-                maxSize: 3,
-                interactive: !isMobile, // Disable mouse interaction on mobile
-                connections: true,
-                connectionDistance: connectionDistance
+                opacity: 0.5,
+                speed: 0.5, // Slightly faster for more visual impact
+                minSize: 2,
+                maxSize: 4,
+                interactive: false, // Disabled for performance
+                connections: false, // Disabled - saves significant CPU
+                connectionDistance: 0
             });
         });
     });
