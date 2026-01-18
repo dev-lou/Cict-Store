@@ -387,7 +387,12 @@
                     <!-- Office Hours -->
                     <div class="contact-card reveal-on-scroll">
                         <div class="contact-card-header">
-                            <div class="contact-card-icon">🕐</div>
+                            <div class="contact-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                    height="20" viewBox="0 0 24 24" fill="none" stroke="#8B0000" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg></div>
                             <span class="contact-card-title">Office Hours</span>
                         </div>
                         <div class="contact-card-value">
@@ -399,7 +404,11 @@
                     <!-- Facebook -->
                     <a href="https://www.facebook.com/profile.php?id=100068849010766" target="_blank"
                         class="social-link reveal-on-scroll">
-                        <span class="social-link-icon">📘</span>
+                        <span class="social-link-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="#1877F2">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg></span>
                         <div class="social-link-content">
                             <div class="social-link-title">Facebook</div>
                             <div class="social-link-desc">Follow our official page</div>
@@ -410,7 +419,17 @@
                     <!-- Messenger -->
                     <a href="https://www.messenger.com/e2ee/t/780806171591045" target="_blank"
                         class="social-link reveal-on-scroll">
-                        <span class="social-link-icon">💬</span>
+                        <span class="social-link-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="url(#messenger-gradient)">
+                                <defs>
+                                    <linearGradient id="messenger-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#00B2FF" />
+                                        <stop offset="100%" style="stop-color:#006AFF" />
+                                    </linearGradient>
+                                </defs>
+                                <path
+                                    d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.975 12-11.111S18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z" />
+                            </svg></span>
                         <div class="social-link-content">
                             <div class="social-link-title">Messenger</div>
                             <div class="social-link-desc">Direct message for inquiries</div>
@@ -421,7 +440,11 @@
                     <!-- Location -->
                     <div class="contact-card reveal-on-scroll">
                         <div class="contact-card-header">
-                            <div class="contact-card-icon">📍</div>
+                            <div class="contact-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                    height="20" viewBox="0 0 24 24" fill="#8B0000" stroke="none">
+                                    <path
+                                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                                </svg></div>
                             <span class="contact-card-title">Location</span>
                         </div>
                         <div class="contact-card-value">
