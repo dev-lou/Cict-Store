@@ -32,20 +32,10 @@ return new class extends Migration
                 $table->renameColumn('category_temp', 'category');
             });
             
-            // Add category_description column if it doesn't exist
-            if (!Schema::hasColumn('services', 'category_description')) {
-                Schema::table('services', function (Blueprint $table) {
-                    $table->text('category_description')->nullable();
-                });
-            }
         } else {
             // For MySQL, just modify the column type
             Schema::table('services', function (Blueprint $table) {
                 $table->string('category')->nullable()->change();
-                
-                if (!Schema::hasColumn('services', 'category_description')) {
-                    $table->text('category_description')->nullable();
-                }
             });
         }
     }
@@ -59,12 +49,10 @@ return new class extends Migration
         if (DB::getDriverName() === 'pgsql') {
             DB::statement("CREATE TYPE service_category_enum AS ENUM ('printing', 'paper_size')");
             Schema::table('services', function (Blueprint $table) {
-                $table->dropColumn('category_description');
             });
             DB::statement("ALTER TABLE services ALTER COLUMN category TYPE service_category_enum USING category::service_category_enum");
         } else {
             Schema::table('services', function (Blueprint $table) {
-                $table->dropColumn('category_description');
                 $table->enum('category', ['printing', 'paper_size'])->default('printing')->change();
             });
         }

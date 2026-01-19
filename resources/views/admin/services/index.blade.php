@@ -12,7 +12,6 @@
             ->map(function ($svc) {
                 return [
                     'name' => $svc->category ?: 'General',
-                    'description' => $svc->category_description,
                 ];
             })
             ->unique('name')
@@ -506,7 +505,7 @@
                     <div class="service-body">
                         <p class="service-description">{{ \Illuminate\Support\Str::limit($service->description, 140) }}</p>
                         <div class="meta-row">
-                            @php $displayPrice = $service->price_bw ?? $service->price_color; @endphp
+                            @php $displayPrice = $service->price_primary ?? $service->price_secondary; @endphp
                             @if($displayPrice)
                                 <span class="price-chip">₱{{ number_format($displayPrice, 2) }}</span>
                             @endif
