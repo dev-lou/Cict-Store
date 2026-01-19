@@ -110,6 +110,15 @@ Route::get('/_debug/session', function (Illuminate\Http\Request $request) {
         'has_session_cookie' => $request->hasCookie(config('session.cookie')),
     ];
     
+    // Add user info if authenticated
+    if (auth()->check()) {
+        $user = auth()->user();
+        $data['user_email'] = $user->email;
+        $data['user_roles_raw'] = $user->roles;
+        $data['user_roles_type'] = gettype($user->roles);
+        $data['is_admin'] = $user->isAdmin();
+    }
+    
     // Check if sessions table exists
     try {
         $count = DB::table('sessions')->count();
