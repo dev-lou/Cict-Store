@@ -249,6 +249,15 @@ Route::get('/chatbot/quick-actions', [ChatbotController::class, 'quickActions'])
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     
+    // Debug test route - remove after fixing
+    Route::get('/test', function() {
+        return response()->json([
+            'status' => 'admin_access_ok',
+            'user_id' => auth()->id(),
+            'is_admin' => auth()->user()->isAdmin(),
+        ]);
+    })->name('test');
+    
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
