@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('dimensions')->nullable();
-            $table->decimal('price_bw', 10, 2)->nullable();
-            $table->decimal('price_color', 10, 2)->nullable();
+            $table->decimal('price_primary', 10, 2)->nullable();
+            $table->decimal('price_secondary', 10, 2)->nullable();
             $table->enum('size_class', ['short', 'standard', 'long'])->default('standard');
             $table->string('badge')->nullable();
             $table->integer('sort_order')->default(0);

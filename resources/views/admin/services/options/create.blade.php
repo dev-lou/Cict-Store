@@ -152,18 +152,18 @@
                     </div>
 
                     <div>
-                        <label class="label" for="price_bw">Primary Price (₱)</label>
+                        <label class="label" for="price_primary">Primary Price (₱)</label>
                         <input 
                             type="number" 
-                            name="price_bw" 
-                            id="price_bw" 
-                            class="input @error('price_bw') border-red-500 @enderror" 
-                            value="{{ old('price_bw') }}"
+                            name="price_primary" 
+                            id="price_primary" 
+                            class="input @error('price_primary') border-red-500 @enderror" 
+                            value="{{ old('price_primary') }}"
                             step="0.01"
                             min="0"
                             placeholder="e.g., 5.00"
                         >
-                        @error('price_bw')
+                        @error('price_primary')
                             <p class="error-text">{{ $message }}</p>
                         @else
                             <p class="helper-text">Primary price</p>
@@ -171,16 +171,16 @@
                     </div>
 
                     <div>
-                        <label class="label" for="price_bw_label">Primary Price Label</label>
+                        <label class="label" for="price_primary_label">Primary Price Label</label>
                         <input 
                             type="text" 
-                            name="price_bw_label" 
-                            id="price_bw_label" 
-                            class="input @error('price_bw_label') border-red-500 @enderror" 
-                            value="{{ old('price_bw_label') }}"
+                            name="price_primary_label" 
+                            id="price_primary_label" 
+                            class="input @error('price_primary_label') border-red-500 @enderror" 
+                            value="{{ old('price_primary_label') }}"
                             placeholder="e.g., per page"
                         >
-                        @error('price_bw_label')
+                        @error('price_primary_label')
                             <p class="error-text">{{ $message }}</p>
                         @else
                             <p class="helper-text">Optional unit label</p>
@@ -188,18 +188,18 @@
                     </div>
 
                     <div>
-                        <label class="label" for="price_color">Secondary Price (₱)</label>
+                        <label class="label" for="price_secondary">Secondary Price (₱)</label>
                         <input 
                             type="number" 
-                            name="price_color" 
-                            id="price_color" 
-                            class="input @error('price_color') border-red-500 @enderror" 
-                            value="{{ old('price_color') }}"
+                            name="price_secondary" 
+                            id="price_secondary" 
+                            class="input @error('price_secondary') border-red-500 @enderror" 
+                            value="{{ old('price_secondary') }}"
                             step="0.01"
                             min="0"
                             placeholder="e.g., 15.00"
                         >
-                        @error('price_color')
+                        @error('price_secondary')
                             <p class="error-text">{{ $message }}</p>
                         @else
                             <p class="helper-text">Secondary price</p>
@@ -207,16 +207,16 @@
                     </div>
 
                     <div>
-                        <label class="label" for="price_color_label">Secondary Price Label</label>
+                        <label class="label" for="price_secondary_label">Secondary Price Label</label>
                         <input 
                             type="text" 
-                            name="price_color_label" 
-                            id="price_color_label" 
-                            class="input @error('price_color_label') border-red-500 @enderror" 
-                            value="{{ old('price_color_label') }}"
+                            name="price_secondary_label" 
+                            id="price_secondary_label" 
+                            class="input @error('price_secondary_label') border-red-500 @enderror" 
+                            value="{{ old('price_secondary_label') }}"
                             placeholder="e.g., per page"
                         >
-                        @error('price_color_label')
+                        @error('price_secondary_label')
                             <p class="error-text">{{ $message }}</p>
                         @else
                             <p class="helper-text">Optional unit label</p>

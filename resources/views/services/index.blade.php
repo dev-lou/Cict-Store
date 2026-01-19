@@ -581,14 +581,13 @@
                 <div class="category-section">
                     <div class="category-header">
                         <h2 class="category-title">{{ $category }}</h2>
-                        @php $catDesc = $categoryDescriptions[$category] ?? null; @endphp
-                        <p class="category-subtitle">{{ $catDesc ?: 'Browse our available services' }}</p>
+                        <p class="category-subtitle">Browse our available services</p>
                     </div>
 
                     <div class="services-grid">
                         @foreach($categoryServices as $service)
                             @php
-                                $startingPrice = $service->price_bw ?? $service->price_color;
+                                $startingPrice = $service->price_primary ?? $service->price_secondary;
                                 $priceLabel = $service->price_label ?: 'per unit';
                             @endphp
                             <a href="{{ route('services.show', $service->slug) }}" class="service-card reveal-on-scroll">
