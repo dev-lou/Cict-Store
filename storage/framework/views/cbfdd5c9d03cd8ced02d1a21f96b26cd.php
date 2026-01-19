@@ -1,13 +1,13 @@
 <?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4619374cef299e94fd7263111d0abc69 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => config('app.name', 'CICT Dingle') . ' — Merchandise & Services']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => 'CICT Dingle Store | ISUFST Student Council Merchandise & Services','metaDescription' => 'Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo. Shop student merchandise, access printing services, document services, and more. Serving Iloilo State University students in Dingle campus.']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('app-layout'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(config('app.name', 'CICT Dingle') . ' — Merchandise & Services')]); ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('CICT Dingle Store | ISUFST Student Council Merchandise & Services'),'meta_description' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo. Shop student merchandise, access printing services, document services, and more. Serving Iloilo State University students in Dingle campus.')]); ?>
     <style>
         /* ============ DESIGN TOKENS ============ */
         :root {
@@ -31,8 +31,8 @@
 
         /* ============ HERO SECTION ============ */
         .hero {
-            min-height: 70vh;
-            padding: 180px 24px 80px;
+            min-height: 75vh;
+            padding: 200px 24px 100px;
             background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
             display: flex;
             align-items: center;
@@ -45,14 +45,14 @@
 
         @media (max-width: 768px) {
             .hero {
-                min-height: 60vh;
-                padding: 160px 20px 60px;
+                min-height: 65vh;
+                padding: 180px 20px 80px;
             }
         }
 
         @media (max-width: 480px) {
             .hero {
-                padding-top: 180px;
+                padding-top: 200px;
             }
         }
 
@@ -67,39 +67,50 @@
         .hero-content {
             position: relative;
             z-index: 10;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 999px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 24px;
-            backdrop-filter: blur(4px);
+            margin-bottom: 32px;
+            backdrop-filter: blur(8px);
+            letter-spacing: 0.3px;
         }
 
         .hero-title {
-            font-size: clamp(36px, 6vw, 56px);
+            font-size: clamp(40px, 7vw, 64px);
             font-weight: 800;
             color: #fff;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+        
+        .hero-title-subtitle {
+            display: block;
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 600;
+            opacity: 0.95;
+            margin-top: 12px;
+            letter-spacing: -0.5px;
         }
 
         .hero-subtitle {
-            font-size: clamp(16px, 2vw, 20px);
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-bottom: 32px;
-            max-width: 600px;
+            font-size: clamp(16px, 2vw, 18px);
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 650px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -597,12 +608,14 @@
         <div class="hero-content">
             <div class="hero-badge">
                 <span>🎓</span>
-                <span>CICT Student Council Store</span>
+                <span>ISUFST DINGLE CAMPUS</span>
             </div>
-            <h1 class="hero-title gsap-hero-title">Campus Merch & Services</h1>
+            <h1 class="hero-title gsap-hero-title">
+                CICT Dingle Store
+                <span class="hero-title-subtitle">Campus Merchandise & Student Services</span>
+            </h1>
             <p class="hero-subtitle gsap-hero-subtitle">
-                Quality merchandise and professional services for the ISUFST community.
-                Every purchase supports student initiatives.
+                Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo
             </p>
             <div class="hero-buttons">
                 <a href="<?php echo e(route('shop.index')); ?>" class="btn-primary">

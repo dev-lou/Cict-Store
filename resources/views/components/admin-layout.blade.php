@@ -24,6 +24,64 @@
 
     <!-- Styles -->
     @include('components.vite-assets')
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- SweetAlert2 Dark Theme -->
+    <style>
+        .swal2-popup {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+        }
+        
+        .swal2-title {
+            color: #f1f5f9 !important;
+        }
+        
+        .swal2-html-container {
+            color: #94a3b8 !important;
+        }
+        
+        .swal2-confirm {
+            background: #3b82f6 !important;
+        }
+        
+        .swal2-confirm:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5) !important;
+        }
+        
+        .swal2-cancel {
+            background: #6b7280 !important;
+        }
+        
+        .swal2-cancel:focus {
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.5) !important;
+        }
+        
+        .swal2-icon.swal2-warning {
+            border-color: #f59e0b !important;
+            color: #f59e0b !important;
+        }
+        
+        .swal2-icon.swal2-error {
+            border-color: #ef4444 !important;
+            color: #ef4444 !important;
+        }
+        
+        .swal2-icon.swal2-success {
+            border-color: #10b981 !important;
+            color: #10b981 !important;
+        }
+        
+        .swal2-icon.swal2-success [class^='swal2-success-line'] {
+            background-color: #10b981 !important;
+        }
+        
+        .swal2-icon.swal2-success .swal2-success-ring {
+            border-color: rgba(16, 185, 129, 0.3) !important;
+        }
+    </style>
 </head>
 <body class="text-white font-inter antialiased" style="background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3e 50%, #0f0f1e 100%); margin: 0; padding: 0;">
     <!-- Grid Container: Two columns (Sidebar | Main Content) -->

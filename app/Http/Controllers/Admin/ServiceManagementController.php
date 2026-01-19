@@ -8,6 +8,7 @@ use App\Models\ServiceOption;
 use App\Models\ServiceOfficer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class ServiceManagementController extends Controller
 {
@@ -16,17 +17,56 @@ class ServiceManagementController extends Controller
      */
     public function index()
     {
-        $services = Service::with('options')->ordered()->get();
-        $officers = ServiceOfficer::ordered()->get();
+        // Cache services list for 5 minutes
+        $services = Cache::remember('admin.services.list', 300, function () {
+            return Service::with('options')->ordered()->get();
+        });
+
+        $officers = Cache::remember('admin.service_officers.list', 300, function () {
+            return ServiceOfficer::ordered()->get();
+        });
         
-        $stats = [
-            'total_services' => Service::count(),
-            'active_services' => Service::where('is_active', true)->count(),
-            'total_officers' => ServiceOfficer::count(),
-            'active_officers' => ServiceOfficer::where('is_active', true)->count(),
-        ];
+        $stats = Cache::remember('admin.services.stats', 300, function () {
+            return [
+                'total_services' => Service::count(),
+                'active_services' => Service::where('is_active', true)->count(),
+                'total_officers' => ServiceOfficer::count(),
+                'active_officers' => ServiceOfficer::where('is_active', true)->count(),
+            ];
+        });
 
         return view('admin.services.index', compact('services', 'officers', 'stats'));
+    }
+
+    /**
+     * Show create service form.
+     */
+    public function create()
+    {
+        // Cache categories for 10 minutes
+        $categories = Cache::remember('admin.services.categories', 600, function () {
+            return Service::select('category')
+                ->whereNotNull('category')
+                ->distinct()
+                ->orderBy('category')
+                ->pluck('category');
+        });
+        
+        return view('admin.services.create', compact('categories'));
+    }
+
+    /**
+     * Show edit service form.
+     */
+    public function edit(Service $service)
+    {
+        $categories = Service::select('category')
+            ->whereNotNull('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
+        
+        return view('admin.services.edit', compact('service', 'categories'));
     }
 
     /**
@@ -57,27 +97,23 @@ class ServiceManagementController extends Controller
 
             $service = Service::create($validated);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Service created successfully!',
-                'service' => $service->load('options'),
-            ]);
+            // Clear caches
+            Cache::forget('admin.services.list');
+            Cache::forget('admin.services.stats');
+            Cache::forget('admin.services.categories');
+
+            return redirect()->route('admin.services.index')
+                ->with('success', 'Service created successfully!');
+                
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $e->errors(),
-            ], 422);
+            return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             \Log::error('Service creation failed: ' . $e->getMessage(), [
                 'exception' => $e,
                 'request' => $request->all()
             ]);
             
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to save service: ' . $e->getMessage(),
-            ], 500);
+            return back()->with('error', 'Failed to save service: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -105,11 +141,13 @@ class ServiceManagementController extends Controller
 
         $service->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Service updated successfully!',
-            'service' => $service->fresh()->load('options'),
-        ]);
+        // Clear caches
+        Cache::forget('admin.services.list');
+        Cache::forget('admin.services.stats');
+        Cache::forget('admin.services.categories');
+
+        return redirect()->route('admin.services.index')
+            ->with('success', 'Service updated successfully!');
     }
 
     /**
@@ -118,6 +156,10 @@ class ServiceManagementController extends Controller
     public function destroy(Service $service)
     {
         $service->delete();
+
+        // Clear caches
+        Cache::forget('admin.services.list');
+        Cache::forget('admin.services.stats');
 
         return response()->json([
             'success' => true,
@@ -132,11 +174,32 @@ class ServiceManagementController extends Controller
     {
         $service->update(['is_active' => !$service->is_active]);
 
+        // Clear caches
+        Cache::forget('admin.services.list');
+        Cache::forget('admin.services.stats');
+
         return response()->json([
             'success' => true,
             'is_active' => $service->is_active,
             'message' => $service->is_active ? 'Service activated!' : 'Service deactivated!',
         ]);
+    }
+
+    /**
+     * Show all options for a service.
+     */
+    public function indexOptions(Service $service)
+    {
+        $options = $service->options()->orderBy('created_at')->get();
+        return view('admin.services.options.index', compact('service', 'options'));
+    }
+
+    /**
+     * Show create option form.
+     */
+    public function createOption(Service $service)
+    {
+        return view('admin.services.options.create', compact('service'));
     }
 
     /**
@@ -161,11 +224,16 @@ class ServiceManagementController extends Controller
 
         $option = $service->options()->create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Option added successfully!',
-            'option' => $option,
-        ]);
+        return redirect()->route('admin.services.index')
+            ->with('success', 'Option created successfully!');
+    }
+
+    /**
+     * Show edit option form.
+     */
+    public function editOption(ServiceOption $option)
+    {
+        return view('admin.services.options.edit', compact('option'));
     }
 
     /**
@@ -189,11 +257,8 @@ class ServiceManagementController extends Controller
 
         $option->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Option updated successfully!',
-            'option' => $option,
-        ]);
+        return redirect()->route('admin.services.index')
+            ->with('success', 'Option updated successfully!');
     }
 
     /**
@@ -201,12 +266,42 @@ class ServiceManagementController extends Controller
      */
     public function destroyOption(ServiceOption $option)
     {
+        $service = $option->service;
         $option->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Option deleted successfully!',
-        ]);
+        return redirect()->route('admin.services.options.index', $service)
+            ->with('success', 'Option deleted successfully!');
+    }
+
+    /**
+     * Show officers index page.
+     */
+    public function officersIndex()
+    {
+        $officers = ServiceOfficer::ordered()->get();
+        
+        $stats = [
+            'total_officers' => ServiceOfficer::count(),
+            'active_officers' => ServiceOfficer::where('is_active', true)->count(),
+        ];
+
+        return view('admin.service-officers.index', compact('officers', 'stats'));
+    }
+
+    /**
+     * Show create officer form.
+     */
+    public function officersCreate()
+    {
+        return view('admin.service-officers.create');
+    }
+
+    /**
+     * Show edit officer form.
+     */
+    public function officersEdit(ServiceOfficer $officer)
+    {
+        return view('admin.service-officers.edit', compact('officer'));
     }
 
     /**
@@ -214,24 +309,31 @@ class ServiceManagementController extends Controller
      */
     public function storeOfficer(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'title' => 'nullable|string|max:255',
-            'messenger_url' => 'nullable|url|max:500',
-            'is_active' => 'boolean',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'title' => 'nullable|string|max:255',
+                'messenger_url' => 'nullable|url|max:500',
+                'is_active' => 'boolean',
+            ]);
 
-        $validated['title'] = $validated['title'] ?? 'PRINTING OFFICER';
-        $validated['sort_order'] = ServiceOfficer::max('sort_order') + 1;
-        $validated['is_active'] = $request->boolean('is_active', true);
+            $validated['title'] = $validated['title'] ?? 'PRINTING OFFICER';
+            $validated['sort_order'] = (ServiceOfficer::max('sort_order') ?? 0) + 1;
+            $validated['is_active'] = $request->boolean('is_active', true);
 
-        $officer = ServiceOfficer::create($validated);
+            $officer = ServiceOfficer::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Officer added successfully!',
-            'officer' => $officer,
-        ]);
+            // Clear caches
+            Cache::forget('admin.service_officers.list');
+            Cache::forget('admin.services.stats');
+
+            return redirect()->route('admin.service-officers.index')
+                ->with('success', 'Officer added successfully!');
+                
+        } catch (\Exception $e) {
+            \Log::error('Officer creation failed: ' . $e->getMessage());
+            return back()->with('error', 'Failed to add officer: ' . $e->getMessage())->withInput();
+        }
     }
 
     /**
@@ -247,14 +349,15 @@ class ServiceManagementController extends Controller
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', true);
-
+        
         $officer->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Officer updated successfully!',
-            'officer' => $officer,
-        ]);
+        // Clear caches
+        Cache::forget('admin.service_officers.list');
+        Cache::forget('admin.services.stats');
+
+        return redirect()->route('admin.service-officers.index')
+            ->with('success', 'Officer updated successfully!');
     }
 
     /**
@@ -264,9 +367,11 @@ class ServiceManagementController extends Controller
     {
         $officer->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Officer removed successfully!',
-        ]);
+        // Clear caches
+        Cache::forget('admin.service_officers.list');
+        Cache::forget('admin.services.stats');
+
+        return redirect()->route('admin.service-officers.index')
+            ->with('success', 'Officer removed successfully!');
     }
 }

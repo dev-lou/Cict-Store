@@ -105,7 +105,7 @@
                         <p class="text-sm" style="color: rgba(255, 255, 255, 0.6);">Track active offerings and options</p>
                     </div>
                 </div>
-                <a href="{{ route('admin.services-management.index') }}" class="text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-300" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); text-decoration:none;" onmouseover="this.style.background='rgba(59, 130, 246, 0.2)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.1)'">Manage services →</a>
+                <a href="{{ route('admin.services.index') }}" class="text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-300" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); text-decoration:none;" onmouseover="this.style.background='rgba(59, 130, 246, 0.2)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.1)'">Manage services →</a>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="p-4 rounded-lg" style="background: linear-gradient(135deg, rgba(15, 20, 25, 0.6) 0%, rgba(26, 31, 46, 0.6) 100%); border: 1px solid rgba(255, 255, 255, 0.1);">

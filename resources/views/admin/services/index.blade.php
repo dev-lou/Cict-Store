@@ -470,11 +470,10 @@
             <div class="flex justify-between items-start">
                 <div>
                     <h1 class="page-title">Services Management</h1>
-                    <p class="page-subtitle">Manage services, options, and officers</p>
+                    <p class="page-subtitle">Manage services and their options</p>
                 </div>
                 <div class="flex gap-2">
-                    <button class="btn-primary" onclick="openServiceModal()">Add Service</button>
-                    <button class="btn-secondary" onclick="openOfficerModal()">Add Officer</button>
+                    <a href="{{ route('admin.services.create') }}" class="btn-primary" style="text-decoration: none; display: inline-flex; align-items: center;">Add Service</a>
                 </div>
             </div>
         </div>
@@ -487,14 +486,6 @@
             <div class="stat-card">
                 <div class="stat-label">Active Services</div>
                 <div class="stat-value">{{ $stats['active_services'] }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total Officers</div>
-                <div class="stat-value">{{ $stats['total_officers'] }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Active Officers</div>
-                <div class="stat-value">{{ $stats['active_officers'] }}</div>
             </div>
         </div>
 
@@ -528,8 +519,8 @@
                         </div>
                     </div>
                     <div class="actions">
-                        <button class="btn-action" onclick="editService({{ $service->id }})">Edit</button>
-                        <button class="btn-action" onclick="manageOptions({{ $service->id }})">Options</button>
+                        <a href="{{ route('admin.services.edit', $service) }}" class="btn-action" style="text-decoration: none;">Edit</a>
+                        <a href="{{ route('admin.services.options.index', $service) }}" class="btn-action" style="text-decoration: none;">Options</a>
                         <button class="btn-action danger" onclick="deleteService({{ $service->id }})">Delete</button>
                     </div>
                 </div>
@@ -537,221 +528,10 @@
                 <div style="color: var(--text-secondary); padding: 20px;">No services found.</div>
             @endforelse
         </div>
-
-        <div class="mt-10 mb-4 flex items-center justify-between">
-            <h2 class="section-title">Officers</h2>
-            <button class="btn-secondary" onclick="openOfficerModal()">Add Officer</button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            @forelse($officers as $officer)
-                <div class="officer-card" data-id="{{ $officer->id }}">
-                    <div class="avatar">{{ $officer->initials }}</div>
-                    <div class="flex-1 min-w-0">
-                        <div style="color: var(--text-primary); font-weight: 600; font-size: 15px;">{{ $officer->name }}</div>
-                        <div style="color: var(--text-secondary); font-size: 12px;">{{ $officer->title ?? 'OFFICER' }}</div>
-                        @if($officer->messenger_url)
-                            <a href="{{ $officer->messenger_url }}" target="_blank" style="color: var(--primary); font-size: 12px; text-decoration: none;">Messenger</a>
-                        @endif
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="btn-action" onclick="editOfficer({{ $officer->id }})">Edit</button>
-                        <button class="btn-action danger" onclick="deleteOfficer({{ $officer->id }})">Delete</button>
-                    </div>
-                </div>
-            @empty
-                <div style="color: var(--text-secondary); padding: 20px;">No officers yet.</div>
-            @endforelse
-        </div>
-    </div>
-
-    <!-- Service Modal -->
-    <div class="modal-overlay" id="serviceModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <div id="serviceModalTitle">Add Service</div>
-                <button class="btn-action" onclick="closeServiceModal()" style="border: none; padding: 8px;">✕</button>
-            </div>
-            <form id="serviceForm" onsubmit="submitService(event)">
-                @csrf
-                <input type="hidden" id="serviceId">
-                <div class="modal-body">
-                    <label class="label">Icon</label>
-                    <input type="hidden" id="serviceIcon" value="🖨️">
-                    <div class="icon-grid mb-4">
-                        @foreach(['🖨️','🎨','📄','📦','🧾','✂️','🖼️','📐','💡','⚙️','🧵','🛠️','🎁','📊','🧮','🪄'] as $emoji)
-                            <div class="icon-pick" data-icon="{{ $emoji }}" onclick="pickIcon('{{ $emoji }}')">{{ $emoji }}</div>
-                        @endforeach
-                    </div>
-                    <div class="helper-text">Choose an emoji icon for the service</div>
-
-                    <label class="label mt-4">Title</label>
-                    <input class="input mb-1" id="serviceTitle" placeholder="Ex: Color Printing, Laptop Repair" required>
-                    <div class="helper-text">Keep it short and descriptive</div>
-
-                    <label class="label mt-4">Description</label>
-                    <textarea class="input mb-1" id="serviceDescription" rows="3" placeholder="Ex: Vibrant full-color prints for presentations and projects." required></textarea>
-                    <div class="helper-text">One or two sentences describing the service</div>
-
-                    <div class="mt-4">
-                        <label class="label">Price (₱)</label>
-                        <input class="input" type="number" step="0.01" id="servicePriceBw" placeholder="Optional">
-                    </div>
-                    <div class="helper-text">Leave empty for free or on-request services</div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                        <div>
-                            <label class="label">Price Label</label>
-                            <input class="input" id="servicePriceLabel" placeholder="per page, per set">
-                            <div class="helper-text">Optional price note</div>
-                        </div>
-                        <div>
-                            <label class="label">Category</label>
-                            <select class="input" id="serviceCategorySelect" onchange="handleCategoryChange()">
-                                @foreach($categories as $cat)
-                                    <option value="{{ $cat['name'] }}">{{ $cat['name'] }}</option>
-                                @endforeach
-                                <option value="__new__">Create new category</option>
-                            </select>
-                            <div class="helper-text">Choose or create category</div>
-                        </div>
-                    </div>
-
-                    <div id="categoryNameGroup" class="mt-4" style="display:none;">
-                        <label class="label">New Category Name</label>
-                        <input class="input" id="serviceCategory" placeholder="Ex: Document Processing, IT Support" />
-                    </div>
-
-                    <div id="categoryDescriptionGroup" class="mt-4">
-                        <label class="label">Category Description</label>
-                        <textarea class="input" id="serviceCategoryDescription" rows="2" placeholder="Short description for this category"></textarea>
-                        <div class="helper-text">Optional description for the category</div>
-                    </div>
-
-                    <div class="flex items-center gap-4 mt-4">
-                        <label class="flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
-                            <input type="checkbox" id="serviceActive" checked> Active
-                        </label>
-                        <div class="helper-text">Turn off to hide from customers</div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-secondary" onclick="closeServiceModal()">Cancel</button>
-                    <button type="submit" class="btn-primary" id="serviceSubmitBtn">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Options Modal -->
-    <div class="modal-overlay" id="optionsModal">
-        <div class="modal-card" style="max-width: 720px;">
-            <div class="modal-header">
-                <div>Manage Options</div>
-                <button class="btn-action" onclick="closeOptionsModal()" style="border: none; padding: 8px;">✕</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="currentServiceId">
-                <div id="optionsList" class="space-y-2 mb-4"></div>
-
-                <form style="border-top: 1px solid var(--border); padding-top: 16px;" onsubmit="submitOption(event)">
-                    @csrf
-                    <input type="hidden" id="optId">
-                    <h4 style="color: var(--text-primary); font-weight: 600; margin-bottom: 16px;" id="optFormTitle">Add Option</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                            <label class="label">Name</label>
-                            <input class="input" id="optName" required>
-                        </div>
-                        <div>
-                            <label class="label">Details (optional)</label>
-                            <input class="input" id="optDimensions" placeholder="e.g. Size, duration">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                        <div>
-                            <label class="label">Price</label>
-                            <input class="input" type="number" step="0.01" id="optPriceBw" placeholder="Optional">
-                        </div>
-                        <div>
-                            <label class="label">Secondary price</label>
-                            <input class="input" type="number" step="0.01" id="optPriceColor" placeholder="Optional">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                        <div>
-                            <label class="label">Price label</label>
-                            <input class="input" id="optPriceBwLabel" placeholder="e.g. B/W, Standard">
-                        </div>
-                        <div>
-                            <label class="label">Secondary label</label>
-                            <input class="input" id="optPriceColorLabel" placeholder="e.g. Colored, Premium">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                        <div>
-                            <label class="label">Badge</label>
-                            <input class="input" id="optBadge" placeholder="Featured, Most Popular">
-                        </div>
-                        <div>
-                            <label class="label">Card size</label>
-                            <select class="input" id="optSizeClass">
-                                <option value="short">Compact</option>
-                                <option value="standard" selected>Standard</option>
-                                <option value="long">Tall</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="mt-3 flex items-center gap-3">
-                        <label class="flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
-                            <input type="checkbox" id="optActive" checked> Active
-                        </label>
-                        <div class="helper-text">Pause option without deleting</div>
-                    </div>
-                    <div class="flex gap-2 mt-4">
-                        <button type="submit" class="btn-primary" id="optSubmitBtn">Save Option</button>
-                        <button type="button" class="btn-secondary" onclick="resetOptionForm()">Clear</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Officer Modal -->
-    <div class="modal-overlay" id="officerModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <div id="officerModalTitle">Add Officer</div>
-                <button class="btn-action" onclick="closeOfficerModal()" style="border: none; padding: 8px;">✕</button>
-            </div>
-            <form id="officerForm" onsubmit="submitOfficer(event)">
-                @csrf
-                <input type="hidden" id="officerId">
-                <div class="modal-body">
-                    <label class="label">Name</label>
-                    <input class="input mb-4" id="officerName" required>
-
-                    <label class="label">Title</label>
-                    <input class="input mb-4" id="officerTitle" placeholder="OFFICER">
-
-                    <label class="label">Messenger URL</label>
-                    <input class="input mb-4" id="officerMessenger" placeholder="https://www.messenger.com/...">
-
-                    <label class="flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
-                        <input type="checkbox" id="officerActive" checked> Active
-                    </label>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-secondary" onclick="closeOfficerModal()">Cancel</button>
-                    <button type="submit" class="btn-primary" id="officerSubmitBtn">Save</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <script>
         const servicesData = @json($services);
-        const categoryMeta = @json($categories->keyBy('name'));
-        const officersData = @json($officers);
 
         function showToast(msg, type = 'info') {
             const el = document.createElement('div');
@@ -765,130 +545,54 @@
             setTimeout(() => el.remove(), 3200);
         }
 
-        // ---------- Service Modal ----------
-        function openServiceModal() {
-            document.getElementById('serviceModal').classList.add('active');
-            document.getElementById('serviceModalTitle').textContent = 'Add Service';
-            document.getElementById('serviceSubmitBtn').textContent = 'Create';
-            document.getElementById('serviceForm').reset();
-            document.getElementById('serviceId').value = '';
-            document.getElementById('serviceIcon').value = '🖨️';
-            document.querySelectorAll('.icon-pick').forEach(el => el.classList.remove('selected'));
-            const categorySelect = document.getElementById('serviceCategorySelect');
-            categorySelect.value = categorySelect.options[0]?.value || 'General';
-            document.getElementById('serviceCategory').value = '';
-            document.getElementById('serviceCategoryDescription').value = categoryMeta[categorySelect.value]?.description || '';
-            handleCategoryChange();
-        }
-        function closeServiceModal() { document.getElementById('serviceModal').classList.remove('active'); }
-
-        function pickIcon(icon) {
-            document.getElementById('serviceIcon').value = icon;
-            document.querySelectorAll('.icon-pick').forEach(el => el.classList.toggle('selected', el.dataset.icon === icon));
-        }
-
-        function editService(id) {
-            const svc = servicesData.find(s => s.id === id);
-            if (!svc) return;
-            openServiceModal();
-            document.getElementById('serviceModalTitle').textContent = 'Edit Service';
-            document.getElementById('serviceSubmitBtn').textContent = 'Update';
-            document.getElementById('serviceId').value = svc.id;
-            document.getElementById('serviceTitle').value = svc.title;
-            document.getElementById('serviceDescription').value = svc.description;
-            document.getElementById('servicePriceBw').value = svc.price_bw || '';
-            document.getElementById('servicePriceLabel').value = svc.price_label || '';
-            document.getElementById('serviceActive').checked = !!svc.is_active;
-            pickIcon(svc.icon || '🖨️');
-
-            const categorySelect = document.getElementById('serviceCategorySelect');
-            const currentCategory = svc.category || 'General';
-            if ([...categorySelect.options].some(o => o.value === currentCategory)) {
-                categorySelect.value = currentCategory;
-            } else {
-                const opt = document.createElement('option');
-                opt.value = currentCategory;
-                opt.textContent = currentCategory;
-                categorySelect.prepend(opt);
-                categorySelect.value = currentCategory;
-            }
-            document.getElementById('serviceCategory').value = '';
-            document.getElementById('serviceCategoryDescription').value = svc.category_description || categoryMeta[currentCategory]?.description || '';
-            handleCategoryChange(true);
-        }
-
-        function handleCategoryChange(isEdit = false) {
-            const select = document.getElementById('serviceCategorySelect');
-            const nameGroup = document.getElementById('categoryNameGroup');
-            const nameInput = document.getElementById('serviceCategory');
-            const descInput = document.getElementById('serviceCategoryDescription');
-            const value = select.value;
-            const isNew = value === '__new__';
-            nameGroup.style.display = isNew ? 'block' : 'none';
-
-            if (!isNew) {
-                nameInput.value = '';
-                descInput.value = categoryMeta[value]?.description || '';
-            } else if (!isEdit) {
-                nameInput.value = '';
-                descInput.value = '';
-            }
-        }
-
-        async function submitService(e) {
-            e.preventDefault();
-            const id = document.getElementById('serviceId').value;
-            const isEdit = !!id;
-            const selectedCategory = document.getElementById('serviceCategorySelect').value;
-            const categoryNameInput = document.getElementById('serviceCategory').value.trim();
-            const resolvedCategory = selectedCategory === '__new__' ? categoryNameInput : selectedCategory;
-            if (!resolvedCategory) { showToast('Category name is required', 'error'); return; }
-            const payload = {
-                title: document.getElementById('serviceTitle').value,
-                description: document.getElementById('serviceDescription').value,
-                icon: document.getElementById('serviceIcon').value,
-                price_bw: document.getElementById('servicePriceBw').value || null,
-                price_label: document.getElementById('servicePriceLabel').value,
-                category: resolvedCategory,
-                category_description: document.getElementById('serviceCategoryDescription').value,
-                is_active: document.getElementById('serviceActive').checked,
-            };
-            const url = isEdit ? `/admin/services-management/${id}` : '/admin/services-management';
-            const method = isEdit ? 'PATCH' : 'POST';
-            try {
-                const res = await fetch(url, {
-                    method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(data.message, 'success');
-                    closeServiceModal();
-                    setTimeout(() => location.reload(), 700);
-                } else {
-                    showToast('Failed to save service', 'error');
-                }
-            } catch (err) {
-                showToast('Error saving service', 'error');
-            }
-        }
-
         async function deleteService(id) {
-            if (!confirm('Delete this service?')) return;
+            const service = servicesData.find(s => s.id === id);
+            const serviceName = service ? service.title : 'this service';
+            
+            const result = await Swal.fire({
+                title: 'Delete Service?',
+                text: `Are you sure you want to delete "${serviceName}"? This will also delete all related options.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel'
+            });
+
+            if (!result.isConfirmed) return;
+
             try {
                 const res = await fetch(`/admin/services-management/${id}`, {
                     method: 'DELETE',
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
                 });
                 const data = await res.json();
-                if (data.success) { showToast(data.message, 'success'); setTimeout(() => location.reload(), 400); }
-                else showToast('Delete failed', 'error');
-            } catch { showToast('Delete failed', 'error'); }
+                if (data.success) { 
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    location.reload();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Delete failed',
+                        confirmButtonColor: '#ef4444'
+                    });
+                }
+            } catch {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Delete failed',
+                    confirmButtonColor: '#ef4444'
+                });
+            }
         }
 
         async function toggleService(id) {
@@ -898,189 +602,43 @@
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
                 });
                 const data = await res.json();
-                if (data.success) { showToast(data.message, 'success'); setTimeout(() => location.reload(), 300); }
-            } catch { showToast('Toggle failed', 'error'); }
-        }
-
-        // ---------- Options ----------
-        function manageOptions(serviceId) {
-            const svc = servicesData.find(s => s.id === serviceId);
-            if (!svc) return;
-            document.getElementById('currentServiceId').value = serviceId;
-            window.currentOptions = svc.options || [];
-            resetOptionForm();
-            renderOptions(window.currentOptions);
-            document.getElementById('optionsModal').classList.add('active');
-        }
-        function closeOptionsModal() { document.getElementById('optionsModal').classList.remove('active'); }
-
-        function renderOptions(options) {
-            const list = document.getElementById('optionsList');
-            if (!options.length) {
-                list.innerHTML = '<div style="color: var(--text);">No options yet.</div>';
-                return;
-            }
-            list.innerHTML = options.map(opt => `
-                <div style="border:1px solid var(--border); border-radius:10px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
-                    <div>
-                        <div style="color: var(--white); font-weight:800;">${opt.name}</div>
-                        <div style="color: var(--text); font-size:12px;">${opt.dimensions || ''}</div>
-                        <div style="color: var(--text); font-size:12px;">${opt.price_bw_label || 'Price'}: ${opt.price_bw ? '₱'+parseFloat(opt.price_bw).toFixed(2) : '—'} | ${opt.price_color_label || 'Secondary'}: ${opt.price_color ? '₱'+parseFloat(opt.price_color).toFixed(2) : '—'}</div>
-                        ${opt.badge ? `<div style="color: var(--cyan); font-size:12px; font-weight:700; margin-top:4px;">${opt.badge}</div>` : ''}
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="btn-ghost" onclick="editOption(${opt.id})">✏️</button>
-                        <button class="btn-ghost" style="border-color: rgba(255,107,107,0.5); color:#ffb3b3;" onclick="deleteOption(${opt.id})">🗑</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function resetOptionForm() {
-            document.getElementById('optId').value = '';
-            document.getElementById('optName').value = '';
-            document.getElementById('optDimensions').value = '';
-            document.getElementById('optPriceBw').value = '';
-            document.getElementById('optPriceColor').value = '';
-            document.getElementById('optPriceBwLabel').value = '';
-            document.getElementById('optPriceColorLabel').value = '';
-            document.getElementById('optBadge').value = '';
-            document.getElementById('optSizeClass').value = 'standard';
-            document.getElementById('optActive').checked = true;
-            document.getElementById('optFormTitle').textContent = 'Add Option';
-            document.getElementById('optSubmitBtn').textContent = 'Save Option';
-        }
-
-        function editOption(id) {
-            if (!window.currentOptions) return;
-            const opt = window.currentOptions.find(o => o.id === id);
-            if (!opt) return;
-            document.getElementById('optId').value = opt.id;
-            document.getElementById('optName').value = opt.name || '';
-            document.getElementById('optDimensions').value = opt.dimensions || '';
-            document.getElementById('optPriceBw').value = opt.price_bw || '';
-            document.getElementById('optPriceColor').value = opt.price_color || '';
-            document.getElementById('optPriceBwLabel').value = opt.price_bw_label || '';
-            document.getElementById('optPriceColorLabel').value = opt.price_color_label || '';
-            document.getElementById('optBadge').value = opt.badge || '';
-            document.getElementById('optSizeClass').value = opt.size_class || 'standard';
-            document.getElementById('optActive').checked = !!opt.is_active;
-            document.getElementById('optFormTitle').textContent = 'Edit Option';
-            document.getElementById('optSubmitBtn').textContent = 'Update Option';
-        }
-
-        async function submitOption(e) {
-            e.preventDefault();
-            const serviceId = document.getElementById('currentServiceId').value;
-            const optId = document.getElementById('optId').value;
-            const payload = {
-                name: document.getElementById('optName').value,
-                dimensions: document.getElementById('optDimensions').value,
-                price_bw: document.getElementById('optPriceBw').value || null,
-                price_color: document.getElementById('optPriceColor').value || null,
-                price_bw_label: document.getElementById('optPriceBwLabel').value,
-                price_color_label: document.getElementById('optPriceColorLabel').value,
-                badge: document.getElementById('optBadge').value,
-                size_class: document.getElementById('optSizeClass').value,
-                is_active: document.getElementById('optActive').checked,
-            };
-            if (!payload.name) { showToast('Name required', 'error'); return; }
-
-            const isEdit = !!optId;
-            const url = isEdit ? `/admin/services-management/options/${optId}` : `/admin/services-management/${serviceId}/options`;
-            const method = isEdit ? 'PATCH' : 'POST';
-            try {
-                const res = await fetch(url, {
-                    method,
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(data.message, 'success');
-                    setTimeout(() => location.reload(), 500);
-                } else {
-                    showToast('Save option failed', 'error');
+                if (data.success) { 
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    location.reload();
                 }
-            } catch { showToast('Save option failed', 'error'); }
-        }
-
-        async function deleteOption(id) {
-            if (!confirm('Delete this option?')) return;
-            try {
-                const res = await fetch(`/admin/services-management/options/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
+            } catch { 
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Toggle failed',
+                    confirmButtonColor: '#ef4444'
                 });
-                const data = await res.json();
-                if (data.success) { showToast(data.message, 'success'); setTimeout(() => location.reload(), 400); }
-                else showToast('Delete failed', 'error');
-            } catch { showToast('Delete failed', 'error'); }
+            }
         }
 
-        // ---------- Officers ----------
-        function openOfficerModal() {
-            document.getElementById('officerModal').classList.add('active');
-            document.getElementById('officerForm').reset();
-            document.getElementById('officerId').value = '';
-            document.getElementById('officerModalTitle').textContent = 'Add Officer';
-            document.getElementById('officerSubmitBtn').textContent = 'Save';
-        }
-        function closeOfficerModal() { document.getElementById('officerModal').classList.remove('active'); }
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
 
-        function editOfficer(id) {
-            const officer = officersData.find(o => o.id === id);
-            if (!officer) return;
-            openOfficerModal();
-            document.getElementById('officerModalTitle').textContent = 'Edit Officer';
-            document.getElementById('officerSubmitBtn').textContent = 'Update';
-            document.getElementById('officerId').value = officer.id;
-            document.getElementById('officerName').value = officer.name;
-            document.getElementById('officerTitle').value = officer.title || '';
-            document.getElementById('officerMessenger').value = officer.messenger_url || '';
-            document.getElementById('officerActive').checked = !!officer.is_active;
-        }
-
-        async function submitOfficer(e) {
-            e.preventDefault();
-            const id = document.getElementById('officerId').value;
-            const isEdit = !!id;
-            const payload = {
-                name: document.getElementById('officerName').value,
-                title: document.getElementById('officerTitle').value,
-                messenger_url: document.getElementById('officerMessenger').value,
-                is_active: document.getElementById('officerActive').checked,
-            };
-            const url = isEdit ? `/admin/services-management/officers/${id}` : '/admin/services-management/officers';
-            const method = isEdit ? 'PATCH' : 'POST';
-            try {
-                const res = await fetch(url, {
-                    method,
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                if (data.success) { showToast(data.message, 'success'); closeOfficerModal(); setTimeout(() => location.reload(), 500); }
-                else showToast('Save failed', 'error');
-            } catch { showToast('Save failed', 'error'); }
-        }
-
-        async function deleteOfficer(id) {
-            if (!confirm('Delete this officer?')) return;
-            try {
-                const res = await fetch(`/admin/services-management/officers/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
-                });
-                const data = await res.json();
-                if (data.success) { showToast(data.message, 'success'); setTimeout(() => location.reload(), 400); }
-                else showToast('Delete failed', 'error');
-            } catch { showToast('Delete failed', 'error'); }
-        }
-
-        // Close modals on overlay click
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
-        });
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#ef4444'
+            });
+        @endif
     </script>
 </x-admin-layout>
