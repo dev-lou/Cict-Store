@@ -1,19 +1,6 @@
 <x-admin-layout>
     @section('page-title', 'Edit Product')
 
-    <!-- Flash Messages -->
-    @if(session('success'))
-        <x-admin.alert type="success" :message="session('success')" :dismissible="true" />
-    @endif
-
-    @if(session('warning'))
-        <x-admin.alert type="warning" :message="session('warning')" :dismissible="true" />
-    @endif
-
-    @if(session('error'))
-        <x-admin.alert type="error" :message="session('error')" :dismissible="true" />
-    @endif
-
     <!-- Breadcrumb -->
     <x-admin.breadcrumb :items="[
         ['label' => 'Catalog'],
@@ -1430,6 +1417,34 @@
                     color: '#e2e8f0',
                     confirmButtonColor: '#3b82f6',
                     backdrop: 'rgba(0, 0, 0, 0.7)'
+                });
+            @endif
+
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            @endif
+
+            @if(session('warning'))
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: '{{ session('warning') }}',
+                    confirmButtonColor: '#f59e0b'
+                });
+            @endif
+
+            @if(session('error') && !$errors->any())
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#ef4444'
                 });
             @endif
         });

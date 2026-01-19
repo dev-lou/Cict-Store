@@ -137,22 +137,52 @@
         </div>
 
         <!-- Services -->
-        <a
-            href="{{ route('admin.services-management.index') }}"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
-            @if(request()->routeIs('admin.services-management.*'))
-                style="background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%); color: #ffffff;"
-            @else
+        <div x-data="{ servicesOpen: {{ request()->routeIs('admin.services.*') ? 'true' : 'false' }} }" class="space-y-1">
+            <button
+                @click="servicesOpen = !servicesOpen"
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
                 style="color: rgba(255, 255, 255, 0.7);"
                 onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';"
                 onmouseout="this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.7)';"
-            @endif
-        >
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10M7 16h6m4-9V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2h8"></path>
-            </svg>
-            <span>Services</span>
-        </a>
+            >
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10M7 16h6m4-9V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2h8"></path>
+                </svg>
+                <span class="flex-1 text-left">Services</span>
+                <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': servicesOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <div x-show="servicesOpen" x-cloak x-transition class="ml-8 space-y-0.5">
+                <a href="{{ route('admin.services.index') }}" class="block px-3 py-2 rounded-lg text-sm transition-all duration-200" style="@if(request()->routeIs('admin.services.index'))background: rgba(139, 0, 0, 0.15); color: #ffffff;@else color: rgba(255, 255, 255, 0.6);@endif" onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';" onmouseout="@if(!request()->routeIs('admin.services.index'))this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.6)';@endif">All Services</a>
+                <a href="{{ route('admin.services.create') }}" class="block px-3 py-2 rounded-lg text-sm transition-all duration-200" style="@if(request()->routeIs('admin.services.create'))background: rgba(139, 0, 0, 0.15); color: #ffffff;@else color: rgba(255, 255, 255, 0.6);@endif" onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';" onmouseout="@if(!request()->routeIs('admin.services.create'))this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.6)';@endif">Add Service</a>
+            </div>
+        </div>
+
+        <!-- Service Officers -->
+        <div x-data="{ officersOpen: {{ request()->routeIs('admin.service-officers.*') ? 'true' : 'false' }} }" class="space-y-1">
+            <button
+                @click="officersOpen = !officersOpen"
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
+                style="color: rgba(255, 255, 255, 0.7);"
+                onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';"
+                onmouseout="this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.7)';"
+            >
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <span class="flex-1 text-left">Service Officers</span>
+                <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': officersOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <div x-show="officersOpen" x-cloak x-transition class="ml-8 space-y-0.5">
+                <a href="{{ route('admin.service-officers.index') }}" class="block px-3 py-2 rounded-lg text-sm transition-all duration-200" style="@if(request()->routeIs('admin.service-officers.index'))background: rgba(139, 0, 0, 0.15); color: #ffffff;@else color: rgba(255, 255, 255, 0.6);@endif" onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';" onmouseout="@if(!request()->routeIs('admin.service-officers.index'))this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.6)';@endif">All Officers</a>
+                <a href="{{ route('admin.service-officers.create') }}" class="block px-3 py-2 rounded-lg text-sm transition-all duration-200" style="@if(request()->routeIs('admin.service-officers.create'))background: rgba(139, 0, 0, 0.15); color: #ffffff;@else color: rgba(255, 255, 255, 0.6);@endif" onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';" onmouseout="@if(!request()->routeIs('admin.service-officers.create'))this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.6)';@endif">Add Officer</a>
+            </div>
+        </div>
 
         <!-- Section: System -->
         <div class="px-3 py-2 mt-4">

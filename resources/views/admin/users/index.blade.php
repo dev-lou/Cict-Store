@@ -1,11 +1,6 @@
 <x-admin-layout>
     @section('page-title', 'User Management')
 
-    <!-- Success Message -->
-    @if(session('success'))
-        <x-admin.alert type="success" :message="session('success')" :dismissible="true" />
-    @endif
-
     <!-- Breadcrumb -->
     <x-admin.breadcrumb :items="[
         ['label' => 'System'],
@@ -215,4 +210,23 @@
             }
         });
     }
+
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '{{ session('success') }}',
+            timer: 3000,
+            showConfirmButton: false
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#ef4444'
+        });
+    @endif
 </script>

@@ -230,20 +230,34 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // ========================================================================
     // Services Management Routes
     // ========================================================================
-    Route::prefix('services-management')->name('services-management.')->group(function () {
+    Route::prefix('services')->name('services.')->group(function () {
         Route::get('/', [ServiceManagementController::class, 'index'])->name('index');
+        Route::get('/create', [ServiceManagementController::class, 'create'])->name('create');
         Route::post('/', [ServiceManagementController::class, 'store'])->name('store');
+        Route::get('/{service}/edit', [ServiceManagementController::class, 'edit'])->name('edit');
         Route::patch('/{service}', [ServiceManagementController::class, 'update'])->name('update');
         Route::delete('/{service}', [ServiceManagementController::class, 'destroy'])->name('destroy');
         Route::patch('/{service}/toggle', [ServiceManagementController::class, 'toggleStatus'])->name('toggle');
 
+        // Service Options
+        Route::get('/{service}/options', [ServiceManagementController::class, 'indexOptions'])->name('options.index');
+        Route::get('/{service}/options/create', [ServiceManagementController::class, 'createOption'])->name('options.create');
         Route::post('/{service}/options', [ServiceManagementController::class, 'storeOption'])->name('options.store');
+        Route::get('/options/{option}/edit', [ServiceManagementController::class, 'editOption'])->name('options.edit');
         Route::patch('/options/{option}', [ServiceManagementController::class, 'updateOption'])->name('options.update');
         Route::delete('/options/{option}', [ServiceManagementController::class, 'destroyOption'])->name('options.destroy');
-
-        Route::post('/officers', [ServiceManagementController::class, 'storeOfficer'])->name('officers.store');
-        Route::patch('/officers/{officer}', [ServiceManagementController::class, 'updateOfficer'])->name('officers.update');
-        Route::delete('/officers/{officer}', [ServiceManagementController::class, 'destroyOfficer'])->name('officers.destroy');
+    });
+    
+    // ========================================================================
+    // Service Officers Routes
+    // ========================================================================
+    Route::prefix('service-officers')->name('service-officers.')->group(function () {
+        Route::get('/', [ServiceManagementController::class, 'officersIndex'])->name('index');
+        Route::get('/create', [ServiceManagementController::class, 'officersCreate'])->name('create');
+        Route::post('/', [ServiceManagementController::class, 'storeOfficer'])->name('store');
+        Route::get('/{officer}/edit', [ServiceManagementController::class, 'officersEdit'])->name('edit');
+        Route::patch('/{officer}', [ServiceManagementController::class, 'updateOfficer'])->name('update');
+        Route::delete('/{officer}', [ServiceManagementController::class, 'destroyOfficer'])->name('destroy');
     });
     
     // ========================================================================

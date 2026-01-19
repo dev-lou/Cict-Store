@@ -36,8 +36,11 @@ chmod 664 /var/www/html/storage/logs/laravel.log
     echo "[Background] Clearing caches..."
     php artisan view:clear || true
     php artisan config:clear || true
+    php artisan route:clear || true
     echo "[Background] Caching config..."
     php artisan config:cache || true
+    php artisan route:cache || true
+    php artisan view:cache || true
     echo "[Background] Running migrations..."
     php artisan migrate --force || echo "[Background] Migration skipped or failed"
     echo "[Background] Tasks complete"

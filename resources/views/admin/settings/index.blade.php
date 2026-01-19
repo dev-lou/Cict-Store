@@ -7,11 +7,6 @@
         ['label' => 'Settings']
     ]" />
 
-    <!-- Success Message -->
-    @if(session('success'))
-        <x-admin.alert type="success" :message="session('success')" :dismissible="true" />
-    @endif
-
     <!-- Page Header -->
     <x-admin.page-header title="Admin Settings" subtitle="Manage application settings, system configuration, and preferences">
         <x-slot:actions>
