@@ -6,6 +6,7 @@ use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Product Model
@@ -35,6 +36,8 @@ class Product extends Model
         'low_stock_threshold',
         'base_price',
         'status',
+        'badge_text',
+        'badge_color',
     ];
 
     protected $casts = [
@@ -42,6 +45,25 @@ class Product extends Model
         'current_stock' => 'integer',
         'low_stock_threshold' => 'integer',
     ];
+
+    /**
+     * Boot the model to clear homepage cache.
+     */
+    protected static function booted(): void
+    {
+        // Clear homepage featured products cache when products change
+        static::created(function () {
+            Cache::forget('homepage.featured_products');
+        });
+        
+        static::updated(function () {
+            Cache::forget('homepage.featured_products');
+        });
+        
+        static::deleted(function () {
+            Cache::forget('homepage.featured_products');
+        });
+    }
 
     /**
      * Get the variants for the product.
@@ -107,17 +129,17 @@ class Product extends Model
         if (empty($this->image_path)) {
             return null;
         }
-        
+
         // If already a full URL, return as-is
         if (str_starts_with($this->image_path, 'http')) {
             return $this->image_path;
         }
-        
+
         // If starts with /storage, use asset() directly
         if (str_starts_with($this->image_path, '/storage')) {
             return asset($this->image_path);
         }
-        
+
         // Otherwise, prepend storage/
         return asset('storage/' . $this->image_path);
     }

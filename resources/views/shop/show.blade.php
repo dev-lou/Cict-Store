@@ -973,7 +973,13 @@
                 <!-- Product Image -->
                 <div class="product-image-card">
                     @if(!empty($product->image_url))
-                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                        <img src="{{ $product->image_url }}" 
+                             alt="{{ $product->name }}"
+                             loading="eager"
+                             fetchpriority="high"
+                             decoding="async"
+                             width="600"
+                             height="600">
                     @else
                         <div class="product-image-placeholder">No Image Available</div>
                     @endif
@@ -1212,7 +1218,12 @@
                             <a href="{{ route('shop.show', $related->slug) }}" class="related-card">
                                 <div class="related-image">
                                     @if($related->image_path)
-                                        <img src="{{ $related->image_url }}" alt="{{ $related->name }}">
+                                        <img src="{{ $related->image_url }}" 
+                                             alt="{{ $related->name }}"
+                                             loading="lazy"
+                                             decoding="async"
+                                             width="300"
+                                             height="300">
                                     @endif
                                 </div>
                                 <div class="related-info">

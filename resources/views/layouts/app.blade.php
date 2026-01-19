@@ -11,10 +11,9 @@
     <meta name="keywords" content="CICT Student Council, ISUFST Dingle, Iloilo Philippines, student merchandise, CICT services, Dingle campus, Iloilo State University, CICT merch">
     
     @php
-        $ogImageSetting = \App\Models\Setting::where('key', 'site_logo')->first();
-        $ogImageUrl = ($ogImageSetting && $ogImageSetting->value) 
-            ? Storage::disk('supabase')->url($ogImageSetting->value)
-            : null;
+        // Use cached Setting::get() method instead of direct query
+        $ogImageValue = \App\Models\Setting::get('site_logo');
+        $ogImageUrl = $ogImageValue ? Storage::disk('supabase')->url($ogImageValue) : null;
     @endphp
     
     <!-- Open Graph / Facebook -->
@@ -35,10 +34,10 @@
 
     <!-- Favicon -->
     @php
-        $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
+        $faviconValue = \App\Models\Setting::get('site_favicon');
     @endphp
-    @if($faviconSetting && $faviconSetting->value)
-        <link rel="icon" href="{{ Storage::disk('supabase')->url($faviconSetting->value) }}" type="image/x-icon">
+    @if($faviconValue)
+        <link rel="icon" href="{{ Storage::disk('supabase')->url($faviconValue) }}" type="image/x-icon">
     @endif
 
     <!-- Fonts - Preload for faster loading -->

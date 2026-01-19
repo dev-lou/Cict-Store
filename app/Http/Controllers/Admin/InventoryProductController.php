@@ -156,6 +156,8 @@ class InventoryProductController extends Controller
                 'description' => 'nullable|string',
                 'base_price' => 'required|numeric|min:0',
                 'status' => 'required|in:active,inactive',
+                'badge_text' => 'nullable|string|max:30',
+                'badge_color' => 'nullable|string|max:7',
                 'image' => 'nullable|image|mimes:jpeg,png,gif,webp|max:5120', // 5MB max
                 'current_stock' => 'nullable|integer|min:0', // For products without variants
                 'variants' => 'nullable|array',
@@ -355,6 +357,8 @@ class InventoryProductController extends Controller
                 'base_price' => 'required|numeric|min:0',
                 'low_stock_threshold' => 'nullable|integer|min:0',
                 'status' => 'required|in:active,inactive',
+                'badge_text' => 'nullable|string|max:30',
+                'badge_color' => 'nullable|string|max:7',
                 'current_stock' => 'nullable|integer|min:0',
                 'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max
                 'variants' => 'nullable|array',

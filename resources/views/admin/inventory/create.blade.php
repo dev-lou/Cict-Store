@@ -26,7 +26,8 @@
         <x-slot:actions>
             <x-admin.button href="{{ route('admin.inventory.index') }}" variant="secondary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
                 Back to Inventory
             </x-admin.button>
@@ -193,15 +194,7 @@
 
         select.form-input {
             cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233b82f6' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 40px;
-        }
-
-        select.form-input:hover {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2360a5fa' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            padding-right: 16px;
         }
 
         .info-box {
@@ -498,6 +491,51 @@
                         {{ $message }}</span>@enderror
                     </div>
 
+                    <!-- Promotional Badge Section -->
+                    <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid rgba(71, 85, 105, 0.3);">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                            <span style="font-size: 1.3rem;">🏷️</span>
+                            <h4
+                                style="color: #cbd5e1; font-weight: 600; font-size: 0.95rem; margin: 0; letter-spacing: 0.3px;">
+                                Promotional Badge</h4>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label">Badge Text</label>
+                                <input type="text" name="badge_text" value="{{ old('badge_text') }}" class="form-input"
+                                    placeholder="e.g., Christmas Sale, New, Limited" maxlength="30" />
+                                <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 8px;">Leave empty for no badge
+                                </p>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label">Badge Color</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <input type="color" name="badge_color" value="{{ old('badge_color', '#8B0000') }}"
+                                        style="width: 50px; height: 42px; padding: 0; border: 2px solid rgba(59, 130, 246, 0.3); border-radius: 6px; cursor: pointer;" />
+                                    <select id="badgeColorPreset" class="form-input" style="flex: 1;"
+                                        onchange="document.querySelector('input[name=badge_color]').value = this.value;">
+                                        <option value="#8B0000">🔴 Maroon (Default)</option>
+                                        <option value="#DC2626">🔴 Red</option>
+                                        <option value="#16A34A">🟢 Green (Eco/New)</option>
+                                        <option value="#2563EB">🔵 Blue</option>
+                                        <option value="#9333EA">🟣 Purple</option>
+                                        <option value="#F59E0B">🟡 Orange (Sale)</option>
+                                        <option value="#EC4899">💗 Pink (Valentine)</option>
+                                        <option value="#059669">🎄 Christmas Green</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box" style="margin-top: 12px;">
+                            <span style="color: #cbd5e1; font-size: 0.85rem;"><strong style="color: #e2e8f0;">Example
+                                    badges:</strong>
+                                "🎄 Christmas Special", "💝 Valentine's Day", "🆕 New Arrival", "🔥 Hot Deal"</span>
+                        </div>
+                    </div>
+
                     <!-- Stock Management -->
                     <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid rgba(71, 85, 105, 0.3);">
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
@@ -531,20 +569,26 @@
                             <span style="font-size: 1.3rem;">📦</span>
                             <span>Product Variants</span>
                         </span>
-                        <span style="color: #94a3b8; font-size: 0.85rem; font-weight: 500;">Optional • Add as many as you need</span>
+                        <span style="color: #94a3b8; font-size: 0.85rem; font-weight: 500;">Optional • Add as many as
+                            you need</span>
                     </div>
 
                     <!-- Info Card -->
-                    <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 20px; margin-bottom: 24px;">
+                    <div
+                        style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 20px; margin-bottom: 24px;">
                         <div style="display: flex; align-items: start; gap: 12px;">
                             <span style="font-size: 1.8rem; line-height: 1;">💡</span>
                             <div>
-                                <h4 style="color: #e2e8f0; font-weight: 600; margin: 0 0 8px 0; font-size: 0.95rem;">About Product Variants</h4>
+                                <h4 style="color: #e2e8f0; font-weight: 600; margin: 0 0 8px 0; font-size: 0.95rem;">
+                                    About Product Variants</h4>
                                 <p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.6; margin: 0 0 8px 0;">
-                                    Variants let customers choose between different options (sizes, colors, styles). Each variant has its own stock and optional price adjustment.
+                                    Variants let customers choose between different options (sizes, colors, styles).
+                                    Each variant has its own stock and optional price adjustment.
                                 </p>
-                                <p style="color: #a78bfa; font-size: 0.85rem; line-height: 1.6; margin: 0; font-weight: 600;">
-                                    💡 Tip: Add variants if customers need to choose options, or leave empty for a simple product with base price.
+                                <p
+                                    style="color: #a78bfa; font-size: 0.85rem; line-height: 1.6; margin: 0; font-weight: 600;">
+                                    💡 Tip: Add variants if customers need to choose options, or leave empty for a
+                                    simple product with base price.
                                 </p>
                             </div>
                         </div>
@@ -555,35 +599,50 @@
                         <div id="variantsList" style="display: grid; gap: 16px; margin-bottom: 20px;">
                             <!-- Variants will be added here dynamically -->
                         </div>
-                        
+
                         <!-- Summary Stats -->
-                        <div id="variantsSummary" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(71, 85, 105, 0.3); border-radius: 8px; padding: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                        <div id="variantsSummary"
+                            style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(71, 85, 105, 0.3); border-radius: 8px; padding: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
                             <div style="text-align: center;">
-                                <p style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">Total Variants</p>
-                                <p id="variantsCount" style="color: #3b82f6; font-weight: 700; font-size: 1.5rem; margin: 0;">0</p>
+                                <p
+                                    style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Total Variants</p>
+                                <p id="variantsCount"
+                                    style="color: #3b82f6; font-weight: 700; font-size: 1.5rem; margin: 0;">0</p>
                             </div>
                             <div style="text-align: center;">
-                                <p style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">Total Stock</p>
-                                <p id="totalVariantStock" style="color: #22c55e; font-weight: 700; font-size: 1.5rem; margin: 0;">0</p>
+                                <p
+                                    style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Total Stock</p>
+                                <p id="totalVariantStock"
+                                    style="color: #22c55e; font-weight: 700; font-size: 1.5rem; margin: 0;">0</p>
                             </div>
                             <div style="text-align: center;">
-                                <p style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">Avg Price Change</p>
-                                <p id="avgPriceChange" style="color: #f59e0b; font-weight: 700; font-size: 1.5rem; margin: 0;">₱0.00</p>
+                                <p
+                                    style="color: #94a3b8; font-size: 0.75rem; margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Avg Price Change</p>
+                                <p id="avgPriceChange"
+                                    style="color: #f59e0b; font-weight: 700; font-size: 1.5rem; margin: 0;">₱0.00</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Empty State -->
-                    <div id="emptyVariantsState" style="background: rgba(30, 41, 59, 0.3); border: 2px dashed rgba(71, 85, 105, 0.5); border-radius: 10px; padding: 40px; text-align: center;">
+                    <div id="emptyVariantsState"
+                        style="background: rgba(30, 41, 59, 0.3); border: 2px dashed rgba(71, 85, 105, 0.5); border-radius: 10px; padding: 40px; text-align: center;">
                         <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.6;">📦</div>
-                        <p style="color: #cbd5e1; font-weight: 600; margin: 0 0 8px 0; font-size: 1rem;">No Variants Added</p>
-                        <p style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 20px 0; line-height: 1.6; max-width: 400px; margin-left: auto; margin-right: auto;">
-                            This will be a simple product with one price and stock level. Click below to add variants if needed.
+                        <p style="color: #cbd5e1; font-weight: 600; margin: 0 0 8px 0; font-size: 1rem;">No Variants
+                            Added</p>
+                        <p
+                            style="color: #94a3b8; font-size: 0.85rem; margin: 0 0 20px 0; line-height: 1.6; max-width: 400px; margin-left: auto; margin-right: auto;">
+                            This will be a simple product with one price and stock level. Click below to add variants if
+                            needed.
                         </p>
                     </div>
 
                     <!-- Add Variant Button -->
-                    <button type="button" id="addVariantBtn" class="btn-primary" style="width: 100%; padding: 14px; font-size: 0.95rem; margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <button type="button" id="addVariantBtn" class="btn-primary"
+                        style="width: 100%; padding: 14px; font-size: 0.95rem; margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                         <span style="font-size: 1.2rem;">+</span>
                         <span>Add Variant</span>
                     </button>
@@ -665,12 +724,12 @@
         });
 
         // Variant Management - NEW CLEAN SYSTEM
-        window.createVariantCard = function(index, data = {}) {
+        window.createVariantCard = function (index, data = {}) {
             const card = document.createElement('div');
             card.className = 'variant-card';
             card.dataset.variantIndex = index;
             card.style.cssText = 'background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 20px; position: relative; transition: all 0.3s ease;';
-            
+
             card.innerHTML = `
                 <div style="position: absolute; top: 12px; right: 12px; display: flex; gap: 8px;">
                     <button type="button" class="remove-variant-btn" onclick="window.removeVariant(${index})" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'; this.style.borderColor='rgba(239, 68, 68, 0.6)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.2)'; this.style.borderColor='rgba(239, 68, 68, 0.4)';">
@@ -696,24 +755,24 @@
                     </div>
                 </div>
             `;
-            
+
             return card;
         }
 
-        window.addVariant = function() {
+        window.addVariant = function () {
             const container = document.getElementById('variantsList');
             const card = window.createVariantCard(variantIndex++);
             container.appendChild(card);
             window.updateVariantDisplay();
             window.updateVariantSummary();
-            
+
             // Scroll to new variant
             setTimeout(() => {
                 card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
         }
 
-        window.removeVariant = function(index) {
+        window.removeVariant = function (index) {
             const card = document.querySelector(`[data-variant-index="${index}"]`);
             if (card) {
                 card.style.opacity = '0';
@@ -727,7 +786,7 @@
             }
         }
 
-        window.reindexVariants = function() {
+        window.reindexVariants = function () {
             const cards = document.querySelectorAll('.variant-card');
             cards.forEach((card, newIndex) => {
                 card.dataset.variantIndex = newIndex;
@@ -742,11 +801,11 @@
             variantIndex = cards.length;
         }
 
-        window.updateVariantDisplay = function() {
+        window.updateVariantDisplay = function () {
             const count = document.querySelectorAll('.variant-card').length;
             const emptyState = document.getElementById('emptyVariantsState');
             const listContainer = document.getElementById('variantsListContainer');
-            
+
             if (count === 0) {
                 emptyState.style.display = 'block';
                 listContainer.style.display = 'none';
@@ -756,19 +815,19 @@
             }
         }
 
-        window.updateVariantSummary = function() {
+        window.updateVariantSummary = function () {
             const cards = document.querySelectorAll('.variant-card');
             let totalStock = 0;
             let totalPriceChange = 0;
             let count = cards.length;
-            
+
             cards.forEach(card => {
                 const stockInput = card.querySelector('.variant-stock');
                 const priceInput = card.querySelector('.variant-price');
                 totalStock += parseInt(stockInput.value) || 0;
                 totalPriceChange += parseFloat(priceInput.value) || 0;
             });
-            
+
             document.getElementById('variantsCount').textContent = count;
             document.getElementById('totalVariantStock').textContent = totalStock;
             document.getElementById('avgPriceChange').textContent = count > 0 ? `₱${(totalPriceChange / count).toFixed(2)}` : '₱0.00';

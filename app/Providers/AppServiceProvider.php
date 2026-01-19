@@ -7,6 +7,7 @@ use App\Extensions\NeonPostgresConnector;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 
@@ -66,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
         // Share order counts with all views via View Composer
         // Skip for error views and console commands to prevent infinite loops
         // and avoid database queries during CLI tasks such as `php artisan`.
+        // Cache these counts for 5 minutes to reduce database load
         View::composer('*', function ($view) {
         $viewName = $view->getName();
         
@@ -82,16 +84,21 @@ class AppServiceProvider extends ServiceProvider
         }
         
         try {
-            $pendingOrderCount = Order::where('status', 'pending')->count();
-            $processingOrderCount = Order::where('status', 'processing')->count();
-            $completedOrderCount = Order::where('status', 'completed')->count();
-            $totalOrderCount = Order::count();
+            // Cache order counts for 5 minutes to reduce database load
+            $orderCounts = Cache::remember('admin.order_counts', now()->addMinutes(5), function () {
+                return [
+                    'pending' => Order::where('status', 'pending')->count(),
+                    'processing' => Order::where('status', 'processing')->count(),
+                    'completed' => Order::where('status', 'completed')->count(),
+                    'total' => Order::count(),
+                ];
+            });
 
             $view->with([
-                'pendingOrderCount' => $pendingOrderCount,
-                'processingOrderCount' => $processingOrderCount,
-                'completedOrderCount' => $completedOrderCount,
-                'totalOrderCount' => $totalOrderCount,
+                'pendingOrderCount' => $orderCounts['pending'],
+                'processingOrderCount' => $orderCounts['processing'],
+                'completedOrderCount' => $orderCounts['completed'],
+                'totalOrderCount' => $orderCounts['total'],
             ]);
         } catch (\Throwable $e) {
             // Fallback to zero counts if database query fails
