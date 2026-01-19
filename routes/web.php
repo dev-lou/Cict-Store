@@ -350,7 +350,7 @@ Route::post('/login', function () {
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.',
     ]);
-})->name('login.post')->middleware(['guest', 'throttle:5,1', 'App\Http\Middleware\BlockFailedLogins']);
+})->name('login.post')->middleware(['throttle:5,1', 'App\Http\Middleware\BlockFailedLogins']);
 
 Route::get('/register', function () {
     return view('auth.register');
