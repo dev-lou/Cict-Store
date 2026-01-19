@@ -29,7 +29,7 @@ class DashboardController extends Controller
 
             // Use single query for today's orders
             $todaysOrders = Order::whereDate('created_at', $today)
-                ->selectRaw('COUNT(*) as count, SUM(CASE WHEN status != "cancelled" THEN total ELSE 0 END) as sales')
+                ->selectRaw("COUNT(*) as count, SUM(CASE WHEN status != 'cancelled' THEN total ELSE 0 END) as sales")
                 ->first();
 
             return [
