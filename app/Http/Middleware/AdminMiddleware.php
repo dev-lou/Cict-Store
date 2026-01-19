@@ -17,12 +17,13 @@ class AdminMiddleware
     {
         // Check if user is authenticated
         if (!auth()->check()) {
-            return redirect('/login');
+            return redirect()->guest(route('login'));
         }
 
         // Check if user has admin role
         if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized access to admin area');
+            // Non-admin users should be redirected to home, not given 403
+            return redirect('/')->with('error', 'You do not have permission to access the admin area.');
         }
 
         return $next($request);
