@@ -701,9 +701,9 @@
                         <div class="service-icon">{{ $service->icon ?? '🖨️' }}</div>
                         <h3 class="service-title">{{ $service->title }}</h3>
                         <p class="service-desc">{{ Str::limit($service->description, 100) }}</p>
-                        @if($service->price_primary || $service->price_secondary)
+                        @if($service->price_bw || $service->price_color)
                             <div class="service-price">
-                                From ₱{{ number_format($service->price_primary ?? $service->price_secondary, 2) }}
+                                From ₱{{ number_format($service->price_bw ?? $service->price_color, 2) }}
                             </div>
                         @endif
                     </a>

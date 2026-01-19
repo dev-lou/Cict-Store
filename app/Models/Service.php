@@ -16,18 +16,19 @@ class Service extends Model
         'slug',
         'description',
         'icon',
-        'price_primary',
-        'price_secondary',
+        'price_bw',
+        'price_color',
         'price_label',
         'category',
+        'category_description',
         'sort_order',
         'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'price_primary' => 'decimal:2',
-        'price_secondary' => 'decimal:2',
+        'price_bw' => 'decimal:2',
+        'price_color' => 'decimal:2',
     ];
 
     protected static function boot()

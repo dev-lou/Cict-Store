@@ -306,14 +306,14 @@
                             @endif
                             <div class="price-grid">
                                 <div class="price-item">
-                                    <div class="price-item-label">{{ $option->price_primary_label ?? 'Primary' }}</div>
+                                    <div class="price-item-label">{{ $option->price_bw_label ?? 'Price' }}</div>
                                     <div class="price-item-value">
-                                        {{ $option->price_primary ? '₱' . number_format($option->price_primary, 2) : '—' }}</div>
+                                        {{ $option->price_bw ? '₱' . number_format($option->price_bw, 2) : '—' }}</div>
                                 </div>
                                 <div class="price-item">
-                                    <div class="price-item-label">{{ $option->price_secondary_label ?? 'Secondary' }}</div>
+                                    <div class="price-item-label">{{ $option->price_color_label ?? 'Secondary' }}</div>
                                     <div class="price-item-value">
-                                        {{ $option->price_secondary ? '₱' . number_format($option->price_secondary, 2) : '—' }}</div>
+                                        {{ $option->price_color ? '₱' . number_format($option->price_color, 2) : '—' }}</div>
                                 </div>
                             </div>
                         </div>

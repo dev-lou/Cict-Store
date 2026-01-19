@@ -186,18 +186,18 @@
                     </div>
 
                     <div>
-                        <label class="label" for="price_primary">Primary Price (₱)</label>
+                        <label class="label" for="price_bw">Price (₱)</label>
                         <input 
                             type="number" 
-                            name="price_primary" 
-                            id="price_primary" 
-                            class="input @error('price_primary') border-red-500 @enderror" 
-                            value="{{ old('price_primary', $service->price_primary) }}"
+                            name="price_bw" 
+                            id="price_bw" 
+                            class="input @error('price_bw') border-red-500 @enderror" 
+                            value="{{ old('price_bw', $service->price_bw) }}"
                             step="0.01"
                             min="0"
                             placeholder="e.g., 50.00"
                         >
-                        @error('price_primary')
+                        @error('price_bw')
                             <p class="error-text">{{ $message }}</p>
                         @else
                             <p class="helper-text">Optional</p>
@@ -205,16 +205,16 @@
                     </div>
 
                     <div>
-                        <label class="label" for="price_label">Price Label</label>
+                        <label class="label" for="price_bw_label">Price Label</label>
                         <input 
                             type="text" 
-                            name="price_label" 
-                            id="price_label" 
-                            class="input @error('price_label') border-red-500 @enderror" 
-                            value="{{ old('price_label', $service->price_label) }}"
+                            name="price_bw_label" 
+                            id="price_bw_label" 
+                            class="input @error('price_bw_label') border-red-500 @enderror" 
+                            value="{{ old('price_bw_label', $service->price_bw_label) }}"
                             placeholder="e.g., per page, per hour, per item"
                         >
-                        @error('price_label')
+                        @error('price_bw_label')
                             <p class="error-text">{{ $message }}</p>
                         @else
                             <p class="helper-text">Optional price note</p>
