@@ -50,16 +50,11 @@ class ServicesController extends Controller
             return $service->category ?: 'General';
         });
 
-        $categoryDescriptions = $groupedServices->map(function ($group) {
-            return optional($group->first())->category_description;
-        });
-
         return view('services.index', [
             'services' => $services,
             'options' => $options,
             'officers' => $officers,
             'groupedServices' => $groupedServices,
-            'categoryDescriptions' => $categoryDescriptions,
         ]);
     }
 

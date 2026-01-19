@@ -48,20 +48,20 @@
                                     </span>
                                 </td>
                                 <td>
-                                    @if($option->price_bw)
-                                        <span class="font-semibold">₱{{ number_format($option->price_bw, 2) }}</span>
-                                        @if($option->price_bw_label)
-                                            <span class="text-xs text-gray-500 dark:text-gray-400">{{ $option->price_bw_label }}</span>
+                                    @if($option->price_primary)
+                                        <span class="font-semibold">₱{{ number_format($option->price_primary, 2) }}</span>
+                                        @if($option->price_primary_label)
+                                            <span class="text-xs text-gray-500 dark:text-gray-400">{{ $option->price_primary_label }}</span>
                                         @endif
                                     @else
                                         <span class="text-gray-400">—</span>
                                     @endif
                                 </td>
                                 <td>
-                                    @if($option->price_color)
-                                        <span class="font-semibold">₱{{ number_format($option->price_color, 2) }}</span>
-                                        @if($option->price_color_label)
-                                            <span class="text-xs text-gray-500 dark:text-gray-400">{{ $option->price_color_label }}</span>
+                                    @if($option->price_secondary)
+                                        <span class="font-semibold">₱{{ number_format($option->price_secondary, 2) }}</span>
+                                        @if($option->price_secondary_label)
+                                            <span class="text-xs text-gray-500 dark:text-gray-400">{{ $option->price_secondary_label }}</span>
                                         @endif
                                     @else
                                         <span class="text-gray-400">—</span>

@@ -37,7 +37,7 @@ class HomepageController extends Controller
         $featuredServices = Cache::remember('homepage.featured_services', now()->addMinutes(10), function () {
             try {
                 return Service::where('is_active', true)
-                    ->select(['id', 'title', 'slug', 'description', 'icon', 'price_bw', 'price_color', 'created_at'])
+                    ->select(['id', 'title', 'slug', 'description', 'icon', 'price_primary', 'price_secondary', 'created_at'])
                     ->orderByDesc('created_at')
                     ->take(3)
                     ->get();
@@ -70,7 +70,6 @@ class HomepageController extends Controller
                     ->map(fn($group) => [
                         'name' => $group->first()->category ?: 'General',
                         'count' => $group->count(),
-                        'description' => $group->first()->category_description,
                     ])
                     ->values();
             } catch (Throwable $e) {
