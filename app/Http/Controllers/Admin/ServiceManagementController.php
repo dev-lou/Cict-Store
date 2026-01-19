@@ -96,10 +96,16 @@ class ServiceManagementController extends Controller
 
             $service = Service::create($validated);
 
-            // Clear caches
+            // Clear admin caches
             Cache::forget('admin.services.list');
             Cache::forget('admin.services.stats');
             Cache::forget('admin.services.categories');
+            
+            // Clear public-facing caches
+            Cache::forget('homepage.featured_services');
+            Cache::forget('homepage.service_categories');
+            Cache::forget('services.index.all');
+            Cache::forget('services.officers');
 
             return redirect()->route('admin.services.index')
                 ->with('success', 'Service created successfully!');
@@ -139,10 +145,16 @@ class ServiceManagementController extends Controller
 
         $service->update($validated);
 
-        // Clear caches
+        // Clear admin caches
         Cache::forget('admin.services.list');
         Cache::forget('admin.services.stats');
         Cache::forget('admin.services.categories');
+        
+        // Clear public-facing caches
+        Cache::forget('homepage.featured_services');
+        Cache::forget('homepage.service_categories');
+        Cache::forget('services.index.all');
+        Cache::forget('services.officers');
 
         return redirect()->route('admin.services.index')
             ->with('success', 'Service updated successfully!');
@@ -155,9 +167,16 @@ class ServiceManagementController extends Controller
     {
         $service->delete();
 
-        // Clear caches
+        // Clear admin caches
         Cache::forget('admin.services.list');
         Cache::forget('admin.services.stats');
+        Cache::forget('admin.services.categories');
+        
+        // Clear public-facing caches
+        Cache::forget('homepage.featured_services');
+        Cache::forget('homepage.service_categories');
+        Cache::forget('services.index.all');
+        Cache::forget('services.officers');
 
         return response()->json([
             'success' => true,
@@ -172,9 +191,16 @@ class ServiceManagementController extends Controller
     {
         $service->update(['is_active' => !$service->is_active]);
 
-        // Clear caches
+        // Clear admin caches
         Cache::forget('admin.services.list');
         Cache::forget('admin.services.stats');
+        Cache::forget('admin.services.categories');
+        
+        // Clear public-facing caches
+        Cache::forget('homepage.featured_services');
+        Cache::forget('homepage.service_categories');
+        Cache::forget('services.index.all');
+        Cache::forget('services.officers');
 
         return response()->json([
             'success' => true,
