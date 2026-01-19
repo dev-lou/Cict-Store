@@ -14,10 +14,10 @@ class ServiceOption extends Model
         'service_id',
         'name',
         'dimensions',
-        'price_primary',
-        'price_secondary',
-        'price_primary_label',
-        'price_secondary_label',
+        'price_bw',
+        'price_color',
+        'price_bw_label',
+        'price_color_label',
         'size_class',
         'badge',
         'sort_order',
@@ -26,8 +26,8 @@ class ServiceOption extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
-        'price_primary' => 'decimal:2',
-        'price_secondary' => 'decimal:2',
+        'price_bw' => 'decimal:2',
+        'price_color' => 'decimal:2',
     ];
 
     /**
