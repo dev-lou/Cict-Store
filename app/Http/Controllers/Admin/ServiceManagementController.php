@@ -34,33 +34,51 @@ class ServiceManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'icon' => 'nullable|string|max:50',
-            'price_bw' => 'nullable|numeric|min:0',
-            'price_color' => 'nullable|numeric|min:0',
-            'price_label' => 'nullable|string|max:100',
-            'category' => 'nullable|string|max:100',
-            'category_description' => 'nullable|string|max:500',
-            'is_active' => 'boolean',
-        ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'icon' => 'nullable|string|max:50',
+                'price_bw' => 'nullable|numeric|min:0',
+                'price_color' => 'nullable|numeric|min:0',
+                'price_label' => 'nullable|string|max:100',
+                'category' => 'nullable|string|max:100',
+                'category_description' => 'nullable|string|max:500',
+                'is_active' => 'boolean',
+            ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
-        $validated['sort_order'] = Service::max('sort_order') + 1;
-        $validated['icon'] = $validated['icon'] ?? '🖨️';
-        $validated['is_active'] = $request->boolean('is_active', true);
-        if (empty($validated['category'])) {
-            $validated['category'] = 'General';
+            $validated['slug'] = Str::slug($validated['title']);
+            $validated['sort_order'] = (Service::max('sort_order') ?? 0) + 1;
+            $validated['icon'] = $validated['icon'] ?? '🖨️';
+            $validated['is_active'] = $request->boolean('is_active', true);
+            if (empty($validated['category'])) {
+                $validated['category'] = 'General';
+            }
+
+            $service = Service::create($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Service created successfully!',
+                'service' => $service->load('options'),
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Service creation failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save service: ' . $e->getMessage(),
+            ], 500);
         }
-
-        $service = Service::create($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Service created successfully!',
-            'service' => $service->load('options'),
-        ]);
     }
 
     /**
