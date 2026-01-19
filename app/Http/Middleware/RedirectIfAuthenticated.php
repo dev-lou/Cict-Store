@@ -20,6 +20,11 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                // Prevent redirect loops: if already on an admin or home page, don't redirect
+                if ($request->is('admin/*') || $request->is('/')) {
+                    return $next($request);
+                }
+                
                 // Redirect admin users to admin dashboard, regular users to home
                 if (Auth::user()->isAdmin()) {
                     return redirect('/admin/dashboard');
