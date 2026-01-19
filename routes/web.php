@@ -93,6 +93,35 @@ Route::get('/healthz', function () {
     }
 });
 
+// Session debug endpoint - temporary for diagnosing redirect loops
+Route::get('/_debug/session', function (Illuminate\Http\Request $request) {
+    $data = [
+        'session_driver' => config('session.driver'),
+        'session_domain' => config('session.domain'),
+        'session_secure' => config('session.secure'),
+        'session_same_site' => config('session.same_site'),
+        'session_encrypt' => config('session.encrypt'),
+        'is_https' => $request->secure(),
+        'scheme' => $request->getScheme(),
+        'host' => $request->getHost(),
+        'is_authenticated' => auth()->check(),
+        'user_id' => auth()->id(),
+        'session_id' => session()->getId(),
+        'has_session_cookie' => $request->hasCookie(config('session.cookie')),
+    ];
+    
+    // Check if sessions table exists
+    try {
+        $count = DB::table('sessions')->count();
+        $data['sessions_table'] = 'exists';
+        $data['sessions_count'] = $count;
+    } catch (\Throwable $e) {
+        $data['sessions_table'] = 'error: ' . $e->getMessage();
+    }
+    
+    return response()->json($data);
+});
+
 // Optional debug endpoint for Gemini diagnostics (secure via token).
 // Only enabled when CICT_GEMINI_DEBUG_TOKEN is set in the environment to avoid exposure.
 if (!empty(env('CICT_GEMINI_DEBUG_TOKEN'))) {
