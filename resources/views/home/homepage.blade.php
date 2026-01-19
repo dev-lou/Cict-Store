@@ -1,4 +1,6 @@
-<x-app-layout :title="config('app.name', 'CICT Dingle') . ' — Merchandise & Services'">
+<x-app-layout 
+    :title="'CICT Dingle Store | ISUFST Student Council Merchandise & Services'"
+    :meta_description="'Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo. Shop student merchandise, access printing services, document services, and more. Serving Iloilo State University students in Dingle campus.'">
     <style>
         /* ============ DESIGN TOKENS ============ */
         :root {
@@ -588,11 +590,11 @@
         <div class="hero-content">
             <div class="hero-badge">
                 <span>🎓</span>
-                <span>CICT Student Council Store</span>
+                <span>ISUFST Dingle Campus Store</span>
             </div>
-            <h1 class="hero-title gsap-hero-title">Campus Merch & Services</h1>
+            <h1 class="hero-title gsap-hero-title">CICT Dingle Store — Campus Merch & Services</h1>
             <p class="hero-subtitle gsap-hero-subtitle">
-                Quality merchandise and professional services for the ISUFST community.
+                Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo. Quality merchandise and professional services for the ISUFST community.
                 Every purchase supports student initiatives.
             </p>
             <div class="hero-buttons">

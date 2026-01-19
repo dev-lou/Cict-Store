@@ -7,38 +7,79 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Official online store of CICT Student Council at ISUFST Dingle Campus, Iloilo, Philippines. Order merchandise and avail student services for the College of Information and Communications Technology.">
-    <meta name="keywords" content="CICT Student Council, ISUFST Dingle, Iloilo Philippines, student merchandise, CICT services, Dingle campus, Iloilo State University, CICT merch">
+    <meta name="description" content="@yield('meta_description', 'Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo, Philippines. Shop CICT merchandise, access student services, printing, document services, and more. Serving Iloilo State University of Fisheries Science and Technology students.')">
+    <meta name="keywords" content="CICT Dingle, ISUFST Dingle, Dingle campus store, ISUFST store, Iloilo State University, CICT Student Council, Dingle Iloilo, ISUFST merchandise, student services Dingle, CICT merch, college printing services, document services, campus shop Dingle, CICT ISUFST, Dingle campus, student store Iloilo">
+    <meta name="author" content="CICT Student Council">
+    <meta name="geo.region" content="PH-ILI">
+    <meta name="geo.placename" content="Dingle, Iloilo">
+    <meta name="geo.position" content="10.9295;122.6693">
+    <link rel="canonical" href="{{ url()->current() }}">
     
     @php
         // Use cached Setting::get() method instead of direct query
         $ogImageValue = \App\Models\Setting::get('site_logo');
         $ogImageUrl = $ogImageValue ? Storage::disk('supabase')->url($ogImageValue) : null;
+        $faviconValue = \App\Models\Setting::get('site_favicon');
+        $faviconUrl = $faviconValue ? Storage::disk('supabase')->url($faviconValue) : null;
     @endphp
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('title', 'CICT Dingle - Student Council Store')">
-    <meta property="og:description" content="Official store of CICT Student Council at ISUFST Dingle Campus. Order merchandise and avail student services.">
+    <meta property="og:title" content="@yield('title', 'CICT Dingle Store | ISUFST Student Council')">
+    <meta property="og:description" content="@yield('meta_description', 'Official CICT Student Council Store at ISUFST Dingle Campus. Shop merchandise and access student services.')">
     <meta property="og:image" content="{{ $ogImageUrl }}">
+    <meta property="og:site_name" content="CICT Dingle Store">
+    <meta property="og:locale" content="en_PH">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('title', 'CICT Dingle - Student Council Store')">
-    <meta property="twitter:description" content="Official store of CICT Student Council at ISUFST Dingle Campus. Order merchandise and avail student services.">
+    <meta property="twitter:title" content="@yield('title', 'CICT Dingle Store | ISUFST Student Council')">
+    <meta property="twitter:description" content="@yield('meta_description', 'Official CICT Student Council Store at ISUFST Dingle Campus.')">
     <meta property="twitter:image" content="{{ $ogImageUrl }}">
 
-    <title>@yield('title', config('app.name', 'CICT Dingle'))</title>
+    <title>@yield('title', 'CICT Dingle Store | ISUFST Student Council')</title>
 
-    <!-- Favicon -->
-    @php
-        $faviconValue = \App\Models\Setting::get('site_favicon');
-    @endphp
-    @if($faviconValue)
-        <link rel="icon" href="{{ Storage::disk('supabase')->url($faviconValue) }}" type="image/x-icon">
+    <!-- Favicons - Multiple sizes for better Google indexing -->
+    @if($faviconUrl)
+        <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ $faviconUrl }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ $faviconUrl }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ $faviconUrl }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ $faviconUrl }}">
     @endif
+    
+    <!-- Structured Data (JSON-LD) for Google -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Store",
+        "name": "CICT Dingle Store",
+        "alternateName": "ISUFST Dingle CICT Student Council Store",
+        "description": "Official merchandise and services store of the CICT Student Council at Iloilo State University of Fisheries Science and Technology, Dingle Campus",
+        "url": "{{ config('app.url') }}",
+        "image": "{{ $ogImageUrl }}",
+        "logo": "{{ $ogImageUrl }}",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Dingle",
+            "addressRegion": "Iloilo",
+            "addressCountry": "PH"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 10.9295,
+            "longitude": 122.6693
+        },
+        "priceRange": "₱",
+        "paymentAccepted": "Cash",
+        "areaServed": {
+            "@type": "Place",
+            "name": "ISUFST Dingle Campus"
+        }
+    }
+    </script>
 
     <!-- Fonts - Preload for faster loading -->
 
