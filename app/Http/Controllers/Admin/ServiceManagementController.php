@@ -79,11 +79,10 @@ class ServiceManagementController extends Controller
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'icon' => 'nullable|string|max:50',
-                'price_bw' => 'nullable|numeric|min:0',
-                'price_color' => 'nullable|numeric|min:0',
+                'price_primary' => 'nullable|numeric|min:0',
+                'price_secondary' => 'nullable|numeric|min:0',
                 'price_label' => 'nullable|string|max:100',
                 'category' => 'nullable|string|max:100',
-                'category_description' => 'nullable|string|max:500',
                 'is_active' => 'boolean',
             ]);
 
@@ -126,11 +125,10 @@ class ServiceManagementController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'icon' => 'nullable|string|max:50',
-            'price_bw' => 'nullable|numeric|min:0',
-            'price_color' => 'nullable|numeric|min:0',
+            'price_primary' => 'nullable|numeric|min:0',
+            'price_secondary' => 'nullable|numeric|min:0',
             'price_label' => 'nullable|string|max:100',
             'category' => 'nullable|string|max:100',
-            'category_description' => 'nullable|string|max:500',
             'is_active' => 'boolean',
         ]);
 
@@ -210,10 +208,10 @@ class ServiceManagementController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'dimensions' => 'nullable|string|max:100',
-            'price_bw' => 'nullable|numeric|min:0',
-            'price_color' => 'nullable|numeric|min:0',
-            'price_bw_label' => 'nullable|string|max:100',
-            'price_color_label' => 'nullable|string|max:100',
+            'price_primary' => 'nullable|numeric|min:0',
+            'price_secondary' => 'nullable|numeric|min:0',
+            'price_primary_label' => 'nullable|string|max:100',
+            'price_secondary_label' => 'nullable|string|max:100',
             'size_class' => 'required|in:short,standard,long',
             'badge' => 'nullable|string|max:100',
             'is_active' => 'boolean',
@@ -224,7 +222,7 @@ class ServiceManagementController extends Controller
 
         $option = $service->options()->create($validated);
 
-        return redirect()->route('admin.services.index')
+        return redirect()->route('admin.services.options.index', $service)
             ->with('success', 'Option created successfully!');
     }
 
@@ -244,10 +242,10 @@ class ServiceManagementController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'dimensions' => 'nullable|string|max:100',
-            'price_bw' => 'nullable|numeric|min:0',
-            'price_color' => 'nullable|numeric|min:0',
-            'price_bw_label' => 'nullable|string|max:100',
-            'price_color_label' => 'nullable|string|max:100',
+            'price_primary' => 'nullable|numeric|min:0',
+            'price_secondary' => 'nullable|numeric|min:0',
+            'price_primary_label' => 'nullable|string|max:100',
+            'price_secondary_label' => 'nullable|string|max:100',
             'size_class' => 'required|in:short,standard,long',
             'badge' => 'nullable|string|max:100',
             'is_active' => 'boolean',
@@ -257,7 +255,7 @@ class ServiceManagementController extends Controller
 
         $option->update($validated);
 
-        return redirect()->route('admin.services.index')
+        return redirect()->route('admin.services.options.index', $option->service)
             ->with('success', 'Option updated successfully!');
     }
 
