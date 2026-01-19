@@ -60,7 +60,7 @@ if (app()->environment('local')) {
             DB::select('SELECT 1');
             $db = 'ok';
         } catch (\Throwable $e) {
-            $db = 'error: '.$e->getMessage();
+            $db = 'error: ' . $e->getMessage();
         }
         return response()->json(['health' => 'ok', 'app_key' => $appKey, 'db' => $db]);
     });
@@ -178,7 +178,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/account', function () {
         return redirect('/profile');
     })->name('account.index');
-    
+
     Route::get('/account/orders', [OrderController::class, 'customerOrders'])->name('account.orders');
     Route::get('/account/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
 });
@@ -210,10 +210,10 @@ Route::get('/chatbot/quick-actions', [ChatbotController::class, 'quickActions'])
 // ============================================================================
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // ========================================================================
     // Inventory Management Routes
     // ========================================================================
@@ -247,7 +247,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/options/{option}', [ServiceManagementController::class, 'updateOption'])->name('options.update');
         Route::delete('/options/{option}', [ServiceManagementController::class, 'destroyOption'])->name('options.destroy');
     });
-    
+
     // ========================================================================
     // Service Officers Routes
     // ========================================================================
@@ -259,7 +259,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/{officer}', [ServiceManagementController::class, 'updateOfficer'])->name('update');
         Route::delete('/{officer}', [ServiceManagementController::class, 'destroyOfficer'])->name('destroy');
     });
-    
+
     // ========================================================================
     // Buy List / To-Buy Module
     // ========================================================================
@@ -271,7 +271,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/{buyListItem}/mark-purchased', [BuyListController::class, 'markPurchased'])->name('mark-purchased');
         Route::post('/{buyListItem}/upload-receipt', [BuyListController::class, 'uploadReceipt'])->name('upload-receipt');
     });
-    
+
     // ========================================================================
     // Order Management Routes
     // ========================================================================
@@ -289,7 +289,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Admin Gemini diagnostics (safe, admin-only)
     Route::get('/gemini/diagnose', [\App\Http\Controllers\Admin\GeminiDiagController::class, 'index'])->name('gemini.diagnose');
-    
+
     // ========================================================================
     // Audit Logs
     // ========================================================================
@@ -297,7 +297,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/', [AuditLogController::class, 'index'])->name('index');
         Route::get('/{auditLog}', [AuditLogController::class, 'show'])->name('show');
     });
-    
+
     // ========================================================================
     // Admin Settings & User Management
     // ========================================================================
@@ -307,7 +307,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('/logo', [UserManageController::class, 'updateLogo'])->name('update-logo');
         Route::post('/favicon', [UserManageController::class, 'updateFavicon'])->name('update-favicon');
     });
-    
+
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserManageController::class, 'index'])->name('index');
         Route::get('/create', [UserManageController::class, 'create'])->name('create');
@@ -341,17 +341,27 @@ Route::post('/login', function () {
 
     if (Auth::attempt($credentials, request()->boolean('remember'))) {
         request()->session()->regenerate();
-        
+
         // Clear failed attempts on successful login
         \App\Models\FailedLoginAttempt::clearAttempts(request()->ip());
-        
+
+        // Get intended URL, but ignore API endpoints and notification URLs
+        $intended = session()->pull('url.intended', '/');
+        $ignoredPaths = ['/notifications/unread', '/api/', '/notifications/'];
+        foreach ($ignoredPaths as $path) {
+            if (str_contains($intended, $path)) {
+                $intended = null;
+                break;
+            }
+        }
+
         // Redirect admin users to admin dashboard, others to home
         if (auth()->user()->isAdmin()) {
-            return redirect()->intended('/admin/dashboard');
+            return $intended ? redirect($intended) : redirect('/admin/dashboard');
         }
-        
-        // Regular users go to home page
-        return redirect('/');
+
+        // Regular users go to intended URL or home page
+        return $intended ? redirect($intended) : redirect('/');
     }
 
     // Record failed login attempt
