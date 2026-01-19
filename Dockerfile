@@ -65,6 +65,13 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . .
 
+# Create required directories and set permissions BEFORE composer install
+RUN mkdir -p bootstrap/cache \
+    && mkdir -p storage/framework/{sessions,views,cache} \
+    && mkdir -p storage/logs \
+    && chmod -R 775 bootstrap/cache \
+    && chmod -R 775 storage
+
 # Install PHP dependencies (production)
 RUN composer install \
     --no-dev \
