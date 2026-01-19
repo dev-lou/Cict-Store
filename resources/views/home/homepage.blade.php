@@ -634,7 +634,12 @@
                     <a href="{{ route('shop.show', $product->slug) }}" class="product-card reveal-on-scroll">
                         <div class="product-image">
                             @if(!empty($product->image_url))
-                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async">
+                                <img src="{{ $product->image_url }}" 
+                                     alt="{{ $product->name }}" 
+                                     loading="lazy" 
+                                     decoding="async"
+                                     width="400"
+                                     height="400">
                             @else
                                 <div
                                     style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">

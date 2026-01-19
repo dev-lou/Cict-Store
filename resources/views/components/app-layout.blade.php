@@ -70,7 +70,9 @@
         <link rel="stylesheet" href="{{ asset('css/button-interactions.css') }}">
     </noscript>
 
-    <!-- CSS-only animations (no external JS libraries) -->
+    <!-- GSAP Animation Library (lightweight, powerful) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 
     <style>
         /* Global mobile fixes */
@@ -906,6 +908,9 @@
 
     <!-- Minimal Animation (particles only for visual appeal) -->
     <script src="{{ asset('js/particles.js') }}" defer></script>
+    
+    <!-- Professional Modern Animations (GSAP) -->
+    <script src="{{ asset('js/modern-animations.js') }}" defer></script>
 
     @stack('body-end')
 </body>

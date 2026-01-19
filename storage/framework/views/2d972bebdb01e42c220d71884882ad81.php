@@ -382,18 +382,18 @@ unset($__defined_vars); ?>
                 }
             }
         </style>
-        <div style="max-width: 80rem; margin: 0 auto;">
+        <div style="max-width: 80rem; margin: 0 auto; overflow: visible !important;">
             <nav class="navbar-glass flex justify-between items-center px-6 py-4"
-                style="border: 1px solid rgba(255, 255, 255, 0.2);">
+                style="border: 1px solid rgba(255, 255, 255, 0.2); overflow: visible !important;">
 
                 <!-- Logo -->
-                <div class="flex items-center">
+                <div class="flex items-center" style="overflow: visible !important;">
                     <a href="/" class="text-2xl font-bold text-black"
                         style="font-family: 'Inter', sans-serif; font-size: 24px;"><?php echo e(config('app.name', 'CICT Dingle')); ?></a>
                 </div>
 
                 <!-- Navigation Links (Center - Hidden on Mobile) -->
-                <div class="hidden md:flex items-center gap-12">
+                <div class="hidden md:flex items-center gap-12" style="overflow: visible !important;">
                     <a href="/" class="navbar-link <?php echo e(request()->is('/') ? 'active' : ''); ?>">
                         Home
                     </a>
@@ -483,9 +483,9 @@ unset($__defined_vars); ?>
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
                                 id="notifications-panel"
-                                class="notifications-dropdown absolute right-0 mt-3 rounded-xl shadow-xl z-50 overflow-hidden"
+                                class="notifications-dropdown absolute right-0 mt-3 rounded-xl shadow-xl"
                                 role="dialog" aria-label="Notifications" :aria-hidden="!open"
-                                style="width: min(480px, calc(100vw - 32px)); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); display: none;">
+                                style="width: min(480px, calc(100vw - 32px)); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); display: none; z-index: 9999 !important; position: fixed !important; top: 60px !important; transform: translateX(0);">
                                 <div class="px-4 py-3 flex items-center justify-between"
                                     style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); background: rgba(218, 165, 32, 0.1);">
                                     <div class="flex items-center gap-2">
@@ -555,10 +555,10 @@ unset($__defined_vars); ?>
 
                     <!-- User Menu / Auth Dropdown (Desktop only) -->
                     <?php if(auth()->guard()->check()): ?>
-                        <div x-data="{ menuOpen: false }" class="relative hidden md:flex">
+                        <div x-data="{ menuOpen: false }" class="relative hidden md:flex" style="overflow: visible !important;">
                             <button @click="menuOpen = !menuOpen"
                                 class="flex items-center gap-2 p-1.5 pr-2.5 rounded-full transition-all duration-200 hover:bg-black/5 text-black border border-transparent hover:border-black/5 hover:shadow-sm"
-                                title="Account Menu">
+                                title="Account Menu" style="overflow: visible !important;">
                                 <?php if(auth()->user()->profile_picture): ?>
                                     <img src="<?php echo e(Storage::disk('supabase')->url(auth()->user()->profile_picture)); ?>"
                                         alt="<?php echo e(auth()->user()->name); ?>"
@@ -586,8 +586,8 @@ unset($__defined_vars); ?>
                                 x-transition:leave="transition ease-in duration-100"
                                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
-                                class="absolute right-0 w-64 rounded-xl shadow-2xl z-50 overflow-hidden"
-                                style="top: calc(100% + 0.75rem); background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(139, 0, 0, 0.1); display: none; z-index: 2147483649 !important;"
+                                class="absolute right-0 w-64 rounded-xl shadow-2xl"
+                                style="top: calc(100% + 0.75rem); background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(139, 0, 0, 0.1); display: none; z-index: 9999 !important; position: fixed !important; transform: translateX(0);"
                                 @click="if ($event.target.closest('a, button, form')) setTimeout(() => menuOpen = false, 100)">
                                 <!-- User Info Header -->
                                 <div class="dropdown-header px-4 py-4 flex items-center gap-3"
@@ -850,4 +850,5 @@ unset($__defined_vars); ?>
         </nav>
     </div>
 
-</div><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/components/navbar.blade.php ENDPATH**/ ?>
+</div>
+<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/components/navbar.blade.php ENDPATH**/ ?>

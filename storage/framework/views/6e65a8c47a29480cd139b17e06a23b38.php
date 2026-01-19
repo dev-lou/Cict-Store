@@ -98,7 +98,9 @@ unset($__defined_vars); ?>
         <link rel="stylesheet" href="<?php echo e(asset('css/button-interactions.css')); ?>">
     </noscript>
 
-    <!-- CSS-only animations (no external JS libraries) -->
+    <!-- GSAP Animation Library (lightweight, powerful) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 
     <style>
         /* Global mobile fixes */
@@ -954,6 +956,9 @@ unset($__defined_vars); ?>
 
     <!-- Minimal Animation (particles only for visual appeal) -->
     <script src="<?php echo e(asset('js/particles.js')); ?>" defer></script>
+    
+    <!-- Professional Modern Animations (GSAP) -->
+    <script src="<?php echo e(asset('js/modern-animations.js')); ?>" defer></script>
 
     <?php echo $__env->yieldPushContent('body-end'); ?>
 </body>

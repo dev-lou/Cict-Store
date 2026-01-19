@@ -421,6 +421,13 @@
                             $isOutOfStock = $stock == 0;
                         @endphp
                         <a href="{{ route('shop.show', $product->slug) }}" class="product-card reveal-on-scroll">
+                            {{-- Custom promotional badge (e.g., Christmas, Valentine) --}}
+                            @if($product->badge_text)
+                                <span class="product-badge"
+                                    style="background: {{ $product->badge_color ?? '#8B0000' }}; top: 12px; right: 12px; left: auto;">{{ $product->badge_text }}</span>
+                            @endif
+
+                            {{-- Stock status badges --}}
                             @if($isOutOfStock)
                                 <span class="product-badge danger">Out of Stock</span>
                             @elseif($isLowStock)
@@ -429,7 +436,12 @@
 
                             <div class="product-image">
                                 @if(!empty($product->image_url))
-                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async">
+                                    <img src="{{ $product->image_url }}" 
+                                         alt="{{ $product->name }}" 
+                                         loading="lazy" 
+                                         decoding="async"
+                                         width="400"
+                                         height="400">
                                 @else
                                     <div class="product-image-placeholder">No Image</div>
                                 @endif
@@ -444,9 +456,9 @@
                                             ->where('status', 'active')
                                             ->orderBy('price_modifier', 'asc')
                                             ->first();
-                                        
-                                        $displayPrice = $firstVariant 
-                                            ? $product->base_price + $firstVariant->price_modifier 
+
+                                        $displayPrice = $firstVariant
+                                            ? $product->base_price + $firstVariant->price_modifier
                                             : $product->base_price;
                                     @endphp
                                     ₱{{ number_format($displayPrice, 0) }}

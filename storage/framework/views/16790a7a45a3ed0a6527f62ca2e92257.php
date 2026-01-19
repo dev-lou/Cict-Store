@@ -430,6 +430,13 @@
                             $isOutOfStock = $stock == 0;
                         ?>
                         <a href="<?php echo e(route('shop.show', $product->slug)); ?>" class="product-card reveal-on-scroll">
+                            
+                            <?php if($product->badge_text): ?>
+                                <span class="product-badge"
+                                    style="background: <?php echo e($product->badge_color ?? '#8B0000'); ?>; top: 12px; right: 12px; left: auto;"><?php echo e($product->badge_text); ?></span>
+                            <?php endif; ?>
+
+                            
                             <?php if($isOutOfStock): ?>
                                 <span class="product-badge danger">Out of Stock</span>
                             <?php elseif($isLowStock): ?>
@@ -438,7 +445,12 @@
 
                             <div class="product-image">
                                 <?php if(!empty($product->image_url)): ?>
-                                    <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>" loading="lazy" decoding="async">
+                                    <img src="<?php echo e($product->image_url); ?>" 
+                                         alt="<?php echo e($product->name); ?>" 
+                                         loading="lazy" 
+                                         decoding="async"
+                                         width="400"
+                                         height="400">
                                 <?php else: ?>
                                     <div class="product-image-placeholder">No Image</div>
                                 <?php endif; ?>
@@ -453,9 +465,9 @@
                                             ->where('status', 'active')
                                             ->orderBy('price_modifier', 'asc')
                                             ->first();
-                                        
-                                        $displayPrice = $firstVariant 
-                                            ? $product->base_price + $firstVariant->price_modifier 
+
+                                        $displayPrice = $firstVariant
+                                            ? $product->base_price + $firstVariant->price_modifier
                                             : $product->base_price;
                                     ?>
                                     ₱<?php echo e(number_format($displayPrice, 0)); ?>

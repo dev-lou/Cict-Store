@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index(Request $request): \Illuminate\View\View
     {
         $query = Product::query()
-            ->select(['id', 'name', 'slug', 'description', 'base_price', 'image_path', 'current_stock', 'low_stock_threshold', 'status', 'created_at'])
+            ->select(['id', 'name', 'slug', 'description', 'base_price', 'image_path', 'current_stock', 'low_stock_threshold', 'status', 'badge_text', 'badge_color', 'created_at'])
             ->active();
 
         // Search functionality
@@ -30,7 +30,10 @@ class ProductController extends Controller
                 ->orWhere('description', 'like', "%{$search}%");
         }
 
-        // Sorting
+        // Products with badges are always pinned to top
+        $query->orderByRaw('CASE WHEN badge_text IS NOT NULL AND badge_text != \'\' THEN 0 ELSE 1 END');
+
+        // Secondary sorting
         $sort = $request->get('sort', 'newest');
         switch ($sort) {
             case 'price-low':

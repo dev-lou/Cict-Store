@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class OrderManageController extends Controller
 {
@@ -230,6 +231,9 @@ class OrderManageController extends Controller
         );
 
         $order->delete();
+        
+        // Clear order count cache
+        Cache::forget('admin.order_counts');
 
         return redirect()->back()
             ->with('success', "Order #{$orderNumber} has been deleted successfully.");
@@ -267,6 +271,9 @@ class OrderManageController extends Controller
             ['status' => $oldStatus],
             ['status' => $newStatus]
         );
+        
+        // Clear order count cache when status changes
+        Cache::forget('admin.order_counts');
 
         return redirect()->route('admin.orders.show', $order)
             ->with('success', "Order status updated from {$oldStatus} to {$newStatus}.");

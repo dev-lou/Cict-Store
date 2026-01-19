@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Order Model
@@ -71,6 +72,19 @@ class Order extends Model
      */
     protected static function booted(): void
     {
+        // Clear order count cache whenever an order is created, updated, or deleted
+        static::created(function () {
+            Cache::forget('admin.order_counts');
+        });
+        
+        static::updated(function () {
+            Cache::forget('admin.order_counts');
+        });
+        
+        static::deleted(function () {
+            Cache::forget('admin.order_counts');
+        });
+        
         static::updating(function (Order $order) {
             // Trigger notification when status changes
             if ($order->isDirty('status')) {
