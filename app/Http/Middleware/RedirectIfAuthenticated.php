@@ -20,7 +20,11 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect('/dashboard');
+                // Redirect admin users to admin dashboard, regular users to home
+                if (Auth::user()->isAdmin()) {
+                    return redirect('/admin/dashboard');
+                }
+                return redirect('/');
             }
         }
 
