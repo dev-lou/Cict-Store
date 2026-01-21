@@ -51,9 +51,17 @@ class ProductController extends Controller
                 break;
         }
 
-        // Pagination
+        // Pagination with caching (5 minutes)
         try {
-            $products = $query->paginate(12);
+            $cacheKey = 'shop_products_' . md5(serialize([
+                'search' => $request->search,
+                'sort' => $sort,
+                'page' => $request->get('page', 1)
+            ]));
+            
+            $products = Cache::remember($cacheKey, 300, function() use ($query) {
+                return $query->paginate(12);
+            });
         } catch (\Throwable $e) {
             logger()->warning('ProductController@index: DB unavailable, using Supabase REST fallback: ' . $e->getMessage());
             $fallback = new SupabaseFallback();
@@ -107,10 +115,11 @@ class ProductController extends Controller
             }
         }
 
-        // Get reviews with pagination
+        // Get reviews with pagination (optimized)
         try {
             $reviews = $product->reviews()
-                ->with('user')
+                ->with('user:id,name,profile_picture')
+                ->select('id', 'user_id', 'product_id', 'rating', 'comment', 'verified_purchase', 'created_at')
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
         } catch (\Throwable $e) {
@@ -121,13 +130,16 @@ class ProductController extends Controller
         // Calculate average rating
         $averageRating = $product->averageRating();
 
-        // Get related products (active only)
+        // Get related products (active only, cached 10 minutes)
         try {
-            $relatedProducts = Product::query()
-                ->active()
-                ->where('id', '!=', $product->id)
-                ->limit(4)
-                ->get();
+            $relatedProducts = Cache::remember('related_products_' . $product->id, 600, function() use ($product) {
+                return Product::query()
+                    ->active()
+                    ->select('id', 'name', 'slug', 'base_price', 'image_path', 'badge_text', 'badge_color')
+                    ->where('id', '!=', $product->id)
+                    ->limit(4)
+                    ->get();
+            });
         } catch (\Throwable $e) {
             logger()->warning('ProductController@show: related products fallback: ' . $e->getMessage());
             $relatedProducts = Cache::get('home.featured_products', collect([]));

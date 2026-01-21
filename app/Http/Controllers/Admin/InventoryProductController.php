@@ -295,6 +295,12 @@ class InventoryProductController extends Controller
             // Clear homepage caches so featured products show updates in near-real-time
             Cache::forget('homepage.featured_products');
             Cache::forget('home.featured_products');
+            
+            // Clear shop page caches so new products appear immediately
+            $this->clearShopCaches();
+            
+            // Clear product detail cache for this product
+            Cache::forget('product_detail_' . $product->id);
 
             $variantMessage = !empty($variantsData) ? ' with ' . count($variantsData) . ' variant(s)' : '';
             return redirect()->route('admin.inventory.index')
@@ -531,6 +537,12 @@ class InventoryProductController extends Controller
             // Clear homepage caches so featured products show updates in near-real-time
             Cache::forget('homepage.featured_products');
             Cache::forget('home.featured_products');
+            
+            // Clear shop page caches so updates appear immediately
+            $this->clearShopCaches();
+            
+            // Clear product detail cache for this product
+            Cache::forget('product_detail_' . $product->id);
 
             return redirect()->route('admin.inventory.index')
                 ->with('success', 'Product and variants updated successfully!');
@@ -654,6 +666,34 @@ class InventoryProductController extends Controller
                 'error' => $e->getMessage(),
             ]);
             return false;
+        }
+    }
+    
+    /**
+     * Clear all shop page cache keys.
+     * 
+     * This clears caches for different search terms, sort orders, and pagination.
+     * Called when products are created/updated/deleted to ensure customers see fresh data.
+     *
+     * @return void
+     */
+    private function clearShopCaches(): void
+    {
+        try {
+            // Clear cache for all common shop page combinations
+            // We can't know all possible search terms, so we clear what we track
+            
+            // Clear default shop listing (no filters)
+            for ($page = 1; $page <= 10; $page++) {
+                Cache::forget('shop_listing___page_' . $page);
+                Cache::forget('shop_listing__latest_page_' . $page);
+                Cache::forget('shop_listing__price_low_page_' . $page);
+                Cache::forget('shop_listing__price_high_page_' . $page);
+            }
+            
+            \Log::info('Cleared shop page caches after product update');
+        } catch (\Exception $e) {
+            \Log::warning('Failed to clear shop caches', ['error' => $e->getMessage()]);
         }
     }
 }
