@@ -82,10 +82,10 @@
                             <p class="text-xs mt-1" style="color: #b0bcc4;">Change the order status</p>
                         </div>
                     </div>
-                    <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" class="space-y-4">
+                    <form id="updateStatusForm" action="{{ route('admin.orders.update-status', $order) }}" method="POST" class="space-y-4" onsubmit="return confirmStatusUpdate(event)">
                         @csrf
                         @method('PATCH')
-                        <select name="status" class="w-full rounded-lg px-4 py-3 font-semibold text-base" style="border: 2px solid #444; background-color: #0f0707; color: #ffffff;">
+                        <select id="statusSelect" name="status" class="w-full rounded-lg px-4 py-3 font-semibold text-base" style="border: 2px solid #444; background-color: #0f0707; color: #ffffff;">
                             <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>⏳ Pending</option>
                             <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>🔄 Processing</option>
                             <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>✅ Completed</option>
@@ -184,6 +184,69 @@
 </script>
 @endif
 <script>
+    function confirmStatusUpdate(event) {
+        event.preventDefault();
+        const currentStatus = '{{ $order->status }}';
+        const newStatus = document.getElementById('statusSelect').value;
+        
+        if (currentStatus === newStatus) {
+            Swal.fire({
+                title: 'No Change',
+                text: 'The selected status is the same as the current status.',
+                icon: 'info',
+                confirmButtonColor: '#3b82f6',
+                background: '#0f1419',
+                color: '#ffffff',
+                didOpen: () => {
+                    document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+                }
+            });
+            return false;
+        }
+        
+        const statusEmoji = {
+            'pending': '⏳',
+            'processing': '🔄',
+            'completed': '✅',
+            'cancelled': '❌'
+        };
+        
+        Swal.fire({
+            title: 'Update Order Status?',
+            html: `Change status from <strong>${statusEmoji[currentStatus]} ${currentStatus.toUpperCase()}</strong> to <strong>${statusEmoji[newStatus]} ${newStatus.toUpperCase()}</strong>`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#4caf50',
+            cancelButtonColor: '#666',
+            confirmButtonText: 'Yes, Update',
+            cancelButtonText: 'Cancel',
+            background: '#0f1419',
+            color: '#ffffff',
+            didOpen: () => {
+                document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Updating...',
+                    text: 'Please wait while the status is being updated.',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+                    },
+                    background: '#0f1419',
+                    color: '#ffffff'
+                });
+                document.getElementById('updateStatusForm').submit();
+            }
+        });
+        
+        return false;
+    }
+    
     function deleteOrder(orderId) {
         Swal.fire({
             title: 'Delete Order?',

@@ -73,7 +73,7 @@ class UserManageController extends Controller
         AuditLog::create([
             'user_id' => auth()->id(),
             'action' => 'create',
-            'model' => 'User',
+            'model_type' => 'User',
             'model_id' => $user->id,
             'new_values' => [
                 'name' => $user->name,
@@ -143,7 +143,7 @@ class UserManageController extends Controller
             AuditLog::create([
                 'user_id' => auth()->id(),
                 'action' => 'update',
-                'model' => 'User',
+                'model_type' => 'User',
                 'model_id' => $user->id,
                 'old_values' => [],
                 'new_values' => $changes,
@@ -174,7 +174,7 @@ class UserManageController extends Controller
         AuditLog::create([
             'user_id' => auth()->id(),
             'action' => 'delete',
-            'model' => 'User',
+            'model_type' => 'User',
             'model_id' => $user->id,
             'old_values' => [
                 'name' => $userName,
@@ -290,7 +290,7 @@ class UserManageController extends Controller
             AuditLog::create([
                 'user_id' => auth()->id(),
                 'action' => 'update',
-                'model' => 'User',
+                'model_type' => 'User',
                 'model_id' => $user->id,
                 'new_values' => ['profile_picture' => 'Updated'],
                 'ip_address' => request()->ip(),
@@ -336,7 +336,7 @@ class UserManageController extends Controller
             AuditLog::create([
                 'user_id' => auth()->id(),
                 'action' => 'update',
-                'model' => 'Setting',
+                'model_type' => 'Setting',
                 'model_id' => $setting->id,
                 'new_values' => ['logo' => $path],
                 'ip_address' => request()->ip(),
@@ -377,7 +377,7 @@ class UserManageController extends Controller
             AuditLog::create([
                 'user_id' => auth()->id(),
                 'action' => 'update',
-                'model' => 'Setting',
+                'model_type' => 'Setting',
                 'model_id' => $setting->id,
                 'new_values' => ['favicon' => $path],
                 'ip_address' => request()->ip(),

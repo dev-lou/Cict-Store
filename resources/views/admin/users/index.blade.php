@@ -217,7 +217,13 @@
             title: 'Success!',
             text: '{{ session('success') }}',
             timer: 3000,
-            showConfirmButton: false
+            showConfirmButton: false,
+            background: '#0f1419',
+            color: '#ffffff',
+            iconColor: '#4caf50',
+            didOpen: () => {
+                document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+            }
         });
     @endif
 
@@ -226,7 +232,13 @@
             icon: 'error',
             title: 'Error!',
             text: '{{ session('error') }}',
-            confirmButtonColor: '#ef4444'
+            confirmButtonColor: '#ef4444',
+            background: '#0f1419',
+            color: '#ffffff',
+            iconColor: '#ef4444',
+            didOpen: () => {
+                document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+            }
         });
     @endif
 </script>

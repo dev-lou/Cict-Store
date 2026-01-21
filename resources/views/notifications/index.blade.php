@@ -77,8 +77,8 @@
                 <article class="card {{ $notification->is_read ? 'read' : 'unread' }}">
                     <div class="icon" style="background: {{ $tint }};">{{ $icon }}</div>
                     <div class="content">
-                        <h3>{{ $notification->title }}</h3>
-                        <p>{{ $notification->message }}</p>
+                        <h3>{{ $notification->data['title'] ?? 'Notification' }}</h3>
+                        <p>{{ $notification->data['message'] ?? 'You have a new notification' }}</p>
                         <div class="meta">
                             <span>{{ $notification->created_at->diffForHumans() }}</span>
                             @if($notification->data && isset($notification->data['order_id']))

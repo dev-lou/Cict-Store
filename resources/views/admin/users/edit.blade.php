@@ -231,6 +231,7 @@
         }
     </style>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
     <script>
         function handleAdminProfilePictureUpload(input, userId) {
             if (input.files && input.files[0]) {
@@ -248,27 +249,90 @@
                     if (data.success) {
                         const preview = document.getElementById('profile-preview');
                         if (preview.tagName === 'IMG') {
-                            preview.src = data.url + '?t=' + new Date().getTime();
+                            preview.src = data.picture_url + '?t=' + new Date().getTime();
                         } else {
                             const img = document.createElement('img');
                             img.id = 'profile-preview';
-                            img.src = data.url + '?t=' + new Date().getTime();
-                            img.className = 'mx-auto';
-                            img.style = 'width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #0f6fdd;';
+                            img.src = data.picture_url + '?t=' + new Date().getTime();
+                            img.style = 'width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #0f6fdd; box-shadow: 0 4px 12px rgba(15, 111, 221, 0.3);';
                             preview.parentNode.replaceChild(img, preview);
                         }
                         
-                        if (typeof Swal !== 'undefined') {
-                            Swal.fire({ icon: 'success', title: 'Success', text: data.message, timer: 2000 });
-                        }
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false,
+                            background: '#0f1419',
+                            color: '#ffffff',
+                            iconColor: '#4caf50',
+                            didOpen: () => {
+                                document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: data.message || 'Failed to upload image',
+                            confirmButtonColor: '#ef4444',
+                            background: '#0f1419',
+                            color: '#ffffff',
+                            iconColor: '#ef4444',
+                            didOpen: () => {
+                                document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+                            }
+                        });
                     }
                 })
                 .catch(error => {
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to upload image' });
-                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to upload image. Please try again.',
+                        confirmButtonColor: '#ef4444',
+                        background: '#0f1419',
+                        color: '#ffffff',
+                        iconColor: '#ef4444',
+                        didOpen: () => {
+                            document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+                        }
+                    });
                 });
             }
         }
+
+        // Success/error messages from session
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                timer: 3000,
+                showConfirmButton: false,
+                background: '#0f1419',
+                color: '#ffffff',
+                iconColor: '#4caf50',
+                didOpen: () => {
+                    document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+                }
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#ef4444',
+                background: '#0f1419',
+                color: '#ffffff',
+                iconColor: '#ef4444',
+                didOpen: () => {
+                    document.querySelector('.swal2-popup').style.border = '3px solid #b0bcc4';
+                }
+            });
+        @endif
     </script>
 </x-admin-layout>

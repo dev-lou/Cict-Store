@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $user_id
  * @property string $type
- * @property string $title
- * @property string $message
+ * @property string|null $notifiable_type
+ * @property int|null $notifiable_id
  * @property array|null $data
  * @property bool $is_read
  * @property \Illuminate\Support\Carbon|null $read_at
@@ -27,8 +27,8 @@ class Notification extends Model
     protected $fillable = [
         'user_id',
         'type',
-        'title',
-        'message',
+        'notifiable_type',
+        'notifiable_id',
         'data',
         'is_read',
         'read_at',

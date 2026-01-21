@@ -95,7 +95,7 @@
                                     {{ ucfirst($log->action) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-white font-semibold">{{ $log->model }}</td>
+                            <td class="px-6 py-4 text-white font-semibold">{{ $log->model_type }}</td>
                             <td class="px-6 py-4" style="color: rgba(255, 255, 255, 0.6);">#{{ $log->model_id }}</td>
                             <td class="px-6 py-4 text-center">
                                 <x-admin.button 

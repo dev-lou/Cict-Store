@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description');
             $table->string('icon')->default('🖨️');
-            $table->decimal('price_primary', 10, 2)->nullable();
-            $table->decimal('price_secondary', 10, 2)->nullable();
+            $table->decimal('price_bw', 10, 2)->nullable();
+            $table->decimal('price_color', 10, 2)->nullable();
             $table->string('price_label')->nullable();
             $table->string('category')->nullable();
             $table->integer('sort_order')->default(0);

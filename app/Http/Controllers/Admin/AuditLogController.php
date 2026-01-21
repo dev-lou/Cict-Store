@@ -14,7 +14,7 @@ class AuditLogController extends Controller
     public function index(Request $request)
     {
         $query = AuditLog::with('user:id,name')
-            ->select('id', 'user_id', 'action', 'model', 'model_id', 'old_values', 'new_values', 'created_at')
+            ->select('id', 'user_id', 'action', 'model_type', 'model_id', 'old_values', 'new_values', 'created_at')
             ->orderBy('created_at', 'desc');
 
         // Filter by action if provided
@@ -24,7 +24,7 @@ class AuditLogController extends Controller
 
         // Filter by model if provided
         if ($request->filled('model')) {
-            $query->where('model', $request->model);
+            $query->where('model_type', $request->model);
         }
 
         // Search by user name if provided
@@ -38,7 +38,7 @@ class AuditLogController extends Controller
         
         // Cache distinct models for 10 minutes
         $models = \Cache::remember('audit_log_models', 600, function() {
-            return AuditLog::distinct('model')->pluck('model');
+            return AuditLog::distinct('model_type')->pluck('model_type');
         });
 
         return view('admin.audit-logs.index', [
