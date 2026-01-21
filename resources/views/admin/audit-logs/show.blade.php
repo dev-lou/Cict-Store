@@ -66,7 +66,7 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium" style="color: #999;">Model Type</p>
-                            <p class="text-lg font-bold mt-1" style="color: #ffffff;">{{ $log->model }}</p>
+                            <p class="text-lg font-bold mt-1" style="color: #ffffff;">{{ $log->model_type }}</p>
                         </div>
                     </div>
 

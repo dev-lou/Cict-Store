@@ -31,9 +31,11 @@ class NotificationService
         Notification::create([
             'user_id' => $order->user_id,
             'type' => 'order_status_changed',
-            'title' => $title,
-            'message' => "{$message} (Order #{$order->order_number})",
+            'notifiable_type' => 'App\\Models\\User',
+            'notifiable_id' => $order->user_id,
             'data' => [
+                'title' => $title,
+                'message' => "{$message} (Order #{$order->order_number})",
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'old_status' => $oldStatus,
@@ -50,9 +52,11 @@ class NotificationService
         Notification::create([
             'user_id' => $order->user_id,
             'type' => 'order_completed',
-            'title' => 'Thank You for Your Order! 🎉',
-            'message' => "Your order #{$order->order_number} is ready for pickup at the CICT Student Council Office. Please bring your student ID and order number.",
+            'notifiable_type' => 'App\\Models\\User',
+            'notifiable_id' => $order->user_id,
             'data' => [
+                'title' => 'Thank You for Your Order! 🎉',
+                'message' => "Your order #{$order->order_number} is ready for pickup at the CICT Student Council Office. Please bring your student ID and order number.",
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'pickup_location' => 'CICT Student Council Office',
@@ -72,9 +76,11 @@ class NotificationService
         Notification::create([
             'user_id' => $order->assigned_staff_id,
             'type' => 'order_assigned',
-            'title' => 'New Order Assigned',
-            'message' => "You have been assigned to order #{$order->order_number}. Total: ₱" . number_format($order->total, 2),
+            'notifiable_type' => 'App\\Models\\User',
+            'notifiable_id' => $order->assigned_staff_id,
             'data' => [
+                'title' => 'New Order Assigned',
+                'message' => "You have been assigned to order #{$order->order_number}. Total: ₱" . number_format($order->total, 2),
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'customer_name' => $order->user->name ?? 'Unknown',
@@ -90,9 +96,11 @@ class NotificationService
         Notification::create([
             'user_id' => $userId,
             'type' => 'low_stock_alert',
-            'title' => '⚠️ Low Stock Alert',
-            'message' => "{$productName} is running low on stock. Only {$currentStock} units remaining.",
+            'notifiable_type' => 'App\\Models\\User',
+            'notifiable_id' => $userId,
             'data' => [
+                'title' => '⚠️ Low Stock Alert',
+                'message' => "{$productName} is running low on stock. Only {$currentStock} units remaining.",
                 'product_name' => $productName,
                 'current_stock' => $currentStock,
             ],

@@ -267,8 +267,8 @@
                                             @endif
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <p class="font-bold text-sm" style="color: #1a1a1a;">{{ $notification->title }}</p>
-                                            <p class="text-xs text-gray-600 mt-1">{{ $notification->message }}</p>
+                                            <p class="font-bold text-sm" style="color: #1a1a1a;">{{ $notification->data['title'] ?? 'Notification' }}</p>
+                                            <p class="text-xs text-gray-600 mt-1">{{ $notification->data['message'] ?? 'You have a new notification' }}</p>
                                             <p class="text-xs text-gray-400 mt-2">{{ $notification->created_at->diffForHumans() }}</p>
                                         </div>
                                     </div>

@@ -7,15 +7,31 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuditLog extends Model
 {
+    /**
+     * Indicates if the model should use timestamps.
+     */
+    public $timestamps = false;
+
+    /**
+     * The attributes that should be set for the 'created_at' timestamp.
+     */
+    const CREATED_AT = 'created_at';
+
+    /**
+     * The attributes that should not be set for the 'updated_at' timestamp.
+     */
+    const UPDATED_AT = null;
+
     protected $fillable = [
         'user_id',
         'action',
-        'model',
+        'model_type',
         'model_id',
         'old_values',
         'new_values',
         'ip_address',
         'user_agent',
+        'created_at',
     ];
 
     protected $casts = [
@@ -45,12 +61,13 @@ class AuditLog extends Model
         return self::create([
             'user_id' => auth()->id(),
             'action' => $action,
-            'model' => $model,
+            'model_type' => $model,
             'model_id' => $modelId,
             'old_values' => $oldValues,
             'new_values' => $newValues,
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
+            'created_at' => now(),
         ]);
     }
 }
