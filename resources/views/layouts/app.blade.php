@@ -371,10 +371,10 @@
             type: 'success',
             init() {
                 @if(session('success'))
-                    this.showToast('{{ session('success') }}', 'success');
+                    this.showToast(@json(session('success')), 'success');
                 @endif
                 @if(session('error'))
-                    this.showToast('{{ session('error') }}', 'error');
+                    this.showToast(@json(session('error')), 'error');
                 @endif
             },
             showToast(msg, toastType = 'success') {
