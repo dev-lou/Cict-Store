@@ -509,7 +509,7 @@
             </div>
 
             <div class="brand-footer">
-                © 2026 CICT Dingle. All rights reserved.
+                © {{ date('Y') }} ISUFST CICT. All rights reserved.
             </div>
         </div>
 
