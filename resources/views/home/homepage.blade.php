@@ -603,11 +603,11 @@
                 <span>ISUFST DINGLE CAMPUS</span>
             </div>
             <h1 class="hero-title gsap-hero-title">
-                CICT Dingle Store
+                ISUFST CICT
                 <span class="hero-title-subtitle">Campus Merchandise & Student Services</span>
             </h1>
             <p class="hero-subtitle gsap-hero-subtitle">
-                Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo
+                Official ISUFST CICT Student Council Store at Dingle Campus
             </p>
             <div class="hero-buttons">
                 <a href="{{ route('shop.index') }}" class="btn-primary">
