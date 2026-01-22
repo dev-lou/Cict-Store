@@ -95,7 +95,7 @@
             margin-bottom: 24px;
             letter-spacing: -1.5px;
         }
-        
+
         .hero-title-subtitle {
             display: block;
             font-size: clamp(24px, 4vw, 36px);
@@ -482,7 +482,7 @@
                 padding: 0 16px;
             }
 
-            .about-image > div {
+            .about-image>div {
                 max-width: 230px !important;
             }
         }
@@ -604,7 +604,7 @@
     </style>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero hero-section">
         <div class="hero-content">
             <div class="hero-badge">
                 <span>🎓</span>
@@ -647,21 +647,17 @@
                             ->where('status', 'active')
                             ->orderBy('price_modifier', 'asc')
                             ->first();
-                        
+
                         // Calculate display price: if variant exists, show base_price + price_modifier, else show base_price
-                        $displayPrice = $firstVariant 
-                            ? $product->base_price + $firstVariant->price_modifier 
+                        $displayPrice = $firstVariant
+                            ? $product->base_price + $firstVariant->price_modifier
                             : $product->base_price;
                     ?>
                     <a href="<?php echo e(route('shop.show', $product->slug)); ?>" class="product-card reveal-on-scroll">
                         <div class="product-image">
                             <?php if(!empty($product->image_url)): ?>
-                                <img src="<?php echo e($product->image_url); ?>" 
-                                     alt="<?php echo e($product->name); ?>" 
-                                     loading="lazy" 
-                                     decoding="async"
-                                     width="400"
-                                     height="400">
+                                <img src="<?php echo e($product->image_url); ?>" alt="<?php echo e($product->name); ?>" loading="lazy" decoding="async"
+                                    width="400" height="400">
                             <?php else: ?>
                                 <div
                                     style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
@@ -738,21 +734,26 @@
         <div class="section-container">
             <div class="about-grid">
                 <div class="about-image reveal-on-scroll">
-                    <div style="width: 100%; max-width: 340px; aspect-ratio: 1; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; overflow: hidden; background: #f1f5f9; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);">
-                        <img src="<?php echo e($logoUrl); ?>" alt="<?php echo e(config('app.name', 'CICT Dingle')); ?> Logo" loading="lazy" decoding="async"
+                    <div
+                        style="width: 100%; max-width: 340px; aspect-ratio: 1; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; overflow: hidden; background: #f1f5f9; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);">
+                        <img src="<?php echo e($logoUrl); ?>" alt="<?php echo e(config('app.name', 'CICT Dingle')); ?> Logo" loading="lazy"
+                            decoding="async"
                             style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
                     </div>
                 </div>
                 <div class="about-content reveal-on-scroll">
                     <h2>About <?php echo e(config('app.name', 'CICT Dingle')); ?></h2>
                     <p>
-                        Your one-stop campus shop at ISUFST Dingle Campus. We're the official merchandise and services hub 
-                        run by the CICT Student Council, offering quality campus merch, professional printing, and digital solutions 
-                        that make student life easier.
+                        Welcome to your one-stop campus hub at ISUFST Dingle Campus. We are the official merchandise and
+                        services store
+                        operated by the CICT Student Council, dedicated to providing quality campus gear, professional
+                        printing,
+                        and digital solutions that make student life easier.
                     </p>
                     <p>
-                        Every purchase supports student programs and campus initiatives. From custom apparel to print services, 
-                        we deliver excellence for the academic community.
+                        Every purchase you make directly supports student programs and campus initiatives. From custom
+                        apparel to
+                        essential document services, we deliver excellence for the entire ISUFST academic community.
                     </p>
                     <a href="<?php echo e(route('contact.index')); ?>" class="btn-outline">
                         Get in Touch

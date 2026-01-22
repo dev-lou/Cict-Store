@@ -38,7 +38,6 @@ class NotificationController extends Controller
         }
 
         $notifications = Notification::where('user_id', auth()->id())
-            ->unread()
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get()
@@ -48,12 +47,15 @@ class NotificationController extends Controller
                 if ($notification->data && isset($notification->data['order_id'])) {
                     $link = route('orders.show', $notification->data['order_id']);
                 }
-                
+
+                $data = $notification->data ?? [];
+
                 return [
                     'id' => $notification->id,
                     'type' => $notification->type,
-                    'title' => $notification->title,
-                    'message' => $notification->message,
+                    'title' => $data['title'] ?? 'Notification',
+                    'message' => $data['message'] ?? 'You have a new notification',
+                    'is_read' => $notification->is_read, // Add is_read status
                     'time' => $notification->created_at->diffForHumans(),
                     'link' => $link,
                 ];
@@ -61,7 +63,7 @@ class NotificationController extends Controller
 
         return response()->json([
             'notifications' => $notifications,
-            'unread_count' => NotificationService::getUnreadCount(auth()->id()),
+            'unread_count' => Notification::where('user_id', auth()->id())->unread()->count(),
         ]);
     }
 

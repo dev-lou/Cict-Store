@@ -3,7 +3,7 @@
 
     <!-- Decorative Red Header Banner (Behind Navbar) -->
     <div
-        style="position: absolute; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); z-index: 0; overflow: hidden;">
+        style="position: absolute; top: 0; left: 0; right: 0; height: 110px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); z-index: 0; overflow: hidden;">
         <!-- Decorative Pattern Overlay -->
         <div style="position: absolute; inset: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=\"
             60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\"
@@ -273,16 +273,20 @@
                 <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
                     <div
                         style="width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg,#8B0000 0%,#A00000 100%); color:#fff; display:grid; place-items:center; font-size:32px; box-shadow: 0 8px 20px rgba(139, 0, 0, 0.25);">
-                        {{ $service->icon ?? '🖨️' }}</div>
+                        {{ $service->icon ?? '🖨️' }}
+                    </div>
                     <div>
                         <h1 style="margin:0; font-size:2rem; font-weight:900; color:#1E293B; letter-spacing:-0.5px;">
-                            {{ $service->title }}</h1>
+                            {{ $service->title }}
+                        </h1>
                         <div style="color:#667085; font-size:15px; font-weight:600; margin-top:4px;">
-                            {{ $service->category ?? 'General' }}</div>
+                            {{ $service->category ?? 'General' }}
+                        </div>
                     </div>
                 </div>
                 <p style="margin:0; color:#475569; line-height:1.7; font-size:15.5px; font-weight:500;">
-                    {{ $service->description }}</p>
+                    {{ $service->description }}
+                </p>
             </div>
 
             @if($options->count())
@@ -308,12 +312,14 @@
                                 <div class="price-item">
                                     <div class="price-item-label">{{ $option->price_primary_label ?? 'Primary' }}</div>
                                     <div class="price-item-value">
-                                        {{ $option->price_primary ? '₱' . number_format($option->price_primary, 2) : '—' }}</div>
+                                        {{ $option->price_primary ? '₱' . number_format($option->price_primary, 2) : '—' }}
+                                    </div>
                                 </div>
                                 <div class="price-item">
                                     <div class="price-item-label">{{ $option->price_secondary_label ?? 'Secondary' }}</div>
                                     <div class="price-item-value">
-                                        {{ $option->price_secondary ? '₱' . number_format($option->price_secondary, 2) : '—' }}</div>
+                                        {{ $option->price_secondary ? '₱' . number_format($option->price_secondary, 2) : '—' }}
+                                    </div>
                                 </div>
                             </div>
                         </div>

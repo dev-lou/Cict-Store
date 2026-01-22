@@ -437,32 +437,33 @@ unset($__defined_vars); ?>
 
                         <!-- Notification Bell (Visible on both mobile and desktop) -->
                         <div x-data="{
-                                                                open: false,
-                                                                unreadCount: <?php echo e(auth()->user()->unreadNotifications()->count()); ?>,
-                                                                notifications: [],
-                                                                async fetchNotifications() {
-                                                                    try {
-                                                                        const response = await fetch('/notifications/unread');
-                                                                        const data = await response.json();
-                                                                        this.unreadCount = data.unread_count || 0;
-                                                                        this.notifications = data.notifications || [];
-                                                                    } catch (error) {
-                                                                        console.error('Failed to fetch notifications:', error);
-                                                                    }
-                                                                },
-                                                                async markAsRead(id) {
-                                                                    try {
-                                                                        await fetch(`/notifications/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>' } });
-                                                                        this.fetchNotifications();
-                                                                    } catch (error) {
-                                                                        console.error('Failed to mark notification as read:', error);
-                                                                    }
-                                                                },
-                                                                init() {
-                                                                    this.fetchNotifications();
-                                                                    setInterval(() => this.fetchNotifications(), 60000);
-                                                                }
-                                                            }" class="relative z-50" style="overflow: visible !important;">
+                                                                        open: false,
+                                                                        unreadCount: <?php echo e(auth()->user()->unreadNotifications()->count()); ?>,
+                                                                        notifications: [],
+                                                                        async fetchNotifications() {
+                                                                            try {
+                                                                                const response = await fetch('/notifications/unread');
+                                                                                const data = await response.json();
+                                                                                this.unreadCount = data.unread_count || 0;
+                                                                                this.notifications = data.notifications || [];
+                                                                            } catch (error) {
+                                                                                console.error('Failed to fetch notifications:', error);
+                                                                            }
+                                                                        },
+                                                                        async markAsRead(id) {
+                                                                            try {
+                                                                                await fetch(`/notifications/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>' } });
+                                                                                this.fetchNotifications();
+                                                                            } catch (error) {
+                                                                                console.error('Failed to mark notification as read:', error);
+                                                                            }
+                                                                        },
+                                                                        init() {
+                                                                            this.fetchNotifications();
+                                                                            setInterval(() => this.fetchNotifications(), 60000);
+                                                                        }
+                                                                    }" class="relative z-50"
+                            style="overflow: visible !important;">
                             <button @click="open = !open" :aria-expanded="open" aria-controls="notifications-panel"
                                 class="relative p-2.5 rounded-lg transition-all duration-200 hover:bg-black/10 text-black touch-target no-animate"
                                 style="overflow: visible !important;" title="Notifications">
@@ -483,8 +484,8 @@ unset($__defined_vars); ?>
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
                                 id="notifications-panel"
-                                class="notifications-dropdown absolute right-0 mt-3 rounded-xl shadow-xl"
-                                role="dialog" aria-label="Notifications" :aria-hidden="!open"
+                                class="notifications-dropdown absolute right-0 mt-3 rounded-xl shadow-xl" role="dialog"
+                                aria-label="Notifications" :aria-hidden="!open"
                                 style="width: min(480px, calc(100vw - 32px)); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); display: none; z-index: 9999 !important; position: fixed !important; top: 60px !important; transform: translateX(0);">
                                 <div class="px-4 py-3 flex items-center justify-between"
                                     style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); background: rgba(218, 165, 32, 0.1);">
@@ -515,24 +516,28 @@ unset($__defined_vars); ?>
                                     </template>
 
                                     <template x-for="(notification, index) in notifications.slice(0, 6)"
-                                        :key="notification.id">
+                                        :key="notification.id + '-' + index">
                                         <div @click="markAsRead(notification.id); open = false; window.location.href = notification.link || '#'"
                                             class="px-4 py-3 hover:bg-black/5 cursor-pointer transition-colors"
+                                            :class="{ 'opacity-75 bg-gray-50': notification.is_read }"
                                             style="border-bottom: 1px solid rgba(0, 0, 0, 0.05);">
                                             <div class="flex items-start gap-3">
                                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                                                    :class="{ 'opacity-50 grayscale': notification.is_read }"
                                                     :style="notification.type === 'order' ? 'background: #3b82f6;' : 
-                                                                                            notification.type === 'stock' ? 'background: #f59e0b;' :
-                                                                                            notification.type === 'review' ? 'background: #10b981;' : 
-                                                                                            'background: #6366f1;'">
+                                                                                                    notification.type === 'stock' ? 'background: #f59e0b;' :
+                                                                                                    notification.type === 'review' ? 'background: #10b981;' : 
+                                                                                                    'background: #6366f1;'">
                                                     <span x-text="notification.type === 'order' ? '📦' : 
-                                                                                                 notification.type === 'stock' ? '⚠️' :
-                                                                                                 notification.type === 'review' ? '⭐' : 
-                                                                                                 '🔔'"
+                                                                                                         notification.type === 'stock' ? '⚠️' :
+                                                                                                         notification.type === 'review' ? '⭐' : 
+                                                                                                         '🔔'"
                                                         class="text-xl"></span>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
-                                                    <p class="text-sm font-semibold text-black" x-text="notification.title">
+                                                    <p class="text-sm text-black"
+                                                        :class="notification.is_read ? 'font-medium' : 'font-bold'"
+                                                        x-text="notification.title">
                                                     </p>
                                                     <p class="text-xs text-gray-600 mt-1" x-text="notification.message"></p>
                                                     <p class="text-xs text-gray-400 mt-1" x-text="notification.time"></p>
@@ -555,7 +560,8 @@ unset($__defined_vars); ?>
 
                     <!-- User Menu / Auth Dropdown (Desktop only) -->
                     <?php if(auth()->guard()->check()): ?>
-                        <div x-data="{ menuOpen: false }" class="relative hidden md:flex" style="overflow: visible !important;">
+                        <div x-data="{ menuOpen: false }" class="relative hidden md:flex"
+                            style="overflow: visible !important;">
                             <button @click="menuOpen = !menuOpen"
                                 class="flex items-center gap-2 p-1.5 pr-2.5 rounded-full transition-all duration-200 hover:bg-black/5 text-black border border-transparent hover:border-black/5 hover:shadow-sm"
                                 title="Account Menu" style="overflow: visible !important;">
@@ -850,5 +856,4 @@ unset($__defined_vars); ?>
         </nav>
     </div>
 
-</div>
-<?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/components/navbar.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\xampp\htdocs\laravel_igp\resources\views/components/navbar.blade.php ENDPATH**/ ?>

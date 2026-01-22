@@ -257,6 +257,7 @@
             transition: all 0.2s ease;
             flex-shrink: 0;
         }
+
         .toggle::after {
             content: '';
             position: absolute;
@@ -268,9 +269,11 @@
             background: var(--text-primary);
             transition: all 0.2s ease;
         }
+
         .toggle.active {
             background: var(--success);
         }
+
         .toggle.active::after {
             left: 27px;
         }
@@ -286,10 +289,12 @@
             gap: 14px;
             transition: all 0.2s ease;
         }
+
         .officer-card:hover {
             border-color: var(--border-hover);
             transform: translateY(-2px);
         }
+
         .avatar {
             width: 48px;
             height: 48px;
@@ -315,9 +320,11 @@
             z-index: 50;
             backdrop-filter: blur(4px);
         }
+
         .modal-overlay.active {
             display: flex;
         }
+
         .modal-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -328,6 +335,7 @@
             overflow: auto;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
+
         .modal-header {
             padding: 20px 24px;
             border-bottom: 1px solid var(--border);
@@ -338,10 +346,12 @@
             font-weight: 600;
             font-size: 18px;
         }
+
         .modal-body {
             padding: 24px;
             color: var(--text-primary);
         }
+
         .modal-footer {
             padding: 16px 24px;
             border-top: 1px solid var(--border);
@@ -350,6 +360,7 @@
             justify-content: flex-end;
             background: rgba(15, 23, 42, 0.5);
         }
+
         .input {
             width: 100%;
             background: var(--bg-main);
@@ -360,12 +371,14 @@
             font-size: 14px;
             transition: all 0.2s ease;
         }
+
         select.input,
         select.input:focus,
         select.input:hover {
             color: var(--text-primary) !important;
             background-color: var(--bg-main) !important;
         }
+
         select.input option,
         select.input option:checked,
         select.input option:active,
@@ -373,11 +386,13 @@
             color: var(--text-primary) !important;
             background-color: var(--bg-card) !important;
         }
+
         .input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
+
         .label {
             font-weight: 600;
             color: var(--text-primary);
@@ -385,6 +400,7 @@
             display: block;
             font-size: 13px;
         }
+
         .btn-primary {
             background: var(--primary);
             color: white;
@@ -396,9 +412,11 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+
         .btn-primary:hover {
             background: var(--primary-hover);
         }
+
         .btn-secondary {
             background: transparent;
             color: var(--text-secondary);
@@ -410,6 +428,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+
         .btn-secondary:hover {
             border-color: var(--border-hover);
             color: var(--text-primary);
@@ -420,6 +439,7 @@
             grid-template-columns: repeat(8, 1fr);
             gap: 8px;
         }
+
         .icon-pick {
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -429,10 +449,12 @@
             transition: all 0.2s ease;
             font-size: 20px;
         }
+
         .icon-pick:hover {
             border-color: var(--primary);
             background: rgba(59, 130, 246, 0.05);
         }
+
         .icon-pick.selected {
             border-color: var(--primary);
             background: rgba(59, 130, 246, 0.1);
@@ -472,7 +494,8 @@
                     <p class="page-subtitle">Manage services and their options</p>
                 </div>
                 <div class="flex gap-2">
-                    <a href="{{ route('admin.services.create') }}" class="btn-primary" style="text-decoration: none; display: inline-flex; align-items: center;">Add Service</a>
+                    <a href="{{ route('admin.services.create') }}" class="btn-primary"
+                        style="text-decoration: none; display: inline-flex; align-items: center;">Add Service</a>
                 </div>
             </div>
         </div>
@@ -500,7 +523,8 @@
                                 <div class="service-category">{{ strtoupper($service->category) }}</div>
                             </div>
                         </div>
-                        <div class="toggle {{ $service->is_active ? 'active' : '' }}" onclick="toggleService({{ $service->id }})"></div>
+                        <div class="toggle {{ $service->is_active ? 'active' : '' }}"
+                            onclick="toggleService({{ $service->id }})"></div>
                     </div>
                     <div class="service-body">
                         <p class="service-description">{{ \Illuminate\Support\Str::limit($service->description, 140) }}</p>
@@ -518,8 +542,10 @@
                         </div>
                     </div>
                     <div class="actions">
-                        <a href="{{ route('admin.services.edit', $service) }}" class="btn-action" style="text-decoration: none;">Edit</a>
-                        <a href="{{ route('admin.services.options.index', $service) }}" class="btn-action" style="text-decoration: none;">Options</a>
+                        <a href="{{ route('admin.services.edit', $service) }}" class="btn-action"
+                            style="text-decoration: none;">Edit</a>
+                        <a href="{{ route('admin.services.options.index', $service) }}" class="btn-action"
+                            style="text-decoration: none;">Options</a>
                         <button class="btn-action danger" onclick="deleteService({{ $service->id }})">Delete</button>
                     </div>
                 </div>
@@ -547,7 +573,7 @@
         async function deleteService(id) {
             const service = servicesData.find(s => s.id === id);
             const serviceName = service ? service.title : 'this service';
-            
+
             const result = await Swal.fire({
                 title: 'Delete Service?',
                 text: `Are you sure you want to delete "${serviceName}"? This will also delete all related options.`,
@@ -562,12 +588,12 @@
             if (!result.isConfirmed) return;
 
             try {
-                const res = await fetch(`/admin/services-management/${id}`, {
+                const res = await fetch(`/admin/services/${id}`, {
                     method: 'DELETE',
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
                 });
                 const data = await res.json();
-                if (data.success) { 
+                if (data.success) {
                     await Swal.fire({
                         icon: 'success',
                         title: 'Deleted!',
@@ -596,12 +622,12 @@
 
         async function toggleService(id) {
             try {
-                const res = await fetch(`/admin/services-management/${id}/toggle`, {
+                const res = await fetch(`/admin/services/${id}/toggle`, {
                     method: 'PATCH',
                     headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
                 });
                 const data = await res.json();
-                if (data.success) { 
+                if (data.success) {
                     await Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -611,7 +637,7 @@
                     });
                     location.reload();
                 }
-            } catch { 
+            } catch {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',

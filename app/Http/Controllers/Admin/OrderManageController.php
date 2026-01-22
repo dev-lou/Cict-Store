@@ -27,9 +27,9 @@ class OrderManageController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('order_number', 'like', '%' . $searchTerm . '%')
-                  ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                      $userQuery->where('name', 'like', '%' . $searchTerm . '%');
-                  });
+                    ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                        $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                    });
             });
         }
 
@@ -37,7 +37,7 @@ class OrderManageController extends Controller
         if ($request->filled('date_filter')) {
             $dateFilter = $request->input('date_filter');
             $now = now();
-            
+
             match ($dateFilter) {
                 'today' => $query->whereDate('created_at', $now->format('Y-m-d')),
                 '3days' => $query->whereBetween('created_at', [$now->copy()->subDays(3), $now]),
@@ -72,9 +72,9 @@ class OrderManageController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('order_number', 'like', '%' . $searchTerm . '%')
-                  ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                      $userQuery->where('name', 'like', '%' . $searchTerm . '%');
-                  });
+                    ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                        $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                    });
             });
         }
 
@@ -82,7 +82,7 @@ class OrderManageController extends Controller
         if ($request->filled('date_filter')) {
             $dateFilter = $request->input('date_filter');
             $now = now();
-            
+
             match ($dateFilter) {
                 'today' => $query->whereDate('created_at', $now->format('Y-m-d')),
                 '3days' => $query->whereBetween('created_at', [$now->copy()->subDays(3), $now]),
@@ -119,9 +119,9 @@ class OrderManageController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('order_number', 'like', '%' . $searchTerm . '%')
-                  ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                      $userQuery->where('name', 'like', '%' . $searchTerm . '%');
-                  });
+                    ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                        $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                    });
             });
         }
 
@@ -129,7 +129,7 @@ class OrderManageController extends Controller
         if ($request->filled('date_filter')) {
             $dateFilter = $request->input('date_filter');
             $now = now();
-            
+
             match ($dateFilter) {
                 'today' => $query->whereDate('created_at', $now->format('Y-m-d')),
                 '3days' => $query->whereBetween('created_at', [$now->copy()->subDays(3), $now]),
@@ -166,9 +166,9 @@ class OrderManageController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('order_number', 'like', '%' . $searchTerm . '%')
-                  ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                      $userQuery->where('name', 'like', '%' . $searchTerm . '%');
-                  });
+                    ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                        $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                    });
             });
         }
 
@@ -176,7 +176,7 @@ class OrderManageController extends Controller
         if ($request->filled('date_filter')) {
             $dateFilter = $request->input('date_filter');
             $now = now();
-            
+
             match ($dateFilter) {
                 'today' => $query->whereDate('created_at', $now->format('Y-m-d')),
                 '3days' => $query->whereBetween('created_at', [$now->copy()->subDays(3), $now]),
@@ -204,7 +204,7 @@ class OrderManageController extends Controller
      */
     public function show(Order $order): \Illuminate\View\View
     {
-        $order->load('user:id,name,email', 'items.product:id,name,base_price');
+        $order->load('user:id,name,email', 'items.product:id,name,base_price', 'items.variant:id,name,price');
         return view('admin.orders.show', ['order' => $order]);
     }
 
@@ -231,7 +231,7 @@ class OrderManageController extends Controller
         );
 
         $order->delete();
-        
+
         // Clear order count cache
         Cache::forget('admin.order_counts');
 
@@ -271,7 +271,7 @@ class OrderManageController extends Controller
             ['status' => $oldStatus],
             ['status' => $newStatus]
         );
-        
+
         // Clear order count cache when status changes
         Cache::forget('admin.order_counts');
 
