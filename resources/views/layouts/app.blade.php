@@ -7,14 +7,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="@yield('meta_description', 'Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo, Philippines. Shop CICT merchandise, access student services, printing, document services, and more. Serving Iloilo State University of Fisheries Science and Technology students.')">
-    <meta name="keywords" content="CICT Dingle, ISUFST Dingle, Dingle campus store, ISUFST store, Iloilo State University, CICT Student Council, Dingle Iloilo, ISUFST merchandise, student services Dingle, CICT merch, college printing services, document services, campus shop Dingle, CICT ISUFST, Dingle campus, student store Iloilo">
+    <meta name="description"
+        content="@yield('meta_description', 'Official ISUFST CICT Student Council Store at Dingle Campus. Shop quality merchandise, access printing services, and digital solutions. Supporting student programs.')">
+    <meta name="keywords"
+        content="ISUFST CICT, ISUFST Dingle, Student Council Store, ISUFST merchandise, campus printing services, Dingle campus shop, CICT merch, student services Iloilo, ISUFST uniform, school supplies Dingle">
     <meta name="author" content="CICT Student Council">
     <meta name="geo.region" content="PH-ILI">
     <meta name="geo.placename" content="Dingle, Iloilo">
     <meta name="geo.position" content="10.9295;122.6693">
     <link rel="canonical" href="{{ url()->current() }}">
-    
+
     @php
         // Use cached Setting::get() method instead of direct query
         $ogImageValue = \App\Models\Setting::get('site_logo');
@@ -22,24 +24,26 @@
         $faviconValue = \App\Models\Setting::get('site_favicon');
         $faviconUrl = $faviconValue ? Storage::disk('supabase')->url($faviconValue) : null;
     @endphp
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('title', 'CICT Dingle Store | ISUFST Student Council')">
-    <meta property="og:description" content="@yield('meta_description', 'Official CICT Student Council Store at ISUFST Dingle Campus. Shop merchandise and access student services.')">
+    <meta property="og:title" content="@yield('title', 'ISUFST CICT | Dingle Campus')">
+    <meta property="og:description"
+        content="@yield('meta_description', 'Official ISUFST CICT Student Council Store. Shop merchandise and access student services.')">
     <meta property="og:image" content="{{ $ogImageUrl }}">
-    <meta property="og:site_name" content="CICT Dingle Store">
+    <meta property="og:site_name" content="ISUFST CICT">
     <meta property="og:locale" content="en_PH">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('title', 'CICT Dingle Store | ISUFST Student Council')">
-    <meta property="twitter:description" content="@yield('meta_description', 'Official CICT Student Council Store at ISUFST Dingle Campus.')">
+    <meta property="twitter:title" content="@yield('title', 'ISUFST CICT | Dingle Campus')">
+    <meta property="twitter:description"
+        content="@yield('meta_description', 'Official ISUFST CICT Student Council Store.')">
     <meta property="twitter:image" content="{{ $ogImageUrl }}">
 
-    <title>@yield('title', 'CICT Dingle Store | ISUFST Student Council')</title>
+    <title>@yield('title', 'ISUFST CICT | Dingle Campus')</title>
 
     <!-- Favicons - Multiple sizes for better Google indexing -->
     @if($faviconUrl)
@@ -49,7 +53,7 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{{ $faviconUrl }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ $faviconUrl }}">
     @endif
-    
+
     <!-- Structured Data (JSON-LD) for Google -->
     <script type="application/ld+json">
     {
@@ -272,7 +276,7 @@
 </head>
 
 <body style="background: var(--color-bg-primary); color: var(--color-text);">
-    <div class="min-h-screen flex flex-col" style="background: var(--color-bg-primary);" data-page-type="home">
+    <div class="min-h-screen flex flex-col" style="background: var(--color-bg-primary);">
         <!-- Navigation -->
         <x-navbar />
 
@@ -293,18 +297,22 @@
                                 $footerLogoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
                             @endphp
                             @if($footerLogoSetting && $footerLogoSetting->value)
-                            <div
-                                style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
                                 <div
-                                    style="width:80px; height:80px; border-radius:9999px; overflow:hidden; background:#fff;">
-                                    <img src="{{ Storage::disk('supabase')->url($footerLogoSetting->value) }}" alt="{{ config('app.name', 'CICT Dingle') }} logo"
-                                        style="width:100%; height:100%; object-fit:cover; border-radius:9999px; display:block;">
+                                    style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                                    <div
+                                        style="width:80px; height:80px; border-radius:9999px; overflow:hidden; background:#fff;">
+                                        <img src="{{ Storage::disk('supabase')->url($footerLogoSetting->value) }}"
+                                            alt="{{ config('app.name', 'CICT Dingle') }} logo"
+                                            style="width:100%; height:100%; object-fit:cover; border-radius:9999px; display:block;">
+                                    </div>
                                 </div>
-                            </div>
                             @endif
                             <div style="display:flex; flex-direction:column; min-width: 0;">
-                                <h3 class="font-bold text-xl" style="margin:0; color:white; line-height: 1.2;">{{ config('app.name', 'CICT Dingle') }}</h3>
-                                <p class="text-sm" style="margin:2px 0 0 0; color: rgba(255,255,255,0.75);">ISUFST Dingle Campus · Shop & Services</p>
+                                <h3 class="font-bold text-xl" style="margin:0; color:white; line-height: 1.2;">
+                                    {{ config('app.name', 'CICT Dingle') }}
+                                </h3>
+                                <p class="text-sm" style="margin:2px 0 0 0; color: rgba(255,255,255,0.75);">ISUFST Dingle
+                                    Campus · Shop & Services</p>
                                 <p class="text-sm"
                                     style="margin:12px 0 0 0; color: rgba(255,255,255,0.75); line-height:1.7; max-width: 22rem;">
                                     Campus-run store and services delivering print, merch, and digital support for students
@@ -346,7 +354,9 @@
 
                     <div style="border-top: 1px solid rgba(255,255,255,0.12); flex-wrap: wrap;"
                         class="pt-4 text-sm flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2 sm:gap-4">
-                        <p style="margin:0; color: rgba(255,255,255,0.75);">&copy; {{ date('Y') }} {{ config('app.name', 'CICT Dingle') }} · ISUFST Dingle Campus</p>
+                        <p style="margin:0; color: rgba(255,255,255,0.75);">&copy; {{ date('Y') }}
+                            {{ config('app.name', 'CICT Dingle') }} · ISUFST Dingle Campus
+                        </p>
                         <p style="margin:0; color: rgba(255,255,255,0.65);" class="text-xs">All rights reserved.</p>
                     </div>
                 </div>
