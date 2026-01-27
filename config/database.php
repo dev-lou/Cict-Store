@@ -120,7 +120,7 @@ return [
             // PDO options with connection timeout for reliability
             'options' => extension_loaded('pdo_pgsql') ? [
                 PDO::ATTR_TIMEOUT => 10,
-                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_EMULATE_PREPARES => true,
                 PDO::ATTR_STRINGIFY_FETCHES => false,
             ] : [],
             'application_name' => env('APP_NAME', 'CICT Dingle'),
