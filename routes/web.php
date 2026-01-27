@@ -428,3 +428,14 @@ Route::post('/profile/update-password', [ProfileController::class, 'updatePasswo
 // ============================================================================
 // Routes for login, register, password reset, email verification are
 // automatically included when Laravel Breeze is installed.
+
+// TEMPORARY DEBUG ROUTE
+Route::get('/debug-db', function () {
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $dbName = \Illuminate\Support\Facades\DB::connection()->getDatabaseName();
+        return "Database connection is functioning correctly. Connected to database: {$dbName}";
+    } catch (\Exception $e) {
+        return 'Database connection failed: ' . $e->getMessage();
+    }
+});
