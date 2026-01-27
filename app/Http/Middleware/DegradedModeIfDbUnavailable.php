@@ -38,7 +38,7 @@ class DegradedModeIfDbUnavailable
 
             // Allow the debug route to proceed so it can print the exception
             if ($path === 'debug-db') {
-                return $next($request);
+                return new Response("<h1>Middleware Exception Caught</h1><p>The middleware failed to connect. Error details:</p><pre>" . $e->getMessage() . "\n\n" . $e->getTraceAsString() . "</pre>", 500);
             }
 
             // Enhanced log: include incoming IP and path for debugging on Render
