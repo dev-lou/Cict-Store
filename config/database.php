@@ -117,11 +117,14 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'require'),
-            // PDO options with connection timeout for reliability
+            // PDO options - CRITICAL for Supabase Port 6543 (Transaction Mode)
+            // ATTR_EMULATE_PREPARES = true forces Laravel to handle prepared statements
+            // instead of delegating to PostgreSQL, which fixes login/auth issues
             'options' => extension_loaded('pdo_pgsql') ? [
                 PDO::ATTR_TIMEOUT => 10,
-                PDO::ATTR_EMULATE_PREPARES => true,
+                PDO::ATTR_EMULATE_PREPARES => true,  // Required for Supabase pooler
                 PDO::ATTR_STRINGIFY_FETCHES => false,
+                PDO::ATTR_PERSISTENT => false,        // Don't use persistent connections with pooler
             ] : [],
             'application_name' => env('APP_NAME', 'CICT Dingle'),
         ],
