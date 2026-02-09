@@ -66,7 +66,7 @@ class Review extends Model
      */
     public function scopeVerified($query)
     {
-        return $query->where('verified_purchase', true);
+        return $query->where('verified_purchase', '=', true);
     }
 
     /**

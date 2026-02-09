@@ -23,7 +23,7 @@ class ServicesController extends Controller
                         $query->active()->ordered();
                     }
                 ])
-                    ->where('is_active', true)
+                    ->where('is_active', '=', true)
                     ->orderBy('sort_order')
                     ->get();
             } catch (Throwable $e) {
@@ -37,7 +37,7 @@ class ServicesController extends Controller
         // Cache officers for 10 minutes
         $officers = Cache::remember('services.officers', now()->addMinutes(10), function () {
             try {
-                return ServiceOfficer::where('is_active', true)
+                return ServiceOfficer::where('is_active', '=', true)
                     ->orderBy('sort_order')
                     ->get();
             } catch (Throwable $e) {

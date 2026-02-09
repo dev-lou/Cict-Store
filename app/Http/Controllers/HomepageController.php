@@ -36,7 +36,7 @@ class HomepageController extends Controller
         // Cache featured services for 10 minutes
         $featuredServices = Cache::remember('homepage.featured_services', now()->addMinutes(10), function () {
             try {
-                return Service::where('is_active', true)
+                return Service::where('is_active', '=', true)
                     ->select(['id', 'title', 'slug', 'description', 'icon', 'price_primary', 'price_secondary', 'created_at'])
                     ->orderByDesc('created_at')
                     ->take(3)
@@ -63,7 +63,7 @@ class HomepageController extends Controller
         // Service categories (keep existing logic, add caching)
         $serviceCategories = Cache::remember('homepage.service_categories', now()->addMinutes(10), function () {
             try {
-                return Service::where('is_active', true)
+                return Service::where('is_active', '=', true)
                     ->orderBy('sort_order')
                     ->get()
                     ->groupBy(fn($service) => $service->category ?: 'General')

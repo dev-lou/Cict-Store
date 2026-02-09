@@ -66,7 +66,7 @@ class Notification extends Model
      */
     public function scopeUnread($query)
     {
-        return $query->where('is_read', false);
+        return $query->where('is_read', '=', false);
     }
 
     /**
@@ -74,7 +74,7 @@ class Notification extends Model
      */
     public function scopeRead($query)
     {
-        return $query->where('is_read', true);
+        return $query->where('is_read', '=', true);
     }
 
     /**

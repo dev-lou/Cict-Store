@@ -29,7 +29,7 @@ class ServiceManagementController extends Controller
         $stats = Cache::remember('admin.services.stats', 300, function () {
             return [
                 'total_services' => Service::count(),
-                'active_services' => Service::where('is_active', true)->count(),
+                'active_services' => Service::where('is_active', '=', true)->count(),
                 'total_officers' => ServiceOfficer::count(),
                 'active_officers' => ServiceOfficer::where('is_active', true)->count(),
             ];
