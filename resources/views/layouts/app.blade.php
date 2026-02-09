@@ -3,8 +3,18 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#8B0000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="{{ config('app.url') }}">
+    <link rel="preconnect" href="https://ppsdvdrnvquykxsmwjmg.supabase.co" crossorigin>
+    <link rel="dns-prefetch" href="https://ppsdvdrnvquykxsmwjmg.supabase.co">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
     <!-- SEO Meta Tags -->
     <meta name="description"
