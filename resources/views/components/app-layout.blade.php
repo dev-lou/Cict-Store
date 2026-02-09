@@ -49,20 +49,7 @@
         .hero,.shop-hero,.services-hero,.contact-hero{min-height:50vh;background:linear-gradient(135deg,#8B0000 0%,#5C0000 100%)}
     </style>
 
-    @php 
-        $viteManifestPath = public_path('build/manifest.json');
-        $hasViteBuild = file_exists($viteManifestPath);
-    @endphp
-    @if ($hasViteBuild)
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        @if (file_exists(public_path('css/app.css')))
-            <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-        @endif
-        @if (file_exists(public_path('js/app.js')))
-            <script src="{{ asset('js/app.js') }}" defer></script>
-        @endif
-    @endif
+    @include('components.vite-assets')
 
     <!-- Only load essential animation CSS (combined) -->
     <link rel="stylesheet" href="{{ asset('css/button-interactions.css') }}" media="print" onload="this.media='all'">
