@@ -96,14 +96,8 @@
 
     <!-- Fonts - Preload for faster loading -->
 
-    <!-- Styles - Async load to prevent render blocking -->
-    <link rel="preload" href="{{ asset('css/app.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ asset('css/app.css') }}"></noscript>
-    
-    <!-- Scripts - Defer to prevent blocking -->
-    @if(file_exists(public_path('js/app.js')))
-        <script src="{{ asset('js/app.js') }}" defer></script>
-    @endif
+    <!-- Styles -->
+    @include('components.vite-assets')
 
     <style>
         :root {
