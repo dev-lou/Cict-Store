@@ -17,8 +17,7 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
     <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="@yield('meta_description', 'Official ISUFST CICT Student Council Store at Dingle Campus. Shop quality merchandise, access printing services, and digital solutions. Supporting student programs.')">
+    <meta name="description" content="@yield('meta_description', 'Official ISUFST CICT Student Council Store at Dingle Campus. Shop quality merchandise, access printing services, and digital solutions. Supporting student programs.')">
     <meta name="keywords"
         content="ISUFST CICT, ISUFST Dingle, Student Council Store, ISUFST merchandise, campus printing services, Dingle campus shop, CICT merch, student services Iloilo, ISUFST uniform, school supplies Dingle">
     <meta name="author" content="CICT Student Council">
@@ -97,8 +96,14 @@
 
     <!-- Fonts - Preload for faster loading -->
 
-    <!-- Styles -->
-    @include('components.vite-assets')
+    <!-- Styles - Async load to prevent render blocking -->
+    <link rel="preload" href="{{ asset('css/app.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ asset('css/app.css') }}"></noscript>
+    
+    <!-- Scripts - Defer to prevent blocking -->
+    @if(file_exists(public_path('js/app.js')))
+        <script src="{{ asset('js/app.js') }}" defer></script>
+    @endif
 
     <style>
         :root {

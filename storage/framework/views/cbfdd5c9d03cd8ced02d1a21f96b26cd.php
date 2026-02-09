@@ -1,13 +1,13 @@
 <?php if (isset($component)) { $__componentOriginal4619374cef299e94fd7263111d0abc69 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4619374cef299e94fd7263111d0abc69 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => 'CICT Dingle Store | ISUFST Student Council Merchandise & Services','metaDescription' => 'Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo. Shop student merchandise, access printing services, document services, and more. Serving Iloilo State University students in Dingle campus.']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.app-layout','data' => ['title' => 'ISUFST CICT | Dingle Campus','metaDescription' => 'Official ISUFST CICT Student Council Store at Dingle Campus. Shop quality merchandise, access printing services, and digital solutions. Supporting student programs.']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('app-layout'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('CICT Dingle Store | ISUFST Student Council Merchandise & Services'),'meta_description' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo. Shop student merchandise, access printing services, document services, and more. Serving Iloilo State University students in Dingle campus.')]); ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('ISUFST CICT | Dingle Campus'),'meta_description' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Official ISUFST CICT Student Council Store at Dingle Campus. Shop quality merchandise, access printing services, and digital solutions. Supporting student programs.')]); ?>
     <style>
         /* ============ DESIGN TOKENS ============ */
         :root {
@@ -611,11 +611,11 @@
                 <span>ISUFST DINGLE CAMPUS</span>
             </div>
             <h1 class="hero-title gsap-hero-title">
-                CICT Dingle Store
+                ISUFST CICT
                 <span class="hero-title-subtitle">Campus Merchandise & Student Services</span>
             </h1>
             <p class="hero-subtitle gsap-hero-subtitle">
-                Official CICT Student Council Store at ISUFST Dingle Campus, Iloilo
+                Official ISUFST CICT Student Council Store at Dingle Campus
             </p>
             <div class="hero-buttons">
                 <a href="<?php echo e(route('shop.index')); ?>" class="btn-primary">
