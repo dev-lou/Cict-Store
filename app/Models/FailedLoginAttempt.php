@@ -76,7 +76,7 @@ class FailedLoginAttempt extends Model
     public static function clearAttempts(string $ipAddress): void
     {
         self::where('ip_address', $ipAddress)
-            ->where('blocked_until', null)
+            ->whereNull('blocked_until')
             ->delete();
     }
 
