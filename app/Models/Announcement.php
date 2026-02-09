@@ -42,7 +42,7 @@ class Announcement extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('is_active', true)
+        return $query->where('is_active', '=', true)
             ->where(function ($q) {
                 $q->whereNull('expires_at')
                     ->orWhere('expires_at', '>', now());
@@ -54,7 +54,7 @@ class Announcement extends Model
      */
     public function scopePinned($query)
     {
-        return $query->where('is_pinned', true)->active();
+        return $query->where('is_pinned', '=', true)->active();
     }
 
     /**

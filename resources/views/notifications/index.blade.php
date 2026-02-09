@@ -205,7 +205,7 @@
     </style>
 
     <div class="shell">
-        @php $unreadCount = $notifications->where('is_read', false)->count(); @endphp
+        @php $unreadCount = $notifications->where('is_read', '=', false)->count(); @endphp
         <div class="page-header">
             <div>
                 <p class="eyebrow">Inbox</p>
