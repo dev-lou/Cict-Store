@@ -31,7 +31,7 @@ class ChatbotController extends Controller
 
         // Pull current active services from the database to ground responses
         $services = Service::query()
-            ->where('is_active', true)
+            ->where('is_active', '=', true)
             ->orderBy('category')
             ->orderBy('sort_order')
             ->get(['title', 'category']);
