@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Blocked | {{ config('app.name') }}</title>
+    <title>Access Blocked | ISUFST CICT</title>
     <style>
         * {
             margin: 0;
@@ -247,7 +247,7 @@
 
         <div class="footer">
             Block expires at: <strong>{{ $blockedUntil?->format('h:i A') }}</strong><br>
-            {{ config('app.name') }} Security System
+            ISUFST CICT Security System
         </div>
     </div>
 </body>
