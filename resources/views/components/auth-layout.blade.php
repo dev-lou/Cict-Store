@@ -10,7 +10,7 @@
         $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
         $faviconUrl = $faviconSetting && $faviconSetting->value 
             ? \Storage::disk('supabase')->url($faviconSetting->value) 
-            : asset('images/ctrlp-logo.png');
+            : asset('images/ctrlp-logo.webp');
     @endphp
     
     <link rel="icon" type="image/png" sizes="32x32" href="{{ $faviconUrl }}">

@@ -10,7 +10,7 @@
                     $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
                     $logoUrl = $logoSetting && $logoSetting->value 
                         ? \Storage::disk('supabase')->url($logoSetting->value) 
-                        : asset('images/ctrlp-logo.png');
+                        : asset('images/ctrlp-logo.webp');
                 @endphp
                 <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} logo" class="w-full h-full object-cover">
             </div>

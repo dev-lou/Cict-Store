@@ -465,7 +465,7 @@
                         $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
                         $logoUrl = $logoSetting && $logoSetting->value
                             ? \Storage::disk('supabase')->url($logoSetting->value)
-                            : asset('images/ctrlp-logo.png');
+                            : asset('images/ctrlp-logo.webp');
                     @endphp
                     <img src="{{ $logoUrl }}" alt="Logo" class="logo-icon">
                     <span class="logo-text">{{ config('app.name') }}</span>

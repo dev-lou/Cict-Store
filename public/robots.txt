@@ -1,7 +1,9 @@
 User-agent: *
-Disallow: /admin
+Allow: /
+Disallow: /admin/
 Disallow: /cart
 Disallow: /checkout
 Disallow: /account
+Disallow: /api/
 
 Sitemap: https://cictstore.me/sitemap.xml

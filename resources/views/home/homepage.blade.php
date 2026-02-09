@@ -52,7 +52,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: url('{{ asset("images/cict_hero_bg.png") }}') center/cover;
+            background: url('{{ asset("images/cict_hero_bg.webp") }}') center/cover;
             opacity: 0.15;
         }
 

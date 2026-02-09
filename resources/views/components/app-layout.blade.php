@@ -1,37 +1,90 @@
-@props(['title' => config('app.name', 'CICT Dingle')])
+@props([
+    'title' => config('app.name', 'CICT Dingle'),
+    'meta_description' => 'Official ISUFST CICT Student Council Store at Dingle Campus. Shop quality merchandise, access printing services, and digital solutions.',
+])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#8B0000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <title>{{ $title }}</title>
 
-    <!-- DNS Preconnect for faster external resource loading -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ $meta_description }}">
+    <meta name="keywords" content="ISUFST CICT, ISUFST Dingle, Student Council Store, ISUFST merchandise, campus printing services, Dingle campus shop, CICT merch, student services Iloilo, ISUFST uniform, school supplies Dingle">
+    <meta name="author" content="CICT Student Council">
+    <meta name="robots" content="index, follow">
+    <meta name="geo.region" content="PH-ILI">
+    <meta name="geo.placename" content="Dingle, Iloilo">
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Favicon (cached query) -->
     @php
-        $faviconUrl = Cache::remember('site.favicon_url', now()->addHours(1), function () {
+        $faviconUrl = Cache::remember('site.favicon_url', 3600, function () {
             $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
             return ($faviconSetting && $faviconSetting->value) 
                 ? \Storage::disk('supabase')->url($faviconSetting->value) 
                 : null;
         });
+        $ogImageValue = \App\Models\Setting::get('site_logo');
+        $ogImageUrl = $ogImageValue ? Storage::disk('supabase')->url($ogImageValue) : null;
     @endphp
     @if($faviconUrl)
         <link rel="icon" href="{{ $faviconUrl }}" type="image/x-icon">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ $faviconUrl }}">
     @endif
 
-    <!-- Preconnect and Fonts (display=swap for faster text rendering) -->
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:description" content="{{ $meta_description }}">
+    @if($ogImageUrl)<meta property="og:image" content="{{ $ogImageUrl }}">@endif
+    <meta property="og:site_name" content="ISUFST CICT">
+    <meta property="og:locale" content="en_PH">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title }}">
+    <meta name="twitter:description" content="{{ $meta_description }}">
+    @if($ogImageUrl)<meta name="twitter:image" content="{{ $ogImageUrl }}">@endif
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Store",
+        "name": "ISUFST CICT Student Council Store",
+        "description": "{{ $meta_description }}",
+        "url": "{{ config('app.url') }}",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Dingle",
+            "addressRegion": "Iloilo",
+            "addressCountry": "PH"
+        }
+    }
+    </script>
+
+    <!-- DNS Preconnect for faster external resource loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+
+    <!-- Fonts (display=swap for faster text rendering) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Preload hero background image for LCP -->
+    <link rel="preload" as="image" href="{{ asset('images/cict_hero_bg.webp') }}" type="image/webp">
 
     <!-- Global debug flag and console silencer for production -->
     <script>
@@ -57,14 +110,21 @@
         <link rel="stylesheet" href="{{ asset('css/button-interactions.css') }}">
     </noscript>
 
-    <!-- GSAP Animation Library (lightweight, powerful) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <!-- GSAP Animation Library - only load on desktop for better mobile performance -->
+    <script>
+        if (window.innerWidth >= 768) {
+            ['gsap.min.js', 'ScrollTrigger.min.js'].forEach(function(f) {
+                var s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/' + f;
+                s.defer = true;
+                document.head.appendChild(s);
+            });
+        }
+    </script>
 
     <style>
         /* Global mobile fixes */
         html, body { overflow-x: hidden; }
-        *, *::before, *::after { box-sizing: border-box; }
 
         /* Prevent underline on buttons and cards */
         .product-card,
@@ -271,10 +331,10 @@
                                         $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
                                         $logoUrl = $logoSetting && $logoSetting->value 
                                             ? \Storage::disk('supabase')->url($logoSetting->value) 
-                                            : asset('images/ctrlp-logo.png');
+                                            : asset('images/ctrlp-logo.webp');
                                     @endphp
                                     <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} logo"
-                                        class="w-full h-full object-cover" style="display:block; border-radius:9999px;">
+                                        width="80" height="80" class="w-full h-full object-cover" style="display:block; border-radius:9999px;">
                                 </div>
                             </div>
                             <div>
