@@ -132,7 +132,7 @@ AWS_URL=https://your-project.supabase.co/storage/v1/object/public/products
 
 # Google Gemini AI
 GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-3-flash-preview
 
 # Cache & Session
 CACHE_STORE=database

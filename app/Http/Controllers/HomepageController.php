@@ -57,7 +57,7 @@ class HomepageController extends Controller
             } catch (Throwable $e) {
                 logger()->warning('Unable to fetch site logo: ' . $e->getMessage());
             }
-            return asset('images/ctrlp-logo.png');
+            return asset('images/ctrlp-logo.webp');
         });
 
         // Service categories (keep existing logic, add caching)

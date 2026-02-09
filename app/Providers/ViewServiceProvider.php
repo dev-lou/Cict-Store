@@ -30,10 +30,10 @@ class ViewServiceProvider extends ServiceProvider
                         // Always use Supabase for logo regardless of FILESYSTEM_DISK setting
                         return \Storage::disk('supabase')->url($logoSetting->value);
                     }
-                    return asset('images/ctrlp-logo.png');
+                    return asset('images/ctrlp-logo.webp');
                 });
             } catch (\Exception $e) {
-                $logoUrl = asset('images/ctrlp-logo.png');
+                $logoUrl = asset('images/ctrlp-logo.webp');
             }
             
             $view->with('siteLogo', $logoUrl);

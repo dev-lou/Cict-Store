@@ -194,7 +194,11 @@
 
         // Add particles to hero sections (PERFORMANCE OPTIMIZED)
         const isMobile = window.innerWidth < 768;
-        const particleCount = isMobile ? 15 : 30; // Reduced from 25/60
+        
+        // Skip particles entirely on mobile for better PageSpeed score
+        if (isMobile) return;
+        
+        const particleCount = 30;
 
         document.querySelectorAll('.hero-section, .hero, .contact-hero, .shop-hero, .services-hero').forEach(hero => {
             new ParticleSystem(hero, {
