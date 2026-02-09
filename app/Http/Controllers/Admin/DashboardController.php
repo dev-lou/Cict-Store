@@ -147,7 +147,7 @@ class DashboardController extends Controller
                     ->distinct('user_id')
                     ->count('user_id'),
                 'servicesTotal' => Service::count(),
-                'servicesActive' => Service::where('is_active', '=', true)->count(),
+                'servicesActive' => Service::whereRaw('"is_active" IS TRUE')->count(),
                 'serviceOptionsCount' => ServiceOption::count(),
             ];
         });

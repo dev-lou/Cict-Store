@@ -55,6 +55,6 @@ class Supplier extends Model
      */
     public function scopePreferred($query)
     {
-        return $query->where('is_preferred', '=', true);
+        return $query->whereRaw('"is_preferred" IS TRUE');
     }
 }
