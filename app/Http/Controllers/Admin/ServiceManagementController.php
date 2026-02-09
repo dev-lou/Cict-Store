@@ -306,7 +306,7 @@ class ServiceManagementController extends Controller
         
         $stats = [
             'total_officers' => ServiceOfficer::count(),
-            'active_officers' => ServiceOfficer::where('is_active', true)->count(),
+            'active_officers' => ServiceOfficer::whereRaw('"is_active" IS TRUE')->count(),
         ];
 
         return view('admin.service-officers.index', compact('officers', 'stats'));
