@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+# Don't use 'set -e' - let migrations fail gracefully if tables exist
 
 echo "=== Starting Laravel Application ==="
 
@@ -39,14 +39,9 @@ php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
-# Run migrations in background (non-blocking)
-(
-    echo "[Background] Waiting for DB connection..."
-    sleep 3
-    echo "[Background] Running migrations..."
-    php artisan migrate --force || echo "[Background] Migration skipped or failed"
-    echo "[Background] Migrations complete"
-) &
+# Don't run migrations in production - tables already exist
+# Migrations should be run manually when needed via Render shell
+# This prevents deployment failures from duplicate table errors
 
 # Start Apache
 echo "=== Starting Apache ==="
