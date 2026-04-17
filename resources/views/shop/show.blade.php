@@ -920,46 +920,71 @@
             .floating-cart-bar {
                 display: flex;
                 position: fixed;
-                bottom: 0;
                 left: 0;
                 right: 0;
-                background: #fff;
-                padding: 16px 16px;
-                padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-                z-index: 99999;
+                bottom: env(safe-area-inset-bottom, 0px);
+                background: rgba(255,255,255,0.98);
+                padding: 12px 14px;
+                padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+                box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
+                z-index: 999999;
                 gap: 12px;
                 align-items: center;
-                border-top: 1px solid var(--border);
+                justify-content: space-between;
+                border-top: none;
             }
 
             .floating-cart-bar .floating-price {
-                font-size: 22px;
+                font-size: 18px;
                 font-weight: 800;
                 color: var(--primary);
                 white-space: nowrap;
+                margin-right: 8px;
             }
 
             .floating-cart-bar .floating-add-btn {
-                flex: 1;
-                padding: 16px 24px;
+                height: 48px;
+                min-height: 44px;
+                padding: 0 18px;
                 background: var(--primary);
                 color: #fff;
                 border: none;
-                border-radius: 12px;
-                font-size: 16px;
+                border-radius: 10px;
+                font-size: 15px;
                 font-weight: 700;
                 cursor: pointer;
                 text-align: center;
                 text-decoration: none;
-                display: flex;
+                display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                gap: 8px;
+                gap: 10px;
+                flex: 0 0 auto;
+            }
+
+            .floating-cart-bar .floating-cart-link,
+            .floating-cart-bar .floating-cart-btn {
+                width: 44px;
+                height: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 10px;
+                background: rgba(0,0,0,0.04);
+                color: var(--primary);
+                text-decoration: none;
+                flex: 0 0 auto;
+                border: none;
+                padding: 0.25rem;
+            }
+
+            .floating-cart-bar .floating-cart-btn {
+                background: rgba(255,255,255,0.06);
+                cursor: pointer;
             }
 
             .floating-cart-bar .floating-add-btn:active {
-                transform: scale(0.98);
+                transform: translateY(0.5px) scale(0.995);
                 background: var(--primary-hover);
             }
 
@@ -973,7 +998,7 @@
 
             /* Add bottom padding to page content so it doesn't hide behind floating bar */
             .product-content {
-                padding-bottom: 120px !important;
+                padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
             }
 
             /* Hide the original add to cart button on mobile */
@@ -1389,20 +1414,17 @@
                     return response.json();
                 })
                 .then(data => {
-                    try {
-                        window.sessionStorage.setItem('cict-pending-toast', JSON.stringify({
-                            message: data.message || '{{ $product->name }} has been added to your cart.',
-                            type: 'success'
-                        }));
-                    } catch (error) {
-                        window.dispatchEvent(new CustomEvent('toast', {
-                            detail: {
-                                message: data.message || '{{ $product->name }} has been added to your cart.',
-                                type: 'success'
-                            }
-                        }));
-                    }
-                    window.location.reload();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: data.message || '{{ $product->name }} has been added to your cart.',
+                        icon: 'success',
+                        confirmButtonText: 'Continue Shopping',
+                        confirmButtonColor: '#8B0000',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then(() => {
+                        window.location.reload();
+                    });
                 })
                 .catch(error => {
                     // Reset button and submit normally as fallback
@@ -1445,23 +1467,23 @@
                         ₱{{ number_format($product->base_price, 2) }}
                     @endif
                 </div>
+                <div style="flex:1;"></div>
                 @auth
-                    <div style="display:flex; gap:0.55rem; align-items:center; flex:1;">
-                        <button type="button" class="floating-add-btn" style="flex:1;"
-                            onclick="document.getElementById('add-to-cart-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            Add to Cart
-                        </button>
-                        <a href="{{ route('cart.index') }}" class="floating-add-btn" style="flex:0 0 auto; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.2); color: white; text-decoration:none;">
-                            Cart
-                        </a>
-                    </div>
+                    <button type="button" class="floating-add-btn" style="flex:0 0 auto;"
+                        onclick="document.getElementById('add-to-cart-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px;">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Add to Cart
+                    </button>
                 @else
-                    <a href="{{ route('login') }}" class="floating-add-btn">
-                        Sign In to Purchase
+                    <a href="{{ route('login') }}" class="floating-add-btn" style="flex:0 0 auto; text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px;">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Sign In
                     </a>
                 @endauth
             </div>
