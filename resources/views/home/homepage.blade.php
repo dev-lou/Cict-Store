@@ -14,20 +14,20 @@
 
     <style>
         .hero-section--home {
-            padding: clamp(4.5rem, 6vw, 5.5rem) 1.5rem 2rem;
+            padding: clamp(7rem, 12vw, 9rem) 1.5rem 2rem;
             position: relative;
         }
 
         .home-section {
-            padding: 5rem 1.5rem;
+            padding: 6rem 1.5rem;
         }
 
         .home-section--cta {
-            padding: 0 1.5rem 3rem;
+            padding: 0 1.5rem 4rem;
         }
 
         .home-section--quick {
-            padding: 0 1.5rem 4rem;
+            padding: 0 1.5rem 5rem;
         }
 
         .home-hero-grid {

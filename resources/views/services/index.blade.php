@@ -95,7 +95,7 @@
         </div>
     </section>
 
-    <section class="store-section store-section-soft" style="padding-top: 1.8rem;">
+    <section class="store-section store-section-soft" style="padding: 3.5rem 1.5rem 3.2rem;">
         <div class="store-shell">
             @if($groupedServices->isNotEmpty())
                 <div style="background: #fff; border: 1px solid var(--color-gray-200); border-radius: 1rem; padding: 0.9rem; margin-bottom: 1.4rem; box-shadow: var(--shadow-sm);">
@@ -131,10 +131,18 @@
                             @php
                                 $icon = $serviceIconKey($service);
                                 $price = $service->price_primary ?? $service->price_bw ?? $service->price_color ?? null;
+                                $iconColors = [
+                                    'camera' => ['bg' => 'rgba(59, 130, 246, 0.12)', 'color' => '#3b82f6'],
+                                    'pen' => ['bg' => 'rgba(168, 85, 247, 0.12)', 'color' => '#a855f7'],
+                                    'document' => ['bg' => 'rgba(34, 197, 94, 0.12)', 'color' => '#22c55e'],
+                                    'layers' => ['bg' => 'rgba(244, 193, 90, 0.14)', 'color' => '#f4c15a'],
+                                    'default' => ['bg' => 'rgba(99, 102, 241, 0.12)', 'color' => '#6366f1']
+                                ];
+                                $colors = $iconColors[$icon] ?? $iconColors['default'];
                             @endphp
                             <a href="{{ route('services.show', $service->slug) }}" class="premium-service-card">
                                 <div class="premium-service-head">
-                                    <span class="premium-icon-wrap" aria-hidden="true">
+                                    <span class="premium-icon-wrap" style="background: {{ $colors['bg'] }}; color: {{ $colors['color'] }};" aria-hidden="true">
                                         @switch($icon)
                                             @case('camera')
                                                 <svg viewBox="0 0 24 24"><path d="M4 8h3l1.6-2h6.8L17 8h3v11H4z"></path><circle cx="12" cy="13" r="3.6"></circle></svg>
@@ -176,10 +184,20 @@
                     </div>
                 </article>
             @empty
-                <article style="border-radius: 1rem; border: 1px solid var(--color-gray-200); background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); padding: 2.2rem 1.5rem; text-align: center; color: var(--color-gray-600); box-shadow: var(--shadow-sm);">
-                    <div style="width: 4.25rem; height: 4.25rem; margin: 0 auto 1rem; border-radius: 9999px; background: rgba(244,193,90,0.18); color: #8b0000; display:flex; align-items:center; justify-content:center; font-size: 1.5rem;">✦</div>
-                    <h3 class="h3" style="margin-bottom: 0.55rem;">Services will appear here soon.</h3>
-                    <p style="margin: 0 auto; max-width: 30rem; line-height: 1.7;">Once the catalog is updated, you’ll be able to browse document tasks, design requests, and office support from this page.</p>
+                <article style="border-radius: 2rem; border: 2px dashed rgba(139,0,0,0.14); background: linear-gradient(135deg, rgba(139,0,0,0.04) 0%, rgba(244,193,90,0.04) 100%); padding: 4rem 2rem; text-align: center; box-shadow: 0 4px 16px rgba(139,0,0,0.06);">
+                    <div style="width: 5.5rem; height: 5.5rem; margin: 0 auto 1.5rem; border-radius: 1.5rem; background: linear-gradient(135deg, rgba(244,193,90,0.12) 0%, rgba(139,0,0,0.08) 100%); border: 2px solid rgba(244,193,90,0.2); color: #8b0000; display:flex; align-items:center; justify-content:center; font-size: 2.2rem;">✦</div>
+                    <h2 class="h2" style="margin: 0 0 0.75rem 0; color: #111827;">Services Catalog Opening Soon</h2>
+                    <p style="margin: 0 auto 2rem; color: #4b5563; max-width: 40rem; line-height: 1.8; font-size: 1.05rem;">We're preparing a curated selection of document services, design requests, and campus support. Check back soon or <strong>contact our team</strong> for immediate assistance.</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="{{ route('shop.index') }}" class="btn btn-primary" style="display:inline-flex; gap: 0.5rem; text-decoration:none;">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                            Browse Merchandise
+                        </a>
+                        <a href="{{ route('contact.index') }}" class="btn btn-secondary" style="display:inline-flex; gap: 0.5rem; text-decoration:none;">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                            Contact Team
+                        </a>
+                    </div>
                 </article>
             @endforelse
         </div>

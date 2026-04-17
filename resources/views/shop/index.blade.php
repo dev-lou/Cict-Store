@@ -108,13 +108,20 @@
                     </div>
                 @endif
             @else
-                <div style="text-align: center; padding: 4.5rem 1rem; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border: 1px solid var(--color-gray-200); border-radius: 1.25rem; box-shadow: var(--shadow-sm); max-width: 760px; margin: 0 auto;">
-                    <div style="width: 4.5rem; height: 4.5rem; margin: 0 auto 1rem; border-radius: 9999px; background: rgba(139,0,0,0.08); color: var(--color-maroon); display:flex; align-items:center; justify-content:center; font-size: 1.6rem;">🛍️</div>
-                    <h3 class="h3" style="margin-bottom: 0.55rem;">No Products Available</h3>
-                    <p style="margin: 0 auto 1.25rem; color: var(--color-gray-600); max-width: 32rem; line-height: 1.7;">Check back soon for new arrivals, or use the services section while the catalog is being updated.</p>
-                    <a href="{{ route('services.index') }}" class="btn btn-primary" style="display:inline-flex; gap: 0.5rem; text-decoration:none;">
-                        View Services
-                    </a>
+                <div style="text-align: center; padding: 6rem 2rem; background: linear-gradient(135deg, rgba(139,0,0,0.04) 0%, rgba(244,193,90,0.04) 100%); border: 2px dashed rgba(139,0,0,0.14); border-radius: 2rem; box-shadow: 0 4px 16px rgba(139,0,0,0.06); max-width: 800px; margin: 0 auto;">
+                    <div style="width: 5.5rem; height: 5.5rem; margin: 0 auto 1.5rem; border-radius: 1.5rem; background: linear-gradient(135deg, rgba(139,0,0,0.12) 0%, rgba(244,193,90,0.08) 100%); border: 2px solid rgba(139,0,0,0.2); color: var(--color-maroon); display:flex; align-items:center; justify-content:center; font-size: 2.2rem;">📦</div>
+                    <h2 class="h2" style="margin: 0 0 0.75rem 0; color: #111827;">Collection Coming Soon</h2>
+                    <p style="margin: 0 auto 2rem; color: #4b5563; max-width: 40rem; line-height: 1.8; font-size: 1.05rem;">Our merchandise catalog is being curated for the premium experience. In the meantime, explore our <strong>services</strong> or check back for fresh arrivals.</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="{{ route('services.index') }}" class="btn btn-primary" style="display:inline-flex; gap: 0.5rem; text-decoration:none;">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-5-9h10v2H7z"/></svg>
+                            Browse Services
+                        </a>
+                        <a href="{{ route('contact.index') }}" class="btn btn-secondary" style="display:inline-flex; gap: 0.5rem; text-decoration:none;">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                            Contact Us
+                        </a>
+                    </div>
                 </div>
             @endif
         </div>
