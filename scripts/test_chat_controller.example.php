@@ -1,6 +1,4 @@
 <?php
-// (Duplicated earlier, ignore)
-<?php
 /**
  * Example script: test_chat_controller
  * Usage: copy to scripts/test_chat_controller.php and run

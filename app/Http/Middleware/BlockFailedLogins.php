@@ -14,11 +14,17 @@ class BlockFailedLogins
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Allow viewing login/register pages; only block credential submission attempts.
+        if (!$request->isMethod('post') || !$request->routeIs('login.post')) {
+            return $next($request);
+        }
+
         $ipAddress = $request->ip();
+        $email = (string) $request->input('email', '');
 
         // Check if IP is blocked
-        if (FailedLoginAttempt::isBlocked($ipAddress)) {
-            $blockedUntil = FailedLoginAttempt::getBlockedUntil($ipAddress);
+        if (FailedLoginAttempt::isBlocked($ipAddress, $email)) {
+            $blockedUntil = FailedLoginAttempt::getBlockedUntil($ipAddress, $email);
             $minutesLeft = $blockedUntil ? now()->diffInMinutes($blockedUntil) : 30;
 
             return response()->view('errors.blocked', [

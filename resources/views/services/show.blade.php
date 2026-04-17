@@ -1,331 +1,106 @@
-<x-app-layout>
-    @section('title', $service->title . ' - CICT Merch')
+<x-app-layout :title="$service->title . ' | ISUFST CICT Dingle Campus'"
+    :meta_description="'View service options, dimensions, and pricing for ' . $service->title . ' at ISUFST CICT Dingle Campus.'">
 
-    <!-- Decorative Red Header Banner (Behind Navbar) -->
-    <div
-        style="position: absolute; top: 0; left: 0; right: 0; height: 110px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); z-index: 0; overflow: hidden;">
-        <!-- Decorative Pattern Overlay -->
-        <div style="position: absolute; inset: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=\"
-            60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\"
-            fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"1\"%3E%3Cpath d=\"M36
-            34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6
-            4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
-        <!-- Decorative Circles -->
-        <div
-            style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.05); border-radius: 50%;">
-        </div>
-        <div
-            style="position: absolute; top: 20px; right: 80px; width: 40px; height: 40px; background: rgba(255,255,255,0.03); border-radius: 50%;">
-        </div>
-        <div
-            style="position: absolute; top: 5px; left: 10%; width: 60px; height: 60px; background: rgba(255,255,255,0.04); border-radius: 50%;">
-        </div>
+    @php
+        $iconKey = (function ($item) {
+            $text = \Illuminate\Support\Str::lower(($item->title ?? '') . ' ' . ($item->category ?? ''));
+
+            if (str_contains($text, 'photo') || str_contains($text, 'image') || str_contains($text, 'id')) {
+                return 'camera';
+            }
+            if (str_contains($text, 'design') || str_contains($text, 'layout') || str_contains($text, 'logo')) {
+                return 'pen';
+            }
+            if (str_contains($text, 'scan') || str_contains($text, 'print') || str_contains($text, 'copy') || str_contains($text, 'document')) {
+                return 'document';
+            }
+            if (str_contains($text, 'binding') || str_contains($text, 'laminate') || str_contains($text, 'finish')) {
+                return 'layers';
+            }
+
+            return 'spark';
+        })($service);
+    @endphp
+
+    <div style="height: 110px; background: linear-gradient(135deg, #8B0000 0%, #A00000 40%, #6B0000 100%); position: relative; overflow: hidden;">
+        <div style="position: absolute; inset: 0; opacity: 0.1; background-image: radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px); background-size: 26px 26px;"></div>
     </div>
 
-    <div style="position: relative; z-index: 1;">
-        <style>
-            body {
-                background: #F9FAFB !important;
-            }
-
-            h1,
-            h2,
-            h3,
-            h4,
-            h5,
-            h6 {
-                font-family: 'Poppins', sans-serif;
-            }
-
-            .page-shell {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 115px 32px 80px;
-            }
-
-            @media (max-width: 768px) {
-                .page-shell {
-                    padding: 105px 20px 60px;
-                }
-            }
-
-            .options-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 24px;
-                align-items: stretch;
-            }
-
-            .card {
-                background: #FFFFFF;
-                border: 2px solid #F0F0F0;
-                border-radius: 20px;
-                box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08),
-                    0 4px 12px rgba(139, 0, 0, 0.04),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-                padding: 36px;
-                transition: all 0.3s ease;
-            }
-
-            .card:hover {
-                box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12),
-                    0 8px 20px rgba(139, 0, 0, 0.08);
-                transform: translateY(-4px);
-            }
-
-            .paper-card {
-                background: #FFFFFF;
-                border: 2px solid #F0F0F0;
-                border-radius: 16px;
-                box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-                text-align: center;
-                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                overflow: hidden;
-            }
-
-            .paper-card::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                border-radius: 16px;
-                padding: 2px;
-                background: linear-gradient(135deg, #8B0000, #FFD700, #8B0000);
-                -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-                -webkit-mask-composite: xor;
-                mask-composite: exclude;
-                opacity: 0;
-                transition: opacity 0.4s ease;
-            }
-
-            .paper-card:hover::before {
-                opacity: 1;
-            }
-
-            .paper-card.short {
-                height: 320px;
-                padding: 28px 32px;
-            }
-
-            .paper-card.standard {
-                height: 440px;
-                padding: 44px 32px;
-            }
-
-            .paper-card.long {
-                height: 560px;
-                padding: 60px 32px;
-            }
-
-            .paper-card:hover {
-                box-shadow: 0 20px 50px rgba(139, 0, 0, 0.15),
-                    0 10px 30px rgba(15, 23, 42, 0.1);
-                transform: translateY(-8px) scale(1.02);
-                border-color: transparent;
-            }
-
-            .paper-card h4 {
-                color: #1E293B;
-                font-weight: 800;
-                margin: 0 0 16px;
-                letter-spacing: -0.5px;
-            }
-
-            .paper-card.short h4 {
-                font-size: 1.75rem;
-            }
-
-            .paper-card.standard h4 {
-                font-size: 2.4rem;
-            }
-
-            .paper-card.long h4 {
-                font-size: 3rem;
-            }
-
-            .paper-badge {
-                display: inline-block;
-                background: linear-gradient(135deg, #FCEEEF, #FEF3F2);
-                color: #8B0000;
-                padding: 8px 16px;
-                border-radius: 10px;
-                font-size: 12px;
-                font-weight: 800;
-                margin-bottom: 16px;
-                text-transform: uppercase;
-                letter-spacing: 0.6px;
-                border: 2px solid rgba(139, 0, 0, 0.15);
-                box-shadow: 0 4px 12px rgba(139, 0, 0, 0.1);
-            }
-
-            .paper-card-dims {
-                color: #888;
-                font-size: 13px;
-                margin-bottom: 24px;
-                font-weight: 500;
-            }
-
-            .price-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-                margin-top: auto;
-            }
-
-            .price-item {
-                background: linear-gradient(135deg, #F7F8FB 0%, #FFFFFF 100%);
-                padding: 20px 18px;
-                border-radius: 12px;
-                border: 2px solid #E8EBF0;
-                transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                min-height: 90px;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .price-item::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(135deg, #8B0000 0%, #A00000 100%);
-                opacity: 0;
-                transition: opacity 0.35s ease;
-            }
-
-            .price-item:hover::before {
-                opacity: 1;
-            }
-
-            .price-item>* {
-                position: relative;
-                z-index: 1;
-            }
-
-            .price-item-label {
-                font-size: 12px;
-                color: #667085;
-                margin-bottom: 10px;
-                font-weight: 700;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                transition: color 0.35s ease;
-            }
-
-            .price-item:hover .price-item-label {
-                color: rgba(255, 255, 255, 0.9);
-            }
-
-            .price-item-value {
-                color: #8B0000;
-                font-weight: 900;
-                font-size: 22px;
-                letter-spacing: -0.5px;
-                transition: color 0.35s ease;
-            }
-
-            .price-item:hover .price-item-value {
-                color: #FFFFFF;
-            }
-
-            .back-link {
-                color: #8B0000;
-                font-weight: 700;
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 18px;
-                border-radius: 10px;
-                background: #FFFFFF;
-                border: 2px solid #F0F0F0;
-                transition: all 0.3s ease;
-                text-decoration: none;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            }
-
-            .back-link:hover {
-                background: #8B0000;
-                color: #FFFFFF;
-                border-color: #8B0000;
-                transform: translateX(-4px);
-                box-shadow: 0 8px 20px rgba(139, 0, 0, 0.15);
-            }
-        </style>
-
-        <div class="page-shell">
-            <div style="margin-bottom: 24px;">
-                <a href="{{ route('services.index') }}" class="back-link">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" fill="none" />
+    <section style="background: var(--color-gray-50); min-height: 100vh;">
+        <div class="premium-detail-shell">
+            <div style="margin-bottom: 1rem;">
+                <a href="{{ route('services.index') }}" class="btn btn-secondary" style="gap: 0.45rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width: 1rem; height: 1rem;">
+                        <path d="M15 6 9 12l6 6"></path>
                     </svg>
                     Back to services
                 </a>
             </div>
 
-            <div class="card" style="margin-bottom: 40px; display:flex; flex-direction:column; gap:18px;">
-                <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
-                    <div
-                        style="width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg,#8B0000 0%,#A00000 100%); color:#fff; display:grid; place-items:center; font-size:32px; box-shadow: 0 8px 20px rgba(139, 0, 0, 0.25);">
-                        {{ $service->icon ?? '🖨️' }}
-                    </div>
+            <div class="premium-detail-hero" style="margin-bottom: 1.4rem;">
+                <div class="premium-detail-head">
+                    <span class="premium-icon-wrap" aria-hidden="true">
+                        @switch($iconKey)
+                            @case('camera')
+                                <svg viewBox="0 0 24 24"><path d="M4 8h3l1.6-2h6.8L17 8h3v11H4z"></path><circle cx="12" cy="13" r="3.6"></circle></svg>
+                                @break
+                            @case('pen')
+                                <svg viewBox="0 0 24 24"><path d="M4 20l4.2-1 9.5-9.5-3.2-3.2L5 15.8 4 20z"></path><path d="m13.8 5.8 3.2 3.2"></path></svg>
+                                @break
+                            @case('document')
+                                <svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v5h4"></path><path d="M10 12h5M10 16h5"></path></svg>
+                                @break
+                            @case('layers')
+                                <svg viewBox="0 0 24 24"><path d="m12 4 8 4-8 4-8-4 8-4z"></path><path d="m4 12 8 4 8-4"></path><path d="m4 16 8 4 8-4"></path></svg>
+                                @break
+                            @default
+                                <svg viewBox="0 0 24 24"><path d="M12 3v6"></path><path d="M12 15v6"></path><path d="m5.6 6.4 4.2 4.2"></path><path d="m14.2 15 4.2 4.2"></path><path d="M3 12h6"></path><path d="M15 12h6"></path></svg>
+                        @endswitch
+                    </span>
                     <div>
-                        <h1 style="margin:0; font-size:2rem; font-weight:900; color:#1E293B; letter-spacing:-0.5px;">
-                            {{ $service->title }}
-                        </h1>
-                        <div style="color:#667085; font-size:15px; font-weight:600; margin-top:4px;">
-                            {{ $service->category ?? 'General' }}
-                        </div>
+                        <p class="premium-inline-meta" style="margin-bottom: 0.22rem;">{{ $service->category ?? 'General' }}</p>
+                        <h1 class="premium-detail-title">{{ $service->title }}</h1>
                     </div>
                 </div>
-                <p style="margin:0; color:#475569; line-height:1.7; font-size:15.5px; font-weight:500;">
-                    {{ $service->description }}
-                </p>
+                <p class="premium-muted">{{ $service->description }}</p>
             </div>
 
             @if($options->count())
-                <div
-                    style="margin-bottom:32px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div class="premium-section-head" style="margin-bottom: 1rem;">
                     <div>
-                        <h2 style="margin:0; font-size:1.75rem; font-weight:900; color:#1E293B; letter-spacing:-0.5px;">
-                            Options & Variants</h2>
-
+                        <p class="premium-kicker">Service matrix</p>
+                        <h2 class="h2" style="margin: 0;">Options & Variants</h2>
                     </div>
                 </div>
-                <div class="options-grid">
+
+                <div class="premium-option-grid">
                     @foreach($options as $option)
-                        <div class="paper-card {{ $option->size_class ?? 'standard' }}">
-                            @if($option->badge)
-                                <span class="paper-badge">{{ $option->badge }}</span>
-                            @endif
-                            <h4 style="margin:0; font-weight:800; font-size:1.25rem; color:#1a1a1a;">{{ $option->name }}</h4>
-                            @if($option->dimensions)
-                                <div class="paper-card-dims">{{ $option->dimensions }}</div>
-                            @endif
-                            <div class="price-grid">
-                                <div class="price-item">
-                                    <div class="price-item-label">{{ $option->price_primary_label ?? 'Primary' }}</div>
-                                    <div class="price-item-value">
-                                        {{ $option->price_primary ? '₱' . number_format($option->price_primary, 2) : '—' }}
-                                    </div>
+                        <article style="border-radius: 1rem; border: 1px solid #e9edf3; background: #fff; box-shadow: 0 14px 26px rgba(16,24,40,0.07); padding: 1.1rem; display: grid; gap: 0.95rem;">
+                            <div>
+                                @if($option->badge)
+                                    <span class="premium-inline-meta" style="margin-bottom: 0.45rem;">{{ $option->badge }}</span>
+                                @endif
+                                <h3 style="margin: 0; font-size: 1.15rem; color: #1f2937; line-height: 1.35;">{{ $option->name }}</h3>
+                                @if($option->dimensions)
+                                    <p style="margin: 0.35rem 0 0; color: var(--color-gray-600); font-size: 0.85rem;">{{ $option->dimensions }}</p>
+                                @endif
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: auto;">
+                                <div style="background: #f9fafc; border: 1px solid #e7eaf0; border-radius: 0.75rem; padding: 0.8rem;">
+                                    <p style="margin: 0 0 0.2rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; color: var(--color-gray-600); text-transform: uppercase;">{{ $option->price_primary_label ?? 'Primary' }}</p>
+                                    <p style="margin: 0; font-size: 1.08rem; font-weight: 800; color: var(--color-maroon);">{{ $option->price_primary ? 'P' . number_format($option->price_primary, 2) : '—' }}</p>
                                 </div>
-                                <div class="price-item">
-                                    <div class="price-item-label">{{ $option->price_secondary_label ?? 'Secondary' }}</div>
-                                    <div class="price-item-value">
-                                        {{ $option->price_secondary ? '₱' . number_format($option->price_secondary, 2) : '—' }}
-                                    </div>
+                                <div style="background: #f9fafc; border: 1px solid #e7eaf0; border-radius: 0.75rem; padding: 0.8rem;">
+                                    <p style="margin: 0 0 0.2rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; color: var(--color-gray-600); text-transform: uppercase;">{{ $option->price_secondary_label ?? 'Secondary' }}</p>
+                                    <p style="margin: 0; font-size: 1.08rem; font-weight: 800; color: var(--color-maroon);">{{ $option->price_secondary ? 'P' . number_format($option->price_secondary, 2) : '—' }}</p>
                                 </div>
                             </div>
-                        </div>
+                        </article>
                     @endforeach
                 </div>
             @endif
         </div>
-    </div>
+    </section>
+
 </x-app-layout>

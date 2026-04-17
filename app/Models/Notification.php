@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Notification Model
@@ -23,6 +24,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Notification extends Model
 {
     use HasFactory;
+
+    /**
+     * Notifications use UUID identifiers in production DB.
+     * Keep id as string to avoid coercion to integer 0.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
+     * @var string
+     */
+    protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',
@@ -54,10 +68,20 @@ class Notification extends Model
     public function markAsRead(): void
     {
         if (!$this->is_read) {
-            $this->update([
-                'is_read' => true,
-                'read_at' => now(),
-            ]);
+            $now = now();
+
+            // Use SQL TRUE literal to stay compatible with PostgreSQL boolean typing.
+            static::query()
+                ->whereKey($this->getKey())
+                ->update([
+                    'is_read' => DB::raw('TRUE'),
+                    'read_at' => $now,
+                    'updated_at' => $now,
+                ]);
+
+            $this->is_read = true;
+            $this->read_at = $now;
+            $this->updated_at = $now;
         }
     }
 
@@ -66,7 +90,7 @@ class Notification extends Model
      */
     public function scopeUnread($query)
     {
-        return $query->whereRaw('"is_read" IS FALSE');
+        return $query->whereRaw('is_read IS FALSE');
     }
 
     /**
@@ -74,7 +98,7 @@ class Notification extends Model
      */
     public function scopeRead($query)
     {
-        return $query->whereRaw('"is_read" IS TRUE');
+        return $query->whereRaw('is_read IS TRUE');
     }
 
     /**

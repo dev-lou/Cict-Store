@@ -52,6 +52,7 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border-radius: 16px;
+            border: 2px solid var(--color-gold, #D97706);
             box-shadow: 0 10px 30px rgba(139, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.12);
             max-width: calc(100% - 24px);
             margin: 8px 12px;
@@ -67,6 +68,66 @@
             nav.navbar-glass {
                 gap: 8px;
             }
+
+            .navbar-brand-link {
+                gap: 0.55rem !important;
+            }
+
+            .navbar-brand-logo {
+                width: 36px !important;
+                height: 36px !important;
+            }
+
+            .navbar-brand-logo svg {
+                width: 18px !important;
+                height: 18px !important;
+            }
+
+            .navbar-brand-kicker {
+                font-size: 0.58rem !important;
+                letter-spacing: 0.12em !important;
+            }
+
+            .navbar-brand-title {
+                font-size: 0.78rem !important;
+                line-height: 1.05 !important;
+                margin-top: 0.08rem !important;
+            }
+
+            .navbar-actions {
+                gap: 0.4rem !important;
+            }
+
+            .navbar-actions .touch-target {
+                min-width: 38px !important;
+                min-height: 38px !important;
+                padding: 0.42rem !important;
+            }
+
+            .navbar-actions svg.w-6.h-6 {
+                width: 22px !important;
+                height: 22px !important;
+            }
+
+            .cart-count-badge--nav {
+                top: -2px;
+                right: -2px;
+                min-width: 18px;
+                height: 18px;
+                font-size: 10px;
+                padding: 0 5px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .navbar-brand-kicker {
+                display: none;
+            }
+
+            .navbar-brand-title {
+                font-size: 0.8rem !important;
+                letter-spacing: -0.02em !important;
+            }
         }
 
         .navbar-link {
@@ -76,7 +137,7 @@
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             display: inline-block;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
             padding-bottom: 6px;
         }
 
@@ -217,49 +278,180 @@
             bottom: 0;
             width: 320px;
             max-width: 85vw;
-            background: #ffffff;
-            box-shadow: -4px 0 32px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(180deg, #faf8f8 0%, #f2f0f0 100%);
+            border-left: 1px solid rgba(139, 0, 0, 0.12);
+            box-shadow: -14px 0 48px rgba(30, 8, 8, 0.28);
             z-index: 100;
             overflow-y: auto;
+            overflow-x: hidden;
+            border-top-left-radius: 1.1rem;
+            border-bottom-left-radius: 1.1rem;
+        }
+
+        .mobile-drawer::before {
+            content: '';
+            position: sticky;
+            top: 0;
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #8B0000 0%, #d97706 55%, #8B0000 100%);
+            z-index: 2;
         }
 
         .mobile-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(20, 10, 10, 0.58);
+            backdrop-filter: blur(6px);
             z-index: 99;
+        }
+
+        .mobile-drawer-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(244, 236, 236, 0.96) 100%) !important;
+            border-bottom: 1px solid rgba(139, 0, 0, 0.1) !important;
+        }
+
+        .mobile-profile-shell {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.08) 0%, rgba(139, 0, 0, 0.02) 100%) !important;
+            border-bottom: 1px solid rgba(139, 0, 0, 0.1) !important;
+        }
+
+        .mobile-nav-stack {
+            padding: 0.6rem;
+            display: grid;
+            gap: 0.36rem;
         }
 
         .mobile-nav-link {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 18px 24px;
+            gap: 12px;
+            padding: 0.78rem 0.82rem;
+            margin: 0;
             font-size: 16px;
             font-weight: 600;
             color: #1f2937;
-            transition: all 0.2s ease;
-            border-left: 4px solid transparent;
-            font-family: 'Inter', sans-serif;
+            transition: all 0.24s ease;
+            border-left: 0;
+            border-radius: 0.85rem;
+            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.45);
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+            text-decoration: none;
         }
 
         .mobile-nav-link.active {
-            background: linear-gradient(90deg, rgba(139, 0, 0, 0.08) 0%, transparent 100%);
-            border-left-color: #8B0000;
+            background: linear-gradient(120deg, rgba(139, 0, 0, 0.15) 0%, rgba(139, 0, 0, 0.07) 100%);
+            border-color: rgba(139, 0, 0, 0.22);
             color: #8B0000;
             font-weight: 700;
+            box-shadow: inset 3px 0 0 #8B0000;
         }
 
         .mobile-nav-link:hover {
-            background: rgba(139, 0, 0, 0.04);
-            padding-left: 28px;
+            background: rgba(139, 0, 0, 0.06);
+            border-color: rgba(139, 0, 0, 0.15);
+            transform: translateX(2px);
         }
 
         .mobile-icon {
-            width: 24px;
-            height: 24px;
+            width: 21px;
+            height: 21px;
             flex-shrink: 0;
+            color: currentColor;
+        }
+
+        .mobile-divider {
+            height: 1px;
+            background: linear-gradient(90deg, rgba(139, 0, 0, 0) 0%, rgba(139, 0, 0, 0.2) 50%, rgba(139, 0, 0, 0) 100%);
+            margin: 0.5rem 0.2rem;
+        }
+
+        .mobile-logout {
+            color: #b91c1c !important;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .notifications-dropdown {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 0.72rem);
+            width: min(360px, calc(100vw - 32px));
+            max-height: min(62vh, 460px);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 0, 0, 0.12);
+            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.22);
+            overflow: hidden;
+            z-index: 11000 !important;
+        }
+
+        .notifications-header {
+            border-bottom: 1px solid rgba(139, 0, 0, 0.1);
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.08) 0%, rgba(217, 119, 6, 0.08) 100%);
+        }
+
+        .notifications-mark-all {
+            border: 1px solid rgba(139, 0, 0, 0.24);
+            background: rgba(255, 255, 255, 0.82);
+            color: #8B0000;
+            border-radius: 9999px;
+            padding: 0.3rem 0.62rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .notifications-mark-all:hover {
+            background: rgba(139, 0, 0, 0.08);
+        }
+
+        .notifications-body {
+            max-height: min(42vh, 300px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .notification-row {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .notification-title {
+            margin: 0;
+            font-size: 0.88rem;
+            line-height: 1.3;
+        }
+
+        .notification-message {
+            margin-top: 0.35rem;
+            margin-bottom: 0;
+            color: #4b5563;
+            font-size: 0.78rem;
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .notification-time {
+            margin-top: 0.5rem;
+            font-size: 0.78rem;
+            color: #9ca3af;
+        }
+
+        .notifications-footer-link {
+            border-top: 1px solid rgba(139, 0, 0, 0.1);
+            background: rgba(139, 0, 0, 0.04);
+            color: #8B0000;
+        }
+
+        .notifications-footer-link:hover {
+            background: rgba(139, 0, 0, 0.08);
         }
 
         /* Ensure touch targets are minimum 44px */
@@ -275,20 +467,19 @@
             /* Mobile-friendly notification dropdown */
             .notifications-dropdown {
                 position: fixed !important;
-                left: 8px !important;
-                right: 8px !important;
-                top: auto !important;
-                bottom: auto !important;
-                margin-top: 8px !important;
+                left: 10px !important;
+                right: 10px !important;
+                top: 84px !important;
                 width: auto !important;
-                max-width: calc(100vw - 16px) !important;
-                border-radius: 16px !important;
+                max-width: none !important;
+                max-height: calc(100vh - 120px) !important;
+                border-radius: 14px !important;
                 z-index: 2147483648 !important;
                 box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25) !important;
             }
 
-            .notifications-dropdown .overflow-y-auto {
-                max-height: calc(100vh - 200px) !important;
+            .notifications-body {
+                max-height: calc(100vh - 230px) !important;
                 overflow-y: auto !important;
                 -webkit-overflow-scrolling: touch !important;
             }
@@ -310,6 +501,15 @@
             .notifications-dropdown .text-xs {
                 font-size: 12px !important;
                 line-height: 1.4 !important;
+            }
+
+            .notification-row {
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+            }
+
+            .notification-message {
+                -webkit-line-clamp: 2;
             }
         }
     </style>
@@ -360,8 +560,17 @@
 
                 <!-- Logo -->
                 <div class="flex items-center" style="overflow: visible !important;">
-                    <a href="/" class="text-2xl font-bold text-black"
-                        style="font-family: 'Inter', sans-serif; font-size: 24px;">{{ config('app.name', 'CICT Dingle') }}</a>
+                    <a href="/" class="flex items-center gap-3 text-black navbar-brand-link" style="text-decoration: none;">
+                        <span class="navbar-brand-logo" style="display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border-radius: 9999px; background: linear-gradient(135deg, var(--color-maroon), var(--color-maroon-dark)); color: white; box-shadow: 0 10px 20px rgba(139,0,0,0.18); flex-shrink: 0;">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px; fill: currentColor;">
+                                <path d="M12 2 1 7l11 5 9-4.09V17h2V7L12 2Zm0 12L4.74 10.67 12 7.36l7.26 3.31L12 14Zm-9 2v2c0 2.2 4.03 4 9 4s9-1.8 9-4v-2l-9 4-9-4Z"/>
+                            </svg>
+                        </span>
+                        <span style="display: flex; flex-direction: column; line-height: 1; min-width: 0;">
+                            <span class="navbar-brand-kicker" style="font-family: var(--font-heading); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-maroon);">Campus store</span>
+                            <span class="navbar-brand-title" style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; letter-spacing: -0.03em; color: #111827; margin-top: 0.15rem;">{{ config('app.name', 'CICT Dingle') }}</span>
+                        </span>
+                    </a>
                 </div>
 
                 <!-- Navigation Links (Center - Hidden on Mobile) -->
@@ -384,7 +593,7 @@
                 </div>
 
                 <!-- Right Side: Cart & Auth -->
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4 navbar-actions">
                     <!-- Cart Button (Visible on both mobile and desktop) -->
                     @auth
                         <a href="{{ route('cart.index') }}"
@@ -410,11 +619,18 @@
                         <!-- Notification Bell (Visible on both mobile and desktop) -->
                         <div x-data="{
                                                                         open: false,
-                                                                        unreadCount: {{ auth()->user()->unreadNotifications()->count() }},
+                                                                        unreadCount: {{ \App\Models\Notification::where('user_id', auth()->id())->unread()->count() }},
+                                                                        visibleCount: 3,
                                                                         notifications: [],
+                                                                        updateVisibleCount() {
+                                                                            this.visibleCount = window.innerWidth <= 768 ? 2 : 3;
+                                                                        },
                                                                         async fetchNotifications() {
                                                                             try {
-                                                                                const response = await fetch('/notifications/unread');
+                                                                                const response = await fetch(`/notifications/unread?ts=${Date.now()}`, {
+                                                                                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                                                                                    cache: 'no-store',
+                                                                                });
                                                                                 const data = await response.json();
                                                                                 this.unreadCount = data.unread_count || 0;
                                                                                 this.notifications = data.notifications || [];
@@ -424,13 +640,62 @@
                                                                         },
                                                                         async markAsRead(id) {
                                                                             try {
-                                                                                await fetch(`/notifications/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
-                                                                                this.fetchNotifications();
+                                                                                const response = await fetch(`/notifications/${id}/read`, {
+                                                                                    method: 'POST',
+                                                                                    credentials: 'same-origin',
+                                                                                    keepalive: true,
+                                                                                    headers: {
+                                                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                                                        'Accept': 'application/json',
+                                                                                        'X-Requested-With': 'XMLHttpRequest',
+                                                                                    },
+                                                                                });
+
+                                                                                if (!response.ok) {
+                                                                                    throw new Error(`Failed with status ${response.status}`);
+                                                                                }
+
+                                                                                await this.fetchNotifications();
+                                                                                return true;
                                                                             } catch (error) {
                                                                                 console.error('Failed to mark notification as read:', error);
+                                                                                await this.fetchNotifications();
+                                                                                return false;
+                                                                            }
+                                                                        },
+                                                                        async markAllAsRead() {
+                                                                            try {
+                                                                                const response = await fetch('/notifications/mark-all-read', {
+                                                                                    method: 'POST',
+                                                                                    credentials: 'same-origin',
+                                                                                    headers: {
+                                                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                                                        'Accept': 'application/json',
+                                                                                        'X-Requested-With': 'XMLHttpRequest',
+                                                                                    },
+                                                                                });
+
+                                                                                if (!response.ok) {
+                                                                                    throw new Error(`Failed with status ${response.status}`);
+                                                                                }
+
+                                                                                this.unreadCount = 0;
+                                                                                this.notifications = this.notifications.map((n) => ({ ...n, is_read: true }));
+                                                                                await this.fetchNotifications();
+                                                                            } catch (error) {
+                                                                                console.error('Failed to mark all notifications as read:', error);
+                                                                            }
+                                                                        },
+                                                                        async openNotification(notification) {
+                                                                            this.open = false;
+
+                                                                            if (notification?.link && notification.link !== '#') {
+                                                                                window.location.href = notification.link;
                                                                             }
                                                                         },
                                                                         init() {
+                                                                            this.updateVisibleCount();
+                                                                            window.addEventListener('resize', () => this.updateVisibleCount());
                                                                             this.fetchNotifications();
                                                                             setInterval(() => this.fetchNotifications(), 60000);
                                                                         }
@@ -456,11 +721,10 @@
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
                                 id="notifications-panel"
-                                class="notifications-dropdown absolute right-0 mt-3 rounded-xl shadow-xl" role="dialog"
+                                class="notifications-dropdown" role="dialog"
                                 aria-label="Notifications" :aria-hidden="!open"
-                                style="width: min(480px, calc(100vw - 32px)); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); display: none; z-index: 9999 !important; position: fixed !important; top: 60px !important; transform: translateX(0);">
-                                <div class="px-4 py-3 flex items-center justify-between"
-                                    style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); background: rgba(218, 165, 32, 0.1);">
+                                style="display: none;">
+                                <div class="notifications-header px-4 py-3 flex items-center justify-between">
                                     <div class="flex items-center gap-2">
                                         <h3 class="text-sm font-bold text-black">Notifications</h3>
                                         <span x-cloak x-show="unreadCount > 0"
@@ -468,13 +732,17 @@
                                             style="background: #ff0000;" x-text="unreadCount + ' new'"></span>
                                     </div>
                                     <div class="flex items-center gap-2">
+                                        <button x-show="unreadCount > 0" @click="markAllAsRead()"
+                                            class="notifications-mark-all no-animate" type="button">
+                                            Mark all read
+                                        </button>
                                         <button @click="open = false"
                                             class="p-2 rounded-md text-black hover:bg-black/5 touch-target no-animate"
                                             title="Close notifications" aria-label="Close notifications">✕</button>
                                     </div>
                                 </div>
 
-                                <div class="overflow-y-auto">
+                                <div class="notifications-body overflow-y-auto">
                                     <template x-if="notifications.length === 0">
                                         <div class="px-4 py-8 text-center text-gray-500">
                                             <svg class="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none"
@@ -487,12 +755,12 @@
                                         </div>
                                     </template>
 
-                                    <template x-for="(notification, index) in notifications.slice(0, 6)"
+                                    <template x-for="(notification, index) in notifications.slice(0, visibleCount)"
                                         :key="notification.id + '-' + index">
-                                        <div @click="markAsRead(notification.id); open = false; window.location.href = notification.link || '#'"
-                                            class="px-4 py-3 hover:bg-black/5 cursor-pointer transition-colors"
+                                        <div @click="openNotification(notification)"
+                                            class="notification-row px-4 py-3 hover:bg-black/5 cursor-pointer transition-colors"
                                             :class="{ 'opacity-75 bg-gray-50': notification.is_read }"
-                                            style="border-bottom: 1px solid rgba(0, 0, 0, 0.05);">
+                                            >
                                             <div class="flex items-start gap-3">
                                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                                                     :class="{ 'opacity-50 grayscale': notification.is_read }"
@@ -507,12 +775,12 @@
                                                         class="text-xl"></span>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
-                                                    <p class="text-sm text-black"
+                                                    <p class="notification-title text-sm text-black"
                                                         :class="notification.is_read ? 'font-medium' : 'font-bold'"
                                                         x-text="notification.title">
                                                     </p>
-                                                    <p class="text-xs text-gray-600 mt-1" x-text="notification.message"></p>
-                                                    <p class="text-xs text-gray-400 mt-1" x-text="notification.time"></p>
+                                                    <p class="notification-message text-xs text-gray-600 mt-1" x-text="notification.message"></p>
+                                                    <p class="notification-time text-xs text-gray-400 mt-1" x-text="notification.time"></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -520,10 +788,7 @@
                                 </div>
 
                                 <a href="{{ route('notifications.index') }}"
-                                    class="block px-4 py-3 text-center text-sm font-semibold transition-colors"
-                                    style="border-top: 1px solid rgba(0, 0, 0, 0.1); background: rgba(218, 165, 32, 0.05); color: #8B0000;"
-                                    onmouseover="this.style.background='rgba(218, 165, 32, 0.1)';"
-                                    onmouseout="this.style.background='rgba(218, 165, 32, 0.05)';">
+                                    class="notifications-footer-link block px-4 py-3 text-center text-sm font-semibold transition-colors">
                                     View All Notifications
                                 </a>
                             </div>
@@ -532,13 +797,17 @@
 
                     <!-- User Menu / Auth Dropdown (Desktop only) -->
                     @auth
+                        @php
+                            /** @var \Illuminate\Filesystem\FilesystemAdapter $supabaseDisk */
+                            $supabaseDisk = Storage::disk('supabase');
+                        @endphp
                         <div x-data="{ menuOpen: false }" class="relative hidden md:flex"
                             style="overflow: visible !important;">
                             <button @click="menuOpen = !menuOpen"
                                 class="flex items-center gap-2 p-1.5 pr-2.5 rounded-full transition-all duration-200 hover:bg-black/5 text-black border border-transparent hover:border-black/5 hover:shadow-sm"
                                 title="Account Menu" style="overflow: visible !important;">
                                 @if(auth()->user()->profile_picture)
-                                    <img src="{{ Storage::disk('supabase')->url(auth()->user()->profile_picture) }}"
+                                    <img src="{{ $supabaseDisk->url(auth()->user()->profile_picture) }}"
                                         alt="{{ auth()->user()->name }}"
                                         class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-md ring-1 ring-black/5">
                                 @else
@@ -570,7 +839,7 @@
                                 <div class="dropdown-header px-4 py-4 flex items-center gap-3"
                                     style="border-bottom: 1px solid rgba(0, 0, 0, 0.08); background: linear-gradient(135deg, rgba(218, 165, 32, 0.12) 0%, rgba(218, 165, 32, 0.06) 100%);">
                                     @if(auth()->user()->profile_picture)
-                                        <img src="{{ Storage::disk('supabase')->url(auth()->user()->profile_picture) }}"
+                                        <img src="{{ $supabaseDisk->url(auth()->user()->profile_picture) }}"
                                             alt="{{ auth()->user()->name }}"
                                             class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm">
                                     @else
@@ -680,7 +949,7 @@
         x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="translate-x-0"
         x-transition:leave-end="translate-x-full" class="mobile-drawer" style="display: none;">
         <!-- Mobile Menu Header -->
-        <div class="flex items-center justify-between p-4 border-b border-gray-200"
+        <div class="mobile-drawer-header flex items-center justify-between p-4 border-b border-gray-200"
             style="background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(218, 165, 32, 0.05) 100%);">
             <h2 class="text-xl font-bold text-black" style="font-family: 'Inter', sans-serif;">Menu</h2>
             <button @click="closeMobileMenu()"
@@ -695,11 +964,11 @@
 
         @auth
             <!-- User Profile Section (Mobile) -->
-            <div class="p-4 border-b border-gray-200"
+            <div class="mobile-profile-shell p-4 border-b border-gray-200"
                 style="background: linear-gradient(135deg, rgba(139, 0, 0, 0.05) 0%, transparent 100%);">
                 <div class="flex items-center gap-3">
                     @if(auth()->user()->profile_picture)
-                        <img src="{{ Storage::disk('supabase')->url(auth()->user()->profile_picture) }}" alt="Profile"
+                        <img src="{{ $supabaseDisk->url(auth()->user()->profile_picture) }}" alt="Profile"
                             class="w-12 h-12 rounded-lg object-cover border-2 border-gray-300">
                     @else
                         <div class="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold"
@@ -716,7 +985,7 @@
         @endauth
 
         <!-- Navigation Links -->
-        <nav class="py-2">
+        <nav class="mobile-nav-stack py-2">
             <a href="/" @click="closeMobileMenu()" class="mobile-nav-link {{ request()->is('/') ? 'active' : '' }}">
                 <svg class="mobile-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -756,7 +1025,7 @@
             </a>
 
             @auth
-                <div class="h-px bg-gray-200 my-2"></div>
+                <div class="mobile-divider h-px bg-gray-200 my-2"></div>
 
                 @if (auth()->user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" @click="closeMobileMenu()" class="mobile-nav-link">
@@ -795,11 +1064,11 @@
                     <span>Shopping Cart</span>
                 </a>
 
-                <div class="h-px bg-gray-200 my-2"></div>
+                <div class="mobile-divider h-px bg-gray-200 my-2"></div>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="mobile-nav-link w-full text-left text-red-600 hover:bg-red-50">
+                    <button type="submit" class="mobile-nav-link mobile-logout w-full text-left text-red-600 hover:bg-red-50">
                         <svg class="mobile-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">

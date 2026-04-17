@@ -18,6 +18,7 @@
                 minSize: options.minSize || 2,
                 maxSize: options.maxSize || 6,
                 speed: options.speed || 0.5,
+                zIndex: options.zIndex ?? 1,
                 interactive: options.interactive !== undefined ? options.interactive : true,
                 connections: options.connections !== undefined ? options.connections : true,
                 connectionDistance: options.connectionDistance || 150,
@@ -40,7 +41,7 @@
                 width: 100%;
                 height: 100%;
                 pointer-events: ${this.options.interactive ? 'auto' : 'none'};
-                z-index: 1;
+                z-index: ${this.options.zIndex};
             `;
 
             this.ctx = this.canvas.getContext('2d');
@@ -200,14 +201,15 @@
         
         const particleCount = 30;
 
-        document.querySelectorAll('.hero-section, .hero, .contact-hero, .shop-hero, .services-hero').forEach(hero => {
+        document.querySelectorAll('.hero-section, .hero, .contact-hero, .shop-hero, .services-hero, .store-hero-section').forEach(hero => {
             new ParticleSystem(hero, {
                 particleCount: particleCount,
                 color: '#FFFFFF',
-                opacity: 0.5,
+                opacity: 0.36,
                 speed: 0.5, // Slightly faster for more visual impact
                 minSize: 2,
                 maxSize: 4,
+                zIndex: 0,
                 interactive: false, // Disabled for performance
                 connections: false, // Disabled - saves significant CPU
                 connectionDistance: 0

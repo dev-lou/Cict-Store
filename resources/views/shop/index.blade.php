@@ -1,487 +1,122 @@
-<x-app-layout>
-    @section('title', 'Shop - ' . config('app.name', 'CICT Dingle'))
+<x-app-layout :title="'Shop | ISUFST CICT Dingle Campus'"
+    :meta_description="'Browse official ISUFST CICT Dingle Campus merchandise with a cleaner premium storefront and student-first support.'">
 
-    <style>
-        /* ============ DESIGN TOKENS ============ */
-        :root {
-            --primary: #8B0000;
-            --primary-hover: #6B0000;
-            --text-primary: #111827;
-            --text-secondary: #6B7280;
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #F9FAFB;
-            --border: #E5E7EB;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-        }
-
-        /* ============ HERO SECTION ============ */
-        .shop-hero {
-            min-height: 50vh;
-            padding: 160px 24px 60px;
-            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin-top: -72px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .shop-hero {
-                min-height: 55vh;
-                padding-top: 140px;
-                padding-bottom: 40px;
-            }
-
-            .shop-hero-content {
-                margin-top: 60px;
-            }
-        }
-
-        .shop-hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('{{ asset("images/cict_hero_bg.webp") }}') center/cover;
-            opacity: 0.15;
-        }
-
-        .shop-hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 700px;
-        }
-
-        .shop-hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 999px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .shop-hero-title {
-            font-size: clamp(32px, 5vw, 48px);
-            font-weight: 800;
-            color: #fff;
-            line-height: 1.1;
-            margin-bottom: 16px;
-            letter-spacing: -1px;
-        }
-
-        .shop-hero-subtitle {
-            font-size: clamp(14px, 2vw, 18px);
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.5;
-        }
-
-        /* ============ MAIN CONTENT ============ */
-        .shop-content {
-            background: var(--bg-secondary);
-            padding: 60px 24px 80px;
-            min-height: 60vh;
-        }
-
-        .shop-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* ============ HEADER ============ */
-        .shop-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .shop-header-left h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0 0 4px 0;
-        }
-
-        .shop-header-left p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin: 0;
-        }
-
-        /* ============ PRODUCT GRID ============ */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-        }
-
-        @media (max-width: 1024px) {
-            .products-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-        }
-
-        /* ============ PRODUCT CARD ============ */
-        .product-card {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            position: relative;
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            padding: 6px 12px;
-            background: var(--primary);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 600;
-            border-radius: var(--radius-sm);
-            z-index: 5;
-        }
-
-        .product-badge.warning {
-            background: #F59E0B;
-        }
-
-        .product-badge.danger {
-            background: #DC2626;
-        }
-
-        .product-image {
-            aspect-ratio: 1/1;
-            background: var(--bg-secondary);
-            overflow: hidden;
-        }
-
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
-        }
-
-        .product-image-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .product-info {
-            padding: 16px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .product-description {
-            font-size: 12px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 12px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .product-price {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: auto;
-            margin-bottom: 12px;
-        }
-
-        .product-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: center;
-            border-radius: var(--radius-sm);
-            transition: background 0.2s ease;
-        }
-
-        .product-btn:hover {
-            background: var(--primary-hover);
-        }
-
-        /* ============ PAGINATION ============ */
-        .pagination-wrapper {
-            margin-top: 48px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .pagination-wrapper nav {
-            background: var(--bg-primary);
-            border-radius: var(--radius-md);
-            padding: 12px 16px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* ============ EMPTY STATE ============ */
-        .empty-state {
-            text-align: center;
-            padding: 80px 24px;
-        }
-
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-
-        .empty-state-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .empty-state-text {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        /* ============ MOBILE ADJUSTMENTS ============ */
-        @media (max-width: 640px) {
-            .shop-hero {
-                min-height: 35vh;
-                padding: 120px 16px 40px;
-            }
-
-            .shop-hero-title {
-                font-size: 26px;
-            }
-
-            .shop-hero-subtitle {
-                font-size: 13px;
-            }
-
-            .shop-content {
-                padding: 32px 12px 60px;
-            }
-
-            .products-grid {
-                gap: 10px;
-            }
-
-            .product-card {
-                border-radius: 12px;
-            }
-
-            .product-image {
-                aspect-ratio: 1/1;
-            }
-
-            .product-info {
-                padding: 10px;
-            }
-
-            .product-title {
-                font-size: 12px;
-                margin-bottom: 4px;
-                -webkit-line-clamp: 2;
-            }
-
-            .product-description {
-                display: none;
-            }
-
-            .product-price {
-                font-size: 14px;
-                margin-bottom: 8px;
-            }
-
-            .product-btn {
-                padding: 8px;
-                font-size: 11px;
-                border-radius: 6px;
-            }
-
-            .product-badge {
-                top: 8px;
-                left: 8px;
-                padding: 4px 8px;
-                font-size: 9px;
-            }
-
-            .shop-header {
-                margin-bottom: 20px;
-                padding-bottom: 16px;
-            }
-
-            .shop-header-left h2 {
-                font-size: 20px;
-            }
-
-            .shop-header-left p {
-                font-size: 13px;
-            }
-        }
-    </style>
-
-    <!-- Hero Section -->
-    <section class="shop-hero">
-        <div class="shop-hero-content">
-            <div class="shop-hero-badge">
-                <span>🛍️</span>
-                <span>CICT Student Council Store</span>
+    <section class="store-section store-section-soft store-hero-section">
+        <div class="store-shell">
+            <div class="editorial-hero">
+                <div class="editorial-hero-glow" aria-hidden="true"></div>
+                <div class="editorial-hero-grid">
+                    <div>
+                        <div class="editorial-eyebrow">
+                            <span style="width: 0.42rem; height: 0.42rem; border-radius: 9999px; background: #f4c15a;"></span>
+                            Official Campus Store
+                        </div>
+                        <h1 class="editorial-title">Shop CICT Merchandise.</h1>
+                        <p class="editorial-subtitle">Modern campus gear with a cleaner buying flow, clearer pricing, and the same student-led support.</p>
+                        <div class="editorial-chips">
+                            <span class="editorial-chip">Student Support</span>
+                            <span class="editorial-chip">Campus Pickup</span>
+                            <span class="editorial-chip editorial-chip--mobile-hide">Official Merchandise</span>
+                        </div>
+                    </div>
+                    <div class="editorial-panel">
+                        <h3>Built for quick checkout</h3>
+                        <p>From product discovery to order confirmation, the catalog is tuned for a more premium and trustworthy shopping experience.</p>
+                    </div>
+                </div>
             </div>
-            <h1 class="shop-hero-title gsap-hero-title">Shop Merchandise</h1>
-            <p class="shop-hero-subtitle gsap-hero-subtitle">
-                Browse our collection of premium campus merchandise. Every purchase supports student initiatives.
-            </p>
         </div>
     </section>
 
-    <!-- Products Section -->
-    <div class="shop-content">
-        <div class="shop-container">
+    <section class="store-section store-section-soft" style="padding-top: 1.8rem; min-height: 60vh;">
+        <div class="store-shell">
             @if($products->count() > 0)
-                <div class="shop-header">
-                    <div class="shop-header-left">
-                        <h2>All Products</h2>
-                        <p>{{ $products->total() }} items available</p>
+                <div class="premium-section-head">
+                    <div>
+                        <p class="premium-kicker">Catalog</p>
+                        <h2 class="h2" style="margin: 0;">All Products</h2>
                     </div>
+                    <p>{{ $products->total() }} items available with variant pricing and stock-aware listing.</p>
                 </div>
 
-                <div class="products-grid">
+                <div class="premium-shop-grid">
                     @foreach($products as $product)
                         @php
                             $stock = $product->current_stock;
                             $isLowStock = $stock > 0 && $stock <= $product->low_stock_threshold;
                             $isOutOfStock = $stock == 0;
+                            $firstVariant = \App\Models\ProductVariant::where('product_id', $product->id)
+                                ->where('status', 'active')
+                                ->orderBy('price_modifier', 'asc')
+                                ->first();
+                            $displayPrice = $firstVariant
+                                ? $product->base_price + $firstVariant->price_modifier
+                                : $product->base_price;
                         @endphp
-                        <a href="{{ route('shop.show', $product->slug) }}" class="product-card reveal-on-scroll">
-                            {{-- Custom promotional badge (e.g., Christmas, Valentine) --}}
-                            @if($product->badge_text)
-                                <span class="product-badge"
-                                    style="background: {{ $product->badge_color ?? '#8B0000' }}; top: 12px; right: 12px; left: auto;">{{ $product->badge_text }}</span>
-                            @endif
-
-                            {{-- Stock status badges --}}
-                            @if($isOutOfStock)
-                                <span class="product-badge danger">Out of Stock</span>
-                            @elseif($isLowStock)
-                                <span class="product-badge warning">Only {{ $stock }} left</span>
-                            @endif
-
-                            <div class="product-image">
+                        <a href="{{ route('shop.show', $product->slug) }}" class="premium-product-card">
+                            <div class="premium-product-media">
+                                <div class="premium-badge-row">
+                                    <span class="premium-badge premium-badge-sale">Sale</span>
+                                    <span class="premium-badge premium-badge-new">New</span>
+                                </div>
                                 @if(!empty($product->image_url))
-                                    <img src="{{ $product->image_url }}" 
-                                         alt="{{ $product->name }}" 
-                                         loading="lazy" 
-                                         decoding="async"
-                                         width="400"
-                                         height="400">
+                                    <div class="loading-skeleton-wrap" style="position:absolute; inset: 0; border-radius: 1rem; overflow: hidden;">
+                                        <div class="loading-skeleton loading-skeleton--image" style="position:absolute; inset: 0;"></div>
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async" width="320" height="420">
+                                    </div>
                                 @else
-                                    <div class="product-image-placeholder">No Image</div>
+                                    <div style="font-size: 0.82rem; color: var(--color-gray-400);">No image</div>
                                 @endif
                             </div>
-
-                            <div class="product-info">
-                                <h3 class="product-title">{{ $product->name }}</h3>
-                                <p class="product-description">{{ Str::limit($product->description, 60) }}</p>
-                                <div class="product-price">
-                                    @php
-                                        $firstVariant = \App\Models\ProductVariant::where('product_id', $product->id)
-                                            ->where('status', 'active')
-                                            ->orderBy('price_modifier', 'asc')
-                                            ->first();
-
-                                        $displayPrice = $firstVariant
-                                            ? $product->base_price + $firstVariant->price_modifier
-                                            : $product->base_price;
-                                    @endphp
-                                    ₱{{ number_format($displayPrice, 0) }}
-                                </div>
-                                <span class="product-btn">View Details</span>
+                            <h3 class="premium-product-name">{{ $product->name }}</h3>
+                            <div class="premium-price-row">
+                                <p class="premium-product-price">P{{ number_format($displayPrice, 0) }}</p>
+                                <span class="premium-stock-note">
+                                    @if($isOutOfStock)
+                                        Out
+                                    @elseif($isLowStock)
+                                        Low
+                                    @else
+                                        Ready
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="premium-product-footer">
+                                <span class="premium-action">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <circle cx="9" cy="20" r="1.4"></circle>
+                                        <circle cx="17" cy="20" r="1.4"></circle>
+                                        <path d="M2.8 4h2.1l2.1 10.4a1 1 0 0 0 1 .8h9.7a1 1 0 0 0 1-.74L21 7H6.4"></path>
+                                    </svg>
+                                    Add to cart
+                                </span>
+                                <svg class="premium-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                    <path d="M7 17 17 7"></path>
+                                    <path d="M8 7h9v9"></path>
+                                </svg>
                             </div>
                         </a>
                     @endforeach
                 </div>
 
                 @if($products->hasPages())
-                    <div class="pagination-wrapper">
-                        {{ $products->links() }}
+                    <div style="margin-top: 2.5rem; display: flex; justify-content: center;">
+                        <nav style="background: var(--color-white); border-radius: var(--radius-md); padding: 0.75rem 1rem; box-shadow: var(--shadow-sm);">
+                            {{ $products->links() }}
+                        </nav>
                     </div>
                 @endif
             @else
-                <div class="empty-state">
-                    <div class="empty-state-icon">🛒</div>
-                    <h3 class="empty-state-title">No Products Available</h3>
-                    <p class="empty-state-text">Check back soon for new items!</p>
+                <div style="text-align: center; padding: 4.5rem 1rem; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border: 1px solid var(--color-gray-200); border-radius: 1.25rem; box-shadow: var(--shadow-sm); max-width: 760px; margin: 0 auto;">
+                    <div style="width: 4.5rem; height: 4.5rem; margin: 0 auto 1rem; border-radius: 9999px; background: rgba(139,0,0,0.08); color: var(--color-maroon); display:flex; align-items:center; justify-content:center; font-size: 1.6rem;">🛍️</div>
+                    <h3 class="h3" style="margin-bottom: 0.55rem;">No Products Available</h3>
+                    <p style="margin: 0 auto 1.25rem; color: var(--color-gray-600); max-width: 32rem; line-height: 1.7;">Check back soon for new arrivals, or use the services section while the catalog is being updated.</p>
+                    <a href="{{ route('services.index') }}" class="btn btn-primary" style="display:inline-flex; gap: 0.5rem; text-decoration:none;">
+                        View Services
+                    </a>
                 </div>
             @endif
         </div>
-    </div>
+    </section>
 
 </x-app-layout>

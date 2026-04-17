@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Services\GeminiChatService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class ChatbotController extends Controller
@@ -23,32 +24,36 @@ class ChatbotController extends Controller
     {
         $validated = $request->validate([
             'message' => 'required|string|max:1000',
-            'context' => 'array|nullable',
+            'context' => 'array|nullable|max:30',
         ]);
 
         $message = $validated['message'];
         $context = $validated['context'] ?? [];
 
-        // Pull current active services from the database to ground responses
-        $services = Service::query()
-            ->whereRaw('"is_active" IS TRUE')
-            ->orderBy('category')
-            ->orderBy('sort_order')
-            ->get(['title', 'category']);
+        $serviceSummary = Cache::remember('chatbot.service_summary', now()->addMinutes(5), function () {
+            $services = Service::query()
+                ->whereRaw('"is_active" IS TRUE')
+                ->orderBy('category')
+                ->orderBy('sort_order')
+                ->get(['title', 'category']);
 
-        $serviceSummary = $services
-            ->groupBy('category')
-            ->map(function ($items, $category) {
-                return $category . ': ' . $items->pluck('title')->join(', ');
-            })
-            ->values()
-            ->join(' | ');
+            return $services
+                ->groupBy('category')
+                ->map(function ($items, $category) {
+                    return $category . ': ' . $items->pluck('title')->join(', ');
+                })
+                ->values()
+                ->join(' | ');
+        });
 
         $messageWithServices = $serviceSummary
             ? $message . "\n\nAvailable services (from database): " . $serviceSummary . "\nIf details are missing, direct the user to the Services page."
             : $message . "\n\nNo services are listed in the database right now. Let users know they can browse services on the Services page.";
 
-        Log::info('Chatbot message received', ['message' => $message]);
+        Log::info('Chatbot message received', [
+            'message_length' => mb_strlen($message),
+            'has_context' => !empty($context),
+        ]);
 
         $response = $this->chatService->chat($messageWithServices, $context);
 

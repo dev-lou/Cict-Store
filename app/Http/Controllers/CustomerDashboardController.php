@@ -42,7 +42,7 @@ class CustomerDashboardController extends Controller
 
         // Unread notifications count
         $unreadNotificationsCount = Notification::where('user_id', $user->id)
-            ->whereRaw('"is_read" IS FALSE')
+            ->unread()
             ->count();
 
         return view('customer.dashboard', [

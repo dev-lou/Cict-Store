@@ -1,6 +1,6 @@
 @props([
-    'title' => config('app.name', 'CICT Dingle'),
-    'meta_description' => 'Official ISUFST CICT Student Council Store at Dingle Campus. Shop quality merchandise, access printing services, and digital solutions.',
+    'title' => 'ISUFST CICT | Dingle Campus',
+    'meta_description' => 'Official ISUFST CICT Student Council Store at Dingle Campus. Shop merchandise, services, and student support at cictstore.me.',
 ])
 
 <!DOCTYPE html>
@@ -19,27 +19,170 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="{{ $meta_description }}">
-    <meta name="keywords" content="ISUFST CICT, ISUFST Dingle, Student Council Store, ISUFST merchandise, campus printing services, Dingle campus shop, CICT merch, student services Iloilo, ISUFST uniform, school supplies Dingle">
+    <meta name="keywords" content="ISUFST CICT, ISUFST Dingle Campus, cictstore.me, ISUFST student council store, ISUFST merchandise, CICT merch, campus services Iloilo, Dingle campus shop, student services Iloilo, ISUFST uniform">
     <meta name="author" content="CICT Student Council">
+    <meta name="application-name" content="ISUFST CICT Store">
+    <meta name="apple-mobile-web-app-title" content="ISUFST CICT">
     <meta name="robots" content="index, follow">
     <meta name="geo.region" content="PH-ILI">
     <meta name="geo.placename" content="Dingle, Iloilo">
     <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="alternate" hreflang="en-PH" href="{{ url()->current() }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
 
     <!-- Favicon (cached query) -->
     @php
         $faviconUrl = Cache::remember('site.favicon_url', 3600, function () {
             $faviconSetting = \App\Models\Setting::where('key', 'site_favicon')->first();
+            /** @var \Illuminate\Filesystem\FilesystemAdapter $faviconDisk */
+            $faviconDisk = \Storage::disk('supabase');
             return ($faviconSetting && $faviconSetting->value) 
-                ? \Storage::disk('supabase')->url($faviconSetting->value) 
+                ? $faviconDisk->url($faviconSetting->value) 
                 : null;
         });
         $ogImageValue = \App\Models\Setting::get('site_logo');
-        $ogImageUrl = $ogImageValue ? Storage::disk('supabase')->url($ogImageValue) : null;
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $ogImageDisk */
+        $ogImageDisk = \Storage::disk('supabase');
+        $ogImageUrl = $ogImageValue ? $ogImageDisk->url($ogImageValue) : null;
+
+        $isHomePage = request()->routeIs('home');
+        $isShopPage = request()->routeIs('shop.index');
+        $isServicesPage = request()->routeIs('services.index');
+        $isContactPage = request()->routeIs('contact.index');
+        $isHeroRoute = $isHomePage || $isShopPage || $isServicesPage || $isContactPage;
+        $enableBlurLoading = $isHeroRoute;
+
+        $siteUrl = rtrim(url('/'), '/');
+        $currentUrl = url()->current();
+
+        $organizationSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => 'ISUFST CICT Student Council Store',
+            'url' => $siteUrl,
+            'logo' => $ogImageUrl,
+            'description' => 'Official campus merchandise and services store of the CICT Student Council at ISUFST Dingle Campus.',
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressLocality' => 'Dingle',
+                'addressRegion' => 'Iloilo',
+                'addressCountry' => 'PH',
+            ],
+        ];
+
+        $websiteSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => 'ISUFST CICT',
+            'url' => $siteUrl,
+            'inLanguage' => 'en-PH',
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => $siteUrl . '/shop?search={search_term_string}',
+                'query-input' => 'required name=search_term_string',
+            ],
+        ];
+
+        $pageSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebPage',
+            'name' => $title,
+            'url' => $currentUrl,
+            'description' => $meta_description,
+            'isPartOf' => [
+                '@type' => 'WebSite',
+                'name' => 'ISUFST CICT',
+                'url' => $siteUrl,
+            ],
+        ];
+
+        if ($isHomePage) {
+            $pageSchema['@type'] = 'WebPage';
+            $pageSchema['name'] = 'ISUFST CICT | Dingle Campus';
+        } elseif ($isShopPage) {
+            $pageSchema['@type'] = 'CollectionPage';
+            $pageSchema['name'] = 'Shop | ISUFST CICT';
+        } elseif ($isServicesPage) {
+            $pageSchema['@type'] = 'CollectionPage';
+            $pageSchema['name'] = 'Services | ISUFST CICT';
+        } elseif ($isContactPage) {
+            $pageSchema['@type'] = 'ContactPage';
+            $pageSchema['name'] = 'Contact | ISUFST CICT';
+        }
+
+        $breadcrumbItems = [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Home',
+                'item' => $siteUrl . '/',
+            ],
+        ];
+
+        if (request()->routeIs('shop.index')) {
+            $breadcrumbItems[] = [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Shop',
+                'item' => $siteUrl . '/shop',
+            ];
+        } elseif (request()->routeIs('shop.show')) {
+            $breadcrumbItems[] = [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Shop',
+                'item' => $siteUrl . '/shop',
+            ];
+            $breadcrumbItems[] = [
+                '@type' => 'ListItem',
+                'position' => 3,
+                'name' => trim((string) preg_replace('/\s*\|\s*ISUFST CICT Dingle Campus$/', '', (string) $title)),
+                'item' => $currentUrl,
+            ];
+        } elseif (request()->routeIs('services.index')) {
+            $breadcrumbItems[] = [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Services',
+                'item' => $siteUrl . '/services',
+            ];
+        } elseif (request()->routeIs('services.show')) {
+            $breadcrumbItems[] = [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Services',
+                'item' => $siteUrl . '/services',
+            ];
+            $breadcrumbItems[] = [
+                '@type' => 'ListItem',
+                'position' => 3,
+                'name' => trim((string) preg_replace('/\s*\|\s*ISUFST CICT Dingle Campus$/', '', (string) $title)),
+                'item' => $currentUrl,
+            ];
+        } elseif (request()->routeIs('contact.index')) {
+            $breadcrumbItems[] = [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Contact',
+                'item' => $siteUrl . '/contact',
+            ];
+        }
+
+        $breadcrumbSchema = count($breadcrumbItems) > 1
+            ? [
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => $breadcrumbItems,
+            ]
+            : null;
     @endphp
     @if($faviconUrl)
         <link rel="icon" href="{{ $faviconUrl }}" type="image/x-icon">
         <link rel="apple-touch-icon" sizes="180x180" href="{{ $faviconUrl }}">
+    @endif
+
+    @if($isHeroRoute)
+        <link rel="preload" as="image" href="{{ asset('images/cict_hero_bg.webp') }}" fetchpriority="high">
     @endif
 
     <!-- Open Graph / Facebook -->
@@ -58,21 +201,12 @@
     @if($ogImageUrl)<meta name="twitter:image" content="{{ $ogImageUrl }}">@endif
 
     <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Store",
-        "name": "ISUFST CICT Student Council Store",
-        "description": "{{ $meta_description }}",
-        "url": "{{ config('app.url') }}",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Dingle",
-            "addressRegion": "Iloilo",
-            "addressCountry": "PH"
-        }
-    }
-    </script>
+    <script type="application/ld+json">@json($organizationSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)</script>
+    <script type="application/ld+json">@json($websiteSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)</script>
+    <script type="application/ld+json">@json($pageSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)</script>
+    @if($breadcrumbSchema)
+        <script type="application/ld+json">@json($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)</script>
+    @endif
 
     <!-- DNS Preconnect for faster external resource loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -82,9 +216,6 @@
     <!-- Fonts (display=swap for faster text rendering) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-
-    <!-- Preload hero background image for LCP -->
-    <link rel="preload" as="image" href="{{ asset('images/cict_hero_bg.webp') }}" type="image/webp">
 
     <!-- Global debug flag and console silencer for production -->
     <script>
@@ -110,17 +241,19 @@
         <link rel="stylesheet" href="{{ asset('css/button-interactions.css') }}">
     </noscript>
 
-    <!-- GSAP Animation Library - only load on desktop for better mobile performance -->
-    <script>
-        if (window.innerWidth >= 768) {
-            ['gsap.min.js', 'ScrollTrigger.min.js'].forEach(function(f) {
-                var s = document.createElement('script');
-                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/' + f;
-                s.defer = true;
-                document.head.appendChild(s);
-            });
-        }
-    </script>
+    @if($isHomePage)
+        <!-- GSAP Animation Library: loaded only where currently used (homepage desktop) -->
+        <script>
+            if (window.innerWidth >= 768) {
+                ['gsap.min.js', 'ScrollTrigger.min.js'].forEach(function(f) {
+                    var s = document.createElement('script');
+                    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/' + f;
+                    s.defer = true;
+                    document.head.appendChild(s);
+                });
+            }
+        </script>
+    @endif
 
     <style>
         /* Global mobile fixes */
@@ -239,6 +372,26 @@
             background: rgba(139, 0, 0, 0.3);
         }
 
+        .footer-nav-link {
+            color: rgba(255, 255, 255, 0.82);
+            text-decoration: none;
+            font-size: 0.96rem;
+            transition: color 0.2s ease, transform 0.2s ease;
+            transform: translateX(0);
+        }
+
+        .footer-nav-link:hover {
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+
+        .footer-nav-link:focus-visible {
+            color: #ffffff;
+            outline: 2px solid rgba(255, 255, 255, 0.55);
+            outline-offset: 3px;
+            border-radius: 0.3rem;
+        }
+
         /* On mobile reduce area and avoid overlapping notification dropdown */
         @media (max-width: 768px) {
             #cict-chatbot {
@@ -256,26 +409,140 @@
             }
 
             /* Footer mobile adjustments */
-            .footer-main-wrapper {
-                flex-direction: column;
-                align-items: center;
+            .footer {
+                border-top-left-radius: 1.2rem !important;
+                border-top-right-radius: 1.2rem !important;
             }
-            
-            .footer-logo-section {
+
+            .footer-inner {
+                padding: 4.2rem 1rem 1.1rem !important;
+                gap: 1.3rem !important;
+            }
+
+            .footer-top-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.25rem !important;
+            }
+
+            .footer-brand-col {
+                gap: 1rem !important;
+                justify-items: center;
+            }
+
+            .footer-logo-row {
+                align-items: center !important;
+                justify-content: center !important;
+                text-align: center;
+            }
+
+            .footer-brand-headline {
+                justify-items: center;
+                text-align: center;
+            }
+
+            .footer-brand-desc {
+                text-align: center;
+            }
+
+            .footer-tag-list {
+                display: grid !important;
+                width: 100%;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.42rem !important;
+            }
+
+            .footer-tag-chip {
+                text-align: center;
+                padding: 0.42rem 0.22rem !important;
+                font-size: 0.61rem !important;
+                border-radius: 0.75rem !important;
+            }
+
+            .footer-support-col {
+                gap: 0.75rem !important;
+            }
+
+            .footer-metrics {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                gap: 0.55rem !important;
+            }
+
+            .footer-metric-card {
+                padding: 0.52rem 0.55rem !important;
+                border-radius: 0.72rem !important;
+            }
+
+            .footer-metric-value {
+                font-size: 1.02rem !important;
+            }
+
+            .footer-metric-label {
+                margin-top: 0.18rem !important;
+                font-size: 0.56rem !important;
+                letter-spacing: 0.07em !important;
+            }
+
+            .footer-links-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 1rem !important;
+                padding-top: 1.2rem !important;
+            }
+
+            .footer-link-col--credits {
+                grid-column: 1 / -1;
+                margin-top: 0.85rem;
+                text-align: center;
+            }
+
+            .footer-link-col--credits h4 {
+                text-align: center;
+            }
+
+            .footer-credit-name {
+                text-align: center;
+            }
+
+            .footer-bottom-row {
                 flex-direction: column !important;
                 align-items: center !important;
+                gap: 0.8rem !important;
                 text-align: center;
-                min-width: 100% !important;
-                width: 100% !important;
             }
 
-            .footer-logo-section h3,
-            .footer-logo-section p {
-                text-align: center !important;
+            .footer-bottom-copy {
+                text-align: center;
             }
 
-            .footer-support-section {
-                max-width: 100% !important;
+            .footer-watermark {
+                white-space: normal !important;
+                font-size: clamp(2rem, 16vw, 3rem) !important;
+                line-height: 0.95 !important;
+                align-self: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .footer-tag-chip {
+                font-size: 0.56rem !important;
+                padding: 0.36rem 0.18rem !important;
+            }
+
+            .footer-metrics {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                gap: 0.38rem !important;
+            }
+
+            .footer-metric-card {
+                padding: 0.44rem !important;
+            }
+
+            .footer-metric-value {
+                font-size: 0.9rem !important;
+            }
+
+            .footer-metric-label {
+                font-size: 0.52rem !important;
             }
         }
 
@@ -308,6 +575,21 @@
 </head>
 
 <body class="bg-white text-gray-900 font-inter antialiased">
+    <div id="global-nav-progress" class="page-load-progress" hidden aria-hidden="true">
+        <span class="page-load-progress-bar"></span>
+    </div>
+    <div id="global-nav-overlay" class="page-load-overlay" hidden aria-hidden="true" role="status" aria-live="polite">
+        <div class="page-load-overlay-card">
+            <div class="page-load-overlay-mark" aria-hidden="true">
+                <img src="{{ $faviconUrl ?: asset('images/cict-logo.webp') }}" alt="" width="40" height="40">
+            </div>
+            <span class="page-load-overlay-copy">
+                <span class="page-load-overlay-label">Loading</span>
+                <span class="page-load-overlay-subtitle">Just a moment</span>
+                <span class="page-load-overlay-tip" data-loading-tip>Preparing your page...</span>
+            </span>
+        </div>
+    </div>
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->
         <x-navbar />
@@ -318,75 +600,178 @@
         </main>
 
         @unless(request()->is('admin*'))
-            <!-- Footer -->
-            <footer class="bg-gray-900 text-gray-200 py-16 border-t border-gray-800 mt-16">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-10">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px;" class="footer-main-wrapper">
-                        <div style="display: flex; align-items: flex-start; gap: 22px; flex: 1; min-width: 280px;" class="footer-logo-section">
-                            <div class="flex-shrink-0"
-                                style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center;">
-                                <div
-                                    style="width:80px; height:80px; border-radius:9999px; overflow:hidden; background:#fff;">
-                                    @php
-                                        $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
-                                        $logoUrl = $logoSetting && $logoSetting->value 
-                                            ? \Storage::disk('supabase')->url($logoSetting->value) 
-                                            : asset('images/ctrlp-logo.webp');
-                                    @endphp
-                                    <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} logo"
-                                        width="80" height="80" class="w-full h-full object-cover" style="display:block; border-radius:9999px;">
+            <footer class="footer" style="position: relative; margin-top: 4rem; color: var(--color-white); background: linear-gradient(180deg, #7a0000 0%, #5d0000 100%); overflow: hidden; border-top-left-radius: 2rem; border-top-right-radius: 2rem;">
+                <div aria-hidden="true" style="position: absolute; top: -1px; left: 0; width: 100%; height: 86px; pointer-events: none; overflow: hidden; line-height: 0; z-index: 2;">
+                    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" style="display: block; width: 100%; height: 100%;">
+                        <path d="M0,64 C120,104 240,104 360,72 C480,40 600,16 720,32 C840,48 960,104 1080,88 C1200,72 1320,24 1440,40 L1440,0 L0,0 Z" fill="#7a0000"></path>
+                    </svg>
+                </div>
+                <div style="position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.09) 1px, transparent 1px); background-size: 28px 28px; opacity: 0.16; pointer-events: none;"></div>
+                <div style="position: absolute; right: -8rem; top: 2rem; width: 22rem; height: 22rem; border-radius: 9999px; background: radial-gradient(circle, rgba(244,193,90,0.14), rgba(244,193,90,0) 70%); pointer-events: none;"></div>
+
+                <div class="footer-inner" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 3; padding: 5rem 1.5rem 1.5rem; display: grid; gap: 2rem;">
+                    @php
+                        $logoSetting = \App\Models\Setting::where('key', 'site_logo')->first();
+                        $logoUrl = $logoSetting && $logoSetting->value && str_starts_with($logoSetting->value, 'http')
+                            ? $logoSetting->value
+                            : asset('images/cict-logo.webp');
+                    @endphp
+
+                    <div class="footer-top-grid" style="display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr); gap: 2rem; align-items: start;">
+                        <div class="footer-brand-col" style="display: grid; gap: 1.25rem; max-width: 44rem;">
+                            <div class="footer-logo-row" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <div style="width: 112px; height: 112px; border-radius: 9999px; overflow: hidden; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); box-shadow: 0 18px 34px rgba(0,0,0,0.24); flex-shrink: 0;">
+                                    <img src="{{ $logoUrl }}" alt="{{ config('app.name', 'CICT Dingle') }} logo" width="112" height="112" style="width: 100%; height: 100%; border-radius: 9999px; object-fit: cover; object-position: center; transform: scale(1.08); display: block;">
+                                </div>
+                                <div class="footer-brand-headline" style="display: grid; gap: 0.45rem;">
+                                    <p style="margin: 0; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.74);">Campus store and services</p>
+                                    <h3 style="margin: 0; font-family: var(--font-heading); font-size: clamp(2.25rem, 4vw, 3.4rem); line-height: 0.92; letter-spacing: -0.06em; color: white;">{{ config('app.name', 'CICT Dingle') }}</h3>
                                 </div>
                             </div>
-                            <div>
-                                <h3 class="font-bold text-xl text-white" style="margin: 0;">{{ config('app.name', 'CICT Dingle') }}</h3>
-                                <p class="text-sm" style="margin: 2px 0 0 0; color: rgba(255,255,255,0.75);">ISUFST Dingle Campus · Shop & Services</p>
-                                <p class="text-sm"
-                                    style="margin: 12px 0 0 0; color: rgba(255,255,255,0.7); line-height:1.7; max-width: 22rem;">Campus-run
-                                    store and services delivering print, merch, and digital support for students and orgs.
-                                </p>
+
+                            <p class="footer-brand-desc" style="margin: 0; max-width: 38rem; color: rgba(255,255,255,0.88); font-size: 1rem; line-height: 1.8;">
+                                Campus-run store and services delivering merch, requests, and digital support for students and orgs.
+                            </p>
+
+                            <div class="footer-tag-list" style="display: flex; flex-wrap: wrap; gap: 0.7rem;">
+                                <span class="footer-tag-chip" style="padding: 0.6rem 0.85rem; border-radius: 9999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.92);">Merchandise</span>
+                                <span class="footer-tag-chip" style="padding: 0.6rem 0.85rem; border-radius: 9999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.92);">Services</span>
+                                <span class="footer-tag-chip" style="padding: 0.6rem 0.85rem; border-radius: 9999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.92);">Student support</span>
                             </div>
                         </div>
 
-                        <div style="flex-shrink: 0; width: 100%; max-width: 420px;" class="footer-support-section">
-                            <div class="p-4 rounded-xl flex items-start gap-3"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);">
-                                <span class="inline-flex h-9 w-9 items-center justify-center rounded-full"
-                                    style="background: linear-gradient(135deg,#8B0000,#A00000); color:white; box-shadow: 0 8px 20px rgba(0,0,0,0.18); flex-shrink: 0;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.6" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 18.25c-2.548 0-4.93-.862-6.772-2.25a.75.75 0 0 1-.228-.834l1.115-3.34a.75.75 0 0 1 .713-.519h1.547A.75.75 0 0 0 9.125 10v-.25A3.625 3.625 0 0 1 12.75 6.125h1.25A3.625 3.625 0 0 1 17.625 9.75v.25a.75.75 0 0 0 .75.75h1.547a.75.75 0 0 1 .713.519l1.115 3.34a.75.75 0 0 1-.228.834A12.433 12.433 0 0 1 12 18.25Z" />
+                        <div class="footer-support-col" style="display: grid; gap: 1rem;">
+                            <div style="padding: 1.15rem 1.2rem; border-radius: 1.25rem; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(14px); display: flex; gap: 0.9rem; align-items: flex-start;">
+                                <span style="display: inline-flex; width: 42px; height: 42px; align-items: center; justify-content: center; border-radius: 9999px; background: rgba(244,193,90,0.18); color: #f4c15a; flex-shrink: 0;">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px; fill: currentColor;">
+                                        <path d="M12 2 1 7l11 5 9-4.09V17h2V7L12 2Zm0 12L4.74 10.67 12 7.36l7.26 3.31L12 14Zm-9 2v2c0 2.2 4.03 4 9 4s9-1.8 9-4v-2l-9 4-9-4Z"/>
                                     </svg>
                                 </span>
                                 <div>
-                                    <p class="text-sm font-semibold text-white" style="margin: 0;">Support</p>
-                                    <p class="text-sm" style="margin: 8px 0 0 0; color: rgba(255,255,255,0.78);">Need help? Ask the
-                                        chatbot on the bottom-right — it is always on.</p>
+                                    <p style="margin: 0; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.72);">Official support</p>
+                                    <p style="margin: 0.4rem 0 0 0; font-size: 0.92rem; color: rgba(255,255,255,0.88); line-height: 1.7;">Need help? Use the chatbot in the lower corner or contact the team directly.</p>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="md:col-span-12 flex flex-col gap-4 mt-4 md:mt-0">
-                            <h4 class="font-semibold text-sm text-white">Credits</h4>
-                            <div class="flex flex-wrap gap-3 text-sm" style="color: rgba(255,255,255,0.92);">
-                                <span class="px-4 py-3 rounded-xl"
-                                    style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); font-weight: 700;">Lou
-                                    Vincent Baroro — Developer</span>
-                                <span class="px-4 py-3 rounded-xl"
-                                    style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); font-weight: 700;">Karl
-                                    Calitamon — UX/UI Designer</span>
+                            <div class="footer-metrics" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem;">
+                                <div class="footer-metric-card" style="padding: 0.95rem 1rem; border-radius: 1rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);">
+                                    <p class="footer-metric-value" style="margin: 0; font-size: 1.35rem; font-weight: 800; line-height: 1;">Fast</p>
+                                    <p class="footer-metric-label" style="margin: 0.3rem 0 0 0; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.72);">Turnaround</p>
+                                </div>
+                                <div class="footer-metric-card" style="padding: 0.95rem 1rem; border-radius: 1rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);">
+                                    <p class="footer-metric-value" style="margin: 0; font-size: 1.35rem; font-weight: 800; line-height: 1;">Clear</p>
+                                    <p class="footer-metric-label" style="margin: 0.3rem 0 0 0; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.72);">Navigation</p>
+                                </div>
+                                <div class="footer-metric-card" style="padding: 0.95rem 1rem; border-radius: 1rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);">
+                                    <p class="footer-metric-value" style="margin: 0; font-size: 1.35rem; font-weight: 800; line-height: 1;">Official</p>
+                                    <p class="footer-metric-label" style="margin: 0.3rem 0 0 0; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.72);">Campus</p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-4 text-sm flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2 sm:gap-4"
-                        style="border-top: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); flex-wrap: wrap;">
-                        <p class="m-0">&copy; {{ date('Y') }} {{ config('app.name', 'CICT Dingle') }} · ISUFST Dingle Campus</p>
-                        <p class="m-0 text-xs" style="color: rgba(255,255,255,0.65);">All rights reserved.</p>
+                    <div class="footer-links-grid" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; padding-top: 1.75rem; border-top: 1px solid rgba(255,255,255,0.14);">
+                        <div class="footer-link-col footer-link-col--explore">
+                            <h4 style="margin: 0 0 1rem 0; font-family: var(--font-heading); font-size: 0.92rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.9);">Explore</h4>
+                            <div style="display: grid; gap: 0.7rem;">
+                                <a class="footer-nav-link" href="/">Home</a>
+                                <a class="footer-nav-link" href="{{ route('shop.index') }}">Shop</a>
+                                <a class="footer-nav-link" href="{{ route('services.index') }}">Services</a>
+                                <a class="footer-nav-link" href="{{ route('contact.index') }}">Contact</a>
+                            </div>
+                        </div>
+
+                        <div class="footer-link-col footer-link-col--support">
+                            <h4 style="margin: 0 0 1rem 0; font-family: var(--font-heading); font-size: 0.92rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.9);">Support</h4>
+                            <div style="display: grid; gap: 0.7rem;">
+                                <a class="footer-nav-link" href="https://www.facebook.com/profile.php?id=100068849010766" target="_blank">Facebook</a>
+                                <a class="footer-nav-link" href="https://www.messenger.com/e2ee/t/780806171591045" target="_blank">Messenger</a>
+                                <a class="footer-nav-link" href="{{ route('contact.index') }}">Get help</a>
+                            </div>
+                        </div>
+
+                        <div class="footer-link-col footer-link-col--credits">
+                            <h4 style="margin: 0 0 1rem 0; font-family: var(--font-heading); font-size: 0.92rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.9);">Credits</h4>
+                            <div style="display: grid; gap: 0.7rem;">
+                                <span class="footer-credit-name" style="padding: 0.65rem 0.85rem; border-radius: 1rem; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14); font-size: 0.92rem; font-weight: 700;">Lou Vincent Baroro - Developer</span>
+                                <span class="footer-credit-name" style="padding: 0.65rem 0.85rem; border-radius: 1rem; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14); font-size: 0.92rem; font-weight: 700;">Karl Calimotan - UI/UX Designer</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer-bottom-row" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: center; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.12);">
+                        <div class="footer-bottom-copy" style="display: grid; gap: 0.3rem;">
+                            <p style="margin: 0; color: rgba(255,255,255,0.76); font-size: 0.9rem;">&copy; 2026 ISUFST CICT</p>
+                            <p style="margin: 0; color: rgba(255,255,255,0.62); font-size: 0.85rem;">All rights reserved.</p>
+                        </div>
+
+                        <p class="footer-watermark" style="margin: 0; font-family: var(--font-heading); font-size: clamp(2.15rem, 7vw, 5.1rem); font-weight: 800; letter-spacing: -0.045em; line-height: 0.9; color: rgba(255,255,255,0.11); white-space: nowrap;">ISUFST DINGLE CAMPUS</p>
                     </div>
                 </div>
             </footer>
         @endunless
+    </div>
+
+    <!-- Toast Notification Component -->
+    <div x-data="{
+            show: false,
+            message: '',
+            type: 'success',
+            init() {
+                const pendingToast = window.sessionStorage ? window.sessionStorage.getItem('cict-pending-toast') : null;
+                if (pendingToast) {
+                    try {
+                        const data = JSON.parse(pendingToast);
+                        this.showToast(data.message || '', data.type || 'success');
+                    } catch (error) {
+                        this.showToast('Action completed.', 'success');
+                    }
+                    window.sessionStorage.removeItem('cict-pending-toast');
+                }
+
+                @if(session('success'))
+                    this.showToast(@json(session('success')), 'success');
+                @endif
+                @if(session('error'))
+                    this.showToast(@json(session('error')), 'error');
+                @endif
+            },
+            showToast(msg, toastType = 'success') {
+                this.message = msg;
+                this.type = toastType;
+                this.show = true;
+                setTimeout(() => { this.show = false }, 4000);
+            }
+        }" @toast.window="showToast($event.detail.message, $event.detail.type || 'success')" x-show="show"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 scale-100" x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+        class="fixed bottom-8 right-8 z-[99999] max-w-md" style="display: none;">
+        <div class="rounded-2xl shadow-2xl p-4 flex items-center gap-3 border border-white/10"
+            :style="type === 'success' ? 'background: linear-gradient(135deg, rgba(122,14,14,0.96), rgba(91,0,0,0.96)); backdrop-filter: blur(12px);' : 'background: linear-gradient(135deg, rgba(239,68,68,0.96), rgba(127,29,29,0.96)); backdrop-filter: blur(12px);'">
+            <div class="flex-shrink-0">
+                <template x-if="type === 'success'">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </template>
+                <template x-if="type === 'error'">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </template>
+            </div>
+
+            <p class="text-white font-semibold flex-1 leading-snug" x-text="message"></p>
+
+            <button @click="show = false" class="flex-shrink-0 text-white/90 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
     </div>
 
     <!-- Modern Chatbot Widget -->
@@ -404,21 +789,22 @@
                 align-items: center;
                 justify-content: center;
                 background: linear-gradient(145deg, #8B0000 0%, #6B0000 100%);
-                box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 0 rgba(139, 0, 0, 0.4);
+                box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 2px rgba(244, 193, 90, 0.52), 0 0 0 0 rgba(139, 0, 0, 0.4);
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 pointer-events: auto !important;
                 position: relative;
                 overflow: visible;
             "
-            onmouseover="this.style.transform='scale(1.1) translateY(-4px)'; this.style.boxShadow='0 16px 48px rgba(139, 0, 0, 0.5), 0 0 0 0 rgba(139, 0, 0, 0)';"
-            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 0 rgba(139, 0, 0, 0.4)';">
+            onmouseover="this.style.transform='scale(1.1) translateY(-4px)'; this.style.boxShadow='0 16px 48px rgba(139, 0, 0, 0.5), 0 0 0 3px rgba(244, 193, 90, 0.72), 0 0 0 0 rgba(139, 0, 0, 0)';"
+            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 2px rgba(244, 193, 90, 0.52), 0 0 0 0 rgba(139, 0, 0, 0.4)';">
 
-            <!-- AI Sparkle/Brain Icon - Better for AI Assistant -->
-            <svg style="width: 28px; height: 28px;" viewBox="0 0 24 24" fill="none">
-                <!-- Sparkle star shape representing AI -->
-                <path
-                    d="M12 2L13.09 8.26L18 6L15.74 10.91L22 12L15.74 13.09L18 18L13.09 15.74L12 22L10.91 15.74L6 18L8.26 13.09L2 12L8.26 10.91L6 6L10.91 8.26L12 2Z"
-                    fill="white" stroke="white" stroke-width="0.5" />
+            <!-- Chatbot icon for clearer intent -->
+            <svg style="width: 30px; height: 30px;" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="4.5" y="7" width="15" height="10.5" rx="3.2" stroke="white" stroke-width="1.9" />
+                <path d="M12 4.1v2.4" stroke="white" stroke-width="1.9" stroke-linecap="round" />
+                <circle cx="9.2" cy="11.9" r="1.15" fill="white" />
+                <circle cx="14.8" cy="11.9" r="1.15" fill="white" />
+                <path d="M9.4 14.5h5.2" stroke="white" stroke-width="1.6" stroke-linecap="round" />
             </svg>
 
             <!-- Online indicator - positioned outside button overflow -->
@@ -430,7 +816,7 @@
                 height: 16px;
                 background: #22C55E;
                 border-radius: 50%;
-                border: 3px solid white;
+                border: 3px solid #f4c15a;
                 box-shadow: 0 2px 8px rgba(34, 197, 94, 0.5);
                 z-index: 10;
             "></span>
@@ -449,11 +835,11 @@
 
                 0%,
                 100% {
-                    box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 0 rgba(139, 0, 0, 0.4);
+                    box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 2px rgba(244, 193, 90, 0.52), 0 0 0 0 rgba(139, 0, 0, 0.4);
                 }
 
                 50% {
-                    box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 12px rgba(139, 0, 0, 0);
+                    box-shadow: 0 8px 32px rgba(139, 0, 0, 0.4), 0 0 0 2px rgba(244, 193, 90, 0.52), 0 0 0 12px rgba(139, 0, 0, 0);
                 }
             }
 
@@ -462,7 +848,7 @@
                 position: absolute;
                 inset: -4px;
                 border-radius: 50%;
-                border: 2px solid rgba(139, 0, 0, 0.3);
+                border: 2px solid rgba(244, 193, 90, 0.55);
                 animation: chatbot-ripple-anim 2s ease-out infinite;
                 pointer-events: none;
             }
@@ -589,7 +975,7 @@
                 background: #FFFFFF;
                 border-top: 1px solid #F0F0F0;
             ">
-                <form id="cict-chat-form" style="display: flex; gap: 10px; align-items: center;">
+                <form id="cict-chat-form" data-no-loading="true" style="display: flex; gap: 10px; align-items: center;">
                     <input id="cict-chat-input" name="message" aria-label="Chat message" type="text"
                         placeholder="Type a message..." style="
                             flex: 1;
@@ -690,6 +1076,185 @@
         })();
     </script>
 
+    <!-- Global navigation loading UX -->
+    <script>
+        (function () {
+            const progress = document.getElementById('global-nav-progress');
+            const overlay = document.getElementById('global-nav-overlay');
+            const tipEl = overlay ? overlay.querySelector('[data-loading-tip]') : null;
+            if (!progress || !overlay) {
+                return;
+            }
+
+            let active = false;
+            let settlingTimer = null;
+            let tipTimer = null;
+            const allowedPaths = new Set(['/', '/shop', '/services', '/contact']);
+            const loadingTips = [
+                'Tip: Shop for products, Services for requests, and Contact for help.',
+                'FAQ: Orders and service requests are organized in separate pages for faster browsing.',
+                'Tip: You can use the chatbot in the corner if you need a quick answer.',
+                'FAQ: This store is built for ISUFST Dingle Campus students and campus support.',
+            ];
+
+            function setLoadingTip(index) {
+                if (!tipEl || !loadingTips.length) {
+                    return;
+                }
+
+                tipEl.textContent = loadingTips[index % loadingTips.length];
+            }
+
+            function normalizePath(pathname) {
+                if (!pathname) {
+                    return '/';
+                }
+
+                const trimmed = pathname.replace(/\/+$/, '');
+                return trimmed === '' ? '/' : trimmed;
+            }
+
+            function resetLoadingState() {
+                active = false;
+                document.body.classList.remove('is-navigating');
+                clearTimeout(settlingTimer);
+                clearInterval(tipTimer);
+                tipTimer = null;
+                progress.classList.remove('is-active', 'is-settling');
+                progress.setAttribute('hidden', 'hidden');
+                overlay.classList.remove('is-active');
+                overlay.setAttribute('hidden', 'hidden');
+                if (tipEl) {
+                    tipEl.textContent = 'Preparing your page...';
+                }
+                document.querySelectorAll('.is-loading[aria-busy="true"]').forEach(function (el) {
+                    el.classList.remove('is-loading');
+                    el.removeAttribute('aria-busy');
+                });
+            }
+
+            function startLoadingState(triggerEl) {
+                if (active) {
+                    return;
+                }
+
+                active = true;
+                document.body.classList.add('is-navigating');
+
+                if (triggerEl) {
+                    triggerEl.classList.add('is-loading');
+                    triggerEl.setAttribute('aria-busy', 'true');
+                }
+
+                progress.removeAttribute('hidden');
+                overlay.removeAttribute('hidden');
+                setLoadingTip(0);
+                clearInterval(tipTimer);
+                let tipIndex = 0;
+                tipTimer = window.setInterval(function () {
+                    tipIndex += 1;
+                    setLoadingTip(tipIndex);
+                }, 3600);
+                requestAnimationFrame(function () {
+                    progress.classList.add('is-active');
+                    overlay.classList.add('is-active');
+                });
+
+                settlingTimer = window.setTimeout(function () {
+                    progress.classList.add('is-settling');
+                }, 220);
+            }
+
+            function shouldStartForLink(el, event) {
+                if (!el || event.defaultPrevented) {
+                    return false;
+                }
+
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                    return false;
+                }
+
+                const href = el.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+                    return false;
+                }
+
+                if (el.hasAttribute('download') || el.getAttribute('target') === '_blank') {
+                    return false;
+                }
+
+                let targetUrl;
+                try {
+                    targetUrl = new URL(el.href, window.location.href);
+                } catch (_e) {
+                    return false;
+                }
+
+                if (targetUrl.origin !== window.location.origin) {
+                    return false;
+                }
+
+                const targetPath = normalizePath(targetUrl.pathname);
+                if (!allowedPaths.has(targetPath)) {
+                    return false;
+                }
+
+                const current = window.location;
+                if (targetPath === normalizePath(current.pathname) && targetUrl.search === current.search && targetUrl.hash) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.addEventListener('click', function (event) {
+                const link = event.target.closest('a');
+                if (shouldStartForLink(link, event)) {
+                    startLoadingState(link);
+                }
+            }, true);
+
+            window.addEventListener('beforeunload', function () {
+                document.body.classList.add('is-navigating');
+            });
+
+            window.addEventListener('pageshow', resetLoadingState);
+            resetLoadingState();
+        })();
+    </script>
+
+    <script>
+        (function () {
+            function markWrapper(wrapper) {
+                if (!wrapper) return;
+                const img = wrapper.querySelector('img');
+                if (!img) return;
+
+                function finish() {
+                    wrapper.classList.add('is-loaded');
+                }
+
+                if (img.complete && img.naturalWidth > 0) {
+                    finish();
+                    return;
+                }
+
+                img.addEventListener('load', finish, { once: true });
+                img.addEventListener('error', finish, { once: true });
+            }
+
+            function boot() {
+                document.querySelectorAll('.loading-skeleton-wrap').forEach(markWrapper);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', boot, { once: true });
+            } else {
+                boot();
+            }
+        })();
+    </script>
+
     <!-- Chatbot (vanilla JS): renders messages, handles send & quick actions, always-on-top -->
     <script>
         (function () {
@@ -743,7 +1308,7 @@
                 const logo = `<div class="flex flex-col items-center justify-center py-8 opacity-70">
                     <div class="w-16 h-16 rounded-full flex items-center justify-center mb-3" style="background: linear-gradient(135deg,#8B0000 0%,#A00000 100%); box-shadow: 0 4px 12px rgba(139,0,0,0.3);">
                         <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2L9.19 8.63L2 11.5L9.19 14.37L12 21L14.81 14.37L22 11.5L14.81 8.63L12 2Z"/>
+                            <path d="M12 2a1 1 0 0 1 1 1v1h2a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-2l-3 3-3-3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h2V3a1 1 0 0 1 2 0v1h2V3a1 1 0 0 1 1-1ZM9 10.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Zm6 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/>
                         </svg>
                     </div>
                     <div class="text-center">

@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\OrderManageController;
 
 use App\Http\Controllers\Admin\UserManageController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\SecurityEventController;
 use App\Http\Controllers\Admin\ReceiptPdfController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReviewController;
@@ -187,9 +188,16 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/unread', [NotificationController::class, 'getUnread'])->name('notifications.unread');
-    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::get('/notifications/{notification}/open', [NotificationController::class, 'open'])
+        ->whereUuid('notification')
+        ->name('notifications.open');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+        ->whereUuid('notification')
+        ->name('notifications.read');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
-    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])
+        ->whereUuid('notification')
+        ->name('notifications.destroy');
 });
 
 // Review Routes (Authenticated Only)
@@ -202,8 +210,10 @@ Route::middleware('auth')->group(function () {
 // ============================================================================
 // CHATBOT ROUTES
 // ============================================================================
-Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.chat');
-Route::get('/chatbot/quick-actions', [ChatbotController::class, 'quickActions'])->name('chatbot.quick-actions');
+Route::middleware('throttle:25,1')->group(function () {
+    Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.chat');
+    Route::get('/chatbot/quick-actions', [ChatbotController::class, 'quickActions'])->name('chatbot.quick-actions');
+});
 
 // ============================================================================
 // ADMIN ROUTES (Protected with Auth & Admin Middleware)
@@ -299,6 +309,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     });
 
     // ========================================================================
+    // Security Events
+    // ========================================================================
+    Route::prefix('security-events')->name('security-events.')->group(function () {
+        Route::get('/', [SecurityEventController::class, 'index'])->name('index');
+    });
+
+    // ========================================================================
     // Admin Settings & User Management
     // ========================================================================
     Route::prefix('settings')->name('settings.')->group(function () {
@@ -325,8 +342,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // ============================================================================
 
 // OAuth Routes (Google & Facebook)
-Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('oauth.redirect');
-Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('oauth.callback');
+Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])
+    ->middleware('throttle:oauth')
+    ->name('oauth.redirect');
+Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])
+    ->middleware('throttle:oauth')
+    ->name('oauth.callback');
 
 // Traditional Login
 Route::get('/login', function () {
@@ -339,11 +360,13 @@ Route::post('/login', function () {
         'password' => 'required',
     ]);
 
+    $credentials['email'] = strtolower(trim($credentials['email']));
+
     if (Auth::attempt($credentials, request()->boolean('remember'))) {
         request()->session()->regenerate();
 
         // Clear failed attempts on successful login
-        \App\Models\FailedLoginAttempt::clearAttempts(request()->ip());
+        \App\Models\FailedLoginAttempt::clearAttempts(request()->ip(), $credentials['email']);
 
         // Get intended URL, but ignore API endpoints and notification URLs
         $intended = session()->pull('url.intended', '/');
@@ -367,14 +390,14 @@ Route::post('/login', function () {
     // Record failed login attempt
     \App\Models\FailedLoginAttempt::recordAttempt(
         request()->ip(),
-        request()->input('email'),
+        $credentials['email'],
         request()->userAgent()
     );
 
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.',
     ]);
-})->name('login.post')->middleware(['guest', 'throttle:5,1', 'App\Http\Middleware\BlockFailedLogins']);
+})->name('login.post')->middleware(['guest', 'throttle:login', 'App\Http\Middleware\BlockFailedLogins']);
 
 Route::get('/register', function () {
     return view('auth.register');

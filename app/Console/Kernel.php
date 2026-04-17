@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         \App\Console\Commands\PrimeCache::class,
+        \App\Console\Commands\CleanupFailedLogins::class,
     ];
 
     /**
@@ -24,7 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule($schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Daily cleanup of old failed-login records to keep security queries fast.
+        $schedule->command('auth:cleanup-failed-logins')
+            ->dailyAt('02:15')
+            ->withoutOverlapping();
     }
 
     /**

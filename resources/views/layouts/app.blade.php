@@ -28,10 +28,12 @@
 
     @php
         // Use cached Setting::get() method instead of direct query
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $supabaseDisk */
+        $supabaseDisk = Storage::disk('supabase');
         $ogImageValue = \App\Models\Setting::get('site_logo');
-        $ogImageUrl = $ogImageValue ? Storage::disk('supabase')->url($ogImageValue) : null;
+        $ogImageUrl = $ogImageValue ? $supabaseDisk->url($ogImageValue) : null;
         $faviconValue = \App\Models\Setting::get('site_favicon');
-        $faviconUrl = $faviconValue ? Storage::disk('supabase')->url($faviconValue) : null;
+        $faviconUrl = $faviconValue ? $supabaseDisk->url($faviconValue) : null;
     @endphp
 
     <!-- Open Graph / Facebook -->
@@ -310,7 +312,7 @@
                                     style="width:92px; height:92px; border-radius:9999px; padding:6px; background:#fff; box-shadow: 0 12px 28px rgba(0,0,0,0.3); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
                                     <div
                                         style="width:80px; height:80px; border-radius:9999px; overflow:hidden; background:#fff;">
-                                        <img src="{{ Storage::disk('supabase')->url($footerLogoSetting->value) }}"
+                                        <img src="{{ $supabaseDisk->url($footerLogoSetting->value) }}"
                                             alt="{{ config('app.name', 'CICT Dingle') }} logo"
                                             style="width:100%; height:100%; object-fit:cover; border-radius:9999px; display:block;">
                                     </div>

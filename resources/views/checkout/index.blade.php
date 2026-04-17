@@ -21,6 +21,56 @@
         .pill-link { display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; text-decoration:none; font-weight:700; border:1px solid var(--border); color:var(--ink); background:#fff; }
         .pill-link:hover { border-color: var(--accent); color: var(--accent); }
 
+        .checkout-stepper {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.85rem;
+            margin: 0 0 1.2rem 0;
+        }
+
+        .checkout-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.95rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(15,23,42,0.08);
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 10px 28px rgba(15,23,42,0.04);
+        }
+
+        .checkout-step-number {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(139,0,0,0.08);
+            color: var(--accent);
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .checkout-step-body {
+            min-width: 0;
+        }
+
+        .checkout-step-body strong {
+            display: block;
+            color: var(--ink);
+            font-size: 0.95rem;
+            line-height: 1.2;
+        }
+
+        .checkout-step-body span {
+            display: block;
+            margin-top: 0.16rem;
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.35;
+        }
+
         .checkout-grid { display:grid; grid-template-columns:1fr; gap:16px; }
         @media(min-width: 992px) { .checkout-grid { grid-template-columns: 2fr 1fr; } }
 
@@ -72,6 +122,11 @@
             .ghost-btn { padding: 10px; font-size: 14px; }
             .note { font-size: 12px; }
             .tag { padding: 5px 8px; font-size: 11px; }
+            .checkout-stepper { grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+            .checkout-step { padding: 0.8rem 0.85rem; }
+            .checkout-step-number { width: 2rem; height: 2rem; }
+            .checkout-step-body strong { font-size: 0.88rem; }
+            .checkout-step-body span { font-size: 0.72rem; }
         }
 
         @media(max-width: 480px) {
@@ -91,6 +146,37 @@
             <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                 <span class="chip">{{ count($items) }} {{ count($items) === 1 ? 'item' : 'items' }}</span>
                 <span class="chip">₱{{ number_format($subtotal, 2) }}</span>
+            </div>
+        </div>
+
+        <div class="checkout-stepper" aria-label="Checkout progress">
+            <div class="checkout-step">
+                <span class="checkout-step-number">1</span>
+                <div class="checkout-step-body">
+                    <strong>Cart</strong>
+                    <span>Review your items first</span>
+                </div>
+            </div>
+            <div class="checkout-step">
+                <span class="checkout-step-number">2</span>
+                <div class="checkout-step-body">
+                    <strong>Details</strong>
+                    <span>Confirm pickup and notes</span>
+                </div>
+            </div>
+            <div class="checkout-step">
+                <span class="checkout-step-number">3</span>
+                <div class="checkout-step-body">
+                    <strong>Review</strong>
+                    <span>Check totals before submitting</span>
+                </div>
+            </div>
+            <div class="checkout-step">
+                <span class="checkout-step-number">4</span>
+                <div class="checkout-step-body">
+                    <strong>Complete</strong>
+                    <span>Order is placed and recorded</span>
+                </div>
             </div>
         </div>
 

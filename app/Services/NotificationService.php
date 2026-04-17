@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Notification;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 
 class NotificationService
 {
@@ -122,11 +123,14 @@ class NotificationService
      */
     public static function markAllAsRead(int $userId): void
     {
+        $now = now();
+
         Notification::where('user_id', $userId)
             ->unread()
             ->update([
-                'is_read' => true,
-                'read_at' => now(),
+                'is_read' => DB::raw('TRUE'),
+                'read_at' => $now,
+                'updated_at' => $now,
             ]);
     }
 }

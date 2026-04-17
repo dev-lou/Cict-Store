@@ -5,9 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class NotificationController extends Controller
 {
+    /**
+     * Resolve where a notification should redirect.
+     */
+    private function resolveNotificationLink(Notification $notification): string
+    {
+        if ($notification->data && isset($notification->data['order_id'])) {
+            return route('orders.show', $notification->data['order_id']);
+        }
+
+        return route('notifications.index');
+    }
+
     /**
      * Display all notifications for the authenticated user.
      */
@@ -42,12 +55,6 @@ class NotificationController extends Controller
             ->limit(10)
             ->get()
             ->map(function ($notification) {
-                // Add link based on notification data
-                $link = '#';
-                if ($notification->data && isset($notification->data['order_id'])) {
-                    $link = route('orders.show', $notification->data['order_id']);
-                }
-
                 $data = $notification->data ?? [];
 
                 return [
@@ -57,7 +64,7 @@ class NotificationController extends Controller
                     'message' => $data['message'] ?? 'You have a new notification',
                     'is_read' => $notification->is_read, // Add is_read status
                     'time' => $notification->created_at->diffForHumans(),
-                    'link' => $link,
+                    'link' => route('notifications.open', $notification->id),
                 ];
             });
 
@@ -68,13 +75,42 @@ class NotificationController extends Controller
     }
 
     /**
+     * Open a notification: mark as read then redirect to target.
+     */
+    public function open($notification)
+    {
+        if (!is_string($notification) || !Str::isUuid($notification)) {
+            return redirect()->route('notifications.index');
+        }
+
+        $notification = Notification::where('id', $notification)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$notification) {
+            return redirect()->route('notifications.index');
+        }
+
+        $notification->markAsRead();
+
+        return redirect()->to($this->resolveNotificationLink($notification));
+    }
+
+    /**
      * Mark a single notification as read.
      */
-    public function markAsRead(Notification $notification)
+    public function markAsRead($notification)
     {
-        // Ensure user owns this notification
-        if ($notification->user_id !== auth()->id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        if (!is_string($notification) || !Str::isUuid($notification)) {
+            return response()->json(['error' => 'Invalid notification id'], 422);
+        }
+
+        $notification = Notification::where('id', $notification)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$notification) {
+            return response()->json(['error' => 'Notification not found'], 404);
         }
 
         $notification->markAsRead();
@@ -101,11 +137,18 @@ class NotificationController extends Controller
     /**
      * Delete a notification.
      */
-    public function destroy(Notification $notification)
+    public function destroy($notification)
     {
-        // Ensure user owns this notification
-        if ($notification->user_id !== auth()->id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        if (!is_string($notification) || !Str::isUuid($notification)) {
+            return response()->json(['error' => 'Invalid notification id'], 422);
+        }
+
+        $notification = Notification::where('id', $notification)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$notification) {
+            return response()->json(['error' => 'Notification not found'], 404);
         }
 
         $notification->delete();

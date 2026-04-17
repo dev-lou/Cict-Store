@@ -295,6 +295,37 @@
             width: 100%;
         }
 
+        .product-lead-card {
+            margin-bottom: 18px;
+            border: 1px solid #E8ECF2;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #FBFCFF 100%);
+            padding: 14px 16px;
+            box-shadow: 0 12px 24px rgba(16, 24, 40, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .product-lead-card .meta {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--primary);
+            margin: 0 0 4px 0;
+        }
+
+        .product-lead-card .text {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+            max-width: 620px;
+        }
+
         @media (max-width: 900px) {
             .product-grid {
                 grid-template-columns: 1fr;
@@ -598,8 +629,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
             flex-shrink: 0;
+            color: var(--primary);
+            border: 1px solid rgba(139, 0, 0, 0.14);
+        }
+
+        .benefit-icon svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .benefit-text {
@@ -969,6 +1011,16 @@
     <!-- Main Content -->
     <div class="product-content" style="width: 100%; max-width: 100vw; overflow-x: hidden;">
         <div class="product-container">
+            <div class="product-lead-card">
+                <div>
+                    <p class="meta">Official Campus Merchandise</p>
+                    <p class="text">A cleaner product page layout with clearer variant selection, stock context, and review trust signals.</p>
+                </div>
+                <div style="display: inline-flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 9999px; background: rgba(139,0,0,0.06); border: 1px solid rgba(139,0,0,0.14); color: var(--primary); font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;">
+                    Premium Detail View
+                </div>
+            </div>
+
             <div class="product-grid">
                 <!-- Product Image -->
                 <div class="product-image-card">
@@ -1101,21 +1153,27 @@
                     <div class="benefits-card">
                         <div class="benefits-grid">
                             <div class="benefit-item">
-                                <div class="benefit-icon">📦</div>
+                                <div class="benefit-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3z"></path><path d="m4 7.5 8 4.5 8-4.5"></path><path d="M12 12v9"></path></svg>
+                                </div>
                                 <div class="benefit-text">
                                     <strong>Campus Pickup</strong>
                                     Collect at CICT office
                                 </div>
                             </div>
                             <div class="benefit-item">
-                                <div class="benefit-icon">💵</div>
+                                <div class="benefit-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M12 9v6"></path><path d="M9.5 11h5"></path><path d="M9.5 13h5"></path></svg>
+                                </div>
                                 <div class="benefit-text">
                                     <strong>Pay on Pickup</strong>
                                     Cash payment accepted
                                 </div>
                             </div>
                             <div class="benefit-item">
-                                <div class="benefit-icon">🎓</div>
+                                <div class="benefit-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="m3 9 9-4 9 4-9 4-9-4z"></path><path d="M7 11.5V15c0 1.7 2.2 3 5 3s5-1.3 5-3v-3.5"></path><path d="M21 9v5"></path></svg>
+                                </div>
                                 <div class="benefit-text">
                                     <strong>Student Support</strong>
                                     Council initiatives
@@ -1216,14 +1274,17 @@
                     <div class="related-grid">
                         @foreach($relatedProducts as $related)
                             <a href="{{ route('shop.show', $related->slug) }}" class="related-card">
-                                <div class="related-image">
+                                <div class="related-image" style="position: relative; overflow: hidden;">
                                     @if($related->image_path)
-                                        <img src="{{ $related->image_url }}" 
-                                             alt="{{ $related->name }}"
-                                             loading="lazy"
-                                             decoding="async"
-                                             width="300"
-                                             height="300">
+                                        <div class="loading-skeleton-wrap" style="position: absolute; inset: 0; border-radius: 0.85rem; overflow: hidden;">
+                                            <div class="loading-skeleton loading-skeleton--image" style="position:absolute; inset: 0;"></div>
+                                            <img src="{{ $related->image_url }}"
+                                                 alt="{{ $related->name }}"
+                                                 loading="lazy"
+                                                 decoding="async"
+                                                 width="300"
+                                                 height="300">
+                                        </div>
                                     @endif
                                 </div>
                                 <div class="related-info">
@@ -1328,23 +1389,20 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Modern centered success SweetAlert
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Added to Cart!',
-                        html: '<p style="color:#6B7280;font-size:15px;">{{ $product->name }} has been added to your cart.</p>',
-                        showConfirmButton: true,
-                        confirmButtonText: 'Continue Shopping',
-                        confirmButtonColor: '#8B0000',
-                        timer: 3000,
-                        timerProgressBar: true,
-                        customClass: {
-                            popup: 'swal-popup-modern',
-                            title: 'swal-title-modern'
-                        }
-                    }).then(() => {
-                        window.location.reload();
-                    });
+                    try {
+                        window.sessionStorage.setItem('cict-pending-toast', JSON.stringify({
+                            message: data.message || '{{ $product->name }} has been added to your cart.',
+                            type: 'success'
+                        }));
+                    } catch (error) {
+                        window.dispatchEvent(new CustomEvent('toast', {
+                            detail: {
+                                message: data.message || '{{ $product->name }} has been added to your cart.',
+                                type: 'success'
+                            }
+                        }));
+                    }
+                    window.location.reload();
                 })
                 .catch(error => {
                     // Reset button and submit normally as fallback
@@ -1388,14 +1446,19 @@
                     @endif
                 </div>
                 @auth
-                    <button type="button" class="floating-add-btn"
-                        onclick="document.getElementById('add-to-cart-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        Add to Cart
-                    </button>
+                    <div style="display:flex; gap:0.55rem; align-items:center; flex:1;">
+                        <button type="button" class="floating-add-btn" style="flex:1;"
+                            onclick="document.getElementById('add-to-cart-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            Add to Cart
+                        </button>
+                        <a href="{{ route('cart.index') }}" class="floating-add-btn" style="flex:0 0 auto; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.2); color: white; text-decoration:none;">
+                            Cart
+                        </a>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="floating-add-btn">
                         Sign In to Purchase

@@ -56,8 +56,20 @@
         .tag { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:10px; background: rgba(139,0,0,0.08); color: var(--accent); font-weight:700; }
 
         .empty { text-align:center; padding:80px 24px; }
+        .empty-icon {
+            width: 4.5rem;
+            height: 4.5rem;
+            margin: 0 auto 1rem;
+            border-radius: 9999px;
+            background: rgba(139,0,0,0.08);
+            color: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
         .empty h2 { margin:12px 0 8px; font-size:28px; font-weight:900; color:var(--ink); }
-        .empty p { margin:0 0 16px 0; color:var(--muted); font-weight:600; }
+        .empty p { margin:0 auto 16px auto; color:var(--muted); font-weight:600; max-width: 28rem; line-height: 1.7; }
 
         @media(max-width: 768px) {
             .cart-shell { padding-top: 100px; padding-left: 12px; padding-right: 12px; }
@@ -184,7 +196,7 @@
             </div>
         @else
             <div class="card pad empty">
-                <div style="font-size:40px;">🛒</div>
+                <div class="empty-icon">🛒</div>
                 <h2>Your cart is empty</h2>
                 <p>Find something you like and it will show up here.</p>
                 <a class="primary-btn" style="display:inline-block; text-decoration:none; width:auto; padding-inline:18px;" href="{{ route('shop.index') }}">Start shopping</a>
@@ -213,6 +225,10 @@
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({ quantity: qty })
+            }).then(() => {
+                window.dispatchEvent(new CustomEvent('toast', {
+                    detail: { message: 'Cart updated.', type: 'success' }
+                }));
             }).catch(() => {});
         }
 

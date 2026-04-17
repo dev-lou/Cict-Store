@@ -225,6 +225,25 @@
             <span>Audit Logs</span>
         </a>
 
+        <!-- Security Events -->
+        <a
+            href="{{ route('admin.security-events.index') }}"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
+            @if(request()->routeIs('admin.security-events.*'))
+                style="background: linear-gradient(135deg, #8B0000 0%, #6B0000 100%); color: #ffffff;"
+            @else
+                style="color: rgba(255, 255, 255, 0.7);"
+                onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='#ffffff';"
+                onmouseout="this.style.backgroundColor='transparent'; this.style.color='rgba(255, 255, 255, 0.7)';"
+            @endif
+        >
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3 5 6v6c0 5 3.5 7.5 7 9 3.5-1.5 7-4 7-9V6l-7-3z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 12 2 2 4-4"></path>
+            </svg>
+            <span>Security Events</span>
+        </a>
+
         <!-- Settings -->
         <a
             href="{{ route('admin.settings.index') }}"

@@ -6,21 +6,21 @@ export default {
   ],
   theme: {
     extend: {
-      // Custom Color Palette (2025 Modern Aesthetic)
+      // Custom Color Palette (2026 Premium Ecommerce - Maroon & Gold)
       colors: {
-        // Primary Blues (main brand colors)
+        // Primary Maroon (main brand colors)
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6', // Main brand blue
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50: '#faf5f5',
+          100: '#f5eeee',
+          200: '#e8d5d5',
+          300: '#d4a8a8',
+          400: '#b87a7a',
+          500: '#a85a5a',
+          600: '#8B0000', // Main brand maroon
+          700: '#6B0000',
+          800: '#5C0000',
+          900: '#4a0000',
+          950: '#300000',
         },
         // Success States (Greens)
         success: {
@@ -35,16 +35,16 @@ export default {
           800: '#166534',
           900: '#145231',
         },
-        // Warning States (Ambers)
+        // Accent Gold (premium visual accents)
         warning: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b', // Main warning
-          600: '#d97706',
-          700: '#b45309',
+          50: '#fffdf5',
+          100: '#fffbeb',
+          200: '#fff3c7',
+          300: '#ffe68a',
+          400: '#ffd24d',
+          500: '#f59e0b', // Light gold for accents
+          600: '#D97706', // Main gold accent
+          700: '#b84709',
           800: '#92400e',
           900: '#78350f',
         },
@@ -90,10 +90,16 @@ export default {
         },
       },
 
-      // Typography System
+      // Typography System (2026 Modern Fonts)
       fontFamily: {
         sans: [
-          'Inter',
+          'Plus Jakarta Sans',
+          'system-ui',
+          '-apple-system',
+          'sans-serif',
+        ],
+        heading: [
+          'Poppins',
           'system-ui',
           '-apple-system',
           'sans-serif',
@@ -274,25 +280,54 @@ export default {
       },
 
       // Opacity scale
-      opacity: {
-        0: '0',
-        5: '0.05',
-        10: '0.1',
-        20: '0.2',
-        25: '0.25',
-        30: '0.3',
-        40: '0.4',
-        50: '0.5',
-        60: '0.6',
-        70: '0.7',
-        75: '0.75',
-        80: '0.8',
+                brand: {
+                  50: '#fbf4f5',
+                  100: '#f8e9eb',
+                  200: '#f1d2d7',
+                  300: '#e4acb8',
+                  400: '#d3788f',
+                  500: '#bc506d',
+                  600: '#a23a55',
+                  700: '#84273F',
+                  800: '#711f35',
+                  900: '#611d31',
+                  950: '#360b18',
+                },
+                primary: {
+                  50: '#fbf3f3',
+                  100: '#f5e4e4',
+                  200: '#eccece',
+                  300: '#dfadad',
+                  400: '#cd8585',
+                  500: '#b66161',
+                  600: '#9e4747',
+                  700: '#8b0000',
+                  800: '#6f3232',
+                  900: '#5e2e2e',
+                  950: '#321515',
+                },
+                neutral: {
+                  50: '#fcfbfb',
+                  100: '#f7f5f6',
+                  200: '#f0ecee',
+                  300: '#e2dce0',
+                  400: '#c9bfc6',
+                  500: '#a998a2',
+                  600: '#87757e',
+                  700: '#65575e',
+                  800: '#43383d',
+                  900: '#292225',
+                  950: '#171214',
+                },
         90: '0.9',
         95: '0.95',
         100: '1',
-      },
-
+                display: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+                serif: ['Inter', 'system-ui', 'sans-serif'],
       // Width & Height utilities
+              backdropBlur: {
+                xs: '2px',
+              },
       width: {
         full: '100%',
         screen: '100vw',
@@ -300,8 +335,16 @@ export default {
         max: 'max-content',
         fit: 'fit-content',
       },
-      height: {
-        full: '100%',
+                none: '0',
+                sm: '0.5rem',
+                base: '1rem',
+                md: '1rem',
+                lg: '1.25rem',
+                xl: '1.5rem',
+                '2xl': '1.75rem',
+                '3xl': '2rem',
+                '4xl': '2.5rem',
+                full: '9999px',
         screen: '100vh',
         min: 'min-content',
         max: 'max-content',
@@ -309,7 +352,11 @@ export default {
       },
 
       // Gradient utilities
+                glass: '0 18px 46px rgba(53, 14, 20, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.38)',
       backgroundImage: {
+              transitionTimingFunction: {
+                premium: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              },
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'gradient-to-tr': 'linear-gradient(to top right, var(--tw-gradient-stops))',
@@ -348,7 +395,7 @@ export default {
 
       const textUtilities = {
         '.text-gradient': {
-          '@apply bg-gradient-to-r from-primary-500 to-blue-600 bg-clip-text text-transparent': {},
+          '@apply bg-gradient-to-r from-primary-600 to-warning-600 bg-clip-text text-transparent': {},
         },
         '.text-shadow': {
           textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -389,12 +436,31 @@ export default {
         },
       };
 
+      const brandUtilities = {
+        '.gradient-brand-hero': {
+          background: 'linear-gradient(135deg, #8B0000 0%, #5C0000 100%)',
+        },
+        '.gradient-brand-accent': {
+          background: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)',
+        },
+        '.border-gold': {
+          borderColor: '#D97706',
+        },
+        '.text-maroon': {
+          color: '#8B0000',
+        },
+        '.bg-maroon-dark': {
+          backgroundColor: '#5C0000',
+        },
+      };
+
       addUtilities({
         ...glassmorphism,
         ...textUtilities,
         ...flexUtilities,
         ...gridUtilities,
         ...boundaryUtilities,
+        ...brandUtilities,
       });
     },
   ],

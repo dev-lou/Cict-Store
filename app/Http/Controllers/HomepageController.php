@@ -8,6 +8,7 @@ use App\Models\Setting;
 use App\Services\SupabaseFallback;
 use App\DTO\FallbackProduct;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Throwable;
@@ -47,12 +48,40 @@ class HomepageController extends Controller
             }
         });
 
+        $featuredProductDisplayPrices = collect();
+        $featuredProductIds = $featuredProducts->pluck('id')->filter()->values()->all();
+
+        if (!empty($featuredProductIds)) {
+            $idsCacheKey = 'homepage.featured_variant_min_modifiers.' . md5(implode(',', $featuredProductIds));
+
+            $variantMinModifiers = Cache::remember($idsCacheKey, now()->addMinutes(10), function () use ($featuredProductIds) {
+                return DB::table('product_variants')
+                    ->select('product_id', DB::raw('MIN(price_modifier) as min_price_modifier'))
+                    ->whereIn('product_id', $featuredProductIds)
+                    ->where('status', 'active')
+                    ->groupBy('product_id')
+                    ->get()
+                    ->mapWithKeys(function ($row) {
+                        return [(int) $row->product_id => (float) $row->min_price_modifier];
+                    });
+            });
+
+            $featuredProductDisplayPrices = $featuredProducts->mapWithKeys(function ($product) use ($variantMinModifiers) {
+                $basePrice = (float) ($product->base_price ?? 0);
+                $modifier = (float) ($variantMinModifiers[(int) $product->id] ?? 0);
+
+                return [(int) $product->id => $basePrice + $modifier];
+            });
+        }
+
         // Cache site logo URL for 30 minutes
         $logoUrl = Cache::remember('site.logo_url', now()->addMinutes(30), function () {
             try {
                 $logoSetting = Setting::where('key', 'site_logo')->first();
                 if ($logoSetting && $logoSetting->value) {
-                    return Storage::disk('supabase')->url($logoSetting->value);
+                    /** @var \Illuminate\Filesystem\FilesystemAdapter $supabaseDisk */
+                    $supabaseDisk = Storage::disk('supabase');
+                    return $supabaseDisk->url($logoSetting->value);
                 }
             } catch (Throwable $e) {
                 logger()->warning('Unable to fetch site logo: ' . $e->getMessage());
@@ -80,6 +109,7 @@ class HomepageController extends Controller
 
         return view('home.homepage', [
             'featuredProducts' => $featuredProducts,
+            'featuredProductDisplayPrices' => $featuredProductDisplayPrices,
             'featuredServices' => $featuredServices,
             'serviceCategories' => $serviceCategories,
             'logoUrl' => $logoUrl,

@@ -7,6 +7,8 @@ use Carbon\Carbon;
 
 class FailedLoginAttempt extends Model
 {
+    private const ATTEMPT_WINDOW_MINUTES = 30;
+
     protected $fillable = [
         'ip_address',
         'email',
@@ -23,22 +25,31 @@ class FailedLoginAttempt extends Model
     /**
      * Check if an IP is currently blocked
      */
-    public static function isBlocked(string $ipAddress): bool
+    public static function isBlocked(string $ipAddress, ?string $email = null): bool
     {
-        return self::where('ip_address', $ipAddress)
-            ->where('blocked_until', '>', now())
-            ->exists();
+        $query = self::where('ip_address', $ipAddress)
+            ->where('blocked_until', '>', now());
+
+        if (!empty($email)) {
+            $query->where('email', strtolower(trim($email)));
+        }
+
+        return $query->exists();
     }
 
     /**
      * Get remaining block time in minutes
      */
-    public static function getBlockedUntil(string $ipAddress): ?Carbon
+    public static function getBlockedUntil(string $ipAddress, ?string $email = null): ?Carbon
     {
-        $attempt = self::where('ip_address', $ipAddress)
-            ->where('blocked_until', '>', now())
-            ->orderBy('blocked_until', 'desc')
-            ->first();
+        $query = self::where('ip_address', $ipAddress)
+            ->where('blocked_until', '>', now());
+
+        if (!empty($email)) {
+            $query->where('email', strtolower(trim($email)));
+        }
+
+        $attempt = $query->orderBy('blocked_until', 'desc')->first();
 
         return $attempt?->blocked_until;
     }
@@ -48,36 +59,60 @@ class FailedLoginAttempt extends Model
      */
     public static function recordAttempt(string $ipAddress, ?string $email = null, ?string $userAgent = null): void
     {
+        $normalizedEmail = $email ? strtolower(trim($email)) : null;
+
         self::create([
             'ip_address' => $ipAddress,
-            'email' => $email,
+            'email' => $normalizedEmail,
             'user_agent' => $userAgent,
             'attempted_at' => now(),
         ]);
 
-        // Check if we should block this IP
-        $recentAttempts = self::where('ip_address', $ipAddress)
-            ->where('attempted_at', '>', now()->subMinutes(30))
-            ->count();
+        // Progressive lockout by IP + email to avoid blocking whole shared networks.
+        $attemptQuery = self::where('ip_address', $ipAddress)
+            ->where('attempted_at', '>', now()->subMinutes(self::ATTEMPT_WINDOW_MINUTES));
 
-        // Block after 10 failed attempts in 30 minutes
-        if ($recentAttempts >= 10) {
-            self::where('ip_address', $ipAddress)
-                ->where('attempted_at', '>', now()->subMinutes(30))
-                ->update([
-                    'blocked_until' => now()->addMinutes(30)
-                ]);
+        if (!empty($normalizedEmail)) {
+            $attemptQuery->where('email', $normalizedEmail);
+        }
+
+        $recentAttempts = $attemptQuery->count();
+
+        $blockMinutes = null;
+        if ($recentAttempts >= 15) {
+            $blockMinutes = 60;
+        } elseif ($recentAttempts >= 10) {
+            $blockMinutes = 15;
+        } elseif ($recentAttempts >= 6) {
+            $blockMinutes = 5;
+        }
+
+        if ($blockMinutes) {
+            $blockQuery = self::where('ip_address', $ipAddress)
+                ->where('attempted_at', '>', now()->subMinutes(self::ATTEMPT_WINDOW_MINUTES));
+
+            if (!empty($normalizedEmail)) {
+                $blockQuery->where('email', $normalizedEmail);
+            }
+
+            $blockQuery->update([
+                'blocked_until' => now()->addMinutes($blockMinutes)
+            ]);
         }
     }
 
     /**
      * Clear successful login attempts for an IP
      */
-    public static function clearAttempts(string $ipAddress): void
+    public static function clearAttempts(string $ipAddress, ?string $email = null): void
     {
-        self::where('ip_address', $ipAddress)
-            ->whereNull('blocked_until')
-            ->delete();
+        $query = self::where('ip_address', $ipAddress);
+
+        if (!empty($email)) {
+            $query->where('email', strtolower(trim($email)));
+        }
+
+        $query->delete();
     }
 
     /**
