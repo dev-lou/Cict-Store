@@ -1033,14 +1033,14 @@
     </section>
 
     <section class="home-section--cta" style="background: var(--color-white);">
-        <div class="home-cta-panel" style="width: 100%; margin: 0 auto; background: linear-gradient(135deg, var(--color-maroon) 0%, var(--color-maroon-dark) 100%); color: white; border-radius: 1.5rem; padding: 5rem 3rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: end; box-shadow: 0 16px 34px rgba(91, 0, 0, 0.22);">
+        <div class="home-cta-panel" style="width: 100%; margin: 0 auto; background: linear-gradient(135deg, var(--color-maroon) 0%, var(--color-maroon-dark) 100%); color: white; border-radius: 1.5rem; padding: 4rem 3rem; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.8rem; box-shadow: 0 16px 34px rgba(91, 0, 0, 0.22);">
             <div>
-                <p style="margin: 0 0 0.35rem 0; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.72);">Ready to order</p>
-                <h2 class="h2" style="color: white; margin: 0; max-width: 13ch;">Browse the collection or request a service.</h2>
+                <p style="margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.72);">Ready to order</p>
+                <h2 class="h2" style="color: white; margin: 0; max-width: 22ch;">Browse the collection or request a service.</h2>
             </div>
-            <a href="{{ route('shop.index') }}" class="btn btn-primary" style="gap: 0.55rem; white-space: nowrap;">
+            <a href="{{ route('shop.index') }}" class="btn btn-primary" style="gap: 0.55rem; padding: 0.9rem 2rem; font-size: 1rem;">
                 <span>Start shopping</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; fill: currentColor;">
+                <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; fill: currentColor;">
                     <path d="M13.172 12 8.222 7.05l1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"/>
                 </svg>
             </a>
