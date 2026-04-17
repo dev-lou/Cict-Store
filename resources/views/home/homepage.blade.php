@@ -14,7 +14,7 @@
 
     <style>
         .hero-section--home {
-            padding: clamp(6rem, 8.6vw, 7.35rem) 1.5rem 2.35rem;
+            padding: clamp(4.5rem, 6vw, 5.5rem) 1.5rem 2rem;
             position: relative;
         }
 
@@ -736,7 +736,7 @@
         <div class="home-hero-panel" style="max-width: 1200px; margin: 0 auto;">
             <div class="home-hero-panel-glow" aria-hidden="true"></div>
 
-            <div class="home-hero-layout" style="display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr); gap: 2rem; align-items: center; position: relative; z-index: 1;">
+            <div class="home-hero-layout" style="display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr); gap: 1.5rem; align-items: center; position: relative; z-index: 1;">
                 <div class="home-hero-copy" style="display: grid; gap: 1.25rem;">
                     <div class="home-hero-kicker" style="display: inline-flex; align-items: center; gap: 0.55rem; width: fit-content; padding: 0.55rem 0.95rem; border-radius: 9999px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 0.76rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;">
                         <span style="width: 0.45rem; height: 0.45rem; border-radius: 9999px; background: #f4c15a; box-shadow: 0 0 0 4px rgba(244,193,90,0.18);"></span>
@@ -774,42 +774,37 @@
                     </div>
                 </div>
 
-                <div class="home-hero-visual" style="display: grid; gap: 1rem;">
-                    <div class="home-hero-feature-card" style="position: relative; overflow: hidden; border-radius: 1.75rem; padding: 1.35rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.16); backdrop-filter: blur(18px); color: white; box-shadow: 0 18px 32px rgba(0,0,0,0.16);">
-                        <div style="display:flex; align-items:center; justify-content:space-between; gap: 1rem; margin-bottom: 1rem;">
-                            <div>
-                                <p style="margin: 0 0 0.35rem 0; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,255,255,0.72);">Official campus store</p>
-                                <h2 style="margin: 0; font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.02; letter-spacing: -0.04em; color: white;">Built for students.</h2>
+                <div class="home-hero-visual" style="display: grid; gap: 1.2rem; align-content: start;">
+                    <div class="home-hero-feature-card" style="position: relative; overflow: hidden; border-radius: 2rem; padding: 2rem; background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 100%); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(20px); color: white; box-shadow: 0 24px 48px rgba(0,0,0,0.22), 0 0 1px rgba(255,255,255,0.08) inset;">
+                        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="flex:1;">
+                                <p style="margin: 0 0 0.5rem 0; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(244,193,90,0.95);">Official campus store</p>
+                                <h2 style="margin: 0; font-size: clamp(1.6rem, 3.5vw, 2.2rem); line-height: 1.1; letter-spacing: -0.03em; color: white; font-weight: 800;">Built for students.</h2>
                             </div>
-                            <div style="width: 3.75rem; height: 3.75rem; border-radius: 9999px; background: transparent; border: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: none;">
-                                <img src="{{ $faviconUrl }}" alt="CICT favicon" width="56" height="56" style="width: 100%; height: 100%; object-fit: contain; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.18));">
+                            <div style="width: 4.5rem; height: 4.5rem; border-radius: 1.4rem; background: rgba(244,193,90,0.12); border: 1px solid rgba(244,193,90,0.22); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                                <img src="{{ $faviconUrl }}" alt="CICT favicon" width="56" height="56" style="width: 65%; height: 65%; object-fit: contain; display: block; filter: brightness(1.2) drop-shadow(0 4px 8px rgba(0,0,0,0.2));">
                             </div>
                         </div>
-                        <p style="margin: 0; color: rgba(255,255,255,0.9); line-height: 1.7;">
-                            A cleaner path from browse to checkout, with campus merchandise and services organized to feel official, easy, and trustworthy.
+                        <p style="margin: 0 0 1.8rem 0; color: rgba(255,255,255,0.92); line-height: 1.8; font-size: 1.05rem; font-weight: 500;">
+                            A cleaner path from browse to checkout—campus merchandise and services organized to feel official, easy, and trustworthy.
                         </p>
-                    </div>
-
-                    <div class="home-hero-stats" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem;">
-                        <div class="home-hero-stat-card" style="padding: 1rem; border-radius: 1.15rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: white;">
-                            <p class="home-hero-stat-value" style="margin: 0; font-size: 1.75rem; font-weight: 800; line-height: 1;">Fast</p>
-                            <p class="home-hero-stat-label" style="margin: 0.35rem 0 0 0; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.09em; color: rgba(255,255,255,0.72);">Turnaround</p>
-                        </div>
-                        <div class="home-hero-stat-card" style="padding: 1rem; border-radius: 1.15rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: white;">
-                            <p class="home-hero-stat-value" style="margin: 0; font-size: 1.75rem; font-weight: 800; line-height: 1;">Official</p>
-                            <p class="home-hero-stat-label" style="margin: 0.35rem 0 0 0; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.09em; color: rgba(255,255,255,0.72);">Campus store</p>
-                        </div>
-                        <div class="home-hero-stat-card" style="padding: 1rem; border-radius: 1.15rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: white;">
-                            <p class="home-hero-stat-value" style="margin: 0; font-size: 1.75rem; font-weight: 800; line-height: 1;">Easy</p>
-                            <p class="home-hero-stat-label" style="margin: 0.35rem 0 0 0; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.09em; color: rgba(255,255,255,0.72);">To use</p>
+                        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem;">
+                            <div style="padding: 1.1rem; border-radius: 1.2rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; text-align: center;">
+                                <p style="margin: 0; font-size: 1.9rem; font-weight: 900; line-height: 1;">3x</p>
+                                <p style="margin: 0.4rem 0 0 0; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.7); font-weight: 700;">Faster</p>
+                            </div>
+                            <div style="padding: 1.1rem; border-radius: 1.2rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; text-align: center;">
+                                <p style="margin: 0; font-size: 1.9rem; font-weight: 900; line-height: 1;">100%</p>
+                                <p style="margin: 0.4rem 0 0 0; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.7); font-weight: 700;">Official</p>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="home-hero-trust" style="display:flex; gap:0.9rem; align-items:center; padding:1rem 1.1rem; border-radius:1.25rem; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16); color:white;">
-                        <div style="width:2.7rem; height:2.7rem; border-radius: 9999px; background: rgba(244,193,90,0.18); display:flex; align-items:center; justify-content:center; color:#f4c15a; font-weight:800;">★</div>
+                    <div class="home-hero-trust" style="display:flex; gap:1rem; align-items:center; padding:1.35rem 1.4rem; border-radius:1.4rem; background: rgba(244,193,90,0.08); border:1px solid rgba(244,193,90,0.22); color:white;">
+                        <div style="width:3rem; height:3rem; border-radius: 1rem; background: rgba(244,193,90,0.18); display:flex; align-items:center; justify-content:center; color:#f4c15a; font-size: 1.5rem; font-weight:800; flex-shrink:0;">★</div>
                         <div>
-                            <p style="margin: 0; font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.7);">Trusted campus support</p>
-                            <p style="margin: 0.35rem 0 0 0; font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.9);">Built to feel modern, official, and easy to trust.</p>
+                            <p style="margin: 0; font-size: 0.76rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(244,193,90,0.95);">Trusted by campus</p>
+                            <p style="margin: 0.35rem 0 0 0; font-size: 0.98rem; line-height: 1.65; color: rgba(255,255,255,0.95);">Student council–backed store with modern, easy-to-use design.</p>
                         </div>
                     </div>
                 </div>
