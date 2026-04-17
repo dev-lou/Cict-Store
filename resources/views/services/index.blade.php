@@ -67,27 +67,28 @@
         }
     </style>
 
-    <section class="store-section store-section-soft store-hero-section">
+    <section class="store-section store-section-soft store-hero-section" style="padding: clamp(7rem, 12vw, 9rem) 1.5rem 2rem;">
         <div class="store-shell">
             <div class="editorial-hero">
                 <div class="editorial-hero-glow" aria-hidden="true"></div>
-                <div class="editorial-hero-grid">
+                <div class="editorial-hero-grid" style="display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr); gap: 1.5rem; align-items: center; position: relative; z-index: 1;">
                     <div>
-                        <div class="editorial-eyebrow">
-                            <span style="width: 0.42rem; height: 0.42rem; border-radius: 9999px; background: #f4c15a;"></span>
+                        <div class="editorial-eyebrow" style="display: inline-flex; align-items: center; gap: 0.55rem; width: fit-content; padding: 0.55rem 0.95rem; border-radius: 9999px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: white; font-size: 0.76rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;">
+                            <span style="width: 0.45rem; height: 0.45rem; border-radius: 9999px; background: #f4c15a; box-shadow: 0 0 0 4px rgba(244,193,90,0.18);"></span>
                             Digital Service Hub
                         </div>
-                        <h1 class="editorial-title">Campus Services, Reframed.</h1>
-                        <p class="editorial-subtitle">Premium service presentation with cleaner options, clearer pricing, and direct support for students and campus organizations.</p>
-                        <div class="editorial-chips">
-                            <span class="editorial-chip">Officer Support</span>
-                            <span class="editorial-chip">Transparent Pricing</span>
-                            <span class="editorial-chip editorial-chip--mobile-hide">Fast Turnaround</span>
+                        <h1 class="editorial-title" style="color: white; text-shadow: 0 4px 14px rgba(0, 0, 0, 0.14); font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.95; letter-spacing: -0.05em; margin: 1rem 0 0 0; max-width: 14ch;">Campus Services, Reframed.</h1>
+                        <p class="editorial-subtitle" style="margin: 1rem 0 0 0; color: rgba(255,255,255,0.95); font-size: clamp(1rem, 2.2vw, 1.2rem); line-height: 1.65; max-width: 40rem; font-weight: 500;">Premium service presentation with cleaner options, clearer pricing, and direct support for students and campus organizations.</p>
+                        <div class="editorial-chips" style="display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.2rem;">
+                            <span class="editorial-chip" style="padding: 0.55rem 0.8rem; border-radius: 9999px; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.92); font-size: 0.8rem; font-weight: 700;">Officer Support</span>
+                            <span class="editorial-chip" style="padding: 0.55rem 0.8rem; border-radius: 9999px; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.92); font-size: 0.8rem; font-weight: 700;">Transparent Pricing</span>
+                            <span class="editorial-chip editorial-chip--mobile-hide" style="padding: 0.55rem 0.8rem; border-radius: 9999px; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.92); font-size: 0.8rem; font-weight: 700;">Fast Turnaround</span>
                         </div>
                     </div>
-                    <div class="editorial-panel">
-                        <h3>Built for real campus workflows</h3>
-                        <p>From document tasks to digital requests, each service is organized to reduce confusion and move requests faster.</p>
+                    <div class="editorial-panel" style="position: relative; overflow: hidden; border-radius: 2rem; padding: 2rem; background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 100%); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(20px); color: white; box-shadow: 0 24px 48px rgba(0,0,0,0.22), 0 0 1px rgba(255,255,255,0.08) inset;">
+                        <p style="margin: 0 0 0.5rem 0; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(244,193,90,0.95);">Campus Workflows</p>
+                        <h3 style="margin: 0 0 1rem 0; font-size: 1.6rem; line-height: 1.15; letter-spacing: -0.03em; color: white; font-weight: 800;">Built for real campus needs</h3>
+                        <p style="margin: 0; color: rgba(255,255,255,0.92); line-height: 1.8; font-size: 1rem;">From document tasks to digital requests, each service is organized to reduce confusion and move requests faster.</p>
                     </div>
                 </div>
             </div>
