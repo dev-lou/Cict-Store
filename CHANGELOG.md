@@ -8,7 +8,7 @@ All notable changes to the **CICT Store** (ISUFST Department E-Commerce Platform
 ---
 
 ## v7.0.0 — May 2026
-*Release date: 2026-05-24*
+[View on GitHub](https://github.com/dev-lou/Cict-Store/releases/tag/v7.0.0) · Release date: 2026-05-24
 
 ### ⚠️ Security
 - **Redact secrets from repository** — Stop tracking `.env`, add `.env.example` with placeholders, add pre-commit hook to prevent secret leaks
@@ -55,7 +55,7 @@ All notable changes to the **CICT Store** (ISUFST Department E-Commerce Platform
 ---
 
 ## v6.0.0 — April 2026
-*Release date: 2026-04-18*
+[View on GitHub](https://github.com/dev-lou/Cict-Store/releases/tag/v6.0.0) · Release date: 2026-04-18
 
 ### 🎨 User Experience
 - **Global navigation loader** — Initialize persistent loading indicator for page transitions
@@ -69,14 +69,14 @@ All notable changes to the **CICT Store** (ISUFST Department E-Commerce Platform
 ---
 
 ## v5.0.0 — March 2026
-*Release date: 2026-03-01*
+[View on GitHub](https://github.com/dev-lou/Cict-Store/releases/tag/v5.0.0) · Release date: 2026-03-01
 
 No notable changes — Infrastructure stabilization period.
 
 ---
 
 ## v4.0.0 — February 2026
-*Release date: 2026-02-10*
+[View on GitHub](https://github.com/dev-lou/Cict-Store/releases/tag/v4.0.0) · Release date: 2026-02-10
 
 ### 🐛 Critical Bug Fixes
 - **Fix ALL PostgreSQL boolean comparison issues** across the entire codebase (19 fixes)
@@ -104,7 +104,7 @@ No notable changes — Infrastructure stabilization period.
 ---
 
 ## v3.0.0 — January 2026
-*Release date: 2026-01-27*
+[View on GitHub](https://github.com/dev-lou/Cict-Store/releases/tag/v3.0.0) · Release date: 2026-01-27
 
 ### 🏗️ Infrastructure & Deployment
 - Transition from Vercel serverless to **Render Docker container** architecture
@@ -138,7 +138,7 @@ No notable changes — Infrastructure stabilization period.
 ---
 
 ## v2.0.0 — December 2025
-*Release date: 2025-12-26*
+[View on GitHub](https://github.com/dev-lou/Cict-Store/releases/tag/v2.0.0) · Release date: 2025-12-26
 
 ### 🐳 Docker & Deployment
 - Fix Docker entrypoint UTF-8 encoding (resolve exec format errors)
@@ -166,7 +166,7 @@ No notable changes — Infrastructure stabilization period.
 ---
 
 ## v1.0.0 — November 2025
-*Release date: 2025-11-29*
+[View on GitHub](https://github.com/dev-lou/Cict-Store/releases/tag/v1.0.0) · Release date: 2025-11-29
 
 ### 🚀 Initial Release
 Production-ready launch of the **ISUFST CICT Department E-Commerce Platform**.
