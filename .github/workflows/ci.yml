@@ -33,28 +33,6 @@ jobs:
     needs: lint-php
     if: success()
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-    env:
-      APP_ENV: testing
-      DB_CONNECTION: pgsql
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_DATABASE: test
-      DB_USERNAME: test
-      DB_PASSWORD: test
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -64,22 +42,9 @@ jobs:
           coverage: none
       - name: Ensure writable cache directory
         run: mkdir -p bootstrap/cache
-      - name: Create .env.testing for CI
-        run: |
-          cat > .env.testing << EOF
-          APP_ENV=testing
-          DB_CONNECTION=pgsql
-          DB_HOST=localhost
-          DB_PORT=5432
-          DB_DATABASE=test
-          DB_USERNAME=test
-          DB_PASSWORD=test
-          SESSION_DRIVER=file
-          CACHE_STORE=file
-          EOF
+      - run: cp .env.example .env
       - run: composer install --no-progress --prefer-dist
       - run: php artisan key:generate --ansi
-      - run: php artisan migrate --force
       - run: php artisan test --no-coverage
 
   build:
