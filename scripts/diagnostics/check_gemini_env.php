@@ -1,10 +1,10 @@
 <?php
 /**
  * Check Gemini config (reads config/services.gemini) and returns quick diagnostics
- * Usage: php scripts/check_gemini_env.php
+ * Usage: php scripts/diagnostics/check_gemini_env.php
  */
-require __DIR__ . '/../vendor/autoload.php';
-$app = require __DIR__ . '/../bootstrap/app.php';
+require __DIR__ . '/../../vendor/autoload.php';
+$app = require __DIR__ . '/../../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
@@ -26,4 +26,4 @@ if (empty($model)) {
     echo "GEMINI_MODEL configured: {$model}\n";
 }
 
-echo "To verify actual supported models, run: php scripts/list_gemini_models.php\n";
+echo "To verify actual supported models, run: php scripts/diagnostics/list_gemini_models.php\n";

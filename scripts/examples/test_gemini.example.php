@@ -3,12 +3,12 @@
  * Example test script to exercise Gemini chat service.
  *
  * Usage:
- *  - Copy to scripts/test_gemini.php
+ *  - Copy to scripts/examples/test_gemini.php
  *  - Ensure `.env` contains `GEMINI_API_KEY` and `GEMINI_MODEL` or provide as env vars
- *  - Run: php scripts/test_gemini.php
+ *  - Run: php scripts/examples/test_gemini.php
  */
-require __DIR__ . '/../vendor/autoload.php';
-$app = require __DIR__ . '/../bootstrap/app.php';
+require __DIR__ . '/../../vendor/autoload.php';
+$app = require __DIR__ . '/../../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 $service = app(App\Services\GeminiChatService::class);

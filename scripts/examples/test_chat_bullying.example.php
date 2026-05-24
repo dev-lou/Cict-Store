@@ -2,11 +2,11 @@
 /**
  * Example script: test_chat_bullying
  * Usage:
- *  - Copy to scripts/test_chat_bullying.php (or run as example by modifying it)
+ *  - Copy to scripts/examples/test_chat_bullying.php (or run as example by modifying it)
  *  - Ensure `.env` contains GEMINI_API_KEY and any necessary API credentials
  */
-require __DIR__ . '/../vendor/autoload.php';
-$app = require __DIR__ . '/../bootstrap/app.php';
+require __DIR__ . '/../../vendor/autoload.php';
+$app = require __DIR__ . '/../../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 

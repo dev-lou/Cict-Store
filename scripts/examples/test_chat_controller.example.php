@@ -1,10 +1,10 @@
 <?php
 /**
  * Example script: test_chat_controller
- * Usage: copy to scripts/test_chat_controller.php and run
+ * Usage: copy to scripts/examples/test_chat_controller.php and run
  */
-require __DIR__ . '/../vendor/autoload.php';
-$app = require __DIR__ . '/../bootstrap/app.php';
+require __DIR__ . '/../../vendor/autoload.php';
+$app = require __DIR__ . '/../../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 use Illuminate\Http\Request;

@@ -2,12 +2,12 @@
 /**
  * Diagnostic script to list available Gemini / Generative Language models
  * Usage: 
- *   - Copy to scripts/list_gemini_models.php
+ *   - Copy to scripts/diagnostics/list_gemini_models.php
  *   - Set AUTH: export GEMINI_API_KEY="YOUR_API_KEY" or set in .env
- *   - Run: php scripts/list_gemini_models.php
+ *   - Run: php scripts/diagnostics/list_gemini_models.php
  */
-require __DIR__ . '/../vendor/autoload.php';
-$app = require __DIR__ . '/../bootstrap/app.php';
+require __DIR__ . '/../../vendor/autoload.php';
+$app = require __DIR__ . '/../../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
@@ -36,4 +36,4 @@ $data = $response->json();
 
 file_put_contents(__DIR__ . '/list_models_result.json', json_encode($data, JSON_PRETTY_PRINT));
 
-echo "Models fetched. Saved to scripts/list_models_result.json\n";
+echo "Models fetched. Saved to scripts/diagnostics/list_models_result.json\n";
