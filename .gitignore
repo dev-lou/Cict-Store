@@ -42,9 +42,6 @@ tmp_*.html
 setup-database.sql
 database_*.sql
 
-# GitHub workflows (not needed for Vercel)
-/.github/workflows/
-
 # Old/deprecated files
 gold.gif
 public/gold.gif

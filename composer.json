@@ -53,8 +53,7 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
-        "check:route-params": "@php scripts/check_route_params.php",
-        "hooks:install": "git config core.hooksPath .githooks || true",
+        "check:route-params": "@php scripts/diagnostics/check_route_params.php",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
