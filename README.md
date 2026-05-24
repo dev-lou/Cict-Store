@@ -1,6 +1,7 @@
 # Laravel IGP — E-Commerce Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/dev-lou/Cict-Store?style=flat&logo=github)](https://github.com/dev-lou/Cict-Store/releases)
 [![Laravel 11](https://img.shields.io/badge/Laravel-11.46.1-FF2D20?style=flat&logo=laravel)](https://laravel.com)
 [![PHP 8.2](https://img.shields.io/badge/PHP-8.2.12-8892BF?style=flat&logo=php)](https://www.php.net)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat&logo=postgresql)](https://www.postgresql.org)
