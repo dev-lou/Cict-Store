@@ -35,6 +35,7 @@ test_*.html
 tmp_*.html
 *_result.json
 /tests/Feature/
+!/tests/Feature/.gitkeep
 /database/factories/
 
 # Database files
