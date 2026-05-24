@@ -6,8 +6,6 @@
 
 # CRITICAL: Never commit cached config with secrets!
 /bootstrap/cache/
-.env.backup
-.env.production
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -89,8 +87,8 @@ public/storage
 *.sqlite
 coverage/
 .php-cs-fixer.cache
-.phpunit.result.cache
 /.parcel-cache
 /.idea
 /.vscode
 /.env
+.env.testing

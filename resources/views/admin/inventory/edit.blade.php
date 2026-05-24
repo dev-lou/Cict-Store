@@ -914,7 +914,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        console.log('Edit page JavaScript loaded - Version 2.0');
+
 
         // Variant Management for Edit Page
         let newVariantIndex = 0;
@@ -1073,20 +1073,13 @@
 
         // Form submission validation
         const productForm = document.querySelector('#productForm');
-        console.log('Form found:', productForm);
+
 
         if (productForm) {
             productForm.addEventListener('submit', function (e) {
-                console.log('Form submit triggered!');
 
-                // Debug: Check what data will be submitted
-                const formData = new FormData(productForm);
-                console.log('Form data entries:');
-                for (let [key, value] of formData.entries()) {
-                    if (key.includes('variant')) {
-                        console.log(key, '=', value);
-                    }
-                }
+
+
 
                 const existingVariants = document.querySelectorAll('.variant-row');
                 const newVariants = document.querySelectorAll('.new-variant-card');
@@ -1096,20 +1089,12 @@
                 const remainingExisting = existingVariants.length - deletedVariants;
                 const totalVariants = remainingExisting + newVariants.length;
 
-                console.log('Validation Check:', {
-                    existingVariants: existingVariants.length,
-                    newVariants: newVariants.length,
-                    deletedVariants: deletedVariants,
-                    remainingExisting: remainingExisting,
-                    totalVariants: totalVariants
-                });
+
 
                 // No validation - allow any number of variants
-                console.log('Submitting form...');
-            });
-        } else {
-            console.error('Form #productForm not found!');
-        }
+
+            });            } else {
+            }
 
         // Show warning message if it exists
         @if(session('warning'))
