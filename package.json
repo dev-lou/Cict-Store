@@ -15,12 +15,9 @@
         "lint:php": "vendor/bin/pint --test",
         "lint:php:fix": "vendor/bin/pint",
         "lint:js": "eslint .",
-        "lint:js:fix": "eslint --fix .",
-        "changeset": "changeset",
-        "changeset:version": "changeset version"
+        "lint:js:fix": "eslint --fix ."
     },
     "devDependencies": {
-        "@changesets/cli": "^2.31.0",
         "@commitlint/cli": "^21.0.1",
         "@commitlint/config-conventional": "^21.0.1",
         "@eslint/js": "^10.0.1",

@@ -4,19 +4,7 @@ This project uses a suite of modern developer tools to maintain code quality, en
 
 ---
 
-## 1. Changesets — Changelog & Versioning
-
-**What it does:** [Changesets](https://github.com/changesets/changesets) generates a `CHANGELOG.md` from markdown files created alongside your changes.
-
-**Workflow:**
-```bash
-npm run changeset        # Create a new changeset (commit this file)
-npm run changeset:version # Bump versions & generate CHANGELOG.md
-```
-
----
-
-## 2. Commitlint — Conventional Commits
+## 1. Commitlint — Conventional Commits
 
 **What it does:** [Commitlint](https://commitlint.js.org/) enforces the [Conventional Commits](https://www.conventionalcommits.org/) format for all commit messages.
 
@@ -101,6 +89,7 @@ npm run lint:php            # PHP syntax check (Pint)
 npm run lint:php:fix        # PHP auto-fix (Pint)
 npm run lint:js             # JavaScript check (ESLint)
 npm run lint:js:fix         # JavaScript auto-fix (ESLint)
-npm run changeset           # Create changelog entry
-npm run changeset:version   # Generate CHANGELOG.md
+
+# Release
+npm run release             # Create CHANGELOG.md entry & commit (manual)
 ```
