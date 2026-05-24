@@ -1,0 +1,53 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract release notes from CHANGELOG.md
+        id: changelog
+        run: |
+          # Extract section between ## vX.X.X and next ## heading
+          awk -v ver="${{ github.ref_name }}" '
+            BEGIN { found = 0 }
+            /^## / {
+              if (found) exit
+              if (index($0, "## " ver) == 1) found = 1
+            }
+            found { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
+
+          # Get the title from the first line (e.g., "v7.0.0 — May 2026")
+          HEADING=$(head -1 /tmp/release-notes.md 2>/dev/null)
+          if [ -z "$HEADING" ]; then
+            echo "::error::No CHANGELOG.md entry found for ${{ github.ref_name }}. Add one before pushing the tag."
+            exit 1
+          fi
+          TITLE="${HEADING### }"
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ steps.changelog.outputs.title }}" \
+            --notes-file /tmp/release-notes.md \
+            --latest
