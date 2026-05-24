@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Controllers\HomepageController;
+use Illuminate\Console\Command;
 
 class PrimeCache extends Command
 {
@@ -34,18 +34,20 @@ class PrimeCache extends Command
                 $featured = cache('homepage.featured_products') ?: collect([]);
                 // Write local JSON fallback files (public storage)
                 $fallbackDir = storage_path('app/public/fallback');
-                if (!file_exists($fallbackDir)) {
+                if (! file_exists($fallbackDir)) {
                     mkdir($fallbackDir, 0755, true);
                 }
-                file_put_contents($fallbackDir . '/products.json', json_encode($featured, JSON_PRETTY_PRINT));
+                file_put_contents($fallbackDir.'/products.json', json_encode($featured, JSON_PRETTY_PRINT));
                 $this->info('Wrote fallback JSON files to storage/app/public/fallback');
             } catch (\Throwable $e) {
-                $this->error('Failed to write fallback files: ' . $e->getMessage());
+                $this->error('Failed to write fallback files: '.$e->getMessage());
             }
             $this->info('Cache primed successfully.');
+
             return 0;
         } catch (\Throwable $e) {
-            $this->error('Cache priming failed: ' . $e->getMessage());
+            $this->error('Cache priming failed: '.$e->getMessage());
+
             return 1;
         }
     }

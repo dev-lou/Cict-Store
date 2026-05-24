@@ -23,12 +23,12 @@ class CleanupFailedLogins extends Command
     public function handle()
     {
         $this->info('Cleaning up failed login attempts older than 7 days...');
-        
+
         $count = FailedLoginAttempt::where('attempted_at', '<', now()->subDays(7))->count();
         FailedLoginAttempt::cleanup();
-        
+
         $this->info("Deleted {$count} old records.");
-        
+
         return Command::SUCCESS;
     }
 }

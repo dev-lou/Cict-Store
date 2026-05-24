@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('reference')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             $table->index('product_id');
             $table->index('user_id');
             $table->index('type');

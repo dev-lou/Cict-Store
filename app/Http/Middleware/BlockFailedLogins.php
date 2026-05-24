@@ -15,7 +15,7 @@ class BlockFailedLogins
     public function handle(Request $request, Closure $next): Response
     {
         // Allow viewing login/register pages; only block credential submission attempts.
-        if (!$request->isMethod('post') || !$request->routeIs('login.post')) {
+        if (! $request->isMethod('post') || ! $request->routeIs('login.post')) {
             return $next($request);
         }
 

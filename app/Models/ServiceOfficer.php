@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\AuditableTrait;
 
 class ServiceOfficer extends Model
 {
-    use HasFactory, AuditableTrait;
+    use AuditableTrait, HasFactory;
 
     protected $fillable = [
         'name',
@@ -48,6 +48,7 @@ class ServiceOfficer extends Model
         foreach (array_slice($words, 0, 2) as $word) {
             $initials .= strtoupper(substr($word, 0, 1));
         }
+
         return $initials;
     }
 }

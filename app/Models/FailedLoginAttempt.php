@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class FailedLoginAttempt extends Model
 {
@@ -30,7 +30,7 @@ class FailedLoginAttempt extends Model
         $query = self::where('ip_address', $ipAddress)
             ->where('blocked_until', '>', now());
 
-        if (!empty($email)) {
+        if (! empty($email)) {
             $query->where('email', strtolower(trim($email)));
         }
 
@@ -45,7 +45,7 @@ class FailedLoginAttempt extends Model
         $query = self::where('ip_address', $ipAddress)
             ->where('blocked_until', '>', now());
 
-        if (!empty($email)) {
+        if (! empty($email)) {
             $query->where('email', strtolower(trim($email)));
         }
 
@@ -72,7 +72,7 @@ class FailedLoginAttempt extends Model
         $attemptQuery = self::where('ip_address', $ipAddress)
             ->where('attempted_at', '>', now()->subMinutes(self::ATTEMPT_WINDOW_MINUTES));
 
-        if (!empty($normalizedEmail)) {
+        if (! empty($normalizedEmail)) {
             $attemptQuery->where('email', $normalizedEmail);
         }
 
@@ -91,12 +91,12 @@ class FailedLoginAttempt extends Model
             $blockQuery = self::where('ip_address', $ipAddress)
                 ->where('attempted_at', '>', now()->subMinutes(self::ATTEMPT_WINDOW_MINUTES));
 
-            if (!empty($normalizedEmail)) {
+            if (! empty($normalizedEmail)) {
                 $blockQuery->where('email', $normalizedEmail);
             }
 
             $blockQuery->update([
-                'blocked_until' => now()->addMinutes($blockMinutes)
+                'blocked_until' => now()->addMinutes($blockMinutes),
             ]);
         }
     }
@@ -108,7 +108,7 @@ class FailedLoginAttempt extends Model
     {
         $query = self::where('ip_address', $ipAddress);
 
-        if (!empty($email)) {
+        if (! empty($email)) {
             $query->where('email', strtolower(trim($email)));
         }
 

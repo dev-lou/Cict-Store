@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\AuditableTrait;
 
 class ServiceOption extends Model
 {
-    use HasFactory, AuditableTrait;
+    use AuditableTrait, HasFactory;
 
     protected $fillable = [
         'service_id',

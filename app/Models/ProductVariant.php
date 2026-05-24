@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Traits\AuditableTrait;
 
 class ProductVariant extends Model
 {
-    use HasFactory, AuditableTrait;
+    use AuditableTrait, HasFactory;
 
     protected $fillable = [
         'product_id',
@@ -49,7 +49,7 @@ class ProductVariant extends Model
      */
     public function getFinalPrice(): float
     {
-        return (float)($this->product->base_price + $this->price_modifier);
+        return (float) ($this->product->base_price + $this->price_modifier);
     }
 
     /**

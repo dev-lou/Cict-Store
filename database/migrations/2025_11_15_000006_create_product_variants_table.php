@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('stock_quantity')->default(0);
             $table->string('status', 50)->default('active');
             $table->timestamps();
-            
+
             $table->index('product_id');
             $table->foreign('product_id')
                 ->references('id')

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('status', 50)->default('pending');
             $table->string('receipt_path')->nullable();
             $table->timestamps();
-            
+
             $table->index('status');
             $table->index('priority');
             $table->foreign('product_id')

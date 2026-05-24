@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('last_activity');
             $table->index('user_id');
             $table->index('last_activity');
-            
+
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')

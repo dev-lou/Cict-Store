@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('orders', function (Blueprint $table) {
             // Composite index for date + status filtering (common query pattern)
             $table->index(['created_at', 'status'], 'orders_created_status_idx');
-            
+
             // Composite index for user orders lookup
             $table->index(['user_id', 'created_at'], 'orders_user_created_idx');
         });
@@ -22,7 +22,7 @@ return new class extends Migration
         Schema::table('products', function (Blueprint $table) {
             // Composite index for low stock queries
             $table->index(['current_stock', 'low_stock_threshold'], 'products_stock_threshold_idx');
-            
+
             // Index for status + stock filtering
             $table->index(['status', 'current_stock'], 'products_status_stock_idx');
         });

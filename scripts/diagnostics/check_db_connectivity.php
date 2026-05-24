@@ -4,25 +4,32 @@
  * Simple script to test DB host DNS and TCP connectivity from the running container/server.
  * Usage: php scripts/check_db_connectivity.php
  */
-
-function safeDnsA($host) {
+function safeDnsA($host)
+{
     $a = @dns_get_record($host, DNS_A);
+
     return $a ?: [];
 }
 
-function safeDnsAAAA($host) {
+function safeDnsAAAA($host)
+{
     $a = @dns_get_record($host, DNS_AAAA);
+
     return $a ?: [];
 }
 
-function testTcpConnect($ip, $port, $isIpv6 = false) {
+function testTcpConnect($ip, $port, $isIpv6 = false)
+{
     $address = $isIpv6 ? "[$ip]" : $ip;
-    $errno = 0; $errstr = '';
+    $errno = 0;
+    $errstr = '';
     $fp = @fsockopen($ip, $port, $errno, $errstr, 3);
     if ($fp) {
         fclose($fp);
+
         return [true, null];
     }
+
     return [false, trim("$errno: $errstr")];
 }
 
@@ -44,8 +51,8 @@ if ($envHost) {
 }
 
 echo "Testing DB host: $host:$port\n";
-echo "CONFIG: DB_HOST env: ".($envHost ?: 'none')."; DB_PORT env: ".($envPort ?: 'none')."; DATABASE_URL present: ".($databaseUrl ? 'yes' : 'no')."\n";
-echo "CONFIG: app config db host: " . (getenv('APP_DB_HOST') ?: (getenv('DB_HOST') ?: 'none')) . "\n";
+echo 'CONFIG: DB_HOST env: '.($envHost ?: 'none').'; DB_PORT env: '.($envPort ?: 'none').'; DATABASE_URL present: '.($databaseUrl ? 'yes' : 'no')."\n";
+echo 'CONFIG: app config db host: '.(getenv('APP_DB_HOST') ?: (getenv('DB_HOST') ?: 'none'))."\n";
 
 $a = safeDnsA($host);
 $aaaa = safeDnsAAAA($host);
@@ -66,7 +73,7 @@ foreach ($aaaa as $r) {
     echo $ok ? "OK\n" : "FAIL ($err)\n";
 }
 
-echo "Attempt direct connect to hostname (system default resolution): ";
+echo 'Attempt direct connect to hostname (system default resolution): ';
 [$ok, $err] = testTcpConnect($host, $port, false);
 echo $ok ? "OK\n" : "FAIL ($err)\n";
 
@@ -76,11 +83,11 @@ $serviceKey = getenv('SUPABASE_SERVICE_ROLE_KEY');
 $projectRef = getenv('AWS_ACCESS_KEY_ID') ?: getenv('SUPABASE_PROJECT_REF');
 if ($projectRef && ($anon || $serviceKey)) {
     $key = $serviceKey ?: $anon;
-    echo "Testing Supabase REST endpoint using key: " . ($serviceKey ? 'service_role' : 'anon') . "\n";
+    echo 'Testing Supabase REST endpoint using key: '.($serviceKey ? 'service_role' : 'anon')."\n";
     $baseUrl = "https://{$projectRef}.supabase.co/rest/v1/products?select=id&limit=1";
     $headers = [
         'apikey' => $key,
-        'Authorization' => 'Bearer ' . $key,
+        'Authorization' => 'Bearer '.$key,
     ];
     $opts = [
         'http' => [

@@ -3,19 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use App\Models\AuditLog;
+use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class OrderManageController extends Controller
 {
     /**
      * Display all customer orders with filtering options.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function index(Request $request): \Illuminate\View\View
     {
@@ -26,9 +23,9 @@ class OrderManageController extends Controller
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('order_number', 'like', '%' . $searchTerm . '%')
+                $q->where('order_number', 'like', '%'.$searchTerm.'%')
                     ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                        $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                        $userQuery->where('name', 'like', '%'.$searchTerm.'%');
                     });
             });
         }
@@ -51,15 +48,12 @@ class OrderManageController extends Controller
 
         return view('admin.orders.index', [
             'orders' => $orders,
-            'pageTitle' => 'All Orders'
+            'pageTitle' => 'All Orders',
         ]);
     }
 
     /**
      * Display pending orders with filtering and search.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function showPending(Request $request): \Illuminate\View\View
     {
@@ -71,9 +65,9 @@ class OrderManageController extends Controller
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('order_number', 'like', '%' . $searchTerm . '%')
+                $q->where('order_number', 'like', '%'.$searchTerm.'%')
                     ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                        $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                        $userQuery->where('name', 'like', '%'.$searchTerm.'%');
                     });
             });
         }
@@ -98,15 +92,12 @@ class OrderManageController extends Controller
             'orders' => $orders,
             'status' => 'pending',
             'pageTitle' => 'Pending Orders',
-            'count' => $orders->total()
+            'count' => $orders->total(),
         ]);
     }
 
     /**
      * Display processing orders with filtering and search.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function showProcessing(Request $request): \Illuminate\View\View
     {
@@ -118,9 +109,9 @@ class OrderManageController extends Controller
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('order_number', 'like', '%' . $searchTerm . '%')
+                $q->where('order_number', 'like', '%'.$searchTerm.'%')
                     ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                        $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                        $userQuery->where('name', 'like', '%'.$searchTerm.'%');
                     });
             });
         }
@@ -145,15 +136,12 @@ class OrderManageController extends Controller
             'orders' => $orders,
             'status' => 'processing',
             'pageTitle' => 'Processing Orders',
-            'count' => $orders->total()
+            'count' => $orders->total(),
         ]);
     }
 
     /**
      * Display completed orders with filtering and search.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function showCompleted(Request $request): \Illuminate\View\View
     {
@@ -165,9 +153,9 @@ class OrderManageController extends Controller
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('order_number', 'like', '%' . $searchTerm . '%')
+                $q->where('order_number', 'like', '%'.$searchTerm.'%')
                     ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                        $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                        $userQuery->where('name', 'like', '%'.$searchTerm.'%');
                     });
             });
         }
@@ -192,27 +180,22 @@ class OrderManageController extends Controller
             'orders' => $orders,
             'status' => 'completed',
             'pageTitle' => 'Completed Orders',
-            'count' => $orders->total()
+            'count' => $orders->total(),
         ]);
     }
 
     /**
      * Display a single order's details.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\View\View
      */
     public function show(Order $order): \Illuminate\View\View
     {
         $order->load('user:id,name,email', 'items.product:id,name,base_price', 'items.variant:id,name,price');
+
         return view('admin.orders.show', ['order' => $order]);
     }
 
     /**
      * Delete an order.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Order $order): \Illuminate\Http\RedirectResponse
     {
@@ -241,10 +224,6 @@ class OrderManageController extends Controller
 
     /**
      * Update an order's status.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function updateStatus(Request $request, Order $order): \Illuminate\Http\RedirectResponse
     {
@@ -260,7 +239,7 @@ class OrderManageController extends Controller
         $order->update(['status' => $newStatus]);
 
         // If marking as completed, set completed_at timestamp
-        if ($newStatus === 'completed' && !$order->completed_at) {
+        if ($newStatus === 'completed' && ! $order->completed_at) {
             $order->update(['completed_at' => now()]);
         }
 
@@ -281,10 +260,6 @@ class OrderManageController extends Controller
 
     /**
      * Assign a staff member to an order.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function assignStaff(Request $request, Order $order): \Illuminate\Http\RedirectResponse
     {
@@ -318,9 +293,7 @@ class OrderManageController extends Controller
     /**
      * Download a customer-uploaded file for an order.
      *
-     * @param  \App\Models\Order  $order
      * @param  string  $fileName
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function downloadFile(Order $order, $fileName): \Symfony\Component\HttpFoundation\StreamedResponse
     {
@@ -330,10 +303,10 @@ class OrderManageController extends Controller
         }
 
         // Build the file path
-        $filePath = 'orders/' . $order->id . '/' . $fileName;
+        $filePath = 'orders/'.$order->id.'/'.$fileName;
 
         // Verify file exists
-        if (!Storage::disk('local')->exists($filePath)) {
+        if (! Storage::disk('local')->exists($filePath)) {
             abort(404, 'File not found.');
         }
 

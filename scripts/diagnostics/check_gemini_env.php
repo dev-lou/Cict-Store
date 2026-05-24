@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Check Gemini config (reads config/services.gemini) and returns quick diagnostics
  * Usage: php scripts/diagnostics/check_gemini_env.php
  */
-require __DIR__ . '/../../vendor/autoload.php';
-$app = require __DIR__ . '/../../bootstrap/app.php';
+require __DIR__.'/../../vendor/autoload.php';
+$app = require __DIR__.'/../../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
@@ -16,7 +17,7 @@ $model = Config::get('services.gemini.model');
 if (empty($key)) {
     echo "GEMINI_API_KEY is NOT set in your environment/config.\n";
 } else {
-    $masked = substr($key, 0, 4) . str_repeat('*', max(0, strlen($key) - 8)) . substr($key, -4);
+    $masked = substr($key, 0, 4).str_repeat('*', max(0, strlen($key) - 8)).substr($key, -4);
     echo "GEMINI_API_KEY is set: {$masked}\n";
 }
 

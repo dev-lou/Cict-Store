@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use App\Traits\AuditableTrait;
 
 class Service extends Model
 {
-    use HasFactory, AuditableTrait;
+    use AuditableTrait, HasFactory;
 
     protected $fillable = [
         'title',
@@ -33,7 +33,7 @@ class Service extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($service) {
             if (empty($service->slug)) {
                 $service->slug = Str::slug($service->title);

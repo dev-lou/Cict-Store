@@ -1,34 +1,30 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\HomepageController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\BuyListController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InventoryProductController;
-use App\Http\Controllers\Admin\InventoryStockController;
-use App\Http\Controllers\Admin\BuyListController;
 use App\Http\Controllers\Admin\OrderManageController;
-
-use App\Http\Controllers\Admin\UserManageController;
-use App\Http\Controllers\Admin\AuditLogController;
-use App\Http\Controllers\Admin\SecurityEventController;
 use App\Http\Controllers\Admin\ReceiptPdfController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\CustomerDashboardController;
-use App\Http\Controllers\ChatbotController;
-use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\Admin\SecurityEventController;
 use App\Http\Controllers\Admin\ServiceManagementController;
+use App\Http\Controllers\Admin\UserManageController;
+use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CustomerDashboardController;
+use App\Http\Controllers\HomepageController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\SitemapController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,8 +57,9 @@ if (app()->environment('local')) {
             DB::select('SELECT 1');
             $db = 'ok';
         } catch (\Throwable $e) {
-            $db = 'error: ' . $e->getMessage();
+            $db = 'error: '.$e->getMessage();
         }
+
         return response()->json(['health' => 'ok', 'app_key' => $appKey, 'db' => $db]);
     });
 }
@@ -72,21 +69,22 @@ Route::get('/healthz', function () {
     try {
         // quick no-results DB ping
         DB::select('SELECT 1');
+
         return response()->json(['status' => 'ok', 'db' => 'ok', 'fallback' => null], 200);
     } catch (\Throwable $e) {
         // Do not leak database details, only return degraded status
-        logger()->warning('Health check: DB unreachable: ' . $e->getMessage());
+        logger()->warning('Health check: DB unreachable: '.$e->getMessage());
         $fallback = null;
         // If we have a server-side key, try to verify the supabase REST is responding
-        if (!empty(config('services.supabase.service_role_key'))) {
+        if (! empty(config('services.supabase.service_role_key'))) {
             try {
-                $fallbackService = new \App\Services\SupabaseFallback();
+                $fallbackService = new \App\Services\SupabaseFallback;
                 $test = $fallbackService->getFeaturedProducts(1);
                 if ($test && $test->isNotEmpty()) {
                     $fallback = 'supabase_rest';
                 }
             } catch (\Throwable $inner) {
-                logger()->warning('Health check: Supabase REST fallback failed: ' . $inner->getMessage());
+                logger()->warning('Health check: Supabase REST fallback failed: '.$inner->getMessage());
             }
         }
 
@@ -96,7 +94,7 @@ Route::get('/healthz', function () {
 
 // Optional debug endpoint for Gemini diagnostics (secure via token).
 // Only enabled when CICT_GEMINI_DEBUG_TOKEN is set in the environment to avoid exposure.
-if (!empty(env('CICT_GEMINI_DEBUG_TOKEN'))) {
+if (! empty(env('CICT_GEMINI_DEBUG_TOKEN'))) {
     Route::get('/_debug/gemini', function (Illuminate\Http\Request $request) {
         $token = env('CICT_GEMINI_DEBUG_TOKEN');
         $provided = $request->header('X-Debug-Token') ?: $request->query('debug_token');
@@ -105,7 +103,7 @@ if (!empty(env('CICT_GEMINI_DEBUG_TOKEN'))) {
         }
 
         $model = config('services.gemini.model');
-        $apiKeySet = !empty(config('services.gemini.api_key'));
+        $apiKeySet = ! empty(config('services.gemini.api_key'));
         $apiUrlBase = 'https://generativelanguage.googleapis.com/v1beta/models';
 
         $result = [
@@ -114,26 +112,29 @@ if (!empty(env('CICT_GEMINI_DEBUG_TOKEN'))) {
             'api_key_set' => $apiKeySet,
         ];
 
-        if (!$apiKeySet) {
+        if (! $apiKeySet) {
             return response()->json($result);
         }
 
         try {
             $res = Illuminate\Support\Facades\Http::withHeaders(['Content-Type' => 'application/json'])
-                ->get($apiUrlBase . '?key=' . config('services.gemini.api_key'));
+                ->get($apiUrlBase.'?key='.config('services.gemini.api_key'));
 
-            if (!$res->successful()) {
+            if (! $res->successful()) {
                 $result['models_fetch_status'] = $res->status();
                 $result['models_fetch_body'] = $res->json();
+
                 return response()->json($result, 200);
             }
 
             $data = $res->json();
-            $modelNames = array_map(fn($m) => $m['name'] ?? ($m['id'] ?? null), $data['models'] ?? []);
+            $modelNames = array_map(fn ($m) => $m['name'] ?? ($m['id'] ?? null), $data['models'] ?? []);
             $result['available_models'] = $modelNames;
+
             return response()->json($result, 200);
         } catch (\Exception $e) {
             $result['exception'] = $e->getMessage();
+
             return response()->json($result, 200);
         }
 
@@ -297,8 +298,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/{order}/download-file', [OrderManageController::class, 'downloadFile'])->name('download-file');
     });
 
-
-
     // ========================================================================
     // Audit Logs
     // ========================================================================
@@ -426,13 +425,15 @@ Route::post('/register', function () {
 
         return redirect('/')->with('success', 'Registration successful!');
     } catch (\Exception $e) {
-        \Log::error('Registration error: ' . $e->getMessage());
+        \Log::error('Registration error: '.$e->getMessage());
+
         return back()->withInput()->withErrors(['error' => 'Registration failed. Please try again.']);
     }
 })->name('register.post')->middleware(['guest', 'throttle:5,1']);
 
 Route::post('/logout', function () {
     \Illuminate\Support\Facades\Auth::logout();
+
     return redirect('/');
 })->name('logout')->middleware('auth');
 
@@ -450,5 +451,3 @@ Route::post('/profile/update-password', [ProfileController::class, 'updatePasswo
 // ============================================================================
 // Routes for login, register, password reset, email verification are
 // automatically included when Laravel Breeze is installed.
-
-

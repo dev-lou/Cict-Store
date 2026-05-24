@@ -31,15 +31,15 @@ class SecurityHeaders
 
         // Content Security Policy (basic, adjust as needed)
         $csp =
-            "default-src 'self'; " .
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:5173 https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.googletagmanager.com https://generativelanguage.googleapis.com https://maps.googleapis.com; " .
-            "style-src 'self' 'unsafe-inline' http://localhost:5173 https://fonts.googleapis.com https://cdn.jsdelivr.net; " .
-            "style-src-elem 'self' 'unsafe-inline' http://localhost:5173 https://fonts.googleapis.com https://cdn.jsdelivr.net; " .
-            "font-src 'self' http://localhost:5173 https://fonts.gstatic.com data:; " .
-            "img-src 'self' data: https: blob: https://*.supabase.co https://*.googleapis.com https://*.gstatic.com; " .
-            "frame-src 'self' https://www.google.com https://maps.google.com https://*.google.com; " .
-            "connect-src 'self' http://localhost:5173 ws://localhost:5173 https://generativelanguage.googleapis.com https://*.supabase.co https://maps.googleapis.com; " .
-            "frame-ancestors " . ($isAuthPage ? "'none'" : "'self'") . ";";
+            "default-src 'self'; ".
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:5173 https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.googletagmanager.com https://generativelanguage.googleapis.com https://maps.googleapis.com; ".
+            "style-src 'self' 'unsafe-inline' http://localhost:5173 https://fonts.googleapis.com https://cdn.jsdelivr.net; ".
+            "style-src-elem 'self' 'unsafe-inline' http://localhost:5173 https://fonts.googleapis.com https://cdn.jsdelivr.net; ".
+            "font-src 'self' http://localhost:5173 https://fonts.gstatic.com data:; ".
+            "img-src 'self' data: https: blob: https://*.supabase.co https://*.googleapis.com https://*.gstatic.com; ".
+            "frame-src 'self' https://www.google.com https://maps.google.com https://*.google.com; ".
+            "connect-src 'self' http://localhost:5173 ws://localhost:5173 https://generativelanguage.googleapis.com https://*.supabase.co https://maps.googleapis.com; ".
+            'frame-ancestors '.($isAuthPage ? "'none'" : "'self'").';';
 
         $response->headers->set('Content-Security-Policy', $csp);
 

@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
-use App\Models\ServiceOption;
 use App\Models\ServiceOfficer;
+use App\Models\ServiceOption;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class ServiceManagementController extends Controller
 {
@@ -25,7 +25,7 @@ class ServiceManagementController extends Controller
         $officers = Cache::remember('admin.service_officers.list', 300, function () {
             return ServiceOfficer::ordered()->get();
         });
-        
+
         $stats = Cache::remember('admin.services.stats', 300, function () {
             return [
                 'total_services' => Service::count(),
@@ -51,7 +51,7 @@ class ServiceManagementController extends Controller
                 ->orderBy('category')
                 ->pluck('category');
         });
-        
+
         return view('admin.services.create', compact('categories'));
     }
 
@@ -65,7 +65,7 @@ class ServiceManagementController extends Controller
             ->distinct()
             ->orderBy('category')
             ->pluck('category');
-        
+
         return view('admin.services.edit', compact('service', 'categories'));
     }
 
@@ -100,7 +100,7 @@ class ServiceManagementController extends Controller
             Cache::forget('admin.services.list');
             Cache::forget('admin.services.stats');
             Cache::forget('admin.services.categories');
-            
+
             // Clear public-facing caches
             Cache::forget('homepage.featured_services');
             Cache::forget('homepage.service_categories');
@@ -109,16 +109,16 @@ class ServiceManagementController extends Controller
 
             return redirect()->route('admin.services.index')
                 ->with('success', 'Service created successfully!');
-                
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            \Log::error('Service creation failed: ' . $e->getMessage(), [
+            \Log::error('Service creation failed: '.$e->getMessage(), [
                 'exception' => $e,
-                'request' => $request->all()
+                'request' => $request->all(),
             ]);
-            
-            return back()->with('error', 'Failed to save service: ' . $e->getMessage())->withInput();
+
+            return back()->with('error', 'Failed to save service: '.$e->getMessage())->withInput();
         }
     }
 
@@ -149,7 +149,7 @@ class ServiceManagementController extends Controller
         Cache::forget('admin.services.list');
         Cache::forget('admin.services.stats');
         Cache::forget('admin.services.categories');
-        
+
         // Clear public-facing caches
         Cache::forget('homepage.featured_services');
         Cache::forget('homepage.service_categories');
@@ -171,7 +171,7 @@ class ServiceManagementController extends Controller
         Cache::forget('admin.services.list');
         Cache::forget('admin.services.stats');
         Cache::forget('admin.services.categories');
-        
+
         // Clear public-facing caches
         Cache::forget('homepage.featured_services');
         Cache::forget('homepage.service_categories');
@@ -189,13 +189,13 @@ class ServiceManagementController extends Controller
      */
     public function toggleStatus(Service $service)
     {
-        $service->update(['is_active' => !$service->is_active]);
+        $service->update(['is_active' => ! $service->is_active]);
 
         // Clear admin caches
         Cache::forget('admin.services.list');
         Cache::forget('admin.services.stats');
         Cache::forget('admin.services.categories');
-        
+
         // Clear public-facing caches
         Cache::forget('homepage.featured_services');
         Cache::forget('homepage.service_categories');
@@ -215,6 +215,7 @@ class ServiceManagementController extends Controller
     public function indexOptions(Service $service)
     {
         $options = $service->options()->orderBy('created_at')->get();
+
         return view('admin.services.options.index', compact('service', 'options'));
     }
 
@@ -303,7 +304,7 @@ class ServiceManagementController extends Controller
     public function officersIndex()
     {
         $officers = ServiceOfficer::ordered()->get();
-        
+
         $stats = [
             'total_officers' => ServiceOfficer::count(),
             'active_officers' => ServiceOfficer::whereRaw('"is_active" IS TRUE')->count(),
@@ -353,10 +354,11 @@ class ServiceManagementController extends Controller
 
             return redirect()->route('admin.service-officers.index')
                 ->with('success', 'Officer added successfully!');
-                
+
         } catch (\Exception $e) {
-            \Log::error('Officer creation failed: ' . $e->getMessage());
-            return back()->with('error', 'Failed to add officer: ' . $e->getMessage())->withInput();
+            \Log::error('Officer creation failed: '.$e->getMessage());
+
+            return back()->with('error', 'Failed to add officer: '.$e->getMessage())->withInput();
         }
     }
 
@@ -373,7 +375,7 @@ class ServiceManagementController extends Controller
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', true);
-        
+
         $officer->update($validated);
 
         // Clear caches

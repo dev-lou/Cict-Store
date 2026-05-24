@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -29,19 +29,19 @@ class ProfileController extends Controller
             // Store new picture with sanitized filename to prevent path traversal
             $file = $request->file('profile_picture');
             $originalName = $file->getClientOriginalName();
-            
+
             // Sanitize filename - remove directory traversal attempts and special characters
             $sanitizedName = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', $originalName);
             $sanitizedName = str_replace(['..', '/', '\\'], '', $sanitizedName);
-            
+
             // Generate unique filename
-            $filename = auth()->id() . '_' . time() . '_' . $sanitizedName;
-            
+            $filename = auth()->id().'_'.time().'_'.$sanitizedName;
+
             // Store in profile-pictures directory on Supabase
             $path = $file->storeAs('profile-pictures', $filename, 'supabase');
 
             // Validate stored path doesn't escape directory
-            if (!str_starts_with($path, 'profile-pictures/')) {
+            if (! str_starts_with($path, 'profile-pictures/')) {
                 throw new \Exception('Invalid file path detected');
             }
 
@@ -81,7 +81,7 @@ class ProfileController extends Controller
     public function updateEmail(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'email' => 'required|email|unique:users,email,'.auth()->id(),
         ]);
 
         auth()->user()->update(['email' => $validated['email']]);

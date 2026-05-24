@@ -18,11 +18,11 @@ class SecurityEventController extends Controller
             ->orderByDesc('attempted_at');
 
         if ($request->filled('ip')) {
-            $query->where('ip_address', 'like', '%' . trim((string) $request->input('ip')) . '%');
+            $query->where('ip_address', 'like', '%'.trim((string) $request->input('ip')).'%');
         }
 
         if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . strtolower(trim((string) $request->input('email'))) . '%');
+            $query->where('email', 'like', '%'.strtolower(trim((string) $request->input('email'))).'%');
         }
 
         if ($request->filled('status')) {

@@ -10,8 +10,6 @@ class BuyListController extends Controller
 {
     /**
      * Display the buy list (to-buy items).
-     *
-     * @return \Illuminate\View\View
      */
     public function index(): \Illuminate\View\View
     {
@@ -20,7 +18,9 @@ class BuyListController extends Controller
         // derive any custom field keys that exist across items so the UI can render those columns
         $customKeys = $items->pluck('custom_fields')
             ->filter()
-            ->flatMap(function ($arr) { return is_array($arr) ? array_keys($arr) : []; })
+            ->flatMap(function ($arr) {
+                return is_array($arr) ? array_keys($arr) : [];
+            })
             ->unique()
             ->values()
             ->all();
@@ -31,7 +31,6 @@ class BuyListController extends Controller
     /**
      * Store a new buy list item via AJAX.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -52,14 +51,13 @@ class BuyListController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Item added successfully!',
-            'item' => $item
+            'item' => $item,
         ]);
     }
 
     /**
      * Update a buy list item via AJAX.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -90,7 +88,7 @@ class BuyListController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Item updated successfully!',
-            'item' => $item
+            'item' => $item,
         ]);
     }
 
@@ -107,8 +105,7 @@ class BuyListController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Item deleted successfully!'
+            'message' => 'Item deleted successfully!',
         ]);
     }
-
 }

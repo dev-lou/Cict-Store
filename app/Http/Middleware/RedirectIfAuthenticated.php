@@ -24,11 +24,12 @@ class RedirectIfAuthenticated
                 if ($request->is('admin/*') || $request->is('/')) {
                     return $next($request);
                 }
-                
+
                 // Redirect admin users to admin dashboard, regular users to home
                 if (Auth::user()->isAdmin()) {
                     return redirect('/admin/dashboard');
                 }
+
                 return redirect('/');
             }
         }

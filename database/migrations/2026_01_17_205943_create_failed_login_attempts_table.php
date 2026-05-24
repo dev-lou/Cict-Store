@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('attempted_at');
             $table->timestamp('blocked_until')->nullable();
             $table->timestamps();
-            
+
             // Index for faster lookups
             $table->index('ip_address');
             $table->index('attempted_at');

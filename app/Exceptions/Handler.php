@@ -2,13 +2,12 @@
 
 namespace App\Exceptions;
 
-use Throwable;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Illuminate\Database\QueryException;
-use PDOException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\DB;
+use PDOException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -41,59 +40,59 @@ class Handler extends ExceptionHandler
         // Handle database errors gracefully
         if ($e instanceof QueryException || $e instanceof PDOException) {
             $msg = $e->getMessage();
-            
+
             // PostgreSQL transaction aborted error (25P02)
             // This happens when a query fails and subsequent queries try to run in the same transaction
             if (str_contains($msg, '25P02') || str_contains($msg, 'transaction is aborted')) {
-                logger()->error('PostgreSQL transaction aborted: ' . $msg);
-                
+                logger()->error('PostgreSQL transaction aborted: '.$msg);
+
                 // Try to rollback the aborted transaction
                 try {
                     DB::rollBack();
                 } catch (Throwable $rollbackError) {
                     // Ignore rollback errors - connection may already be reset
                 }
-                
+
                 if ($request->expectsJson()) {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'A database error occurred. Please try again.',
                     ], 500);
                 }
-                
+
                 // Redirect back with error for web requests
                 if ($request->hasSession()) {
                     return redirect()->back()
                         ->withInput()
                         ->with('error', 'An error occurred. Please try again.');
                 }
-                
+
                 return response()->make(
                     $this->renderErrorPage(500, 'Database Error', 'Please try again.'),
                     500
                 );
             }
-            
+
             // Network/connection errors
-            if (str_contains($msg, 'Network is unreachable') || 
-                str_contains($msg, 'SQLSTATE[08006]') || 
+            if (str_contains($msg, 'Network is unreachable') ||
+                str_contains($msg, 'SQLSTATE[08006]') ||
                 str_contains($msg, 'could not connect') ||
                 str_contains($msg, 'Connection refused') ||
                 str_contains($msg, 'server closed the connection')) {
-                
-                logger()->warning('DB connectivity issue: ' . $msg);
-                
+
+                logger()->warning('DB connectivity issue: '.$msg);
+
                 if ($request->expectsJson()) {
                     return response()->json(['status' => 'degraded', 'message' => 'DB unreachable'], 503);
                 }
-                
+
                 // Serve degraded page if exists
                 $path = public_path('degraded.html');
                 if (file_exists($path)) {
                     return response(file_get_contents($path), 503)
                         ->header('Content-Type', 'text/html');
                 }
-                
+
                 return response()->make(
                     $this->renderErrorPage(503, 'Service Temporarily Unavailable', 'Please try again later.'),
                     503
@@ -102,24 +101,24 @@ class Handler extends ExceptionHandler
         }
 
         // For production: show clean error pages
-        if (app()->environment('production') && !$request->expectsJson()) {
+        if (app()->environment('production') && ! $request->expectsJson()) {
             $statusCode = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
-            
+
             // Log the actual error for debugging
-            logger()->error('Production error: ' . $e->getMessage(), [
+            logger()->error('Production error: '.$e->getMessage(), [
                 'exception' => get_class($e),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'url' => $request->fullUrl(),
             ]);
-            
+
             // For admin pages, redirect back with error message
             if ($request->is('admin/*') && $request->hasSession() && $statusCode === 500) {
                 return redirect()->back()
                     ->withInput()
-                    ->with('error', 'Error: ' . $e->getMessage());
+                    ->with('error', 'Error: '.$e->getMessage());
             }
-            
+
             return response()->make(
                 $this->renderErrorPage($statusCode, 'Error', 'Something went wrong.'),
                 $statusCode
@@ -128,7 +127,7 @@ class Handler extends ExceptionHandler
 
         return parent::render($request, $e);
     }
-    
+
     /**
      * Render a simple error page without Blade compilation.
      */
@@ -139,7 +138,7 @@ class Handler extends ExceptionHandler
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>' . $code . ' - ' . htmlspecialchars($title) . '</title>
+    <title>'.$code.' - '.htmlspecialchars($title).'</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -178,13 +177,12 @@ class Handler extends ExceptionHandler
 </head>
 <body>
     <div class="container">
-        <div class="code">' . $code . '</div>
-        <h1 class="title">' . htmlspecialchars($title) . '</h1>
-        <p class="message">' . htmlspecialchars($message) . '</p>
+        <div class="code">'.$code.'</div>
+        <h1 class="title">'.htmlspecialchars($title).'</h1>
+        <p class="message">'.htmlspecialchars($message).'</p>
         <a href="/" class="btn">Go Home</a>
     </div>
 </body>
 </html>';
     }
 }
-

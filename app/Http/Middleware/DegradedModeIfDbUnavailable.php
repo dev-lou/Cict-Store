@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\DTO\FallbackProduct;
+use App\Services\SupabaseFallback;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
-use App\Services\SupabaseFallback;
-use App\DTO\FallbackProduct;
+use Illuminate\Support\Facades\DB;
 
 class DegradedModeIfDbUnavailable
 {
@@ -25,11 +25,12 @@ class DegradedModeIfDbUnavailable
         // If a Supabase REST fallback is configured we allow public pages to proceed
         // so controllers can render content using the REST fallback. This prevents
         // sending a degraded page for routes that can still be served.
-        $hasSupabaseRestFallback = !empty(config('services.supabase.service_role_key')) || !empty(config('services.supabase.anon_key'));
+        $hasSupabaseRestFallback = ! empty(config('services.supabase.service_role_key')) || ! empty(config('services.supabase.anon_key'));
 
         try {
             // Quick DB ping
             DB::select('SELECT 1');
+
             return $next($request);
         } catch (\Throwable $e) {
             // DB is unreachable - switch to file sessions/cache to prevent further DB errors
@@ -38,7 +39,7 @@ class DegradedModeIfDbUnavailable
 
             // Allow the debug route to proceed so it can print the exception
             if ($path === 'debug-db') {
-                return new Response("<h1>Middleware Exception Caught</h1><p>The middleware failed to connect. Error details:</p><pre>" . $e->getMessage() . "\n\n" . $e->getTraceAsString() . "</pre>", 500);
+                return new Response('<h1>Middleware Exception Caught</h1><p>The middleware failed to connect. Error details:</p><pre>'.$e->getMessage()."\n\n".$e->getTraceAsString().'</pre>', 500);
             }
 
             // Enhanced log: include incoming IP and path for debugging on Render
@@ -63,7 +64,7 @@ class DegradedModeIfDbUnavailable
                     'segments' => $request->segments(),
                 ]);
                 try {
-                    $fallback = new SupabaseFallback();
+                    $fallback = new SupabaseFallback;
 
                     // Home page (root path is empty string in Laravel)
                     if ($path === '' || $path === '/') {
@@ -74,7 +75,7 @@ class DegradedModeIfDbUnavailable
                             throw new \Exception('REST API returned null');
                         }
                         logger()->info('DegradedMode: Got featured products', ['count' => $featured->count()]);
-                        $featured = collect($featured)->map(fn($p) => new FallbackProduct($p));
+                        $featured = collect($featured)->map(fn ($p) => new FallbackProduct($p));
                         logger()->info('DegradedMode: Rendering homepage view');
                         try {
                             return $this->renderFallbackView('home.homepage', ['featuredProducts' => $featured]);
@@ -89,9 +90,10 @@ class DegradedModeIfDbUnavailable
                             $html .= '<h1>TheWerk - Products</h1><p>Homepage in maintenance mode.</p>';
                             $html .= '<ul>';
                             foreach ($featured as $product) {
-                                $html .= '<li><a href="/shop/' . ($product->slug ?? '') . '">' . htmlspecialchars($product->name ?? 'Unknown') . '</a> - ₱' . number_format($product->base_price ?? 0, 2) . '</li>';
+                                $html .= '<li><a href="/shop/'.($product->slug ?? '').'">'.htmlspecialchars($product->name ?? 'Unknown').'</a> - ₱'.number_format($product->base_price ?? 0, 2).'</li>';
                             }
                             $html .= '</ul></body></html>';
+
                             return new Response($html, 200, ['Content-Type' => 'text/html']);
                         }
                     }
@@ -102,12 +104,14 @@ class DegradedModeIfDbUnavailable
                         $limit = 12;
                         $offset = ($page - 1) * $limit;
                         $filters = [];
-                        if ($request->has('search'))
+                        if ($request->has('search')) {
                             $filters['search'] = $request->search;
-                        if ($request->has('sort'))
+                        }
+                        if ($request->has('sort')) {
                             $filters['order'] = $request->get('sort');
+                        }
                         $productsCollection = $fallback->getProducts($filters, $limit, $offset) ?: collect([]);
-                        $productsCollection = collect($productsCollection)->map(fn($p) => new FallbackProduct($p));
+                        $productsCollection = collect($productsCollection)->map(fn ($p) => new FallbackProduct($p));
                         // Create a simple LengthAwarePaginator so the view can paginate links
                         $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
                             $productsCollection,
@@ -116,10 +120,11 @@ class DegradedModeIfDbUnavailable
                             $page,
                             ['path' => $request->url(), 'query' => $request->query()]
                         );
+
                         return $this->renderFallbackView('shop.index', [
                             'products' => $paginator,
                             'sort' => $request->get('sort', 'newest'),
-                            'search' => $request->get('search', '')
+                            'search' => $request->get('search', ''),
                         ]);
                     }
 
@@ -156,7 +161,7 @@ class DegradedModeIfDbUnavailable
                             logger()->info('DegradedMode: Creating FallbackProduct', ['remote_id' => $remoteId]);
                             $product = new FallbackProduct($remote);
                             $variants = $fallback->getVariantsForProduct($product->id) ?: collect([]);
-                            $product->variants = collect($variants)->map(fn($v) => (object) $v);
+                            $product->variants = collect($variants)->map(fn ($v) => (object) $v);
                             logger()->info('DegradedMode: About to render product view', ['product_name' => $product->name]);
                             try {
                                 return $this->renderFallbackView('shop.show', ['product' => $product]);
@@ -167,12 +172,13 @@ class DegradedModeIfDbUnavailable
                                     'line' => $viewError->getLine(),
                                 ]);
                                 // Minimal product page fallback
-                                $html = '<!DOCTYPE html><html><head><title>' . htmlspecialchars($product->name) . ' - TheWerk</title></head><body>';
-                                $html .= '<h1>' . htmlspecialchars($product->name) . '</h1>';
-                                $html .= '<p>Price: ₱' . number_format($product->base_price, 2) . '</p>';
-                                $html .= '<p>' . htmlspecialchars($product->description ?? '') . '</p>';
+                                $html = '<!DOCTYPE html><html><head><title>'.htmlspecialchars($product->name).' - TheWerk</title></head><body>';
+                                $html .= '<h1>'.htmlspecialchars($product->name).'</h1>';
+                                $html .= '<p>Price: ₱'.number_format($product->base_price, 2).'</p>';
+                                $html .= '<p>'.htmlspecialchars($product->description ?? '').'</p>';
                                 $html .= '<p><a href="/shop">← Back to Shop</a></p>';
                                 $html .= '</body></html>';
+
                                 return new Response($html, 200, ['Content-Type' => 'text/html']);
                             }
                         } else {
@@ -186,7 +192,7 @@ class DegradedModeIfDbUnavailable
                     if (in_array($path, ['login', 'register', 'password/reset', 'password/email'])) {
                         return $this->renderMaintenancePage(
                             'Login & Registration',
-                            'User accounts and login functionality are temporarily unavailable while we perform maintenance. ' .
+                            'User accounts and login functionality are temporarily unavailable while we perform maintenance. '.
                             'You can still browse our products!',
                             [['url' => '/', 'text' => 'Go to Homepage'], ['url' => '/shop', 'text' => 'Browse Products']]
                         );
@@ -196,7 +202,7 @@ class DegradedModeIfDbUnavailable
                     if ($path === 'cart' || str_starts_with($path, 'cart/')) {
                         return $this->renderMaintenancePage(
                             'Shopping Cart',
-                            'The shopping cart is temporarily unavailable while we perform maintenance. ' .
+                            'The shopping cart is temporarily unavailable while we perform maintenance. '.
                             'Please try again in a few minutes.',
                             [['url' => '/', 'text' => 'Go to Homepage'], ['url' => '/shop', 'text' => 'Browse Products']]
                         );
@@ -206,7 +212,7 @@ class DegradedModeIfDbUnavailable
                     if (str_starts_with($path, 'checkout')) {
                         return $this->renderMaintenancePage(
                             'Checkout',
-                            'Checkout is temporarily unavailable while we perform maintenance. ' .
+                            'Checkout is temporarily unavailable while we perform maintenance. '.
                             'Your cart items will be preserved. Please try again shortly.',
                             [['url' => '/', 'text' => 'Go to Homepage'], ['url' => '/shop', 'text' => 'Browse Products']]
                         );
@@ -216,13 +222,13 @@ class DegradedModeIfDbUnavailable
                     if (str_starts_with($path, 'orders')) {
                         return $this->renderMaintenancePage(
                             'Order History',
-                            'Order history is temporarily unavailable while we perform maintenance. ' .
+                            'Order history is temporarily unavailable while we perform maintenance. '.
                             'Please try again in a few minutes.',
                             [['url' => '/', 'text' => 'Go to Homepage'], ['url' => '/shop', 'text' => 'Browse Products']]
                         );
                     }
                 } catch (\Throwable $inner) {
-                    logger()->warning('DegradedMode: REST fallback attempt failed: ' . $inner->getMessage(), ['path' => $path]);
+                    logger()->warning('DegradedMode: REST fallback attempt failed: '.$inner->getMessage(), ['path' => $path]);
                 }
             }
 
@@ -232,16 +238,19 @@ class DegradedModeIfDbUnavailable
 
             if (file_exists($staticPath)) {
                 $content = file_get_contents($staticPath);
+
                 return new Response($content, 503, ['Content-Type' => 'text/html']);
             }
 
             // Fallback to public directory
             if (file_exists($publicPath)) {
                 $content = file_get_contents($publicPath);
+
                 return new Response($content, 503, ['Content-Type' => 'text/html']);
             }
 
             $message = '<html><body><h1>Service temporarily unavailable</h1><p>We are currently experiencing technical difficulties. Please try again later.</p></body></html>';
+
             return new Response($message, 503, ['Content-Type' => 'text/html']);
         }
     }
@@ -261,9 +270,10 @@ class DegradedModeIfDbUnavailable
 
         try {
             $content = view($view, $data)->render();
+
             return new Response($content, 200, ['Content-Type' => 'text/html']);
         } catch (\Throwable $e) {
-            logger()->error('DegradedMode: View render failed: ' . $e->getMessage(), [
+            logger()->error('DegradedMode: View render failed: '.$e->getMessage(), [
                 'view' => $view,
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -278,7 +288,7 @@ class DegradedModeIfDbUnavailable
     {
         $linksHtml = '';
         foreach ($links as $link) {
-            $linksHtml .= '<a href="' . htmlspecialchars($link['url']) . '" style="display:inline-block;margin:10px 10px 10px 0;padding:12px 24px;background:#3b82f6;color:white;text-decoration:none;border-radius:6px;font-weight:500;">' . htmlspecialchars($link['text']) . '</a>';
+            $linksHtml .= '<a href="'.htmlspecialchars($link['url']).'" style="display:inline-block;margin:10px 10px 10px 0;padding:12px 24px;background:#3b82f6;color:white;text-decoration:none;border-radius:6px;font-weight:500;">'.htmlspecialchars($link['text']).'</a>';
         }
 
         $html = '<!DOCTYPE html>
@@ -286,7 +296,7 @@ class DegradedModeIfDbUnavailable
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>' . htmlspecialchars($title) . ' - TheWerk</title>
+    <title>'.htmlspecialchars($title).' - TheWerk</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -302,9 +312,9 @@ class DegradedModeIfDbUnavailable
     <div class="container">
         <div class="icon">🔧</div>
         <div class="status">Maintenance Mode</div>
-        <h1>' . htmlspecialchars($title) . '</h1>
-        <p>' . htmlspecialchars($message) . '</p>
-        <div class="links">' . $linksHtml . '</div>
+        <h1>'.htmlspecialchars($title).'</h1>
+        <p>'.htmlspecialchars($message).'</p>
+        <div class="links">'.$linksHtml.'</div>
     </div>
 </body>
 </html>';

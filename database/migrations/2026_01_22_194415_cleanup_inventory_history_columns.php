@@ -2,10 +2,11 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -36,10 +37,10 @@ return new class extends Migration {
     {
         // Restore old columns
         Schema::table('inventory_history', function (Blueprint $table) {
-            if (!Schema::hasColumn('inventory_history', 'quantity_change')) {
+            if (! Schema::hasColumn('inventory_history', 'quantity_change')) {
                 $table->integer('quantity_change')->nullable();
             }
-            if (!Schema::hasColumn('inventory_history', 'reason')) {
+            if (! Schema::hasColumn('inventory_history', 'reason')) {
                 $table->text('reason')->nullable();
             }
         });

@@ -13,22 +13,23 @@ class SupabaseFallback
     {
         $projectRef = config('services.supabase.project_ref');
         $serviceKey = config('services.supabase.service_role_key') ?: config('services.supabase.anon_key');
-        
+
         logger()->info('SupabaseFallback::getFromRest called', [
             'table' => $table,
-            'project_ref_set' => !empty($projectRef),
-            'service_key_set' => !empty($serviceKey),
+            'project_ref_set' => ! empty($projectRef),
+            'service_key_set' => ! empty($serviceKey),
         ]);
-        
+
         if (! $projectRef || ! $serviceKey) {
             logger()->warning('SupabaseFallback: Missing config', ['project_ref' => $projectRef ? 'set' : 'missing', 'key' => $serviceKey ? 'set' : 'missing']);
+
             return null;
         }
 
-        $baseUrl = "https://{$projectRef}.supabase.co/rest/v1/" . $table;
+        $baseUrl = "https://{$projectRef}.supabase.co/rest/v1/".$table;
         $headers = [
             'apikey' => $serviceKey,
-            'Authorization' => 'Bearer ' . $serviceKey,
+            'Authorization' => 'Bearer '.$serviceKey,
             'Accept' => 'application/json',
         ];
 
@@ -48,6 +49,7 @@ class SupabaseFallback
                     'status' => $response->status(),
                     'body' => substr($response->body(), 0, 500),
                 ]);
+
                 return null;
             }
 
@@ -56,6 +58,7 @@ class SupabaseFallback
             logger()->error('SupabaseFallback::getFromRest exception', [
                 'error' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
@@ -79,6 +82,7 @@ class SupabaseFallback
             if ($local) {
                 return $local->take($limit);
             }
+
             return null;
         }
 
@@ -92,8 +96,9 @@ class SupabaseFallback
                 unset($obj->image_path);
             }
             // Ensure numeric casts
-            $obj->base_price = isset($obj->base_price) ? (float)$obj->base_price : 0.0;
-            $obj->current_stock = isset($obj->current_stock) ? (int)$obj->current_stock : 0;
+            $obj->base_price = isset($obj->base_price) ? (float) $obj->base_price : 0.0;
+            $obj->current_stock = isset($obj->current_stock) ? (int) $obj->current_stock : 0;
+
             return $obj;
         });
     }
@@ -109,10 +114,10 @@ class SupabaseFallback
         ];
 
         if (isset($filters['status'])) {
-            $params['status'] = 'eq.' . $filters['status'];
+            $params['status'] = 'eq.'.$filters['status'];
         }
         if (isset($filters['search'])) {
-            $params['name'] = 'ilike.*' . $filters['search'] . '*';
+            $params['name'] = 'ilike.*'.$filters['search'].'*';
         }
         if (isset($filters['order'])) {
             $params['order'] = $filters['order'];
@@ -125,22 +130,25 @@ class SupabaseFallback
             if ($local) {
                 // apply filters search/order/limit/offset in-memory as best-effort
                 $collection = $local;
-                if (!empty($filters['search'])) {
+                if (! empty($filters['search'])) {
                     $collection = $collection->filter(function ($p) use ($filters) {
                         return str_contains(strtolower($p->name ?? ''), strtolower($filters['search']));
                     });
                 }
-                if (!empty($filters['order'])) {
+                if (! empty($filters['order'])) {
                     // Simplified: only support created_at.desc ordering
                     if ($filters['order'] === 'created_at.desc' || $filters['order'] === 'created_at.desc') {
                         $collection = $collection->sortByDesc('created_at');
                     }
                 }
                 $slice = $collection->slice($offset, $limit)->values();
+
                 return $slice;
             }
+
             return null;
         }
+
         return collect($data)->map(function ($item) {
             return (object) $item;
         });
@@ -149,10 +157,10 @@ class SupabaseFallback
     public function getProductBySlug(string $slug)
     {
         logger()->info('SupabaseFallback::getProductBySlug called', ['slug' => $slug]);
-        
+
         $params = [
             'select' => '*',
-            'slug' => 'eq.' . $slug,
+            'slug' => 'eq.'.$slug,
             'limit' => 1,
         ];
 
@@ -162,21 +170,24 @@ class SupabaseFallback
             'data_is_null' => ($data === null),
             'data_count' => $data ? count($data) : 0,
         ]);
-        
+
         if (! $data || count($data) === 0) {
             // Attempt to read local fallback and find by slug
             $local = $this->readLocalFallback('products');
             if ($local) {
-                $found = $local->first(fn($p) => ($p->slug ?? '') === $slug);
+                $found = $local->first(fn ($p) => ($p->slug ?? '') === $slug);
                 if ($found) {
                     logger()->info('SupabaseFallback::getProductBySlug found in local fallback', ['slug' => $slug]);
-                    return (object)$found;
+
+                    return (object) $found;
                 }
             }
             logger()->warning('SupabaseFallback::getProductBySlug product not found anywhere', ['slug' => $slug]);
+
             return null;
         }
         logger()->info('SupabaseFallback::getProductBySlug returning product', ['slug' => $slug, 'id' => $data[0]['id'] ?? 'no-id']);
+
         return (object) $data[0];
     }
 
@@ -184,7 +195,7 @@ class SupabaseFallback
     {
         $params = [
             'select' => '*',
-            'product_id' => 'eq.' . $productId,
+            'product_id' => 'eq.'.$productId,
         ];
 
         $data = $this->getFromRest('product_variants', $params);
@@ -192,6 +203,7 @@ class SupabaseFallback
             // No local fallback for variants currently
             return null;
         }
+
         return collect($data)->map(function ($item) {
             return (object) $item;
         });
@@ -201,16 +213,22 @@ class SupabaseFallback
     {
         try {
             $path = storage_path("app/public/fallback/{$type}.json");
-            if (!file_exists($path)) {
+            if (! file_exists($path)) {
                 return null;
             }
             $content = file_get_contents($path);
-            if (! $content) return null;
+            if (! $content) {
+                return null;
+            }
             $json = json_decode($content, true);
-            if (! $json) return null;
-            return collect($json)->map(fn($i) => (object)$i);
+            if (! $json) {
+                return null;
+            }
+
+            return collect($json)->map(fn ($i) => (object) $i);
         } catch (\Throwable $e) {
-            logger()->warning('Failed reading local fallback ' . $type . ': ' . $e->getMessage());
+            logger()->warning('Failed reading local fallback '.$type.': '.$e->getMessage());
+
             return null;
         }
     }

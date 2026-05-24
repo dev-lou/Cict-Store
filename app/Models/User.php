@@ -4,9 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * User Model
@@ -107,13 +107,13 @@ class User extends Authenticatable
     public function hasRole($roles): bool
     {
         $roles = is_array($roles) ? $roles : [$roles];
-        
+
         // Handle roles as either array or JSON string
         $userRoles = $this->roles;
         if (is_string($userRoles)) {
             $userRoles = json_decode($userRoles, true) ?? [];
         }
-        
+
         return count(array_intersect($userRoles ?? [], $roles)) > 0;
     }
 

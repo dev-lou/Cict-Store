@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\FallbackProduct;
 use App\Models\Product;
 use App\Services\SupabaseFallback;
-use App\DTO\FallbackProduct;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
     /**
      * Display the product shop page with all items and variants.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function index(Request $request): \Illuminate\View\View
     {
@@ -53,18 +50,18 @@ class ProductController extends Controller
 
         // Pagination with caching (5 minutes)
         try {
-            $cacheKey = 'shop_products_' . md5(serialize([
+            $cacheKey = 'shop_products_'.md5(serialize([
                 'search' => $request->search,
                 'sort' => $sort,
-                'page' => $request->get('page', 1)
+                'page' => $request->get('page', 1),
             ]));
-            
-            $products = Cache::remember($cacheKey, 300, function() use ($query) {
+
+            $products = Cache::remember($cacheKey, 300, function () use ($query) {
                 return $query->paginate(12);
             });
         } catch (\Throwable $e) {
-            logger()->warning('ProductController@index: DB unavailable, using Supabase REST fallback: ' . $e->getMessage());
-            $fallback = new SupabaseFallback();
+            logger()->warning('ProductController@index: DB unavailable, using Supabase REST fallback: '.$e->getMessage());
+            $fallback = new SupabaseFallback;
             $page = max(1, (int) $request->get('page', 1));
             $limit = 12;
             $offset = ($page - 1) * $limit;
@@ -74,7 +71,7 @@ class ProductController extends Controller
             }
             $productsCollection = $fallback->getProducts($filters, $limit, $offset) ?: collect([]);
             // Map to fallback DTOs so views can expect properties like `low_stock_threshold`.
-            $productsCollection = collect($productsCollection)->map(fn($p) => new FallbackProduct($p));
+            $productsCollection = collect($productsCollection)->map(fn ($p) => new FallbackProduct($p));
             $products = new LengthAwarePaginator(
                 $productsCollection, // items
                 $productsCollection->count(), // total (best-effort)
@@ -93,9 +90,6 @@ class ProductController extends Controller
 
     /**
      * Display a single product detail page.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\View\View
      */
     public function show(Product $product): \Illuminate\View\View
     {
@@ -103,15 +97,15 @@ class ProductController extends Controller
         try {
             $product->load(['variants']);
         } catch (\Throwable $e) {
-            logger()->warning('ProductController@show: DB unavailable, using Supabase REST fallback: ' . $e->getMessage());
+            logger()->warning('ProductController@show: DB unavailable, using Supabase REST fallback: '.$e->getMessage());
             // Try to fetch via REST fallback using slug
-            $fallback = new SupabaseFallback();
+            $fallback = new SupabaseFallback;
             $remote = $fallback->getProductBySlug($product->slug);
             if ($remote) {
                 // Wrap remote into fallback DTO for view compatibility
                 $product = new FallbackProduct($remote);
                 $variants = $fallback->getVariantsForProduct($product->id) ?: collect([]);
-                $product->variants = collect($variants)->map(fn($v) => (object) $v);
+                $product->variants = collect($variants)->map(fn ($v) => (object) $v);
             }
         }
 
@@ -123,7 +117,7 @@ class ProductController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
         } catch (\Throwable $e) {
-            logger()->warning('ProductController@show: reviews unavailable: ' . $e->getMessage());
+            logger()->warning('ProductController@show: reviews unavailable: '.$e->getMessage());
             $reviews = collect([]);
         }
 
@@ -132,7 +126,7 @@ class ProductController extends Controller
 
         // Get related products (active only, cached 10 minutes)
         try {
-            $relatedProducts = Cache::remember('related_products_' . $product->id, 600, function() use ($product) {
+            $relatedProducts = Cache::remember('related_products_'.$product->id, 600, function () use ($product) {
                 return Product::query()
                     ->active()
                     ->select('id', 'name', 'slug', 'base_price', 'image_path', 'badge_text', 'badge_color')
@@ -141,7 +135,7 @@ class ProductController extends Controller
                     ->get();
             });
         } catch (\Throwable $e) {
-            logger()->warning('ProductController@show: related products fallback: ' . $e->getMessage());
+            logger()->warning('ProductController@show: related products fallback: '.$e->getMessage());
             $relatedProducts = Cache::get('home.featured_products', collect([]));
         }
 
@@ -152,7 +146,7 @@ class ProductController extends Controller
         if (auth()->check()) {
             $userReview = $product->reviews()->where('user_id', auth()->id())->first();
 
-            if (!$userReview) {
+            if (! $userReview) {
                 $canReview = \App\Models\Order::where('user_id', auth()->id())
                     ->where('status', 'completed')
                     ->whereHas('items', function ($query) use ($product) {
@@ -179,4 +173,3 @@ class ProductController extends Controller
         ]);
     }
 }
-

@@ -4,26 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceOption;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     /**
      * Display the admin dashboard with key metrics and Bento Grid layout.
-     *
-     * @return \Illuminate\View\View
      */
     public function index(): \Illuminate\View\View
     {
         // Cache key metrics for 2 minutes to reduce database load
-        $cacheKey = 'admin_dashboard_metrics_' . date('YmdHi');
-        
-        $metrics = \Cache::remember($cacheKey, 120, function() {
+        $cacheKey = 'admin_dashboard_metrics_'.date('YmdHi');
+
+        $metrics = \Cache::remember($cacheKey, 120, function () {
             $today = Carbon::today();
             $startOfMonth = Carbon::now()->startOfMonth();
 
@@ -43,10 +41,10 @@ class DashboardController extends Controller
                 'totalCustomers' => Order::distinct('user_id')->count('user_id'),
             ];
         });
-        
+
         $today = Carbon::today();
         $startOfMonth = Carbon::now()->startOfMonth();
-        
+
         $todaysSales = $metrics['todaysSales'];
         $todaysOrdersCount = $metrics['todaysOrdersCount'];
         $pendingOrdersCount = $metrics['pendingOrdersCount'];
@@ -58,10 +56,10 @@ class DashboardController extends Controller
         // ========================================================================
         // REVENUE CHART DATA (Last 7 Days) - Cached
         // ========================================================================
-        $chartData = \Cache::remember('admin_revenue_chart_' . date('Ymd'), 300, function() {
+        $chartData = \Cache::remember('admin_revenue_chart_'.date('Ymd'), 300, function () {
             $revenueData = [];
             $labels = [];
-            
+
             // Single query for all 7 days
             $startDate = Carbon::now()->subDays(6)->startOfDay();
             $revenues = Order::where('created_at', '>=', $startDate)
@@ -69,25 +67,25 @@ class DashboardController extends Controller
                 ->selectRaw('DATE(created_at) as date, SUM(total) as total')
                 ->groupBy('date')
                 ->pluck('total', 'date');
-            
+
             for ($i = 6; $i >= 0; $i--) {
                 $date = Carbon::now()->subDays($i);
                 $dayLabel = $date->format('M d');
                 $dateKey = $date->format('Y-m-d');
                 $labels[] = $dayLabel;
-                $revenueData[] = (float)($revenues[$dateKey] ?? 0);
+                $revenueData[] = (float) ($revenues[$dateKey] ?? 0);
             }
-            
+
             return compact('labels', 'revenueData');
         });
-        
+
         $labels = $chartData['labels'];
         $revenueData = $chartData['revenueData'];
 
         // ========================================================================
         // TOP SELLING PRODUCTS - Cached 5 min
         // ========================================================================
-        $topProducts = \Cache::remember('admin_top_products', 300, function() {
+        $topProducts = \Cache::remember('admin_top_products', 300, function () {
             return OrderItem::select('product_id', DB::raw('COUNT(*) as order_count'), DB::raw('SUM(total_price) as revenue'))
                 ->groupBy('product_id')
                 ->orderBy('order_count', 'desc')
@@ -109,20 +107,20 @@ class DashboardController extends Controller
         // ========================================================================
         // INVENTORY STATS - Cached 3 min
         // ========================================================================
-        $inventoryStats = \Cache::remember('admin_inventory_stats', 180, function() {
+        $inventoryStats = \Cache::remember('admin_inventory_stats', 180, function () {
             $stats = Product::selectRaw('
                 COUNT(*) as total,
                 SUM(CASE WHEN current_stock > 0 THEN 1 ELSE 0 END) as in_stock,
                 SUM(CASE WHEN current_stock = 0 THEN 1 ELSE 0 END) as out_of_stock
             ')->first();
-            
+
             return [
                 'totalProducts' => $stats->total,
                 'inStockProducts' => $stats->in_stock,
                 'outOfStockProducts' => $stats->out_of_stock,
             ];
         });
-        
+
         $totalProducts = $inventoryStats['totalProducts'];
         $inStockProducts = $inventoryStats['inStockProducts'];
         $outOfStockProducts = $inventoryStats['outOfStockProducts'];
@@ -138,7 +136,7 @@ class DashboardController extends Controller
         // ========================================================================
         // CUSTOMER & SERVICES - Cached 5 min
         // ========================================================================
-        $customerAndServices = \Cache::remember('admin_customer_services_' . date('YmdH'), 300, function() use ($startOfMonth) {
+        $customerAndServices = \Cache::remember('admin_customer_services_'.date('YmdH'), 300, function () use ($startOfMonth) {
             return [
                 'newCustomersThisMonth' => \App\Models\User::whereBetween('created_at', [$startOfMonth, now()])
                     ->whereJsonContains('roles', 'customer')
@@ -151,7 +149,7 @@ class DashboardController extends Controller
                 'serviceOptionsCount' => ServiceOption::count(),
             ];
         });
-        
+
         $newCustomersThisMonth = $customerAndServices['newCustomersThisMonth'];
         $activeCustomers = $customerAndServices['activeCustomers'];
         $servicesTotal = $customerAndServices['servicesTotal'];
@@ -166,16 +164,16 @@ class DashboardController extends Controller
             'lowStockCount' => $lowStockCount,
             'monthsRevenue' => $monthsRevenue,
             'totalCustomers' => $totalCustomers,
-            
+
             // Charts
             'revenueLabels' => json_encode($labels),
             'revenueData' => json_encode($revenueData),
-            
+
             // Lists
             'topProducts' => $topProducts,
             'recentOrders' => $recentOrders,
             'lowStockProducts' => $lowStockProducts,
-            
+
             // Inventory
             'totalProducts' => $totalProducts,
             'inStockProducts' => $inStockProducts,
@@ -192,4 +190,3 @@ class DashboardController extends Controller
         ]);
     }
 }
-

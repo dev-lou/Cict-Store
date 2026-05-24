@@ -30,14 +30,14 @@ class AuditLogController extends Controller
         // Search by user name if provided
         if ($request->filled('search')) {
             $query->whereHas('user', function ($q) {
-                $q->where('name', 'like', '%' . request('search') . '%');
+                $q->where('name', 'like', '%'.request('search').'%');
             });
         }
 
         $logs = $query->paginate(15);
-        
+
         // Cache distinct models for 10 minutes
-        $models = \Cache::remember('audit_log_models', 600, function() {
+        $models = \Cache::remember('audit_log_models', 600, function () {
             return AuditLog::distinct('model_type')->pluck('model_type');
         });
 
@@ -57,4 +57,3 @@ class AuditLogController extends Controller
         ]);
     }
 }
-

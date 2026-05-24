@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
 use App\Models\Notification;
-use Illuminate\Http\Request;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerDashboardController extends Controller
 {
     /**
      * Display the customer dashboard.
-     *
-     * @return \Illuminate\View\View
      */
     public function index(): \Illuminate\View\View
     {
@@ -28,7 +25,7 @@ class CustomerDashboardController extends Controller
         $totalOrders = Order::where('user_id', $user->id)->count();
         $pendingOrders = Order::where('user_id', $user->id)->where('status', 'pending')->count();
         $completedOrders = Order::where('user_id', $user->id)->where('status', 'completed')->count();
-        
+
         // Total spent
         $totalSpent = Order::where('user_id', $user->id)
             ->where('status', '!=', 'cancelled')

@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('services', function (Blueprint $table) {
-            if (!Schema::hasColumn('services', 'category_description')) {
+            if (! Schema::hasColumn('services', 'category_description')) {
                 $table->text('category_description')->nullable();
             }
         });

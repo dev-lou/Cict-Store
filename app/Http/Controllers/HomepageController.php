@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Setting;
-use App\Services\SupabaseFallback;
-use App\DTO\FallbackProduct;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -29,7 +27,8 @@ class HomepageController extends Controller
                     ->take(4)
                     ->get();
             } catch (Throwable $e) {
-                logger()->warning('Unable to fetch featured products: ' . $e->getMessage());
+                logger()->warning('Unable to fetch featured products: '.$e->getMessage());
+
                 return collect([]);
             }
         });
@@ -43,7 +42,8 @@ class HomepageController extends Controller
                     ->take(3)
                     ->get();
             } catch (Throwable $e) {
-                logger()->warning('Unable to fetch featured services: ' . $e->getMessage());
+                logger()->warning('Unable to fetch featured services: '.$e->getMessage());
+
                 return collect([]);
             }
         });
@@ -51,8 +51,8 @@ class HomepageController extends Controller
         $featuredProductDisplayPrices = collect();
         $featuredProductIds = $featuredProducts->pluck('id')->filter()->values()->all();
 
-        if (!empty($featuredProductIds)) {
-            $idsCacheKey = 'homepage.featured_variant_min_modifiers.' . md5(implode(',', $featuredProductIds));
+        if (! empty($featuredProductIds)) {
+            $idsCacheKey = 'homepage.featured_variant_min_modifiers.'.md5(implode(',', $featuredProductIds));
 
             $variantMinModifiers = Cache::remember($idsCacheKey, now()->addMinutes(10), function () use ($featuredProductIds) {
                 return DB::table('product_variants')
@@ -81,11 +81,13 @@ class HomepageController extends Controller
                 if ($logoSetting && $logoSetting->value) {
                     /** @var \Illuminate\Filesystem\FilesystemAdapter $supabaseDisk */
                     $supabaseDisk = Storage::disk('supabase');
+
                     return $supabaseDisk->url($logoSetting->value);
                 }
             } catch (Throwable $e) {
-                logger()->warning('Unable to fetch site logo: ' . $e->getMessage());
+                logger()->warning('Unable to fetch site logo: '.$e->getMessage());
             }
+
             return asset('images/ctrlp-logo.webp');
         });
 
@@ -95,14 +97,15 @@ class HomepageController extends Controller
                 return Service::whereRaw('"is_active" IS TRUE')
                     ->orderBy('sort_order')
                     ->get()
-                    ->groupBy(fn($service) => $service->category ?: 'General')
-                    ->map(fn($group) => [
+                    ->groupBy(fn ($service) => $service->category ?: 'General')
+                    ->map(fn ($group) => [
                         'name' => $group->first()->category ?: 'General',
                         'count' => $group->count(),
                     ])
                     ->values();
             } catch (Throwable $e) {
-                logger()->warning('Unable to fetch service categories: ' . $e->getMessage());
+                logger()->warning('Unable to fetch service categories: '.$e->getMessage());
+
                 return collect([]);
             }
         });

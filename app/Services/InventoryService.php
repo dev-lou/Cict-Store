@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\InventoryHistory;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use App\Models\InventoryHistory;
 use Illuminate\Support\Facades\DB;
 
 class InventoryService
@@ -49,6 +49,7 @@ class InventoryService
     public function getStockStatusLabel(Product $product): string
     {
         $status = $this->getStockStatus($product);
+
         return match ($status) {
             'in-stock' => 'In Stock',
             'low-stock' => 'Low Stock',
@@ -85,10 +86,10 @@ class InventoryService
     ): InventoryHistory {
         return DB::transaction(function () use ($variant, $quantity, $reference, $notes, $userId) {
             $oldStock = $variant->stock_quantity;
-            
+
             // Update variant stock
             $variant->increment('stock_quantity', $quantity);
-            
+
             // Create history record
             return InventoryHistory::create([
                 'product_id' => $variant->product_id,
@@ -120,10 +121,10 @@ class InventoryService
 
         return DB::transaction(function () use ($variant, $quantity, $reason, $notes, $userId) {
             $oldStock = $variant->stock_quantity;
-            
+
             // Update variant stock
             $variant->decrement('stock_quantity', $quantity);
-            
+
             // Create history record
             return InventoryHistory::create([
                 'product_id' => $variant->product_id,

@@ -40,19 +40,19 @@ class ChatbotController extends Controller
             return $services
                 ->groupBy('category')
                 ->map(function ($items, $category) {
-                    return $category . ': ' . $items->pluck('title')->join(', ');
+                    return $category.': '.$items->pluck('title')->join(', ');
                 })
                 ->values()
                 ->join(' | ');
         });
 
         $messageWithServices = $serviceSummary
-            ? $message . "\n\nAvailable services (from database): " . $serviceSummary . "\nIf details are missing, direct the user to the Services page."
-            : $message . "\n\nNo services are listed in the database right now. Let users know they can browse services on the Services page.";
+            ? $message."\n\nAvailable services (from database): ".$serviceSummary."\nIf details are missing, direct the user to the Services page."
+            : $message."\n\nNo services are listed in the database right now. Let users know they can browse services on the Services page.";
 
         Log::info('Chatbot message received', [
             'message_length' => mb_strlen($message),
-            'has_context' => !empty($context),
+            'has_context' => ! empty($context),
         ]);
 
         $response = $this->chatService->chat($messageWithServices, $context);
@@ -64,7 +64,7 @@ class ChatbotController extends Controller
         // ordering intent
         if (preg_match('/\b(order|where to order|how to order|buy|purchase|shop)\b/', $lower)) {
             $quick[] = ['text' => 'Shop', 'url' => route('shop.index')];
-            $quick[] = ['text' => 'How to order', 'url' => route('shop.index') . '#how-to-order'];
+            $quick[] = ['text' => 'How to order', 'url' => route('shop.index').'#how-to-order'];
         }
 
         // services / printing intent
@@ -83,9 +83,11 @@ class ChatbotController extends Controller
             $quick[] = ['text' => 'My Orders', 'url' => route('account.orders')];
         }
 
-        if (!empty($quick)) {
+        if (! empty($quick)) {
             // ensure response is an array and attach quick_links
-            if (!is_array($response)) $response = ['success' => false, 'error' => 'Unexpected response'];
+            if (! is_array($response)) {
+                $response = ['success' => false, 'error' => 'Unexpected response'];
+            }
             $response['quick_links'] = $quick;
         }
 
@@ -98,7 +100,7 @@ class ChatbotController extends Controller
     public function quickActions()
     {
         return response()->json([
-            'actions' => $this->chatService->getQuickActions()
+            'actions' => $this->chatService->getQuickActions(),
         ]);
     }
 }

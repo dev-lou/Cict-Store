@@ -76,27 +76,27 @@ class Order extends Model
         static::created(function () {
             Cache::forget('admin.order_counts');
         });
-        
+
         static::updated(function () {
             Cache::forget('admin.order_counts');
         });
-        
+
         static::deleted(function () {
             Cache::forget('admin.order_counts');
         });
-        
+
         static::updating(function (Order $order) {
             // Trigger notification when status changes
             if ($order->isDirty('status')) {
                 $oldStatus = $order->getOriginal('status');
                 $newStatus = $order->status;
-                
+
                 NotificationService::orderStatusChanged($order, $oldStatus, $newStatus);
-                
+
                 // Send special thank you message and deduct inventory when order is completed
                 if ($newStatus === 'completed' && $oldStatus !== 'completed') {
                     NotificationService::orderCompleted($order);
-                    
+
                     // Deduct inventory for completed orders
                     foreach ($order->items as $item) {
                         $product = $item->product;
@@ -114,13 +114,13 @@ class Order extends Model
                                 'quantity_before' => $oldStock,
                                 'quantity_after' => $product->current_stock,
                                 // keep a short reference and a human-readable note
-                                'reference' => 'order:' . $order->order_number,
-                                'notes' => 'Order #' . $order->order_number . ' completed',
+                                'reference' => 'order:'.$order->order_number,
+                                'notes' => 'Order #'.$order->order_number.' completed',
                                 'user_id' => $order->user_id,
                             ]);
 
                             // Check if product is now low stock - notify all admins
-                                if ($product->current_stock <= $product->low_stock_threshold && $oldStock > $product->low_stock_threshold) {
+                            if ($product->current_stock <= $product->low_stock_threshold && $oldStock > $product->low_stock_threshold) {
                                 // users.roles is a JSON array (e.g. ["admin"]). Use whereJsonContains to find admins
                                 $admins = \App\Models\User::whereJsonContains('roles', 'admin')->get();
                                 foreach ($admins as $admin) {

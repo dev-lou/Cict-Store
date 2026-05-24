@@ -43,7 +43,7 @@ class NotificationController extends Controller
     public function getUnread()
     {
         // Return empty response if user is not authenticated
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json([
                 'notifications' => [],
                 'unread_count' => 0,
@@ -79,7 +79,7 @@ class NotificationController extends Controller
      */
     public function open($notification)
     {
-        if (!is_string($notification) || !Str::isUuid($notification)) {
+        if (! is_string($notification) || ! Str::isUuid($notification)) {
             return redirect()->route('notifications.index');
         }
 
@@ -87,7 +87,7 @@ class NotificationController extends Controller
             ->where('user_id', auth()->id())
             ->first();
 
-        if (!$notification) {
+        if (! $notification) {
             return redirect()->route('notifications.index');
         }
 
@@ -101,7 +101,7 @@ class NotificationController extends Controller
      */
     public function markAsRead($notification)
     {
-        if (!is_string($notification) || !Str::isUuid($notification)) {
+        if (! is_string($notification) || ! Str::isUuid($notification)) {
             return response()->json(['error' => 'Invalid notification id'], 422);
         }
 
@@ -109,7 +109,7 @@ class NotificationController extends Controller
             ->where('user_id', auth()->id())
             ->first();
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json(['error' => 'Notification not found'], 404);
         }
 
@@ -139,7 +139,7 @@ class NotificationController extends Controller
      */
     public function destroy($notification)
     {
-        if (!is_string($notification) || !Str::isUuid($notification)) {
+        if (! is_string($notification) || ! Str::isUuid($notification)) {
             return response()->json(['error' => 'Invalid notification id'], 422);
         }
 
@@ -147,7 +147,7 @@ class NotificationController extends Controller
             ->where('user_id', auth()->id())
             ->first();
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json(['error' => 'Notification not found'], 404);
         }
 

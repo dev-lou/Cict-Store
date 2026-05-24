@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->boolean('verified_purchase')->default(false);
             $table->timestamps();
-            
+
             // Prevent duplicate reviews from same user on same product
             $table->unique(['user_id', 'product_id']);
             $table->index('product_id');

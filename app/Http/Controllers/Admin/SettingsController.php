@@ -13,6 +13,7 @@ class SettingsController extends Controller
     {
         $logo = Setting::where('key', 'site_logo')->first();
         $favicon = Setting::where('key', 'site_favicon')->first();
+
         return view('admin.settings.index', compact('logo', 'favicon'));
     }
 

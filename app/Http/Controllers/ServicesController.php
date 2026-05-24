@@ -21,13 +21,14 @@ class ServicesController extends Controller
                 return Service::with([
                     'options' => function ($query) {
                         $query->active()->ordered();
-                    }
+                    },
                 ])
                     ->whereRaw('"is_active" IS TRUE')
                     ->orderBy('sort_order')
                     ->get();
             } catch (Throwable $e) {
-                logger()->warning('Unable to fetch services: ' . $e->getMessage());
+                logger()->warning('Unable to fetch services: '.$e->getMessage());
+
                 return collect([]);
             }
         });
@@ -41,7 +42,8 @@ class ServicesController extends Controller
                     ->orderBy('sort_order')
                     ->get();
             } catch (Throwable $e) {
-                logger()->warning('Unable to fetch officers: ' . $e->getMessage());
+                logger()->warning('Unable to fetch officers: '.$e->getMessage());
+
                 return collect([]);
             }
         });
@@ -68,7 +70,7 @@ class ServicesController extends Controller
         $service->load([
             'options' => function ($query) {
                 $query->active()->ordered();
-            }
+            },
         ]);
 
         return view('services.show', [

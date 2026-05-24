@@ -21,16 +21,16 @@ try {
     $errorMessage = $e->getMessage();
     $errorFile = $e->getFile();
     $errorLine = $e->getLine();
-    
+
     // Write to error log
     error_log("FATAL: {$errorMessage} in {$errorFile}:{$errorLine}");
-    
+
     // Try to write to Laravel log
-    $logFile = __DIR__ . '/../storage/logs/fatal.log';
-    @file_put_contents($logFile, date('Y-m-d H:i:s') . " FATAL: {$errorMessage}\nFile: {$errorFile}:{$errorLine}\nTrace: {$e->getTraceAsString()}\n\n", FILE_APPEND);
-    
+    $logFile = __DIR__.'/../storage/logs/fatal.log';
+    @file_put_contents($logFile, date('Y-m-d H:i:s')." FATAL: {$errorMessage}\nFile: {$errorFile}:{$errorLine}\nTrace: {$e->getTraceAsString()}\n\n", FILE_APPEND);
+
     // Serve custom 500 error page
-    $errorPage = __DIR__ . '/../resources/views/errors/500.blade.php';
+    $errorPage = __DIR__.'/../resources/views/errors/500.blade.php';
     if (file_exists($errorPage)) {
         http_response_code(500);
         echo file_get_contents($errorPage);

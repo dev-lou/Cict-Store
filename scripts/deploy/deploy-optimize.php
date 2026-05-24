@@ -5,7 +5,6 @@
  * Deploy Optimization Script
  * Run this after deploying code to Render to clear and rebuild caches
  */
-
 echo "\n🚀 Laravel Performance Optimization Deployment\n";
 echo "=============================================\n\n";
 

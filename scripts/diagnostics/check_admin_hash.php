@@ -1,12 +1,12 @@
 <?php
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__.'/../../vendor/autoload.php';
 
-$app = require_once __DIR__ . '/../../bootstrap/app.php';
+$app = require_once __DIR__.'/../../bootstrap/app.php';
 $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 $email = 'admin@example.com';
 $user = DB::table('users')->where('email', $email)->first();
@@ -25,6 +25,6 @@ echo "Hash::check('password') => ";
 echo $ok ? "true\n" : "false\n";
 
 // Print current app env and DB connection used
-echo "APP_ENV=" . env('APP_ENV') . "\n";
-echo "DB_CONNECTION=" . config('database.default') . "\n";
-echo "DB_HOST=" . env('DB_HOST') . "\n";
+echo 'APP_ENV='.env('APP_ENV')."\n";
+echo 'DB_CONNECTION='.config('database.default')."\n";
+echo 'DB_HOST='.env('DB_HOST')."\n";

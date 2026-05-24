@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('file_path')->nullable();
             $table->string('status', 50)->default('pending');
             $table->timestamps();
-            
+
             $table->index('order_id');
             $table->index('status');
             $table->foreign('order_id')

@@ -67,7 +67,7 @@ class Notification extends Model
      */
     public function markAsRead(): void
     {
-        if (!$this->is_read) {
+        if (! $this->is_read) {
             $now = now();
 
             // Use SQL TRUE literal to stay compatible with PostgreSQL boolean typing.

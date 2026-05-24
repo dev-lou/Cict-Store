@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('causer_id')->nullable();
             $table->longText('properties')->nullable();
             $table->timestamps();
-            
+
             $table->index('log_name');
             $table->index(['causer_type', 'causer_id']);
             $table->index(['subject_type', 'subject_id']);

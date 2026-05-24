@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('order_items', 'product_name')) {
+        if (! Schema::hasColumn('order_items', 'product_name')) {
             Schema::table('order_items', function (Blueprint $table) {
                 // Store product name snapshot; keep not-null with a sensible default
                 $table->string('product_name')->default('Unknown Product')->after('product_variant_id');
             });
         }
 
-        if (!Schema::hasColumn('order_items', 'variant_name')) {
+        if (! Schema::hasColumn('order_items', 'variant_name')) {
             Schema::table('order_items', function (Blueprint $table) {
                 // Variant name may be null
                 $table->string('variant_name')->nullable()->after('product_name');

@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Cache;
  */
 class Product extends Model
 {
-    use HasFactory, AuditableTrait;
+    use AuditableTrait, HasFactory;
 
     protected $fillable = [
         'name',
@@ -55,11 +55,11 @@ class Product extends Model
         static::created(function () {
             Cache::forget('homepage.featured_products');
         });
-        
+
         static::updated(function () {
             Cache::forget('homepage.featured_products');
         });
-        
+
         static::deleted(function () {
             Cache::forget('homepage.featured_products');
         });
@@ -141,7 +141,7 @@ class Product extends Model
         }
 
         // Otherwise, prepend storage/
-        return asset('storage/' . $this->image_path);
+        return asset('storage/'.$this->image_path);
     }
 
     /**

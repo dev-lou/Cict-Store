@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\AuditLog;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -25,7 +25,7 @@ class UserManageController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%");
         }
 
         // Filter by role
@@ -85,7 +85,7 @@ class UserManageController extends Controller
         ]);
 
         return redirect()->route('admin.users.index')
-                       ->with('success', "User {$user->name} created successfully!");
+            ->with('success', "User {$user->name} created successfully!");
     }
 
     /**
@@ -106,28 +106,28 @@ class UserManageController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'password' => 'nullable|string|min:8|confirmed',
             'roles' => 'required|in:admin,staff,customer',
         ]);
 
         // Track changes for audit log
         $changes = [];
-        
+
         if ($user->name !== $validated['name']) {
             $changes['name'] = ['from' => $user->name, 'to' => $validated['name']];
         }
-        
+
         if ($user->email !== $validated['email']) {
             $changes['email'] = ['from' => $user->email, 'to' => $validated['email']];
         }
-        
+
         $oldRoles = $user->roles ?? [];
         $newRoles = [$validated['roles']];
         if ($oldRoles !== $newRoles) {
             $changes['roles'] = ['from' => $oldRoles, 'to' => $newRoles];
         }
-        
+
         if ($validated['password'] ?? null) {
             $changes['password'] = 'Password changed';
             $user->password = Hash::make($validated['password']);
@@ -139,7 +139,7 @@ class UserManageController extends Controller
         $user->save();
 
         // Log the action
-        if (!empty($changes)) {
+        if (! empty($changes)) {
             AuditLog::create([
                 'user_id' => auth()->id(),
                 'action' => 'update',
@@ -153,7 +153,7 @@ class UserManageController extends Controller
         }
 
         return redirect()->route('admin.users.index')
-                       ->with('success', "User {$user->name} updated successfully!");
+            ->with('success', "User {$user->name} updated successfully!");
     }
 
     /**
@@ -164,12 +164,12 @@ class UserManageController extends Controller
         // Prevent deletion of current authenticated user
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users.index')
-                           ->with('error', 'You cannot delete your own account!');
+                ->with('error', 'You cannot delete your own account!');
         }
 
         $userName = $user->name;
         $userEmail = $user->email;
-        
+
         // Log the action before deletion
         AuditLog::create([
             'user_id' => auth()->id(),
@@ -188,7 +188,7 @@ class UserManageController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.index')
-                       ->with('success', "User {$userName} deleted successfully!");
+            ->with('success', "User {$userName} deleted successfully!");
     }
 
     /**
@@ -225,7 +225,7 @@ class UserManageController extends Controller
             if ($request->hasFile('logo')) {
                 $logoFile = $request->file('logo');
                 $logoPath = Storage::disk('supabase')->putFile('settings', $logoFile, 'public');
-                
+
                 $logoSetting = Setting::firstOrNew(['key' => 'site_logo']);
                 $logoSetting->value = $logoPath;
                 $logoSetting->save();
@@ -235,7 +235,7 @@ class UserManageController extends Controller
             if ($request->hasFile('favicon')) {
                 $faviconFile = $request->file('favicon');
                 $faviconPath = Storage::disk('supabase')->putFile('settings', $faviconFile, 'public');
-                
+
                 $faviconSetting = Setting::firstOrNew(['key' => 'site_favicon']);
                 $faviconSetting->value = $faviconPath;
                 $faviconSetting->save();
@@ -245,23 +245,23 @@ class UserManageController extends Controller
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Settings updated successfully!'
+                    'message' => 'Settings updated successfully!',
                 ]);
             }
 
             return redirect()->route('admin.settings')
-                           ->with('success', 'Settings updated successfully!');
+                ->with('success', 'Settings updated successfully!');
         } catch (\Exception $e) {
             // If AJAX request, return JSON error
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to update site name: ' . $e->getMessage()
+                    'message' => 'Failed to update site name: '.$e->getMessage(),
                 ], 400);
             }
 
             return redirect()->route('admin.settings')
-                           ->with('error', 'Failed to update site name: ' . $e->getMessage());
+                ->with('error', 'Failed to update site name: '.$e->getMessage());
         }
     }
 
@@ -300,7 +300,7 @@ class UserManageController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Profile picture updated successfully',
-                'picture_url' => asset('storage/' . $path),
+                'picture_url' => asset('storage/'.$path),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -347,7 +347,7 @@ class UserManageController extends Controller
                 ->with('success', 'Logo updated successfully! The new logo is now displayed across your site.');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Failed to update logo: ' . $e->getMessage());
+                ->with('error', 'Failed to update logo: '.$e->getMessage());
         }
     }
 
@@ -388,8 +388,7 @@ class UserManageController extends Controller
                 ->with('success', 'Favicon updated successfully! The new favicon is now displayed in browser tabs.');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Failed to update favicon: ' . $e->getMessage());
+                ->with('error', 'Failed to update favicon: '.$e->getMessage());
         }
     }
 }
-

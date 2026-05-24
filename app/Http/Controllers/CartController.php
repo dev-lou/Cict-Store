@@ -10,8 +10,6 @@ class CartController extends Controller
 {
     /**
      * Display the shopping cart.
-     *
-     * @return \Illuminate\View\View
      */
     public function index(): \Illuminate\View\View
     {
@@ -52,7 +50,6 @@ class CartController extends Controller
     /**
      * Add an item to the cart.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -65,10 +62,11 @@ class CartController extends Controller
 
         $product = Product::find($validated['product_id']);
 
-        if (!$product) {
+        if (! $product) {
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => 'Product not found.'], 404);
             }
+
             return redirect()->back()->with('error', 'Product not found.');
         }
 
@@ -76,7 +74,7 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
 
         // Create a unique key for this product+variant combination
-        $cartKey = $validated['product_id'] . '_' . ($validated['variant_id'] ?? '0');
+        $cartKey = $validated['product_id'].'_'.($validated['variant_id'] ?? '0');
 
         // If item already in cart, update quantity
         if (isset($cart[$cartKey])) {
@@ -106,9 +104,7 @@ class CartController extends Controller
     /**
      * Update a cart item (quantity, etc.).
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $key): \Illuminate\Http\RedirectResponse
     {
@@ -121,6 +117,7 @@ class CartController extends Controller
         if (isset($cart[$key])) {
             $cart[$key]['quantity'] = $validated['quantity'];
             session()->put('cart', $cart);
+
             return redirect()->route('cart.index');
         }
 
@@ -131,7 +128,6 @@ class CartController extends Controller
      * Remove an item from the cart.
      *
      * @param  string  $key
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($key): \Illuminate\Http\RedirectResponse
     {
@@ -140,6 +136,7 @@ class CartController extends Controller
         if (isset($cart[$key])) {
             unset($cart[$key]);
             session()->put('cart', $cart);
+
             return redirect()->route('cart.index')->with('success', 'Item removed from cart.');
         }
 
@@ -148,12 +145,11 @@ class CartController extends Controller
 
     /**
      * Clear all items from the cart.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function clear(): \Illuminate\Http\RedirectResponse
     {
         session()->forget('cart');
+
         return redirect()->route('cart.index')->with('success', 'Cart cleared.');
     }
 }

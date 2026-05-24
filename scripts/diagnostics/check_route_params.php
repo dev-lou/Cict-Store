@@ -1,10 +1,11 @@
 <?php
+
 // Simple script to find named routes that require parameters and views that call them without parameters.
 
-$routesFile = __DIR__ . '/../routes/web.php';
-$viewsPath = __DIR__ . '/../resources/views';
+$routesFile = __DIR__.'/../routes/web.php';
+$viewsPath = __DIR__.'/../resources/views';
 
-if (!file_exists($routesFile)) {
+if (! file_exists($routesFile)) {
     fwrite(STDERR, "routes/web.php not found\n");
     exit(1);
 }
@@ -45,8 +46,12 @@ if (empty($parameterized)) {
 $finder = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($viewsPath));
 $issues = [];
 foreach ($finder as $file) {
-    if ($file->isDir()) continue;
-    if (!preg_match('/\.blade\.php$/', $file->getPathname())) continue;
+    if ($file->isDir()) {
+        continue;
+    }
+    if (! preg_match('/\.blade\.php$/', $file->getPathname())) {
+        continue;
+    }
 
     $lines = file($file->getPathname(), FILE_IGNORE_NEW_LINES);
     foreach ($lines as $ln => $text) {

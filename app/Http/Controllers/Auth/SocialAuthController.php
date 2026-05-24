@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
-use Exception;
 
 class SocialAuthController extends Controller
 {
@@ -17,7 +17,7 @@ class SocialAuthController extends Controller
     public function redirect($provider)
     {
         // Validate provider
-        if (!in_array($provider, ['google', 'facebook'])) {
+        if (! in_array($provider, ['google', 'facebook'])) {
             return redirect()->route('login')->withErrors(['provider' => 'Invalid OAuth provider.']);
         }
 
@@ -34,7 +34,7 @@ class SocialAuthController extends Controller
     public function callback($provider)
     {
         // Validate provider
-        if (!in_array($provider, ['google', 'facebook'])) {
+        if (! in_array($provider, ['google', 'facebook'])) {
             return redirect()->route('login')->withErrors(['provider' => 'Invalid OAuth provider.']);
         }
 
@@ -48,7 +48,7 @@ class SocialAuthController extends Controller
             if ($user) {
                 // Update existing user's OAuth info
                 $user->update([
-                    $provider . '_id' => $socialUser->getId(),
+                    $provider.'_id' => $socialUser->getId(),
                     'avatar' => $socialUser->getAvatar(),
                 ]);
             } else {
@@ -57,7 +57,7 @@ class SocialAuthController extends Controller
                     'name' => $socialUser->getName(),
                     'email' => $socialUser->getEmail(),
                     'password' => Hash::make(uniqid()), // Random password for OAuth users
-                    $provider . '_id' => $socialUser->getId(),
+                    $provider.'_id' => $socialUser->getId(),
                     'avatar' => $socialUser->getAvatar(),
                     'email_verified_at' => now(), // OAuth emails are pre-verified
                 ]);
@@ -74,7 +74,7 @@ class SocialAuthController extends Controller
             return redirect()->route('home');
 
         } catch (Exception $e) {
-            return redirect()->route('login')->withErrors(['oauth' => 'Unable to authenticate with ' . ucfirst($provider) . '. Please try again.']);
+            return redirect()->route('login')->withErrors(['oauth' => 'Unable to authenticate with '.ucfirst($provider).'. Please try again.']);
         }
     }
 }

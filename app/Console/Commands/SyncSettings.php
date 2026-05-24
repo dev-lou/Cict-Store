@@ -2,13 +2,14 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Setting;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class SyncSettings extends Command
 {
     protected $signature = 'settings:sync';
+
     protected $description = 'Sync settings from Supabase to local database';
 
     public function handle()
@@ -36,6 +37,7 @@ class SyncSettings extends Command
 
             if ($settings->isEmpty()) {
                 $this->warn('No settings found in Supabase database.');
+
                 return 0;
             }
 
@@ -51,10 +53,12 @@ class SyncSettings extends Command
             }
 
             $this->info('Settings synced successfully!');
+
             return 0;
 
         } catch (\Exception $e) {
-            $this->error('Failed to sync settings: ' . $e->getMessage());
+            $this->error('Failed to sync settings: '.$e->getMessage());
+
             return 1;
         }
     }

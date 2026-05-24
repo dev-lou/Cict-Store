@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Extensions\NeonPostgresConnector;
+use App\Models\Order;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Cache;
-use App\Models\Order;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register custom Neon Postgres connector to append endpoint and ensure options are sanitized.
         $this->app->bind('db.connector.pgsql', function () {
-            return new NeonPostgresConnector();
+            return new NeonPostgresConnector;
         });
     }
 
@@ -69,47 +69,48 @@ class AppServiceProvider extends ServiceProvider
         // and avoid database queries during CLI tasks such as `php artisan`.
         // Cache these counts for 5 minutes to reduce database load
         View::composer('*', function ($view) {
-        $viewName = $view->getName();
-        
-        // Skip error views and API responses (but NOT components, they need the counts)
-        if (str_starts_with($viewName, 'errors.') || 
-            str_starts_with($viewName, 'errors::')) {
-            $view->with([
-                'pendingOrderCount' => 0,
-                'processingOrderCount' => 0,
-                'completedOrderCount' => 0,
-                'totalOrderCount' => 0,
-            ]);
-            return;
-        }
-        
-        try {
-            // Cache order counts for 5 minutes to reduce database load
-            $orderCounts = Cache::remember('admin.order_counts', now()->addMinutes(5), function () {
-                return [
-                    'pending' => Order::where('status', 'pending')->count(),
-                    'processing' => Order::where('status', 'processing')->count(),
-                    'completed' => Order::where('status', 'completed')->count(),
-                    'total' => Order::count(),
-                ];
-            });
+            $viewName = $view->getName();
 
-            $view->with([
-                'pendingOrderCount' => $orderCounts['pending'],
-                'processingOrderCount' => $orderCounts['processing'],
-                'completedOrderCount' => $orderCounts['completed'],
-                'totalOrderCount' => $orderCounts['total'],
-            ]);
-        } catch (\Throwable $e) {
-            // Fallback to zero counts if database query fails
-            // Don't log excessively to avoid log spam
-            $view->with([
-                'pendingOrderCount' => 0,
-                'processingOrderCount' => 0,
-                'completedOrderCount' => 0,
-                'totalOrderCount' => 0,
-            ]);
-        }
+            // Skip error views and API responses (but NOT components, they need the counts)
+            if (str_starts_with($viewName, 'errors.') ||
+                str_starts_with($viewName, 'errors::')) {
+                $view->with([
+                    'pendingOrderCount' => 0,
+                    'processingOrderCount' => 0,
+                    'completedOrderCount' => 0,
+                    'totalOrderCount' => 0,
+                ]);
+
+                return;
+            }
+
+            try {
+                // Cache order counts for 5 minutes to reduce database load
+                $orderCounts = Cache::remember('admin.order_counts', now()->addMinutes(5), function () {
+                    return [
+                        'pending' => Order::where('status', 'pending')->count(),
+                        'processing' => Order::where('status', 'processing')->count(),
+                        'completed' => Order::where('status', 'completed')->count(),
+                        'total' => Order::count(),
+                    ];
+                });
+
+                $view->with([
+                    'pendingOrderCount' => $orderCounts['pending'],
+                    'processingOrderCount' => $orderCounts['processing'],
+                    'completedOrderCount' => $orderCounts['completed'],
+                    'totalOrderCount' => $orderCounts['total'],
+                ]);
+            } catch (\Throwable $e) {
+                // Fallback to zero counts if database query fails
+                // Don't log excessively to avoid log spam
+                $view->with([
+                    'pendingOrderCount' => 0,
+                    'processingOrderCount' => 0,
+                    'completedOrderCount' => 0,
+                    'totalOrderCount' => 0,
+                ]);
+            }
         });
 
         // Vite manifest fallback: In some Vite versions or setups, the manifest may be
@@ -118,15 +119,15 @@ class AppServiceProvider extends ServiceProvider
         // expected path at runtime (only when necessary).
         try {
             $manifestDir = public_path('build');
-            $legacyManifest = $manifestDir . DIRECTORY_SEPARATOR . '.vite' . DIRECTORY_SEPARATOR . 'manifest.json';
-            $expectedManifest = $manifestDir . DIRECTORY_SEPARATOR . 'manifest.json';
+            $legacyManifest = $manifestDir.DIRECTORY_SEPARATOR.'.vite'.DIRECTORY_SEPARATOR.'manifest.json';
+            $expectedManifest = $manifestDir.DIRECTORY_SEPARATOR.'manifest.json';
 
-            if (file_exists($legacyManifest) && !file_exists($expectedManifest)) {
+            if (file_exists($legacyManifest) && ! file_exists($expectedManifest)) {
                 @copy($legacyManifest, $expectedManifest);
                 logger()->info('Copied Vite manifest from nested .vite to build manifest', ['from' => $legacyManifest, 'to' => $expectedManifest]);
             }
         } catch (\Throwable $e) {
-            logger()->warning('Failed to ensure Vite manifest was present: ' . $e->getMessage());
+            logger()->warning('Failed to ensure Vite manifest was present: '.$e->getMessage());
         }
     }
 
@@ -140,4 +141,3 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 }
-

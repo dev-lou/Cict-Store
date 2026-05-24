@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Service;
-use App\Models\ServiceOption;
 use App\Models\ServiceOfficer;
+use App\Models\ServiceOption;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 

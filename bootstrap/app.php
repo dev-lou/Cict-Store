@@ -15,56 +15,56 @@ use Illuminate\Foundation\Application;
 | so it becomes part of the DSN (e.g., host=...;options=endpoint=...).
 |--------------------------------------------------------------------------
 */
-if (!empty($_ENV['DATABASE_URL']) || !empty($_SERVER['DATABASE_URL']) || !empty(getenv('DATABASE_URL'))) {
+if (! empty($_ENV['DATABASE_URL']) || ! empty($_SERVER['DATABASE_URL']) || ! empty(getenv('DATABASE_URL'))) {
     $databaseUrl = $_ENV['DATABASE_URL'] ?? $_SERVER['DATABASE_URL'] ?? getenv('DATABASE_URL');
     $parsedUrl = parse_url($databaseUrl);
-    
+
     if ($parsedUrl !== false) {
         // Extract query params (e.g., sslmode, options)
         $queryParams = [];
-        if (!empty($parsedUrl['query'])) {
+        if (! empty($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $queryParams);
         }
-        
+
         // Build host string. For Neon pooler hosts we DO NOT append a separate SNI endpoint
         // via `options=...` to the DB_HOST because that causes a mismatch between the
         // SNI project inferred from the host and the endpoint in options. Only append
         // `options` when connecting directly to the SNI endpoint, not when using pooler.
         $host = $parsedUrl['host'] ?? '127.0.0.1';
         $isPoolerHost = str_contains($host, '-pooler');
-        if (!empty($queryParams['options']) && ! $isPoolerHost) {
+        if (! empty($queryParams['options']) && ! $isPoolerHost) {
             // Append options to host so it becomes part of DSN: host=...;options=endpoint=...
-            $host .= ';options=' . rawurldecode($queryParams['options']);
+            $host .= ';options='.rawurldecode($queryParams['options']);
         }
-        
+
         // Set individual env vars (these take precedence if not already set)
         if (empty($_ENV['DB_HOST']) && empty($_SERVER['DB_HOST'])) {
             $_ENV['DB_HOST'] = $host;
             $_SERVER['DB_HOST'] = $host;
             putenv("DB_HOST={$host}");
         }
-        if (empty($_ENV['DB_PORT']) && empty($_SERVER['DB_PORT']) && !empty($parsedUrl['port'])) {
+        if (empty($_ENV['DB_PORT']) && empty($_SERVER['DB_PORT']) && ! empty($parsedUrl['port'])) {
             $_ENV['DB_PORT'] = $parsedUrl['port'];
             $_SERVER['DB_PORT'] = $parsedUrl['port'];
             putenv("DB_PORT={$parsedUrl['port']}");
         }
-        if (empty($_ENV['DB_DATABASE']) && empty($_SERVER['DB_DATABASE']) && !empty($parsedUrl['path'])) {
+        if (empty($_ENV['DB_DATABASE']) && empty($_SERVER['DB_DATABASE']) && ! empty($parsedUrl['path'])) {
             $database = ltrim($parsedUrl['path'], '/');
             $_ENV['DB_DATABASE'] = $database;
             $_SERVER['DB_DATABASE'] = $database;
             putenv("DB_DATABASE={$database}");
         }
-        if (empty($_ENV['DB_USERNAME']) && empty($_SERVER['DB_USERNAME']) && !empty($parsedUrl['user'])) {
+        if (empty($_ENV['DB_USERNAME']) && empty($_SERVER['DB_USERNAME']) && ! empty($parsedUrl['user'])) {
             $_ENV['DB_USERNAME'] = $parsedUrl['user'];
             $_SERVER['DB_USERNAME'] = $parsedUrl['user'];
             putenv("DB_USERNAME={$parsedUrl['user']}");
         }
-        if (empty($_ENV['DB_PASSWORD']) && empty($_SERVER['DB_PASSWORD']) && !empty($parsedUrl['pass'])) {
+        if (empty($_ENV['DB_PASSWORD']) && empty($_SERVER['DB_PASSWORD']) && ! empty($parsedUrl['pass'])) {
             $_ENV['DB_PASSWORD'] = $parsedUrl['pass'];
             $_SERVER['DB_PASSWORD'] = $parsedUrl['pass'];
             putenv("DB_PASSWORD={$parsedUrl['pass']}");
         }
-        if (empty($_ENV['DB_SSLMODE']) && empty($_SERVER['DB_SSLMODE']) && !empty($queryParams['sslmode'])) {
+        if (empty($_ENV['DB_SSLMODE']) && empty($_SERVER['DB_SSLMODE']) && ! empty($queryParams['sslmode'])) {
             $_ENV['DB_SSLMODE'] = $queryParams['sslmode'];
             $_SERVER['DB_SSLMODE'] = $queryParams['sslmode'];
             putenv("DB_SSLMODE={$queryParams['sslmode']}");

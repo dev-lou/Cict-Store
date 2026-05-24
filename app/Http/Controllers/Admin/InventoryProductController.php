@@ -5,17 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class InventoryProductController extends Controller
 {
     /**
      * Display the inventory product listing page.
-     *
-     * @return \Illuminate\View\View
      */
     public function index(Request $request): \Illuminate\View\View
     {
@@ -25,7 +23,7 @@ class InventoryProductController extends Controller
         // Apply search filter by product name
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
-            $query->where('name', 'like', '%' . $searchTerm . '%');
+            $query->where('name', 'like', '%'.$searchTerm.'%');
         }
 
         // Apply status filter
@@ -125,8 +123,6 @@ class InventoryProductController extends Controller
 
     /**
      * Display the create product form.
-     *
-     * @return \Illuminate\View\View
      */
     public function create(): \Illuminate\View\View
     {
@@ -135,9 +131,6 @@ class InventoryProductController extends Controller
 
     /**
      * Store a new product in the database.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
@@ -171,7 +164,7 @@ class InventoryProductController extends Controller
             if ($request->hasFile('image')) {
                 try {
                     $file = $request->file('image');
-                    $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                    $filename = time().'_'.preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
                     $storagePath = $filename;  // Store directly in bucket root since bucket is already 'products'
 
                     \Log::info('Attempting Supabase upload', [
@@ -182,7 +175,7 @@ class InventoryProductController extends Controller
                         'disk' => 'supabase',
                         'endpoint' => env('AWS_ENDPOINT'),
                         'bucket' => env('AWS_BUCKET'),
-                        'aws_key' => env('AWS_ACCESS_KEY_ID') ? substr(env('AWS_ACCESS_KEY_ID'), 0, 8) . '...' : 'NOT SET',
+                        'aws_key' => env('AWS_ACCESS_KEY_ID') ? substr(env('AWS_ACCESS_KEY_ID'), 0, 8).'...' : 'NOT SET',
                         'aws_url' => env('AWS_URL'),
                     ]);
 
@@ -208,9 +201,9 @@ class InventoryProductController extends Controller
                         // Build the public URL for the uploaded image
                         // Format: https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>/<path>
                         if ($diskName === 'supabase') {
-                            $imagePath = env('AWS_URL') . '/' . $storagePath; // public supabase URL
+                            $imagePath = env('AWS_URL').'/'.$storagePath; // public supabase URL
                         } else {
-                            $imagePath = '/storage/' . ltrim($storagePath, '/');
+                            $imagePath = '/storage/'.ltrim($storagePath, '/');
                         }
 
                         \Log::info('Image uploaded to Supabase successfully', [
@@ -224,7 +217,7 @@ class InventoryProductController extends Controller
                         ]);
                         // Fallback to local storage
                         $localPath = $file->store('products', 'public');
-                        $imagePath = '/storage/' . $localPath;
+                        $imagePath = '/storage/'.$localPath;
                         \Log::info('Image saved to local storage as fallback', ['path' => $imagePath]);
 
                         // Add warning for admin
@@ -239,11 +232,11 @@ class InventoryProductController extends Controller
                     // Try local storage as fallback
                     try {
                         $localPath = $request->file('image')->store('products', 'public');
-                        $imagePath = '/storage/' . $localPath;
+                        $imagePath = '/storage/'.$localPath;
                         \Log::info('Image saved to local storage as fallback after Supabase error', ['path' => $imagePath]);
 
                         // Add warning for admin with error details
-                        session()->flash('warning', 'Supabase error: ' . $e->getMessage() . '. Image saved locally (may be lost on redeploy).');
+                        session()->flash('warning', 'Supabase error: '.$e->getMessage().'. Image saved locally (may be lost on redeploy).');
                     } catch (\Exception $localError) {
                         \Log::error('Local storage fallback also failed', ['error' => $localError->getMessage()]);
                         $imagePath = null;
@@ -256,13 +249,13 @@ class InventoryProductController extends Controller
 
             // Filter out empty variant entries (in case form sends empty arrays)
             $variantsData = array_filter($variantsData, function ($v) {
-                return !empty($v['name']) && isset($v['stock_quantity']);
+                return ! empty($v['name']) && isset($v['stock_quantity']);
             });
 
             // Allow any number of variants (0, 1, 2+)
 
             // Calculate total stock
-            if (!empty($variantsData)) {
+            if (! empty($variantsData)) {
                 // Has variants - calculate from variant stock
                 $totalStock = collect($variantsData)->sum('stock_quantity');
             } else {
@@ -281,7 +274,7 @@ class InventoryProductController extends Controller
             $product = Product::create($validated);
 
             // Create variants only if user added them
-            if (!empty($variantsData)) {
+            if (! empty($variantsData)) {
                 foreach ($variantsData as $variantData) {
                     $product->variants()->create([
                         'name' => $variantData['name'],
@@ -295,16 +288,17 @@ class InventoryProductController extends Controller
             // Clear homepage caches so featured products show updates in near-real-time
             Cache::forget('homepage.featured_products');
             Cache::forget('home.featured_products');
-            
+
             // Clear shop page caches so new products appear immediately
             $this->clearShopCaches();
-            
-            // Clear product detail cache for this product
-            Cache::forget('product_detail_' . $product->id);
 
-            $variantMessage = !empty($variantsData) ? ' with ' . count($variantsData) . ' variant(s)' : '';
+            // Clear product detail cache for this product
+            Cache::forget('product_detail_'.$product->id);
+
+            $variantMessage = ! empty($variantsData) ? ' with '.count($variantsData).' variant(s)' : '';
+
             return redirect()->route('admin.inventory.index')
-                ->with('success', 'Product created successfully' . $variantMessage . '!');
+                ->with('success', 'Product created successfully'.$variantMessage.'!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e; // Let validation errors bubble up normally
@@ -318,15 +312,12 @@ class InventoryProductController extends Controller
 
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Failed to create product: ' . $e->getMessage());
+                ->with('error', 'Failed to create product: '.$e->getMessage());
         }
     }
 
     /**
      * Display the edit product form.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\View\View
      */
     public function edit(Product $product): \Illuminate\View\View
     {
@@ -345,10 +336,6 @@ class InventoryProductController extends Controller
 
     /**
      * Update a product in the database.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Product $product): \Illuminate\Http\RedirectResponse
     {
@@ -397,7 +384,7 @@ class InventoryProductController extends Controller
 
                     // Upload new image to Supabase Storage (or fallback to local public disk)
                     $file = $request->file('image');
-                    $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                    $filename = time().'_'.preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
                     $storagePath = $filename;  // Store directly in bucket root since bucket is already 'products'
 
                     \Log::info('Attempting Supabase upload for update', [
@@ -413,9 +400,9 @@ class InventoryProductController extends Controller
                     if ($uploaded) {
                         // Build the public URL for the uploaded image
                         if ($diskName === 'supabase') {
-                            $validated['image_path'] = env('AWS_URL') . '/' . $storagePath;
+                            $validated['image_path'] = env('AWS_URL').'/'.$storagePath;
                         } else {
-                            $validated['image_path'] = '/storage/' . ltrim($storagePath, '/');
+                            $validated['image_path'] = '/storage/'.ltrim($storagePath, '/');
                         }
 
                         \Log::info('Product image updated on Supabase', [
@@ -425,7 +412,7 @@ class InventoryProductController extends Controller
                     } else {
                         \Log::warning('Supabase upload returned false during update, trying local fallback');
                         $localPath = $file->store('products', 'public');
-                        $validated['image_path'] = '/storage/' . $localPath;
+                        $validated['image_path'] = '/storage/'.$localPath;
                     }
                 } catch (\Exception $e) {
                     \Log::error('Supabase image upload failed during update', [
@@ -436,7 +423,7 @@ class InventoryProductController extends Controller
                     // Try local storage as fallback
                     try {
                         $localPath = $request->file('image')->store('products', 'public');
-                        $validated['image_path'] = '/storage/' . $localPath;
+                        $validated['image_path'] = '/storage/'.$localPath;
                         \Log::info('Image saved to local storage as fallback during update', ['path' => $validated['image_path']]);
                     } catch (\Exception $localError) {
                         \Log::error('Local storage fallback also failed during update', ['error' => $localError->getMessage()]);
@@ -451,13 +438,13 @@ class InventoryProductController extends Controller
 
             // Filter new variants to remove empty ones
             $newVariants = array_filter($newVariants, function ($v) {
-                return !empty($v['name']) && isset($v['stock_quantity']);
+                return ! empty($v['name']) && isset($v['stock_quantity']);
             });
 
             // Count total variants after deletions and additions
             $existingActiveCount = 0;
             foreach ($variants as $variantData) {
-                if (!isset($variantData['delete']) || $variantData['delete'] != 1) {
+                if (! isset($variantData['delete']) || $variantData['delete'] != 1) {
                     $existingActiveCount++;
                 }
             }
@@ -468,7 +455,7 @@ class InventoryProductController extends Controller
                 'newVariants' => $newVariants,
                 'existingActiveCount' => $existingActiveCount,
                 'newVariantsCount' => count($newVariants),
-                'totalVariantCount' => $totalVariantCount
+                'totalVariantCount' => $totalVariantCount,
             ]);
 
             // Allow any number of variants (0, 1, 2+)
@@ -486,11 +473,11 @@ class InventoryProductController extends Controller
             $product->update($validated);
 
             // Update existing variants
-            if (!empty($variants)) {
+            if (! empty($variants)) {
                 foreach ($variants as $variantData) {
                     $variant = $product->variants()->where('id', $variantData['id'])->first();
 
-                    if (!$variant) {
+                    if (! $variant) {
                         continue;
                     }
 
@@ -517,7 +504,7 @@ class InventoryProductController extends Controller
             }
 
             // Create new variants if adding to legacy product
-            if (!empty($newVariants)) {
+            if (! empty($newVariants)) {
                 foreach ($newVariants as $variantData) {
                     $product->variants()->create([
                         'name' => $variantData['name'],
@@ -537,12 +524,12 @@ class InventoryProductController extends Controller
             // Clear homepage caches so featured products show updates in near-real-time
             Cache::forget('homepage.featured_products');
             Cache::forget('home.featured_products');
-            
+
             // Clear shop page caches so updates appear immediately
             $this->clearShopCaches();
-            
+
             // Clear product detail cache for this product
-            Cache::forget('product_detail_' . $product->id);
+            Cache::forget('product_detail_'.$product->id);
 
             return redirect()->route('admin.inventory.index')
                 ->with('success', 'Product and variants updated successfully!');
@@ -555,14 +542,14 @@ class InventoryProductController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'request_data' => $request->except(['image']),
             ]);
-            return redirect()->back()->withInput()->with('error', 'Failed to update product: ' . $e->getMessage());
+
+            return redirect()->back()->withInput()->with('error', 'Failed to update product: '.$e->getMessage());
         }
     }
 
     /**
      * Delete a product from the database.
      *
-     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function destroy(Product $product)
@@ -574,7 +561,7 @@ class InventoryProductController extends Controller
                     $this->deleteSupabaseImage($product->image_path);
                 } catch (\Exception $storageException) {
                     // Log the storage error but continue with deletion
-                    \Log::warning('Failed to delete product image from Supabase: ' . $storageException->getMessage());
+                    \Log::warning('Failed to delete product image from Supabase: '.$storageException->getMessage());
                 }
             }
 
@@ -603,9 +590,9 @@ class InventoryProductController extends Controller
                 ->with('success', "Product '{$productName}' deleted successfully!");
         } catch (\Exception $e) {
             // Log the error for debugging
-            \Log::error('Product deletion failed: ' . $e->getMessage(), [
+            \Log::error('Product deletion failed: '.$e->getMessage(), [
                 'product_id' => $product->id,
-                'exception' => $e
+                'exception' => $e,
             ]);
 
             // Always return JSON if Accept header or X-Requested-With header indicates AJAX
@@ -615,13 +602,13 @@ class InventoryProductController extends Controller
             if ($isAjax || request()->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to delete product: ' . $e->getMessage(),
+                    'message' => 'Failed to delete product: '.$e->getMessage(),
                 ], 500);
             }
 
             // Return redirect for traditional form submissions
             return redirect()->route('admin.inventory.index')
-                ->with('error', 'Failed to delete product: ' . $e->getMessage());
+                ->with('error', 'Failed to delete product: '.$e->getMessage());
         }
     }
 
@@ -631,7 +618,6 @@ class InventoryProductController extends Controller
      * Extracts the storage path from the full public URL and deletes the file.
      *
      * @param  string  $imageUrl  The full public URL of the image
-     * @return bool
      */
     private function deleteSupabaseImage(string $imageUrl): bool
     {
@@ -648,14 +634,16 @@ class InventoryProductController extends Controller
                     $diskName = (config('filesystems.disks.supabase.key') && config('filesystems.disks.supabase.secret') && config('filesystems.disks.supabase.bucket')) ? 'supabase' : 'public';
                     Storage::disk($diskName)->delete($storagePath);
                     \Log::info('Deleted image', ['disk' => $diskName, 'path' => $storagePath]);
+
                     return true;
                 }
             }
 
             // Fallback: Try to delete from legacy local storage if it's a relative path
-            if (!str_starts_with($imageUrl, 'http')) {
+            if (! str_starts_with($imageUrl, 'http')) {
                 Storage::disk('public')->delete($imageUrl);
                 \Log::info('Deleted legacy local image', ['path' => $imageUrl]);
+
                 return true;
             }
 
@@ -665,32 +653,31 @@ class InventoryProductController extends Controller
                 'url' => $imageUrl,
                 'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
-    
+
     /**
      * Clear all shop page cache keys.
-     * 
+     *
      * This clears caches for different search terms, sort orders, and pagination.
      * Called when products are created/updated/deleted to ensure customers see fresh data.
-     *
-     * @return void
      */
     private function clearShopCaches(): void
     {
         try {
             // Clear cache for all common shop page combinations
             // We can't know all possible search terms, so we clear what we track
-            
+
             // Clear default shop listing (no filters)
             for ($page = 1; $page <= 10; $page++) {
-                Cache::forget('shop_listing___page_' . $page);
-                Cache::forget('shop_listing__latest_page_' . $page);
-                Cache::forget('shop_listing__price_low_page_' . $page);
-                Cache::forget('shop_listing__price_high_page_' . $page);
+                Cache::forget('shop_listing___page_'.$page);
+                Cache::forget('shop_listing__latest_page_'.$page);
+                Cache::forget('shop_listing__price_low_page_'.$page);
+                Cache::forget('shop_listing__price_high_page_'.$page);
             }
-            
+
             \Log::info('Cleared shop page caches after product update');
         } catch (\Exception $e) {
             \Log::warning('Failed to clear shop caches', ['error' => $e->getMessage()]);

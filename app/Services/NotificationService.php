@@ -20,7 +20,7 @@ class NotificationService
             'cancelled' => '❌ Your order has been cancelled',
         ];
 
-        $title = match($newStatus) {
+        $title = match ($newStatus) {
             'processing' => 'Order Being Processed',
             'completed' => 'Order Completed',
             'cancelled' => 'Order Cancelled',
@@ -70,7 +70,7 @@ class NotificationService
      */
     public static function orderAssignedToStaff(Order $order): void
     {
-        if (!$order->assigned_staff_id) {
+        if (! $order->assigned_staff_id) {
             return;
         }
 
@@ -81,7 +81,7 @@ class NotificationService
             'notifiable_id' => $order->assigned_staff_id,
             'data' => [
                 'title' => 'New Order Assigned',
-                'message' => "You have been assigned to order #{$order->order_number}. Total: ₱" . number_format($order->total, 2),
+                'message' => "You have been assigned to order #{$order->order_number}. Total: ₱".number_format($order->total, 2),
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'customer_name' => $order->user->name ?? 'Unknown',

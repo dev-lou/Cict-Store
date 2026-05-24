@@ -3,21 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
+use App\Models\InventoryHistory;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use App\Models\InventoryHistory;
-use App\Models\AuditLog;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class InventoryStockController extends Controller
 {
     /**
      * Handle stock-in operation (add stock to inventory for a variant).
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function storeIn(Request $request): \Illuminate\Http\RedirectResponse
     {
@@ -75,16 +72,14 @@ class InventoryStockController extends Controller
                 ->with('success', "Stock-in completed: +{$request->quantity} units added to {$product->name} ({$variant->name})");
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()
-                ->with('error', 'Error processing stock-in: ' . $e->getMessage());
+                ->with('error', 'Error processing stock-in: '.$e->getMessage());
         }
     }
 
     /**
      * Handle stock-out operation (remove stock from inventory for a variant).
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function storeOut(Request $request): \Illuminate\Http\RedirectResponse
     {
@@ -148,15 +143,14 @@ class InventoryStockController extends Controller
                 ->with('success', "Stock-out completed: -{$request->quantity} units removed from {$product->name} ({$variant->name})");
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()
-                ->with('error', 'Error processing stock-out: ' . $e->getMessage());
+                ->with('error', 'Error processing stock-out: '.$e->getMessage());
         }
     }
 
     /**
      * Display the inventory history timeline.
-     *
-     * @return \Illuminate\View\View
      */
     public function history(): \Illuminate\View\View
     {
@@ -172,4 +166,3 @@ class InventoryStockController extends Controller
         ]);
     }
 }
-

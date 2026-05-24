@@ -9,9 +9,6 @@ class OrderController extends Controller
 {
     /**
      * Display a single order with tracking details.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\View\View
      */
     public function show(Order $order): \Illuminate\View\View
     {
@@ -19,7 +16,7 @@ class OrderController extends Controller
         if ($order->user_id !== auth()->id()) {
             abort(403, 'Unauthorized access.');
         }
-        
+
         // Fetch order with relationships
         $order->load('items.product', 'items.variant');
 
@@ -30,9 +27,6 @@ class OrderController extends Controller
 
     /**
      * Cancel an order (if status is 'pending').
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function cancel(Order $order): \Illuminate\Http\RedirectResponse
     {
@@ -42,7 +36,7 @@ class OrderController extends Controller
         }
 
         // Check if order can be cancelled
-        if (!$order->canBeCancelled()) {
+        if (! $order->canBeCancelled()) {
             return redirect()->back()
                 ->with('error', 'Order cannot be cancelled at this stage.');
         }
@@ -55,8 +49,6 @@ class OrderController extends Controller
 
     /**
      * Display customer's order history (for account page).
-     *
-     * @return \Illuminate\View\View
      */
     public function customerOrders(Request $request): \Illuminate\View\View
     {
@@ -93,9 +85,6 @@ class OrderController extends Controller
 
     /**
      * Delete an order permanently.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Order $order): \Illuminate\Http\RedirectResponse
     {

@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 class GeminiChatService
 {
     private string $apiKey;
+
     private string $apiUrl;
+
     private string $model;
 
     public function __construct()
@@ -39,14 +41,15 @@ class GeminiChatService
     /**
      * Send a message to Gemini API and get a response
      *
-     * @param string $message User's message
-     * @param array $context Conversation context/history
+     * @param  string  $message  User's message
+     * @param  array  $context  Conversation context/history
      * @return array Response with 'success', 'message', and optional 'error'
      */
     public function chat(string $message, array $context = []): array
     {
         if (empty($this->apiKey)) {
             Log::error('Gemini API key not configured');
+
             return [
                 'success' => false,
                 'error' => 'Chatbot service is not configured. Please contact support.',
@@ -56,21 +59,21 @@ class GeminiChatService
         try {
             // Build system prompt with business context
             $systemPrompt = $this->buildSystemPrompt();
-            
+
             // Combine system prompt with user message
-            $fullPrompt = $systemPrompt . "\n\nUser: " . $message . "\n\nAssistant:";
+            $fullPrompt = $systemPrompt."\n\nUser: ".$message."\n\nAssistant:";
 
             $response = Http::timeout(30)
                 ->withHeaders([
                     'Content-Type' => 'application/json',
                 ])
-                ->post($this->apiUrl . '?key=' . $this->apiKey, [
+                ->post($this->apiUrl.'?key='.$this->apiKey, [
                     'contents' => [
                         [
                             'parts' => [
-                                ['text' => $fullPrompt]
-                            ]
-                        ]
+                                ['text' => $fullPrompt],
+                            ],
+                        ],
                     ],
                     'generationConfig' => [
                         'temperature' => 0.7,
@@ -81,21 +84,21 @@ class GeminiChatService
                     'safetySettings' => [
                         [
                             'category' => 'HARM_CATEGORY_HARASSMENT',
-                            'threshold' => 'BLOCK_MEDIUM_AND_ABOVE'
+                            'threshold' => 'BLOCK_MEDIUM_AND_ABOVE',
                         ],
                         [
                             'category' => 'HARM_CATEGORY_HATE_SPEECH',
-                            'threshold' => 'BLOCK_MEDIUM_AND_ABOVE'
+                            'threshold' => 'BLOCK_MEDIUM_AND_ABOVE',
                         ],
                         [
                             'category' => 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-                            'threshold' => 'BLOCK_MEDIUM_AND_ABOVE'
+                            'threshold' => 'BLOCK_MEDIUM_AND_ABOVE',
                         ],
                         [
                             'category' => 'HARM_CATEGORY_DANGEROUS_CONTENT',
-                            'threshold' => 'BLOCK_MEDIUM_AND_ABOVE'
+                            'threshold' => 'BLOCK_MEDIUM_AND_ABOVE',
                         ],
-                    ]
+                    ],
                 ]);
 
             Log::info('Gemini API request sent', [
@@ -104,14 +107,14 @@ class GeminiChatService
                 'status' => $response->status(),
             ]);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 Log::error('Gemini API error', [
                     'status' => $response->status(),
                     'body' => $response->body(),
                     'model' => $this->model,
-                    'api_key_set' => !empty($this->apiKey),
+                    'api_key_set' => ! empty($this->apiKey),
                 ]);
-                
+
                 // Parse error message from response
                 $errorBody = $response->json();
                 $errorMessage = $errorBody['error']['message'] ?? 'Unknown error';
@@ -134,7 +137,7 @@ class GeminiChatService
                         'debug' => config('app.debug') ? "API Error 429: {$errorMessage} | Retry: {$retryInfo}" : null,
                     ];
                 }
-                
+
                 return [
                     'success' => false,
                     'error' => 'CICT AI is not available right now. Please try again later.',
@@ -147,10 +150,10 @@ class GeminiChatService
             if ($response->status() == 404) {
                 try {
                     $modelsResp = Http::withHeaders(['Content-Type' => 'application/json'])
-                        ->get('https://generativelanguage.googleapis.com/v1beta/models?key=' . $this->apiKey);
+                        ->get('https://generativelanguage.googleapis.com/v1beta/models?key='.$this->apiKey);
                     if ($modelsResp->successful()) {
                         $modelsData = $modelsResp->json();
-                        $modelIds = array_map(fn($m) => $m['name'] ?? ($m['id'] ?? null), $modelsData['models'] ?? []);
+                        $modelIds = array_map(fn ($m) => $m['name'] ?? ($m['id'] ?? null), $modelsData['models'] ?? []);
                         Log::warning('Gemini models list (v1beta) fetched for debugging', ['models' => $modelIds]);
                     } else {
                         Log::warning('Failed to fetch Gemini models list for debugging', ['status' => $modelsResp->status(), 'body' => $modelsResp->body()]);
@@ -161,12 +164,13 @@ class GeminiChatService
             }
 
             $data = $response->json();
-            
+
             // Extract the response text
             $responseText = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-            
-            if (!$responseText) {
+
+            if (! $responseText) {
                 Log::warning('Empty response from Gemini API', ['data' => $data]);
+
                 return [
                     'success' => false,
                     'error' => 'I didn\'t quite understand that. Could you rephrase?',
@@ -181,7 +185,7 @@ class GeminiChatService
         } catch (\Exception $e) {
             Log::error('Gemini chat service exception', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return [

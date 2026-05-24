@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('supplier_id')->nullable();
             $table->string('status', 50)->default('active');
             $table->timestamps();
-            
+
             $table->index('status');
             $table->index('slug');
             $table->foreign('supplier_id')
